@@ -18,10 +18,10 @@ export class MainScene {
   }
 
   createPlayer() {
-    const player = new Player()
+    const player = new Player({ x: Globals.width / 2, y: Globals.height / 2 })
     this.container.addChild(player.sprite)
 
-    player.sprite.x = Globals.width / 2
-    player.sprite.y = Globals.height / 2
+    // player.sprite.x = Globals.width / 2
+    // player.sprite.y = Globals.height / 2
   }
 }
