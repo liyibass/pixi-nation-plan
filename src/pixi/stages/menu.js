@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import player from '../components/player'
+import player from '../components/playerOld'
 import doctor from '../components/doctor'
 import ground from '../components/ground'
 import spotlight from '../components/spotlight'
