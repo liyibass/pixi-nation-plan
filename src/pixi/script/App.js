@@ -23,6 +23,7 @@ export class App {
     this.app = new PIXI.Application({
       width: WIDTH,
       height: HEIGHT,
+      backgroundColor: '0xeeeeee',
     })
 
     // add a canvas into DOM with pixi app
