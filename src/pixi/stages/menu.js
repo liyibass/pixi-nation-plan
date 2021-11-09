@@ -1,10 +1,10 @@
 import * as PIXI from 'pixi.js'
-import player from '../components/player/index'
-import doctor from '../components/doctor/index'
-import ground from '../components/ground/index'
-import spotlight from '../components/spotlight/index'
+import player from '../components/player'
+import doctor from '../components/doctor'
+import ground from '../components/ground'
+import spotlight from '../components/spotlight'
 
-const menu = new PIXI.Container({
+export const menu = new PIXI.Container({
   backgroundColor: 0x1099bb,
   width: 300,
   height: 300,
@@ -22,5 +22,3 @@ player.y = 247
 doctor.x = menu.width / 2
 doctor.y = 0
 menu.addChild(spotlight, ground, player, doctor)
-
-export default menu

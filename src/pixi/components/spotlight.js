@@ -1,9 +1,8 @@
 import * as PIXI from 'pixi.js'
-
-import spotlightImagePath from './spotlight.png'
+import { Globals } from '../script/Globals'
 
 // create a new Sprite from an image path
-const spotlight = PIXI.Sprite.from(spotlightImagePath)
+const spotlight = PIXI.Sprite(Globals.resources['player'].texture)
 // center the sprite's anchor point
 spotlight.anchor.set(0.5, 1)
 // move the sprite to the center of the screen

@@ -1,4 +1,5 @@
 import { LoaderConfig } from './LoaderConfig'
+import { Globals } from './Globals'
 
 export class Loader {
   constructor(loader, topLevelThis) {
@@ -15,28 +16,16 @@ export class Loader {
       }
 
       console.log('loader added')
-      this.loader.load()
+      this.loader.load((loader, resources) => {
+        Globals.resources = resources
+        resolve()
+      })
 
       // throughout the process multiple signals can be dispatched.
       this.loader.onProgress.add((event) => {
         this.topLevelThis.progress = event.progress
         console.log(event.progress)
       }) // called once per loaded/errored file
-
-      this.loader.onError.add((error) => {
-        console.log('error')
-        this.failedFiles.push(error.name)
-        console.log('onError: ', error)
-      }) // called once per errored file
-
-      this.loader.onComplete.add(() => {
-        if (this.failedFiles.length == 0) {
-          console.log('all file completed')
-          resolve()
-        } else {
-          console.log('Loading...failed: could not load ' + this.failedFiles)
-        }
-      }) // called once when the queued resourc
     })
   }
 }

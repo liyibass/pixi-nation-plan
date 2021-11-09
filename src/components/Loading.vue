@@ -32,7 +32,7 @@ export default {
     isLoaded: function () {
       setTimeout(() => {
         this.showStart = true
-      }, 200)
+      }, 500)
       this.$emit('start')
     },
   },

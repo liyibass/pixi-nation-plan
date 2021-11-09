@@ -1,7 +1,11 @@
-import playerImagePath from '../components/player/player1.png'
-import groundImagePath from '../components/ground/ground.png'
+import player from '../assets/images/player1.png'
+import doctor from '../assets/images/doctor.png'
+import ground from '../assets/images/ground.png'
+import spotlight from '../assets/images/spotlight.png'
 
 export const LoaderConfig = {
-  playerImagePath,
-  groundImagePath,
+  player,
+  doctor,
+  ground,
+  spotlight,
 }
