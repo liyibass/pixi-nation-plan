@@ -5,9 +5,9 @@ import ground from '../components/ground/index'
 import spotlight from '../components/spotlight/index'
 
 const menu = new PIXI.Container({
-    backgroundColor: 0x1099bb,
-    width: 300,
-    height: 300,
+  backgroundColor: 0x1099bb,
+  width: 300,
+  height: 300,
 })
 
 spotlight.x = menu.width / 2

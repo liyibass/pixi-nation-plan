@@ -1,9 +1,9 @@
 <template>
-    <transition name="fade" mode="out-in">
-        <Loading v-if="!loaded" @start="startHandler" :progress="progress" />
-    </transition>
+  <transition name="fade" mode="out-in">
+    <Loading v-if="!loaded" @start="startHandler" :progress="progress" />
+  </transition>
 
-    <div class="pixi" ref="pixi" />
+  <div class="pixi" ref="pixi" />
 </template>
 
 <script>
@@ -17,23 +17,23 @@ import { App } from '../pixi/script/App'
 // const HEIGHT = 812
 
 export default {
-    name: 'pixi',
-    components: { Loading },
-    data() {
-        return {
-            progress: 0,
-            loaded: false,
-        }
+  name: 'pixi',
+  components: { Loading },
+  data() {
+    return {
+      progress: 0,
+      loaded: false,
+    }
+  },
+  methods: {
+    startHandler() {
+      this.loaded = true
     },
-    methods: {
-        startHandler() {
-            this.loaded = true
-        },
-    },
-    async mounted() {
-        const app = new App(this)
-        app.run()
-    },
+  },
+  async mounted() {
+    const app = new App(this)
+    app.run()
+  },
 }
 </script>
 
