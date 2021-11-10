@@ -25,6 +25,7 @@ export class App {
       height: HEIGHT,
       backgroundColor: '0xeeeeee',
     })
+    Globals.app = this.app
 
     // add a canvas into DOM with pixi app
     document.querySelector('.pixi').appendChild(this.app.view)

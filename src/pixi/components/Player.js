@@ -47,4 +47,19 @@ export class Player {
     this.sprite.x = currentPosition.x
     this.sprite.y = currentPosition.y
   }
+
+  async lookAround(time = 2) {
+    for (let i = 0; i < time; i++) {
+      this.sprite.scale.x *= -1
+      await wait(600)
+    }
+  }
+}
+
+function wait(delayTime) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, delayTime)
+  })
 }
