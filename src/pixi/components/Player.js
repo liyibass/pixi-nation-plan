@@ -4,8 +4,9 @@ import { Globals } from '../script/Globals'
 export class Player {
   constructor(position = { x: 0, y: 0 }) {
     this.createSprite()
-    this.sprite.x = position.x
-    this.sprite.y = position.y
+    this.x = position.x
+    this.y = position.y
+    this.setupPosition()
     this.setInteractive()
     this.dragging = false
   }
@@ -15,6 +16,11 @@ export class Player {
 
     this.sprite = new PIXI.Sprite(texture)
     this.sprite.anchor.set(0.5, 0.5)
+  }
+
+  setupPosition() {
+    this.sprite.x = this.x
+    this.sprite.y = this.y
   }
 
   setInteractive() {

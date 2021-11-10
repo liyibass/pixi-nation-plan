@@ -1,12 +1,23 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
+// import { Globals } from '../script/Globals'
 
-// create a new Sprite from an image path
-const spotlight = PIXI.Sprite(Globals.resources['player'].texture)
-// center the sprite's anchor point
-spotlight.anchor.set(0.5, 1)
-// move the sprite to the center of the screen
-// player.x = app.screen.width / 2
-// player.y = app.screen.height / 2
+export class Spotlight {
+  constructor(position = { x: 0, y: 0 }) {
+    this.createSpotlight()
+    this.x = position.x
+    this.y = position.y
+    this.setupPosition()
+  }
 
-export default spotlight
+  createSpotlight() {
+    const texture = Globals.resources['spotlight']?.texture
+    this.sprite = new PIXI.Sprite(texture)
+    this.sprite.anchor.set(0.5, 1)
+  }
+
+  setupPosition() {
+    this.sprite.x = this.x
+    this.sprite.y = this.y
+  }
+}

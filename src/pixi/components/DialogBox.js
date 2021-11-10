@@ -56,11 +56,11 @@ export class DialogBox {
     graphics.lineStyle(2, 0xeeeeee, 1)
     graphics.beginFill(0xeeeeee)
     graphics.drawPolygon([
-      this.width / 2 - -3,
+      this.width / 2 - 3,
       this.height,
       this.talkerX > this.x ? spinX - TALKER_WIDTH : spinX + TALKER_WIDTH,
       spinY - TALKER_HEIGHT,
-      this.width / 2 - +3,
+      this.width / 2 + 3,
       this.height,
     ])
     graphics.endFill()

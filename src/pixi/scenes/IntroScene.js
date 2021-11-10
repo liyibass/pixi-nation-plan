@@ -2,6 +2,8 @@ import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 import { Player } from '../components/Player'
 import { DialogBox } from '../components/DialogBox'
+import { Ground } from '../components/Ground'
+import { Spotlight } from '../components/Spotlight'
 export class IntroScene {
   constructor() {
     this.container = new PIXI.Container()
@@ -10,6 +12,7 @@ export class IntroScene {
 
     this.filmScript = [
       this.startStory.bind(this),
+      this.firstLightUp.bind(this),
       this.lookAround.bind(this),
       this.movePlayerToGround.bind(this),
       this.spotlightOn.bind(this),
@@ -55,30 +58,111 @@ export class IntroScene {
 
   async startStory() {
     console.log('startStory')
-    this.player = new Player({ x: Globals.width / 2, y: Globals.height / 2 })
+    this.player = new Player({
+      x: this.container.width / 2,
+      y: this.container.height / 2,
+    })
+    this.ground = new Ground({
+      x: this.container.width / 2,
+      y: this.container.height / 2 + 58,
+    })
+    this.spotlight = new Spotlight({
+      x: this.container.width / 2,
+      y: this.container.height - 110,
+    })
+    this.container.addChild(
+      this.spotlight.sprite,
+      this.ground.sprite,
+      this.player.sprite
+    )
 
-    this.container.addChild(this.player.sprite)
-    this.player.sprite.x = this.container.width / 2
-    this.player.sprite.y = this.container.height / 2
-    await this.playerSay('!')
-    await wait(600)
+    this.player.sprite.alpha = 0
+    this.ground.sprite.alpha = 0
+    this.spotlight.sprite.alpha = 0
+
+    Globals.app.ticker.add(() => {
+      if (this.player.sprite.alpha <= 0.5) {
+        this.player.sprite.alpha += 0.01
+        this.ground.sprite.alpha += 0.01
+      }
+    })
+    await wait(2000)
+  }
+
+  async firstLightUp() {
+    this.player.sprite.alpha = 1
+    this.ground.sprite.alpha = 1
+
+    await this.playerSay({ text: '!', time: 1000 })
   }
 
   async lookAround() {
     console.log('lookAround')
     await this.player.lookAround()
-    await this.playerSay('?', 2000)
+    await this.playerSay({
+      text: '?',
+      time: 2000,
+      x: this.container.width / 2 - 100,
+    })
   }
 
-  async playerSay(text, time = 1000) {
+  async movePlayerToGround() {
+    // this.container.addChild(ground.sprite)
+
+    Globals.app.ticker.add(() => {
+      if (this.ground.sprite.y <= this.container.height - 108) {
+        moveDown(this.player.sprite)
+        moveDown(this.ground.sprite)
+      } else if (this.player.sprite.x >= 100) {
+        // moveLeft(this.player.sprite)
+      }
+    })
+    await wait(1500)
+
+    function moveDown(sprite) {
+      sprite.y += 3
+    }
+    // function moveLeft(sprite) {
+    //   sprite.x -= 5
+    // }
+  }
+
+  async spotlightOn() {
+    console.log('spotlightOn')
+    this.spotlight.sprite.alpha = 1
+
+    await this.playerSay({
+      text: '!?',
+      time: 3000,
+      y: this.container.height - 299,
+      talkerY: this.container.height - 155,
+    })
+
+    await wait(1000)
+  }
+
+  async doctorDrop() {
+    console.log('doctorDrop')
+  }
+
+  async playerSay({
+    text,
+    time = 1000,
+    x = this.container.width / 2 + 20,
+    y = this.container.height / 2 - 150,
+    talkerX = this.container.width / 2,
+    talkerY = this.container.height / 2,
+    width = 100,
+    height = 72,
+  }) {
     this.playerDialogBox = new DialogBox({
-      x: 200,
-      y: 250,
-      talkerX: this.container.width / 2,
-      talkerY: this.container.height / 2,
-      width: 100,
-      height: 72,
-      text: text,
+      x,
+      y,
+      talkerX,
+      talkerY,
+      width,
+      height,
+      text,
     })
     this.container.addChild(this.playerDialogBox.container)
 
@@ -88,29 +172,6 @@ export class IntroScene {
         resolve()
       }, time)
     })
-  }
-
-  async movePlayerToGround() {
-    Globals.app.ticker.add(() => {
-      if (this.player.sprite.y <= 700) {
-        moveDown(this.player.sprite)
-      } else if (this.player.sprite.x >= 100) {
-        moveLeft(this.player.sprite)
-      }
-    })
-    await wait(1000)
-
-    function moveDown(sprite) {
-      sprite.y += 5
-    }
-    function moveLeft(sprite) {
-      sprite.x -= 5
-    }
-  }
-
-  async spotlightOn() {
-    console.log('spotlightOn')
-    await wait(1000)
   }
 
   async doctorExplain(text) {
