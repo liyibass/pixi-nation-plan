@@ -52,10 +52,6 @@ export class IntroScene {
     this.createStartButton()
     this.container.buttonMode = true
 
-    // player.sprite.x = Globals.width / 2
-    // player.sprite.y = Globals.height / 2
-    // this.startStory()
-
     // start film script
     this.container.on('mousedown', async () => {
       if (this.filmScriptStep === 0) {
@@ -161,9 +157,6 @@ export class IntroScene {
     function moveUp(sprite) {
       sprite.y -= 2
     }
-    // function moveLeft(sprite) {
-    //   sprite.x -= 5
-    // }
   }
 
   async spotlightOn() {
