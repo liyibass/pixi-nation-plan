@@ -15,7 +15,6 @@ export class Loader {
         this.loader.add(key, this.resource[key])
       }
 
-      console.log('loader added')
       this.loader.load((loader, resources) => {
         Globals.resources = resources
         resolve()
@@ -24,7 +23,6 @@ export class Loader {
       // throughout the process multiple signals can be dispatched.
       this.loader.onProgress.add((event) => {
         this.topLevelThis.progress = event.progress
-        console.log(event.progress)
       }) // called once per loaded/errored file
     })
   }

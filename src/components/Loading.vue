@@ -1,10 +1,7 @@
 <template>
   <div class="loading">
     <transition name="loadFade" mode="out-in">
-      <div v-if="showStart" class="loading__enter" @click="clickHandler">
-        START
-      </div>
-      <div v-else class="loading__progress">LOADING... {{ progress }}%</div>
+      <div class="loading__progress">LOADING... {{ progress }}%</div>
     </transition>
   </div>
 </template>
@@ -18,11 +15,7 @@ export default {
       default: 0,
     },
   },
-  data() {
-    return {
-      showStart: false,
-    }
-  },
+
   computed: {
     isLoaded() {
       return this.progress === 100
@@ -31,14 +24,8 @@ export default {
   watch: {
     isLoaded: function () {
       setTimeout(() => {
-        this.showStart = true
+        this.$emit('start')
       }, 500)
-      this.$emit('start')
-    },
-  },
-  methods: {
-    clickHandler() {
-      this.$emit('start')
     },
   },
 }
@@ -56,6 +43,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 24px;
 }
 
 .loading__enter {

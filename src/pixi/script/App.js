@@ -8,8 +8,12 @@ import { MainScene } from '../scenes/MainScene'
 import { Globals } from '../script/Globals'
 
 // import menu from '../stages/menu'
-const WIDTH = 375
-const HEIGHT = 812
+const WIDTH = window.innerWidth
+const HEIGHT = window.innerHeight
+Globals.width = WIDTH
+Globals.height = HEIGHT
+// const WIDTH = 375
+// const HEIGHT = 812
 // const MOBILE_HEIGHT = 812
 // const MOBILE_WIDTH = (window.innerHeight * 375) / 812
 
@@ -45,8 +49,8 @@ export class App {
     this.app.stage.addChild(this.scene.container)
 
     //設定遊戲大小隨視窗大小改變
-    this.onResize()
-    window.onresize = this.onResize
+    // this.onResize()
+    // window.onresize = this.onResize
   }
 
   onResize() {

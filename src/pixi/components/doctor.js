@@ -1,13 +1,23 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
+// import { Globals } from '../script/Globals'
 
-// create a new Sprite from an image path
+export class Doctor {
+  constructor(position = { x: 0, y: 0 }) {
+    this.createDoctor()
+    this.x = position.x
+    this.y = position.y
+    this.setupPosition()
+  }
 
-const doctor = PIXI.Sprite(Globals.resources['doctor'].texture)
-// center the sprite's anchor point
-doctor.anchor.set(0.5, 0.5)
-// move the sprite to the center of the screen
-// doctor.x = app.screen.width / 2
-// doctor.y = app.screen.height / 2
+  createDoctor() {
+    const texture = Globals.resources['doctor']?.texture
+    this.sprite = new PIXI.Sprite(texture)
+    this.sprite.anchor.set(0.5, 0.5)
+  }
 
-export default doctor
+  setupPosition() {
+    this.sprite.x = this.x
+    this.sprite.y = this.y
+  }
+}
