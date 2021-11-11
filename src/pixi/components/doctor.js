@@ -8,6 +8,7 @@ export class Doctor {
     this.x = position.x
     this.y = position.y
     this.setupPosition()
+    this.status = 'falling'
   }
 
   createDoctor() {
@@ -19,5 +20,12 @@ export class Doctor {
   setupPosition() {
     this.sprite.x = this.x
     this.sprite.y = this.y
+  }
+
+  stand() {
+    const texture = Globals.resources['doctorStand']?.texture
+
+    this.sprite.texture = texture
+    this.sprite.angle = 0
   }
 }

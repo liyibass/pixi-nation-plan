@@ -3,6 +3,7 @@ import doctor from '../assets/images/doctor.png'
 import ground from '../assets/images/ground.png'
 import spotlight from '../assets/images/spotlight.png'
 import taiwan from '../assets/images/taiwan.png'
+import doctorStand from '../assets/images/doctorStand.png'
 
 export const LoaderConfig = {
   player,
@@ -10,4 +11,5 @@ export const LoaderConfig = {
   ground,
   spotlight,
   taiwan,
+  doctorStand,
 }

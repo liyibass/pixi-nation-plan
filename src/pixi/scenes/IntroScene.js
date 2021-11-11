@@ -6,6 +6,7 @@ import { Ground } from '../components/Ground'
 import { Spotlight } from '../components/Spotlight'
 import { Doctor } from '../components/Doctor'
 import { Taiwan } from '../components/Taiwan'
+import { DoctorDialogBox } from '../components/DoctorDialogBox'
 export class IntroScene {
   constructor() {
     this.container = new PIXI.Container()
@@ -19,6 +20,8 @@ export class IntroScene {
       this.movePlayerToGround.bind(this),
       this.spotlightOn.bind(this),
       this.doctorDrop.bind(this),
+      this.positionCharacters.bind(this),
+      this.taiwanShowUp.bind(this),
       this.doctorExplain.bind(this),
     ]
     this.filmScriptStep = 0
@@ -57,7 +60,6 @@ export class IntroScene {
       if (this.filmScriptStep === 0) {
         this.container.removeChild(this.startButton)
         this.container.buttonMode = false
-        await wait(1000)
 
         for (let i = 0; i < this.filmScript.length; i++) {
           this.filmScriptStep++
@@ -89,17 +91,24 @@ export class IntroScene {
       x: Globals.width / 2,
       y: Globals.height / 2,
     })
+    this.doctor = new Doctor({
+      x: Globals.width / 2,
+      y: 0,
+    })
 
+    await wait(1000)
     this.container.addChild(
       this.taiwan.container,
       this.spotlight.sprite,
       this.ground.sprite,
+      this.doctor.sprite,
       this.player.sprite
     )
     this.taiwan.container.alpha = 0
     this.player.sprite.alpha = 0
     this.ground.sprite.alpha = 0
     this.spotlight.sprite.alpha = 0
+    this.doctor.sprite.alpha = 0
 
     Globals.app.ticker.add(() => {
       if (this.player.sprite.alpha <= 0.5) {
@@ -182,12 +191,6 @@ export class IntroScene {
 
   async doctorDrop() {
     console.log('doctorDrop')
-    this.doctor = new Doctor({
-      x: Globals.width / 2,
-      y: 0,
-    })
-    this.container.addChild(this.doctor.sprite)
-    this.doctor.sprite.alpha = 0
 
     Globals.app.ticker.add(() => {
       if (this.doctor.sprite.alpha < 1) {
@@ -212,15 +215,61 @@ export class IntroScene {
     await wait(4000)
   }
 
+  async positionCharacters() {
+    this.spotlight.sprite.alpha = 0
+    this.doctor.stand()
+
+    Globals.app.ticker.add(() => {
+      if (this.player.sprite.y <= Globals.height - 110) {
+        this.player.sprite.x -= 0.8
+        this.player.sprite.y += 2
+      }
+      if (this.doctor.sprite.y <= Globals.height - 138) {
+        this.doctor.sprite.x -= 2.1
+        this.doctor.sprite.y += 0.5
+      }
+    })
+
+    await wait(1000)
+  }
+
+  async taiwanShowUp() {
+    Globals.app.ticker.add(() => {
+      if (this.taiwan.container.alpha <= 1) {
+        this.taiwan.container.alpha += 0.05
+      }
+    })
+
+    await wait(2000)
+  }
+
+  async doctorExplain() {
+    console.log('doctorExplain')
+
+    await this.doctorSay({
+      fontSize: 16,
+      text: '經營村莊的不二法門，就是別讓村民不開心，但村子久了總是會出現一些狀況，像是垃圾變多、公共設備損壞，你的任務就是要幫我解決問題。',
+      x: Globals.width / 2 - 327 / 2,
+      y: Globals.height - 130 - 182 - 80,
+      talkerX: Globals.width / 2 - 80,
+      talkerY: Globals.height - 130,
+      width: 327,
+      height: 182,
+    })
+
+    await wait(1000)
+  }
+
   async playerSay({
     text,
-    time = 1000,
-    x = Globals.width / 2 + 20,
-    y = Globals.height / 2 - 150,
-    talkerX = Globals.width / 2,
-    talkerY = Globals.height / 2,
-    width = 100,
-    height = 72,
+    fontSize,
+    time = 0,
+    x,
+    y,
+    talkerX,
+    talkerY,
+    width,
+    height,
   }) {
     this.playerDialogBox = new DialogBox({
       x,
@@ -230,21 +279,51 @@ export class IntroScene {
       width,
       height,
       text,
+      fontSize,
     })
     this.container.addChild(this.playerDialogBox.container)
 
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        this.container.removeChild(this.playerDialogBox.container)
-        resolve()
-      }, time)
-    })
+    if (time) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          this.container.removeChild(this.playerDialogBox.container)
+          resolve()
+        }, time)
+      })
+    }
   }
 
-  async doctorExplain(text) {
-    console.log('doctorExplain')
-    console.log(text)
-    await wait(1000)
+  async doctorSay({
+    text,
+    fontSize,
+    time = 0,
+    x,
+    y,
+    talkerX,
+    talkerY,
+    width,
+    height,
+  }) {
+    this.doctorDialogBox = new DoctorDialogBox({
+      x,
+      y,
+      talkerX,
+      talkerY,
+      width,
+      height,
+      text,
+      fontSize,
+    })
+    this.container.addChild(this.doctorDialogBox.container)
+
+    if (time) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          this.container.removeChild(this.doctorDialogBox.container)
+          resolve()
+        }, time)
+      })
+    }
   }
 }
 
