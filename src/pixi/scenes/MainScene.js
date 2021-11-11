@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+
 // import { Globals } from '../script/Globals'
 
 import { IntroScene } from './IntroScene'
@@ -10,8 +11,8 @@ export class MainScene {
 
     this.createBackground()
     // this.createPlayer()
-    // this.createIntroScene()
-    this.createSnakeScene()
+    this.createIntroScene()
+    // this.createSnakeScene()
   }
 
   createBackground() {}
@@ -23,7 +24,10 @@ export class MainScene {
 
   createSnakeScene() {
     const snakeScene = new SnakeScene()
+    console.log('CLEAR ALL')
     this.container.removeChildren()
+    this.container.removeAllListeners()
+    // Globals.app.ticker.stop()
     this.container.addChild(snakeScene.container)
   }
 

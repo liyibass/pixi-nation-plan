@@ -5,6 +5,7 @@ import groundBrown from '../assets/images/groundBrown.png'
 import spotlight from '../assets/images/spotlight.png'
 import taiwan from '../assets/images/taiwan.png'
 import doctorStand from '../assets/images/doctorStand.png'
+import snakeHead from '../assets/images/snakeHead.png'
 
 export const LoaderConfig = {
   player,
@@ -14,4 +15,5 @@ export const LoaderConfig = {
   spotlight,
   taiwan,
   doctorStand,
+  snakeHead,
 }

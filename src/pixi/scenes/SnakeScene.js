@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 import { GroundGroup } from '../components/GroundGroup'
+import { SnakeGroup } from '../components/SnakeGroup'
 
 export class SnakeScene {
   constructor() {
@@ -56,6 +57,8 @@ export class SnakeScene {
 
   startGame() {
     console.log('game started')
+    const snakeGroup = new SnakeGroup({ x: 0, y: 0 })
+    this.gameStage.addChild(snakeGroup.container)
 
     Globals.app.ticker.add(() => {})
   }

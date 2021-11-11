@@ -115,6 +115,7 @@ export class IntroScene {
     this.ground = new Ground({
       x: Globals.width / 2,
       y: Globals.height / 2 + 58,
+      isDarkGreen: true,
     })
     this.spotlight = new Spotlight({
       x: Globals.width / 2,
@@ -144,13 +145,24 @@ export class IntroScene {
     this.doctor.sprite.alpha = 0
     this.doctor.fall()
 
-    Globals.app.ticker.add(() => {
-      if (this.player.sprite.alpha <= 0.5) {
-        this.player.sprite.alpha += 0.01
-        this.ground.sprite.alpha += 0.01
-      }
+    // first fade in
+    return new Promise((resolve) => {
+      const initShowUpTicker = new PIXI.Ticker()
+
+      initShowUpTicker.add(async () => {
+        console.log('initShowUpTicker')
+        if (this.player.sprite.alpha <= 0.5) {
+          this.player.sprite.alpha += 0.01
+          this.ground.sprite.alpha += 0.01
+        } else {
+          initShowUpTicker.destroy()
+          await wait(2000)
+          resolve()
+        }
+      })
+
+      initShowUpTicker.start()
     })
-    await wait(2000)
   }
 
   async firstLightUp() {
@@ -179,7 +191,9 @@ export class IntroScene {
     console.log('movePlayerToGround')
 
     return new Promise((resolve) => {
-      Globals.app.ticker.add(async () => {
+      const movePlayerToGroundTicker = new PIXI.Ticker()
+
+      movePlayerToGroundTicker.add(async () => {
         if (this.ground.sprite.y <= this.getGroundPosition()) {
           moveDown(this.player.sprite)
           moveDown(this.ground.sprite)
@@ -195,10 +209,15 @@ export class IntroScene {
         }
 
         if (this.ground.sprite.y >= this.getGroundPosition()) {
+          movePlayerToGroundTicker.destroy()
+
           await wait(1500)
+
           resolve()
         }
       })
+
+      movePlayerToGroundTicker.start()
 
       function moveDown(sprite) {
         sprite.y += 3
@@ -236,13 +255,15 @@ export class IntroScene {
 
   async doctorDrop() {
     console.log('doctorDrop')
+
     return new Promise((resolve) => {
-      Globals.app.ticker.add(async () => {
+      const doctorDropTicker = new PIXI.Ticker()
+
+      doctorDropTicker.add(async () => {
         if (this.doctor.sprite.alpha < 1) {
           this.doctor.sprite.alpha += 0.1
         }
         // console.log(this.ground.sprite.y)
-        console.log(this.getGroundPosition())
         if (this.doctor.sprite.y <= this.getGroundPosition() - 55) {
           moveDown(this.doctor.sprite)
           this.doctor.sprite.angle += 4
@@ -252,10 +273,14 @@ export class IntroScene {
         }
 
         if (this.doctor.sprite.y >= this.getGroundPosition() - 55) {
+          doctorDropTicker.destroy()
           await wait(1000)
           resolve()
         }
       })
+
+      doctorDropTicker.start()
+
       function moveDown(sprite) {
         sprite.y += 3
       }
@@ -267,38 +292,62 @@ export class IntroScene {
   }
 
   async positionCharacters() {
-    this.spotlight.sprite.alpha = 0
     this.doctor.stand()
+
     return new Promise((resolve) => {
-      Globals.app.ticker.add(async () => {
+      const positionCharactersTicker = new PIXI.Ticker()
+
+      positionCharactersTicker.add(async () => {
+        console.log('positionCharactersTicker')
+
         if (this.player.sprite.y <= Globals.height - 110) {
           this.player.sprite.x -= 0.8
           this.player.sprite.y += 2
         }
         if (this.doctor.sprite.y <= Globals.height - 138) {
-          this.doctor.sprite.x -= 2.1
           this.doctor.sprite.y += 0.5
+        }
+
+        if (this.doctor.sprite.x >= Globals.width / 2 - 111) {
+          this.doctor.sprite.x -= 2.1
+        }
+
+        if (this.spotlight.sprite.alpha > 0) {
+          this.spotlight.sprite.alpha -= 0.1
         }
 
         if (
           this.player.sprite.y >= Globals.height - 110 &&
-          this.doctor.sprite.y <= Globals.height - 138
+          this.doctor.sprite.y >= Globals.height - 138 &&
+          this.doctor.sprite.x <= Globals.width / 2 - 111
         ) {
-          await wait(1000)
+          positionCharactersTicker.destroy()
+
+          await wait(800)
           resolve()
         }
       })
+      positionCharactersTicker.start()
     })
   }
 
   async taiwanShowUp() {
-    Globals.app.ticker.add(() => {
-      if (this.taiwan.container.alpha <= 1) {
-        this.taiwan.container.alpha += 0.05
-      }
-    })
+    return new Promise((resolve) => {
+      const taiwanShowUpTicker = new PIXI.Ticker()
 
-    await wait(1200)
+      taiwanShowUpTicker.add(async () => {
+        if (this.taiwan.container.alpha <= 1) {
+          this.taiwan.container.alpha += 0.05
+        } else {
+          taiwanShowUpTicker.destroy()
+
+          await wait(400)
+          resolve()
+        }
+      })
+
+      taiwanShowUpTicker.start()
+    })
   }
 
   async doctorExplain() {
@@ -319,11 +368,15 @@ export class IntroScene {
   async chosenHandler(chosen) {
     console.log('choosed ' + chosen)
 
-    Globals.app.ticker.add(() => {
+    const lightUpBackgroundTicker = new PIXI.Ticker()
+    lightUpBackgroundTicker.add(() => {
       if (this.darkBg.alpha >= 0) {
         this.darkBg.alpha -= 0.01
+      } else {
+        lightUpBackgroundTicker.destroy()
       }
     })
+    lightUpBackgroundTicker.start()
 
     if (chosen === 'play') {
       console.log('play game')
