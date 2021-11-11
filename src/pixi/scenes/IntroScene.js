@@ -160,6 +160,15 @@ export class IntroScene {
   }
 
   async spotlightOn() {
+    this.spotlight.sprite.alpha = 0.3
+    await wait(70)
+    this.spotlight.sprite.alpha = 0.1
+    await wait(40)
+    this.spotlight.sprite.alpha = 0.5
+    await wait(70)
+    this.spotlight.sprite.alpha = 0
+    await wait(400)
+
     console.log('spotlightOn')
     this.spotlight.sprite.alpha = 0.8
 
@@ -186,6 +195,7 @@ export class IntroScene {
       }
       if (this.doctor.sprite.y <= Globals.height - 168) {
         moveDown(this.doctor.sprite)
+        this.doctor.sprite.angle += 4
       }
       if (this.player.sprite.x >= Globals.width / 2 - 50) {
         moveLeft(this.player.sprite)

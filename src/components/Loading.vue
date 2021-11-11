@@ -62,34 +62,4 @@ export default {
   animation-duration: 2s;
   animation-iteration-count: infinite;
 }
-
-@keyframes beat {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.9;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.loadFade-enter-active,
-.loadFade-leave-active {
-  transition: opacity 1s;
-}
-
-.loadFade-enter-from,
-.loadFade-leave-to {
-  opacity: 0;
-}
-
-.loadFade-enter-to,
-.loadFade-leave-from {
-  opacity: 1;
-}
 </style>

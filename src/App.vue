@@ -25,7 +25,7 @@ export default {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 2s ease;
+  transition: opacity 1s ease;
 }
 .fade-enter, .fade-leave-to
 /* .component-fade-leave-active for below version 2.1.8 */ {
