@@ -1,7 +1,7 @@
 <template>
   <div class="loading">
     <transition name="loadFade" mode="out-in">
-      <div class="loading__progress">LOADING... {{ progress }}%</div>
+      <div class="loading__progress">{{ progressInInteger }}%</div>
     </transition>
   </div>
 </template>
@@ -19,6 +19,9 @@ export default {
   computed: {
     isLoaded() {
       return this.progress === 100
+    },
+    progressInInteger() {
+      return Math.floor(this.progress)
     },
   },
   watch: {

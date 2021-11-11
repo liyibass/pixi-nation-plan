@@ -34,13 +34,19 @@ export class IntroScene {
   }
 
   createBackground() {
-    let graphics = new PIXI.Graphics()
-    graphics.lineStyle(4, 0x00000, 1)
-    graphics.beginFill(0x000000)
-    graphics.drawRect(0, 0, Globals.width, Globals.height)
-    graphics.endFill()
+    const bg = new PIXI.Graphics()
+    bg.lineStyle(4, 0x00000, 1)
+    bg.beginFill(0x92b79c)
+    bg.drawRect(0, 0, Globals.width, Globals.height)
+    bg.endFill()
 
-    this.container.addChild(graphics)
+    this.darkBg = new PIXI.Graphics()
+    this.darkBg.lineStyle(4, 0x00000, 1)
+    this.darkBg.beginFill(0x000000)
+    this.darkBg.drawRect(0, 0, Globals.width, Globals.height)
+    this.darkBg.endFill()
+
+    this.container.addChild(bg, this.darkBg)
   }
 
   createStartButton() {
@@ -269,9 +275,16 @@ export class IntroScene {
   async chosenHandler(chosen) {
     console.log('choosed ' + chosen)
 
+    Globals.app.ticker.add(() => {
+      if (this.darkBg.alpha >= 0) {
+        this.darkBg.alpha -= 0.01
+      }
+    })
+
     if (chosen === 'play') {
       console.log('play game')
-      this.container.destroy()
+
+      this.container.removeListener()
     } else {
       this.skipCount++
       await wait(300)

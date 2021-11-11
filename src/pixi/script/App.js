@@ -49,8 +49,8 @@ export class App {
     this.app.stage.addChild(this.scene.container)
 
     //設定遊戲大小隨視窗大小改變
-    // this.onResize()
-    // window.onresize = this.onResize
+    this.onResize()
+    window.onresize = this.onResize
   }
 
   onResize() {
