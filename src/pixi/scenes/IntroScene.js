@@ -78,7 +78,7 @@ export class IntroScene {
     }
 
     // start film script
-    this.startButton.on('mousedown', startFilmScript)
+    this.startButton.on('pointerdown', startFilmScript)
   }
 
   async startStory() {

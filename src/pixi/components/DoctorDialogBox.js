@@ -22,12 +22,12 @@ export class DoctorDialogBox extends DialogBox {
     this.skipButton.x = this.roundRect.width / 2 + 6
     this.skipButton.y = this.roundRect.height - this.playButton.height - 24
 
-    this.playButton.on('mousedown', async () => {
+    this.playButton.on('pointerdown', async () => {
       this.chosenHandler('play')
       this.playButton.removeListener()
       this.container.destroy()
     })
-    this.skipButton.on('mousedown', async () => {
+    this.skipButton.on('pointerdown', async () => {
       this.chosenHandler('skip')
       this.skipButton.removeListener()
       this.container.destroy()
