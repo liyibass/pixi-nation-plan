@@ -8,13 +8,12 @@ import { Doctor } from '../components/Doctor'
 import { Taiwan } from '../components/Taiwan'
 import { DoctorDialogBox } from '../components/DoctorDialogBox'
 export class IntroScene {
-  constructor() {
+  constructor(selectStage) {
+    this.selectStage = selectStage
     this.container = new PIXI.Container()
     this.container.interactive = true
     this.container.visible = true
 
-    this.playButtonIsClicked = false
-    this.skipButtonIsClicked = false
     this.skipCount = 0
 
     this.filmScript = [
@@ -65,9 +64,27 @@ export class IntroScene {
     this.container.addChild(this.startButton)
   }
 
+  createSelectStageButton(stageName) {
+    this.stageButton = new PIXI.Text(stageName, {
+      fill: '0xeeeeee',
+      fontSize: '24px',
+    })
+    this.stageButton.position.x = 0
+    this.stageButton.position.y = 0
+
+    this.stageButton.interactive = true
+    this.stageButton.buttonMode = true
+    this.container.addChild(this.stageButton)
+
+    this.stageButton.on('pointerdown', () => {
+      this.selectStage(stageName)
+    })
+  }
+
   async createIntro() {
     this.createBackground()
     this.createStartButton()
+    this.createSelectStageButton('snake')
 
     const startFilmScript = async () => {
       if (this.filmScriptStep === 0) {
@@ -125,6 +142,7 @@ export class IntroScene {
     this.ground.sprite.alpha = 0
     this.spotlight.sprite.alpha = 0
     this.doctor.sprite.alpha = 0
+    this.doctor.fall()
 
     Globals.app.ticker.add(() => {
       if (this.player.sprite.alpha <= 0.5) {
@@ -159,6 +177,7 @@ export class IntroScene {
   async movePlayerToGround() {
     // this.container.addChild(ground.sprite)
     console.log('movePlayerToGround')
+
     return new Promise((resolve) => {
       Globals.app.ticker.add(async () => {
         if (this.ground.sprite.y <= this.getGroundPosition()) {
@@ -250,7 +269,6 @@ export class IntroScene {
   async positionCharacters() {
     this.spotlight.sprite.alpha = 0
     this.doctor.stand()
-
     return new Promise((resolve) => {
       Globals.app.ticker.add(async () => {
         if (this.player.sprite.y <= Globals.height - 110) {

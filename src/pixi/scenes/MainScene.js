@@ -1,7 +1,8 @@
 import * as PIXI from 'pixi.js'
-import { Globals } from '../script/Globals'
-import { Player } from '../components/Player'
+// import { Globals } from '../script/Globals'
+
 import { IntroScene } from './IntroScene'
+import { SnakeScene } from './SnakeScene'
 
 export class MainScene {
   constructor() {
@@ -9,21 +10,32 @@ export class MainScene {
 
     this.createBackground()
     // this.createPlayer()
-    this.createIntroScene()
+    // this.createIntroScene()
+    this.createSnakeScene()
   }
 
   createBackground() {}
 
-  createPlayer() {
-    const player = new Player({ x: Globals.width / 2, y: Globals.height / 2 })
-    this.container.addChild(player.sprite)
-
-    // player.sprite.x = Globals.width / 2
-    // player.sprite.y = Globals.height / 2
+  createIntroScene() {
+    const introScene = new IntroScene(this.selectStage.bind(this))
+    this.container.addChild(introScene.container)
   }
 
-  createIntroScene() {
-    const introScene = new IntroScene()
-    this.container.addChild(introScene.container)
+  createSnakeScene() {
+    const snakeScene = new SnakeScene()
+    this.container.removeChildren()
+    this.container.addChild(snakeScene.container)
+  }
+
+  selectStage(stageName) {
+    console.log('clicked ' + stageName)
+    switch (stageName) {
+      case 'snake':
+        this.createSnakeScene()
+        break
+
+      default:
+        break
+    }
   }
 }

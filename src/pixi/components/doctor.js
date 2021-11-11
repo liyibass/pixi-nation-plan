@@ -12,7 +12,7 @@ export class Doctor {
   }
 
   createDoctor() {
-    const texture = Globals.resources['doctor']?.texture
+    const texture = Globals.resources['doctorStand']?.texture
     this.sprite = new PIXI.Sprite(texture)
     this.sprite.anchor.set(0.5, 0.5)
   }
@@ -22,6 +22,12 @@ export class Doctor {
     this.sprite.y = this.y
   }
 
+  fall() {
+    const texture = Globals.resources['doctor']?.texture
+
+    this.sprite.texture = texture
+    this.sprite.angle = 0
+  }
   stand() {
     const texture = Globals.resources['doctorStand']?.texture
 
