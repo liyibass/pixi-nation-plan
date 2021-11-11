@@ -13,8 +13,8 @@ export class SnakeHead {
     const texture = Globals.resources['snakeHead']?.texture
 
     this.sprite = new PIXI.Sprite(texture)
-    this.sprite.anchor.set(0.5, 0.5)
-    this.sprite.pivot.set(0.5, 0.5)
+    this.sprite.anchor.set(0.5, 0)
+    this.sprite.pivot.set(0.5, 0)
   }
 
   setupPosition(x, y) {
