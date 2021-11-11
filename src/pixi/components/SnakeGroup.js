@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 // import { Globals } from '../script/Globals'
-import { SnakeHead } from '../components/SnakeHead'
+import { SnakeHead } from './SnakePart'
 
 export class SnakeGroup {
   constructor(

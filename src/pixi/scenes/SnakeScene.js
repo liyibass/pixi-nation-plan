@@ -1,18 +1,22 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 import { GroundGroup } from '../components/GroundGroup'
-import { SnakeHead } from '../components/SnakeHead'
+import { SnakePart } from '../components/SnakePart'
+// import { SnakeBody } from '../components/SnakeBody'
 
 export class SnakeScene {
   constructor() {
     this.container = new PIXI.Container()
     this.createBackground()
     this.createGameStage()
-    this.createSnakeScene()
 
     // snake property
-    this.direction = 'right'
-    this.headPosition = { x: 30, y: 30 }
+    this.headDirection = 'right'
+
+    this.totalI = Math.floor(this.gameStageWidth / 10)
+    this.totalJ = Math.floor(this.gameStageHeight / 10)
+
+    this.createSnakeScene()
   }
 
   createBackground() {
@@ -77,73 +81,63 @@ export class SnakeScene {
   startGame() {
     console.log('game started')
 
-    this.snakeHead = new SnakeHead(this.headPosition)
-    this.gameStage.addChild(this.snakeHead.sprite)
+    this.snakeHead = new SnakePart({ i: 3, j: 4, id: 0 })
+    const snakePart1 = new SnakePart({ i: 2, j: 4, id: 1 })
 
-    const snakeMoveTicker = new PIXI.Ticker()
-    snakeMoveTicker.add(() => {
-      this.moveMonitor(this.direction)
-      this.snakeHeadDirectionMonitor(this.direction)
+    this.snakeArray = [this.snakeHead, snakePart1]
+
+    this.snakeArray.forEach((snakePart) => {
+      this.gameStage.addChild(snakePart.sprite)
+    })
+
+    //  add keyboard listener
+    this.keyboardListener = document.addEventListener('keydown', (event) => {
+      const key = event.key
+
+      switch (key) {
+        case 'ArrowDown':
+          this.headDirection = 'down'
+          break
+        case 'ArrowRight':
+          this.headDirection = 'right'
+          break
+        case 'ArrowUp':
+          this.headDirection = 'up'
+          break
+        case 'ArrowLeft':
+          this.headDirection = 'left'
+          break
+      }
+    })
+
+    this.snakeMoveTicker = new PIXI.Ticker()
+    this.snakeMoveTicker.add(() => {
+      // body
+      for (let i = this.snakeArray.length - 1; i > 0; i--) {
+        const backSnakePart = this.snakeArray[i]
+        const frontSnakePart = this.snakeArray[i - 1]
+
+        backSnakePart.move()
+        backSnakePart.setNextDirection(frontSnakePart.direction)
+      }
+      // head
+
+      this.snakeHead.move()
+      this.snakeHead.setNextDirection(this.headDirection)
       this.deadMonitor()
     })
 
-    snakeMoveTicker.start()
-  }
-  moveMonitor(direction) {
-    switch (direction) {
-      case 'right':
-        this.snakeHead.sprite.x += 2
-        break
-      case 'left':
-        this.snakeHead.sprite.x -= 2
-        break
-
-      case 'up':
-        this.snakeHead.sprite.y -= 2
-        break
-      case 'down':
-        this.snakeHead.sprite.y += 2
-        break
-
-      default:
-        break
-    }
-  }
-  snakeHeadDirectionMonitor(direction) {
-    switch (direction) {
-      case 'right':
-        this.snakeHead.sprite.angle = 90
-        break
-      case 'left':
-        this.snakeHead.sprite.angle = -90
-        break
-
-      case 'up':
-        this.snakeHead.sprite.angle = 0
-        break
-      case 'down':
-        this.snakeHead.sprite.angle = 180
-        break
-
-      default:
-        break
-    }
+    this.snakeMoveTicker.start()
   }
 
   deadMonitor() {
-    if (this.snakeHead.sprite.x > this.gameStageWidth) {
-      this.snakeHead.sprite.x = this.gameStageWidth - 1
-      this.direction = 'down'
-    } else if (this.snakeHead.sprite.x < 0) {
-      this.snakeHead.sprite.x = 0 + 1
-      this.direction = 'up'
-    } else if (this.snakeHead.sprite.y > this.gameStageHeight) {
-      this.snakeHead.sprite.y = this.gameStageHeight - 1
-      this.direction = 'left'
-    } else if (this.snakeHead.sprite.y < 0) {
-      this.snakeHead.sprite.y = 0 + 1
+    // console.log('deadMonitor')
 
-      this.direction = 'right'
+    const { i, j } = this.snakeHead.getCoordinate()
+
+    // check if need to change direction
+    if (i >= this.totalI || i <= 0 || j >= this.totalJ || j <= 0) {
+      this.snakeMoveTicker.stop()
     }
   }
 }
