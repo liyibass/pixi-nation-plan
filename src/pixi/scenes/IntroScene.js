@@ -31,6 +31,8 @@ export class IntroScene {
     this.filmScriptStep = 0
 
     this.createIntro()
+
+    this.getGroundPosition = this.getGroundPosition.bind(this)
   }
 
   createBackground() {
@@ -156,33 +158,43 @@ export class IntroScene {
 
   async movePlayerToGround() {
     // this.container.addChild(ground.sprite)
+    console.log('movePlayerToGround')
+    return new Promise((resolve) => {
+      Globals.app.ticker.add(async () => {
+        if (this.ground.sprite.y <= this.getGroundPosition()) {
+          moveDown(this.player.sprite)
+          moveDown(this.ground.sprite)
+        }
 
-    Globals.app.ticker.add(() => {
-      if (this.ground.sprite.y <= Globals.height - 108) {
-        moveDown(this.player.sprite)
-        moveDown(this.ground.sprite)
+        if (this.taiwan.container.y >= Globals.height / 4 + 100) {
+          moveUp(this.taiwan.container)
+          this.taiwan.container.filters.pop()
+        }
+
+        if (this.taiwan.container.alpha <= 0.3) {
+          this.taiwan.container.alpha += 0.005
+        }
+
+        if (this.ground.sprite.y >= this.getGroundPosition()) {
+          await wait(1500)
+          resolve()
+        }
+      })
+
+      function moveDown(sprite) {
+        sprite.y += 3
       }
-
-      if (this.taiwan.container.y >= Globals.height / 2 - 100) {
-        moveUp(this.taiwan.container)
-        this.taiwan.container.filters.pop()
-      }
-
-      if (this.taiwan.container.alpha <= 0.3) {
-        this.taiwan.container.alpha += 0.005
+      function moveUp(sprite) {
+        sprite.y -= 2
       }
     })
-    await wait(1500)
-
-    function moveDown(sprite) {
-      sprite.y += 3
-    }
-    function moveUp(sprite) {
-      sprite.y -= 2
-    }
   }
 
   async spotlightOn() {
+    console.log(this.ground.sprite.x)
+    console.log(this.getGroundPosition())
+    this.spotlight.sprite.y = this.getGroundPosition()
+    await wait(70)
     this.spotlight.sprite.alpha = 0.3
     await wait(70)
     this.spotlight.sprite.alpha = 0.1
@@ -205,46 +217,60 @@ export class IntroScene {
 
   async doctorDrop() {
     console.log('doctorDrop')
+    return new Promise((resolve) => {
+      Globals.app.ticker.add(async () => {
+        if (this.doctor.sprite.alpha < 1) {
+          this.doctor.sprite.alpha += 0.1
+        }
+        // console.log(this.ground.sprite.y)
+        console.log(this.getGroundPosition())
+        if (this.doctor.sprite.y <= this.getGroundPosition() - 55) {
+          moveDown(this.doctor.sprite)
+          this.doctor.sprite.angle += 4
+        }
+        if (this.player.sprite.x >= Globals.width / 2 - 50) {
+          moveLeft(this.player.sprite)
+        }
 
-    Globals.app.ticker.add(() => {
-      if (this.doctor.sprite.alpha < 1) {
-        this.doctor.sprite.alpha += 0.1
+        if (this.doctor.sprite.y >= this.getGroundPosition() - 55) {
+          await wait(1000)
+          resolve()
+        }
+      })
+      function moveDown(sprite) {
+        sprite.y += 3
       }
-      if (this.doctor.sprite.y <= Globals.height - 168) {
-        moveDown(this.doctor.sprite)
-        this.doctor.sprite.angle += 4
-      }
-      if (this.player.sprite.x >= Globals.width / 2 - 50) {
-        moveLeft(this.player.sprite)
+
+      function moveLeft(sprite) {
+        sprite.x -= 1
       }
     })
-    function moveDown(sprite) {
-      sprite.y += 3
-    }
-
-    function moveLeft(sprite) {
-      sprite.x -= 1
-    }
-
-    await wait(4000)
   }
 
   async positionCharacters() {
     this.spotlight.sprite.alpha = 0
     this.doctor.stand()
 
-    Globals.app.ticker.add(() => {
-      if (this.player.sprite.y <= Globals.height - 110) {
-        this.player.sprite.x -= 0.8
-        this.player.sprite.y += 2
-      }
-      if (this.doctor.sprite.y <= Globals.height - 138) {
-        this.doctor.sprite.x -= 2.1
-        this.doctor.sprite.y += 0.5
-      }
-    })
+    return new Promise((resolve) => {
+      Globals.app.ticker.add(async () => {
+        if (this.player.sprite.y <= Globals.height - 110) {
+          this.player.sprite.x -= 0.8
+          this.player.sprite.y += 2
+        }
+        if (this.doctor.sprite.y <= Globals.height - 138) {
+          this.doctor.sprite.x -= 2.1
+          this.doctor.sprite.y += 0.5
+        }
 
-    await wait(1000)
+        if (
+          this.player.sprite.y >= Globals.height - 110 &&
+          this.doctor.sprite.y <= Globals.height - 138
+        ) {
+          await wait(1000)
+          resolve()
+        }
+      })
+    })
   }
 
   async taiwanShowUp() {
@@ -283,8 +309,7 @@ export class IntroScene {
 
     if (chosen === 'play') {
       console.log('play game')
-
-      this.container.removeListener()
+      this.container.removeAllListeners()
     } else {
       this.skipCount++
       await wait(300)
@@ -324,6 +349,7 @@ export class IntroScene {
           },
           2000
         )
+        this.container.removeAllListeners()
       }
     }
   }
@@ -393,6 +419,12 @@ export class IntroScene {
         }, time)
       })
     }
+  }
+
+  getGroundPosition() {
+    return (Globals.height * 3) / 4 > Globals.height - 108
+      ? (Globals.height * 3) / 4
+      : Globals.height - 108
   }
 }
 
