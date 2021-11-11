@@ -5,13 +5,9 @@ import { DialogBox } from './DialogBox'
 export class DoctorDialogBox extends DialogBox {
   constructor(...args) {
     super(...args)
+    this.chosenHandler = args[0].chosenHandler
 
-    this.createDoctorDialogBox()
     this.createTwoButtons()
-  }
-
-  createDoctorDialogBox() {
-    console.log('createDoctorDialogBox')
   }
 
   createTwoButtons() {
@@ -25,6 +21,17 @@ export class DoctorDialogBox extends DialogBox {
     this.playButton.y = this.roundRect.height - this.playButton.height - 24
     this.skipButton.x = this.roundRect.width / 2 + 6
     this.skipButton.y = this.roundRect.height - this.playButton.height - 24
+
+    this.playButton.on('mousedown', async () => {
+      this.chosenHandler('play')
+      this.playButton.removeListener()
+      this.container.destroy()
+    })
+    this.skipButton.on('mousedown', async () => {
+      this.chosenHandler('skip')
+      this.skipButton.removeListener()
+      this.container.destroy()
+    })
   }
 
   getButtonContainer(text, color) {

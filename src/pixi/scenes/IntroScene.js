@@ -13,6 +13,10 @@ export class IntroScene {
     this.container.interactive = true
     this.container.visible = true
 
+    this.playButtonIsClicked = false
+    this.skipButtonIsClicked = false
+    this.skipCount = 0
+
     this.filmScript = [
       this.startStory.bind(this),
       this.firstLightUp.bind(this),
@@ -47,19 +51,20 @@ export class IntroScene {
     this.startButton.position.x = Globals.width / 2
     this.startButton.position.y = Globals.height / 2
     this.startButton.anchor.set(0.5, 0.5)
+
+    this.startButton.interactive = true
+    this.startButton.buttonMode = true
     this.container.addChild(this.startButton)
   }
 
   async createIntro() {
     this.createBackground()
     this.createStartButton()
-    this.container.buttonMode = true
 
-    // start film script
-    this.container.on('mousedown', async () => {
+    const startFilmScript = async () => {
       if (this.filmScriptStep === 0) {
         this.container.removeChild(this.startButton)
-        this.container.buttonMode = false
+        this.startButton.buttonMode = false
 
         for (let i = 0; i < this.filmScript.length; i++) {
           this.filmScriptStep++
@@ -68,9 +73,12 @@ export class IntroScene {
           await filmScript()
         }
       } else {
-        this.container.removeAllListeners()
+        this.startButton.removeAllListeners()
       }
-    })
+    }
+
+    // start film script
+    this.startButton.on('mousedown', startFilmScript)
   }
 
   async startStory() {
@@ -240,7 +248,7 @@ export class IntroScene {
       }
     })
 
-    await wait(2000)
+    await wait(1200)
   }
 
   async doctorExplain() {
@@ -256,8 +264,55 @@ export class IntroScene {
       width: 327,
       height: 182,
     })
+  }
 
-    await wait(1000)
+  async chosenHandler(chosen) {
+    console.log('choosed ' + chosen)
+
+    if (chosen === 'play') {
+      console.log('play game')
+      this.container.destroy()
+    } else {
+      this.skipCount++
+      await wait(300)
+      const promptArray = [
+        '真的不找找看嗎？ 不然你幫我分享，我先告訴你一點 回到現實世界的小秘訣',
+        '玩啦玩啦',
+        '拜託玩一下下就好了啦',
+        '玩嘛玩嘛玩嘛',
+        '真的不找找看嗎？',
+        '來啦來啦',
+        '一下下就好了拜託',
+        '真的不找找看嗎？ 不然你幫我分享，我先告訴你一點 回到現實世界的小秘訣',
+      ]
+
+      if (this.skipCount <= promptArray.length) {
+        await this.doctorSay({
+          fontSize: 16,
+          text: promptArray[this.skipCount - 1],
+          x: Globals.width / 2 - 327 / 2,
+          y: Globals.height - 130 - 182 - 80,
+          talkerX: Globals.width / 2 - 80,
+          talkerY: Globals.height - 130,
+          width: 327,
+          height: 182,
+        })
+      } else {
+        await this.playerSay(
+          {
+            fontSize: 16,
+            text: '幹！都不玩！',
+            x: Globals.width / 2 - 327 / 2,
+            y: Globals.height - 130 - 182 - 80,
+            talkerX: Globals.width / 2 - 80,
+            talkerY: Globals.height - 130,
+            width: 327,
+            height: 182,
+          },
+          2000
+        )
+      }
+    }
   }
 
   async playerSay({
@@ -313,6 +368,7 @@ export class IntroScene {
       height,
       text,
       fontSize,
+      chosenHandler: this.chosenHandler.bind(this),
     })
     this.container.addChild(this.doctorDialogBox.container)
 

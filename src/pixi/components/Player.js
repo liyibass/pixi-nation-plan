@@ -7,7 +7,7 @@ export class Player {
     this.x = position.x
     this.y = position.y
     this.setupPosition()
-    this.setInteractive()
+    // this.setInteractive()
     this.dragging = false
   }
 
@@ -23,36 +23,36 @@ export class Player {
     this.sprite.y = this.y
   }
 
-  setInteractive() {
-    this.sprite.interactive = true
+  // setInteractive() {
+  //   this.sprite.interactive = true
 
-    this.sprite.on('mousedown', this.onTouchStart.bind(this))
-    this.sprite.on('mousemove', this.onTouchMove.bind(this))
-  }
+  //   this.sprite.on('mousedown', this.onTouchStart.bind(this))
+  //   this.sprite.on('mousemove', this.onTouchMove.bind(this))
+  // }
 
-  onTouchStart(event) {
-    // 1. remember the position of the mouse cursor
-    this.touchPosition = {
-      x: event.data.global.x,
-      y: event.data.global.y,
-    }
+  // onTouchStart(event) {
+  //   // 1. remember the position of the mouse cursor
+  //   this.touchPosition = {
+  //     x: event.data.global.x,
+  //     y: event.data.global.y,
+  //   }
 
-    // 2.set the dragging state for this sprite
-    this.dragging = !this.dragging
-  }
-  onTouchMove(event) {
-    if (!this.dragging) return
+  //   // 2.set the dragging state for this sprite
+  //   this.dragging = !this.dragging
+  // }
+  // onTouchMove(event) {
+  //   if (!this.dragging) return
 
-    // 1. get the corrdinates of ther cursor
-    const currentPosition = {
-      x: event.data.global.x,
-      y: event.data.global.y,
-    }
+  //   // 1. get the corrdinates of ther cursor
+  //   const currentPosition = {
+  //     x: event.data.global.x,
+  //     y: event.data.global.y,
+  //   }
 
-    // 3. apply the rusulting offset
-    this.sprite.x = currentPosition.x
-    this.sprite.y = currentPosition.y
-  }
+  //   // 3. apply the rusulting offset
+  //   this.sprite.x = currentPosition.x
+  //   this.sprite.y = currentPosition.y
+  // }
 
   async lookAround(time = 2) {
     for (let i = 0; i < time; i++) {
