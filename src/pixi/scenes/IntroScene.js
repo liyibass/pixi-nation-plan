@@ -229,8 +229,6 @@ export class IntroScene {
   }
 
   async spotlightOn() {
-    console.log(this.ground.sprite.x)
-    console.log(this.getGroundPosition())
     this.spotlight.sprite.y = this.getGroundPosition()
     await wait(70)
     this.spotlight.sprite.alpha = 0.3

@@ -82,9 +82,9 @@ export class SnakeScene {
     console.log('game started')
 
     this.snakeHead = new SnakePart({ i: 3, j: 4, id: 0 })
-    const snakePart1 = new SnakePart({ i: 2, j: 4, id: 1 })
+    // const snakePart1 = new SnakePart({ i: 2, j: 4, id: 1 })
 
-    this.snakeArray = [this.snakeHead, snakePart1]
+    this.snakeArray = [this.snakeHead]
 
     this.snakeArray.forEach((snakePart) => {
       this.gameStage.addChild(snakePart.sprite)
@@ -137,7 +137,11 @@ export class SnakeScene {
 
     // check if need to change direction
     if (i >= this.totalI || i <= 0 || j >= this.totalJ || j <= 0) {
-      this.snakeMoveTicker.stop()
+      this.snakeArray = []
+      this.gameStage.destroy()
+      this.createGameStage()
+      this.startGame()
+      this.snakeMoveTicker.destroy()
     }
   }
 }
