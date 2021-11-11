@@ -37,4 +37,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.pixi {
+  height: 100vh;
+}
+</style>
