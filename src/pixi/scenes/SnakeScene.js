@@ -5,7 +5,8 @@ import { GroundGroup } from '../components/GroundGroup'
 export class SnakeScene {
   constructor() {
     this.container = new PIXI.Container()
-
+    this.createBackground()
+    this.createGameStage()
     this.createSnakeScene()
   }
 
@@ -19,13 +20,43 @@ export class SnakeScene {
     this.container.addChild(bg)
   }
 
+  createGameStage() {
+    // get gameStage dimention
+    const gameStageDimention = Globals.getGameStageDimention()
+
+    this.gameStage = new PIXI.Container()
+
+    // create a color region
+    const gameStageFrame = new PIXI.Graphics()
+    gameStageFrame.lineStyle(4, 0xdddddd, 1)
+    gameStageFrame.beginFill(0x92b79c)
+    gameStageFrame.drawRect(
+      gameStageDimention.x,
+      gameStageDimention.y,
+      gameStageDimention.width,
+      gameStageDimention.height
+    )
+    gameStageFrame.endFill()
+
+    // add to container
+    this.gameStage.addChild(gameStageFrame)
+    this.container.addChild(this.gameStage)
+  }
+
   createSnakeScene() {
-    this.createBackground()
-    console.log()
+    const groundGroupDimention = Globals.getGroundDimention()
 
-    const groundGroupPosition = Globals.groundPosition()
-
-    this.groundGroup = new GroundGroup(groundGroupPosition)
+    this.groundGroup = new GroundGroup(groundGroupDimention)
     this.container.addChild(this.groundGroup.container)
+
+    // todo introduce
+
+    this.startGame()
+  }
+
+  startGame() {
+    console.log('game started')
+
+    Globals.app.ticker.add(() => {})
   }
 }

@@ -29,6 +29,7 @@ export class App {
       height: HEIGHT,
       backgroundColor: '0xeeeeee',
     })
+    // add app to global object
     Globals.app = this.app
 
     // add a canvas into DOM with pixi app

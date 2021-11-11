@@ -3,33 +3,33 @@ import * as PIXI from 'pixi.js'
 import { Ground } from '../components/Ground'
 import { Doctor } from '../components/Doctor'
 import { Player } from '../components/Player'
+import { Globals } from '../script/Globals'
 
 export class GroundGroup {
-  constructor(groundGroupPosition) {
+  constructor(groundGroupDimention) {
     this.container = new PIXI.Container()
-    this.x = groundGroupPosition.x
-    this.y = groundGroupPosition.y
+    this.x = groundGroupDimention.x
+    this.y = groundGroupDimention.y
 
     this.createGroundGroup()
   }
 
   createGroundGroup() {
-    console.log('createGroundGroup')
-    console.log(this.x)
-    console.log(this.y)
+    const doctorDimention = Globals.getDoctorDimention({ x: this.x, y: this.y })
+    const playerDimention = Globals.getPlayerDimention({ x: this.x, y: this.y })
 
-    this.player = new Player({
-      x: this.x - 52,
-      y: this.y,
-    })
     this.ground = new Ground({
       x: this.x,
       y: this.y,
       isDarkGreen: false,
     })
+    this.player = new Player({
+      x: playerDimention.x,
+      y: playerDimention.y,
+    })
     this.doctor = new Doctor({
-      x: this.x - 100,
-      y: this.y - 33,
+      x: doctorDimention.x,
+      y: doctorDimention.y,
     })
 
     this.container.addChild(
