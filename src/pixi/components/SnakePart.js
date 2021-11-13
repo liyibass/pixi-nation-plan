@@ -1,76 +1,116 @@
 import * as PIXI from 'pixi.js'
-import { Globals } from '../script/Globals'
+// import { Globals } from '../script/Globals'
+const MOVE_SPEED = 1
+const BLOCK_WIDTH = 16
 
 export class SnakePart {
   constructor(args = { i: 3, j: 4, id: 0 }) {
+    this.container = new PIXI.Container()
     this.id = args.id
-    this.i = args.i
-    this.j = args.j
+
+    this.currentPosition = { i: args.i, j: args.j }
+    this.nextPosition = { i: args.i + 1, j: args.j }
     this.direction = 'right'
-    this.nextDirection = 'right'
+
+    // set initial position in pixel
+    this.container.x = this.currentPosition.i * BLOCK_WIDTH
+    this.container.y = this.currentPosition.j * BLOCK_WIDTH
 
     this.createSprite()
-    this.setupPosition(args.i, args.j)
+    this.setupPositionInPixel(this.currentPosition.i, this.currentPosition.j)
   }
 
   createSprite() {
-    const texture = Globals.resources[`snakePart${this.id}`]?.texture
+    const color = new PIXI.Graphics()
+    color.beginFill(0xdddddd)
+    color.drawRect(0, 0, BLOCK_WIDTH, BLOCK_WIDTH)
+    color.endFill()
 
-    this.sprite = new PIXI.Sprite(texture)
-    this.sprite.anchor.set(0.5, 0.5)
-    this.sprite.pivot.set(0.5, 0.5)
-    this.sprite.angle = 90
+    this.container.addChild(color)
+    // const texture = Globals.resources[`snakePart${this.id}`]?.texture
+
+    // this.sprite = new PIXI.Sprite(texture)
+    // this.sprite.anchor.set(0.5, 0.5)
+    // this.sprite.pivot.set(0.5, 0.5)
+    // this.sprite.angle = 90
   }
 
-  setupPosition(i, j) {
-    this.sprite.x = 5 + i * 10
-    this.sprite.y = 5 + j * 10
+  setupPositionInPixel(i, j) {
+    this.container.x = i * BLOCK_WIDTH
+    this.container.y = j * BLOCK_WIDTH
   }
 
-  setupCoordinate(x, y) {
-    this.i = Math.floor(x / 10)
-    this.j = Math.floor(y / 10)
-  }
-
-  setNextDirection(nextDirection) {
-    this.direction = nextDirection
+  getPositionInPixel({ i, j }) {
+    return {
+      x: BLOCK_WIDTH / 2 + i * BLOCK_WIDTH,
+      y: BLOCK_WIDTH / 2 + j * BLOCK_WIDTH,
+    }
   }
 
   move() {
-    const SPEED = 2
+    const { x: x0, y: y0 } = this.container
+    const { x: x1, y: y1 } = this.getPositionInPixel(this.nextPosition)
+
     switch (this.direction) {
       case 'right':
-        this.sprite.x += SPEED
-        this.sprite.angle = 90
+        if (x1 > x0) {
+          this.container.x++
+        } else {
+          this.currentPosition = {
+            i: this.nextPosition.i,
+            j: this.nextPosition.j,
+          }
+          this.nextPosition = {
+            i: this.currentPosition.i + MOVE_SPEED,
+            j: this.currentPosition.j,
+          }
+        }
         break
 
       case 'left':
-        this.sprite.x -= SPEED
-        this.sprite.angle = -90
-        break
-
-      case 'up':
-        this.sprite.y -= SPEED
-        this.sprite.angle = 0
+        if (x1 < x0) {
+          this.container.x--
+        } else {
+          this.currentPosition = {
+            i: this.nextPosition.i,
+            j: this.nextPosition.j,
+          }
+          this.nextPosition = {
+            i: this.currentPosition.i - MOVE_SPEED,
+            j: this.currentPosition.j,
+          }
+        }
         break
 
       case 'down':
-        this.sprite.y += SPEED
-        this.sprite.angle = 180
+        if (y1 > y0) {
+          this.container.y++
+        } else {
+          this.currentPosition = {
+            i: this.nextPosition.i,
+            j: this.nextPosition.j,
+          }
+          this.nextPosition = {
+            i: this.currentPosition.i + MOVE_SPEED,
+            j: this.currentPosition.j,
+          }
+        }
         break
 
-      default:
+      case 'up':
+        if (y1 < y0) {
+          this.container.y--
+        } else {
+          this.currentPosition = {
+            i: this.nextPosition.i,
+            j: this.nextPosition.j,
+          }
+          this.nextPosition = {
+            i: this.currentPosition.i - MOVE_SPEED,
+            j: this.currentPosition.j,
+          }
+        }
         break
-    }
-
-    this.i = Math.floor(this.sprite.x / 10)
-    this.j = Math.floor(this.sprite.y / 10)
-  }
-
-  getCoordinate() {
-    return {
-      i: Math.floor(this.sprite.x / 10),
-      j: Math.floor(this.sprite.y / 10),
     }
   }
 }

@@ -4,6 +4,8 @@ import { GroundGroup } from '../components/GroundGroup'
 import { SnakePart } from '../components/SnakePart'
 // import { SnakeBody } from '../components/SnakeBody'
 
+const BLOCK_WIDTH = 16
+
 export class SnakeScene {
   constructor() {
     this.container = new PIXI.Container()
@@ -13,15 +15,15 @@ export class SnakeScene {
     // snake property
     this.headDirection = 'right'
 
-    this.totalI = Math.floor(this.gameStageWidth / 10)
-    this.totalJ = Math.floor(this.gameStageHeight / 10)
+    this.totalI = Math.floor(this.gameStageWidth / BLOCK_WIDTH)
+    this.totalJ = Math.floor(this.gameStageHeight / BLOCK_WIDTH)
 
     this.createSnakeScene()
   }
 
   createBackground() {
     const bg = new PIXI.Graphics()
-    bg.lineStyle(4, 0x00000, 1)
+    // bg.lineStyle(4, 0x00000, 1)
     bg.beginFill(0x92b79c)
     bg.drawRect(0, 0, Globals.width, Globals.height)
     bg.endFill()
@@ -41,7 +43,8 @@ export class SnakeScene {
 
     // create a color region
     const gameStageFrame = new PIXI.Graphics()
-    gameStageFrame.lineStyle(4, 0xdddddd, 1)
+    const frameLineWeight = 4
+    gameStageFrame.lineStyle(frameLineWeight, 0xdddddd, 0.6)
     gameStageFrame.beginFill(0x92b79c)
 
     /*
@@ -50,10 +53,10 @@ export class SnakeScene {
      * (Graphics and drawRect is NOT in same level)
      */
     gameStageFrame.drawRect(
-      -8,
-      -8,
-      this.gameStageWidth + 16,
-      this.gameStageHeight + 16
+      -frameLineWeight,
+      -frameLineWeight,
+      this.gameStageWidth + frameLineWeight * 2,
+      this.gameStageHeight + frameLineWeight * 2
     )
     gameStageFrame.endFill()
 
@@ -75,21 +78,13 @@ export class SnakeScene {
     // todo introduce
 
     // start game
+
+    this.createKeyboardListener()
+    this.createSnake()
     this.startGame()
   }
 
-  startGame() {
-    console.log('game started')
-
-    this.snakeHead = new SnakePart({ i: 3, j: 4, id: 0 })
-    // const snakePart1 = new SnakePart({ i: 2, j: 4, id: 1 })
-
-    this.snakeArray = [this.snakeHead]
-
-    this.snakeArray.forEach((snakePart) => {
-      this.gameStage.addChild(snakePart.sprite)
-    })
-
+  createKeyboardListener() {
     //  add keyboard listener
     this.keyboardListener = document.addEventListener('keydown', (event) => {
       const key = event.key
@@ -109,39 +104,37 @@ export class SnakeScene {
           break
       }
     })
+  }
+
+  createSnake() {
+    console.log('createSnake')
+
+    const snakePart = new SnakePart({ i: 0, j: 0, id: 0 })
+    this.snakeArray = [snakePart]
+
+    this.snakeArray.forEach((snakePart) => {
+      this.gameStage.addChild(snakePart.container)
+      console.log(snakePart)
+    })
+  }
+
+  startGame() {
+    console.log('game started')
 
     this.snakeMoveTicker = new PIXI.Ticker()
     this.snakeMoveTicker.add(() => {
-      // body
-      for (let i = this.snakeArray.length - 1; i > 0; i--) {
-        const backSnakePart = this.snakeArray[i]
-        const frontSnakePart = this.snakeArray[i - 1]
-
-        backSnakePart.move()
-        backSnakePart.setNextDirection(frontSnakePart.direction)
-      }
-      // head
-
-      this.snakeHead.move()
-      this.snakeHead.setNextDirection(this.headDirection)
-      this.deadMonitor()
+      this.snakeArray.forEach((snakePart) => {
+        // console.log(snakePart.container.x % 10)
+        // console.log(snakePart.container.y % 10)
+        snakePart.move()
+        if (snakePart.container.x % BLOCK_WIDTH === 0) {
+          console.log('CHANGE DIRECTION')
+        }
+      })
     })
 
-    this.snakeMoveTicker.start()
+    // this.snakeMoveTicker.start()
   }
 
-  deadMonitor() {
-    // console.log('deadMonitor')
-
-    const { i, j } = this.snakeHead.getCoordinate()
-
-    // check if need to change direction
-    if (i >= this.totalI || i <= 0 || j >= this.totalJ || j <= 0) {
-      this.snakeArray = []
-      this.gameStage.destroy()
-      this.createGameStage()
-      this.startGame()
-      this.snakeMoveTicker.destroy()
-    }
-  }
+  deadMonitor() {}
 }

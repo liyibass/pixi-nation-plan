@@ -23,11 +23,12 @@ export class MainScene {
   }
 
   createSnakeScene() {
-    const snakeScene = new SnakeScene()
-    console.log('CLEAR ALL')
+    // remove unuse scene
     this.container.removeChildren()
     this.container.removeAllListeners()
-    // Globals.app.ticker.stop()
+
+    // create snake scene
+    const snakeScene = new SnakeScene()
     this.container.addChild(snakeScene.container)
   }
 

@@ -28,6 +28,7 @@ export class App {
       width: WIDTH,
       height: HEIGHT,
       backgroundColor: '0xeeeeee',
+      antialias: true,
     })
     // add app to global object
     Globals.app = this.app

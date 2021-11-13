@@ -36,14 +36,12 @@ export class IntroScene {
 
   createBackground() {
     const bg = new PIXI.Graphics()
-    bg.lineStyle(4, 0x00000, 1)
     bg.beginFill(0x92b79c)
     bg.drawRect(0, 0, Globals.width, Globals.height)
     bg.endFill()
 
     this.darkBg = new PIXI.Graphics()
-    this.darkBg.lineStyle(4, 0x00000, 1)
-    this.darkBg.beginFill(0x000000)
+    this.darkBg.beginFill(0x00000)
     this.darkBg.drawRect(0, 0, Globals.width, Globals.height)
     this.darkBg.endFill()
 

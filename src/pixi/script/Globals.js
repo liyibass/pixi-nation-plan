@@ -1,3 +1,5 @@
+const gameStagePadding = 20
+
 export const Globals = {
   resources: {},
   width: window.innerWidth,
@@ -27,23 +29,27 @@ export const Globals = {
     }
   },
   getGameStageDimention: function () {
+    const BLOCK_WIDTH = 16
+
     let shortLength
 
-    if (this.width - 40 > this.height / 2 - 20) {
-      shortLength = this.height / 2 - 20
+    if (this.width > this.height / 2) {
+      shortLength = parseInt(this.height / 2 / BLOCK_WIDTH) * BLOCK_WIDTH
 
       return {
         x: (this.width - shortLength) / 2,
-        y: this.height / 2 - shortLength,
+        y: this.height / 2 - shortLength + gameStagePadding,
         width: shortLength,
         height: shortLength,
       }
     } else {
-      shortLength = this.width - 40
+      shortLength =
+        parseInt((this.width - gameStagePadding * 2) / BLOCK_WIDTH) *
+        BLOCK_WIDTH
 
       return {
         x: (this.width - shortLength) / 2,
-        y: this.height / 2 - shortLength,
+        y: (this.height / 2 - shortLength) / 2,
         width: shortLength,
         height: shortLength,
       }
