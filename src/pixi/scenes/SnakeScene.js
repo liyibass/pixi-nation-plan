@@ -100,6 +100,7 @@ export class SnakeScene {
           if (
             this.moveDirection[this.moveDirection.length - 1] === 'up' ||
             this.moveDirection[this.moveDirection.length - 1] === 'down'
+            // this.snakeArray[0].direction === 'up'
           ) {
             break
           }
@@ -110,6 +111,7 @@ export class SnakeScene {
           if (
             this.moveDirection[this.moveDirection.length - 1] === 'left' ||
             this.moveDirection[this.moveDirection.length - 1] === 'right'
+            // this.snakeArray[0].direction === 'left'
           ) {
             break
           }
@@ -121,6 +123,7 @@ export class SnakeScene {
           if (
             this.moveDirection[this.moveDirection.length - 1] === 'down' ||
             this.moveDirection[this.moveDirection.length - 1] === 'up'
+            // this.snakeArray[0].direction === 'down'
           ) {
             break
           }
@@ -132,6 +135,7 @@ export class SnakeScene {
           if (
             this.moveDirection[this.moveDirection.length - 1] === 'right' ||
             this.moveDirection[this.moveDirection.length - 1] === 'left'
+            // this.snakeArray[0].direction === 'right'
           ) {
             break
           }
@@ -171,7 +175,10 @@ export class SnakeScene {
           snakePart.container.y % BLOCK_WIDTH === 0 &&
           this.moveDirection.length > 0
         ) {
-          snakePart.direction = this.moveDirection.shift()
+          const nextDirection = this.moveDirection.shift()
+          if (snakePart.direction !== getOppositeDirection(nextDirection)) {
+            snakePart.direction = nextDirection
+          }
         }
       })
     })
@@ -180,4 +187,17 @@ export class SnakeScene {
   }
 
   deadMonitor() {}
+}
+
+function getOppositeDirection(direction) {
+  switch (direction) {
+    case 'right':
+      return 'left'
+    case 'left':
+      return 'right'
+    case 'up':
+      return 'down'
+    case 'down':
+      return 'up'
+  }
 }
