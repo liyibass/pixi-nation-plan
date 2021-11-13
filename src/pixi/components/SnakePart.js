@@ -11,6 +11,7 @@ export class SnakePart {
     this.currentPosition = { i: args.i, j: args.j }
     this.nextPosition = { i: args.i + 1, j: args.j }
     this.direction = 'right'
+    this.prevDirection = 'right'
 
     // set initial position in pixel
     this.container.x = this.currentPosition.i * BLOCK_WIDTH
@@ -22,9 +23,15 @@ export class SnakePart {
 
   createSprite() {
     const color = new PIXI.Graphics()
-    color.beginFill(0xdddddd)
-    color.drawRect(0, 0, BLOCK_WIDTH, BLOCK_WIDTH)
+    if (this.id === 0) {
+      color.beginFill(0x888888)
+    } else {
+      color.beginFill(this.id % 2 === 0 ? 0xbbbbbb : 0xdddddd)
+    }
+    // color.drawRect(0, 0, BLOCK_WIDTH, BLOCK_WIDTH)
+    color.drawRoundedRect(0, 0, BLOCK_WIDTH * 1.1, BLOCK_WIDTH * 1.1, 5)
     color.endFill()
+    color.pivot.set(0.5, 0.5)
 
     this.container.addChild(color)
     // const texture = Globals.resources[`snakePart${this.id}`]?.texture
@@ -54,6 +61,7 @@ export class SnakePart {
     switch (this.direction) {
       case 'right':
         this.container.x += MOVE_SPEED
+        // this.container.angle = 0
 
         if (x1 <= x0) {
           this.currentPosition = {
@@ -69,6 +77,7 @@ export class SnakePart {
 
       case 'left':
         this.container.x -= MOVE_SPEED
+        // this.container.angle = 0
 
         if (x1 >= x0) {
           this.currentPosition = {
@@ -84,6 +93,7 @@ export class SnakePart {
 
       case 'down':
         this.container.y += MOVE_SPEED
+        // this.container.angle = 90
 
         if (y1 <= y0) {
           this.currentPosition = {
@@ -99,6 +109,7 @@ export class SnakePart {
 
       case 'up':
         this.container.y -= MOVE_SPEED
+        // this.container.angle = 90
 
         if (y1 >= y0) {
           this.currentPosition = {

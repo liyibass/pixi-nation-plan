@@ -6,6 +6,7 @@ import { SnakePart } from '../components/SnakePart'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
+const INIT_SNAKE_LENGTH = 10
 
 export class SnakeScene {
   constructor() {
@@ -14,7 +15,7 @@ export class SnakeScene {
     this.createGameStage()
 
     // snake property
-
+    this.snakeArray = []
     this.moveDirection = ['right']
 
     this.totalI = Math.floor(this.gameStageWidth / BLOCK_WIDTH)
@@ -152,12 +153,19 @@ export class SnakeScene {
   createSnake() {
     console.log('createSnake')
 
-    const snakePart = new SnakePart({ i: 0, j: 0, id: 0 })
-    this.snakeArray = [snakePart]
+    this.gameStage.sortableChildren = true
+    for (let i = 0; i < INIT_SNAKE_LENGTH; i++) {
+      const snakePart = new SnakePart({
+        i: INIT_SNAKE_LENGTH + 2 - i,
+        j: 3,
+        id: i,
+      })
+      snakePart.container.zIndex = INIT_SNAKE_LENGTH - 1 - i
+      this.snakeArray.push(snakePart)
+    }
 
     this.snakeArray.forEach((snakePart) => {
       this.gameStage.addChild(snakePart.container)
-      console.log(snakePart)
     })
   }
 
@@ -166,21 +174,64 @@ export class SnakeScene {
 
     this.snakeMoveTicker = new PIXI.Ticker()
     this.snakeMoveTicker.add(() => {
-      this.snakeArray.forEach((snakePart) => {
+      // this.snakeArray.forEach((snakePart) => {
+      //   snakePart.move()
+
+      //   // only when snake is moved to grid could change direction
+      //   if (
+      //     snakePart.container.x % BLOCK_WIDTH === 0 &&
+      //     snakePart.container.y % BLOCK_WIDTH === 0 &&
+      //     this.moveDirection.length > 0
+      //   ) {
+      //     const nextDirection = this.moveDirection.shift()
+      //     if (snakePart.direction !== getOppositeDirection(nextDirection)) {
+      //       snakePart.direction = nextDirection
+      //     }
+      //   }
+      // })
+
+      // snakeBody
+
+      for (let i = 0; i < this.snakeArray.length; i++) {
+        const snakePart = this.snakeArray[i]
         snakePart.move()
 
         // only when snake is moved to grid could change direction
         if (
-          snakePart.container.x % BLOCK_WIDTH === 0 &&
-          snakePart.container.y % BLOCK_WIDTH === 0 &&
-          this.moveDirection.length > 0
+          snakePart.container.x % BLOCK_WIDTH !== 0 ||
+          snakePart.container.y % BLOCK_WIDTH !== 0
         ) {
-          const nextDirection = this.moveDirection.shift()
-          if (snakePart.direction !== getOppositeDirection(nextDirection)) {
-            snakePart.direction = nextDirection
+          continue
+        }
+
+        // head
+        if (i === 0) {
+          const nextHeadDirection = this.moveDirection[0]
+
+          // remove invalid move direction
+          if (snakePart.direction === getOppositeDirection(nextHeadDirection)) {
+            this.moveDirection.shift()
+          }
+
+          if (this.moveDirection.length > 0) {
+            // backup prev direction and update direction newer
+            snakePart.prevDirection = snakePart.direction
+            snakePart.direction = this.moveDirection.shift()
+          } else {
+            snakePart.prevDirection = snakePart.direction
           }
         }
-      })
+        //  body
+        else {
+          const frontSnakePart = this.snakeArray[i - 1]
+          // console.log(snakePart)
+
+          snakePart.prevDirection = snakePart.direction
+          snakePart.direction = frontSnakePart.prevDirection
+          snakePart.currentPosition = frontSnakePart.currentPosition
+          snakePart.nextPosition = frontSnakePart.nextPosition
+        }
+      }
     })
 
     this.snakeMoveTicker.start()
