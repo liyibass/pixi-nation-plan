@@ -11,17 +11,15 @@ const INIT_SNAKE_LENGTH = 15
 export class SnakeScene {
   constructor() {
     this.container = new PIXI.Container()
-    this.createBackground()
-    this.createGameStage()
-
-    // snake property
-    this.snakeArray = []
-    this.moveDirection = ['right']
+    this.createSnakeScene()
 
     this.totalI = Math.floor(this.gameStageWidth / BLOCK_WIDTH)
     this.totalJ = Math.floor(this.gameStageHeight / BLOCK_WIDTH)
 
-    this.createSnakeScene()
+    // snake property
+    this.snakeArray = []
+    this.moveDirection = ['right']
+    this.initGame()
   }
 
   createBackground() {
@@ -34,9 +32,17 @@ export class SnakeScene {
     this.container.addChild(bg)
   }
 
+  createItems() {
+    const groundGroupDimention = Globals.getGroundDimention()
+
+    this.groundGroup = new GroundGroup(groundGroupDimention)
+    this.container.addChild(this.groundGroup.container)
+  }
+
   createGameStage() {
     // get gameStage dimention
     const gameStageDimention = Globals.getGameStageDimention()
+
     this.gameStageX = gameStageDimention.x
     this.gameStageY = gameStageDimention.y
     this.gameStageWidth = gameStageDimention.width
@@ -73,15 +79,14 @@ export class SnakeScene {
   }
 
   createSnakeScene() {
-    const groundGroupDimention = Globals.getGroundDimention()
-
-    this.groundGroup = new GroundGroup(groundGroupDimention)
-    this.container.addChild(this.groundGroup.container)
+    this.createBackground()
+    this.createItems()
+    this.createGameStage()
 
     // todo introduce
+  }
 
-    // start game
-
+  initGame() {
     this.createKeyboardListener()
     this.createSnake()
     this.startGame()
@@ -89,7 +94,7 @@ export class SnakeScene {
 
   createKeyboardListener() {
     //  add keyboard listener
-    const cb = (event) => {
+    this.keyboardListenerCallBack = (event) => {
       // if (this.moveDirection.length > 2) {
       //   return
       // }
@@ -147,13 +152,14 @@ export class SnakeScene {
       }
     }
 
-    this.keyboardListener = document.addEventListener('keydown', cb)
+    document.addEventListener('keydown', this.keyboardListenerCallBack)
   }
 
   createSnake() {
     console.log('createSnake')
+    this.snakeGroup = new PIXI.Container()
 
-    this.gameStage.sortableChildren = true
+    this.snakeGroup.sortableChildren = true
     for (let i = 0; i < INIT_SNAKE_LENGTH; i++) {
       const snakePart = new SnakePart(i)
       snakePart.container.zIndex = INIT_SNAKE_LENGTH - 1 - i
@@ -161,8 +167,10 @@ export class SnakeScene {
     }
 
     this.snakeArray.forEach((snakePart) => {
-      this.gameStage.addChild(snakePart.container)
+      this.snakeGroup.addChild(snakePart.container)
     })
+
+    this.gameStage.addChild(this.snakeGroup)
   }
 
   startGame() {
@@ -211,13 +219,34 @@ export class SnakeScene {
           snakePart.currentPosition = frontSnakePart.currentPosition
           snakePart.nextPosition = frontSnakePart.nextPosition
         }
+
+        this.deadMonitor()
       }
     })
 
     this.snakeMoveTicker.start()
   }
 
-  deadMonitor() {}
+  deadMonitor() {
+    const { i, j } = this.snakeArray[0].nextPosition
+    // console.log(`${i},${j}`)
+    // console.log(`${this.totalI},${this.totalJ}`)
+    if (i < 0 || j < 0 || i >= this.totalI - 1 || j >= this.totalJ - 1) {
+      this.gameOver()
+    }
+  }
+
+  gameOver() {
+    this.snakeMoveTicker.destroy()
+    window.removeEventListener('keydown', this.keyboardListener)
+
+    this.snakeArray = []
+
+    setTimeout(() => {
+      this.snakeGroup.destroy()
+      this.initGame()
+    }, 1000)
+  }
 }
 
 function getOppositeDirection(direction) {
