@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 // import { Globals } from '../script/Globals'
-const MOVE_SPEED = 1
+const MOVE_SPEED = 2
 const BLOCK_WIDTH = 16
 
 export class SnakePart {
@@ -53,61 +53,61 @@ export class SnakePart {
 
     switch (this.direction) {
       case 'right':
-        if (x1 > x0) {
-          this.container.x++
-        } else {
+        this.container.x += MOVE_SPEED
+
+        if (x1 <= x0) {
           this.currentPosition = {
             i: this.nextPosition.i,
             j: this.nextPosition.j,
           }
           this.nextPosition = {
-            i: this.currentPosition.i + MOVE_SPEED,
+            i: this.currentPosition.i + 1,
             j: this.currentPosition.j,
           }
         }
         break
 
       case 'left':
-        if (x1 < x0) {
-          this.container.x--
-        } else {
+        this.container.x -= MOVE_SPEED
+
+        if (x1 >= x0) {
           this.currentPosition = {
             i: this.nextPosition.i,
             j: this.nextPosition.j,
           }
           this.nextPosition = {
-            i: this.currentPosition.i - MOVE_SPEED,
+            i: this.currentPosition.i - 1,
             j: this.currentPosition.j,
           }
         }
         break
 
       case 'down':
-        if (y1 > y0) {
-          this.container.y++
-        } else {
+        this.container.y += MOVE_SPEED
+
+        if (y1 <= y0) {
           this.currentPosition = {
             i: this.nextPosition.i,
             j: this.nextPosition.j,
           }
           this.nextPosition = {
-            i: this.currentPosition.i + MOVE_SPEED,
-            j: this.currentPosition.j,
+            i: this.currentPosition.i,
+            j: this.currentPosition.j + 1,
           }
         }
         break
 
       case 'up':
-        if (y1 < y0) {
-          this.container.y--
-        } else {
+        this.container.y -= MOVE_SPEED
+
+        if (y1 >= y0) {
           this.currentPosition = {
             i: this.nextPosition.i,
             j: this.nextPosition.j,
           }
           this.nextPosition = {
-            i: this.currentPosition.i - MOVE_SPEED,
-            j: this.currentPosition.j,
+            i: this.currentPosition.i,
+            j: this.currentPosition.j - 1,
           }
         }
         break

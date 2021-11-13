@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+// import _ from 'lodash'
 import { Globals } from '../script/Globals'
 import { GroundGroup } from '../components/GroundGroup'
 import { SnakePart } from '../components/SnakePart'
@@ -13,7 +14,8 @@ export class SnakeScene {
     this.createGameStage()
 
     // snake property
-    this.headDirection = 'right'
+
+    this.moveDirection = ['right']
 
     this.totalI = Math.floor(this.gameStageWidth / BLOCK_WIDTH)
     this.totalJ = Math.floor(this.gameStageHeight / BLOCK_WIDTH)
@@ -86,24 +88,61 @@ export class SnakeScene {
 
   createKeyboardListener() {
     //  add keyboard listener
-    this.keyboardListener = document.addEventListener('keydown', (event) => {
+    const cb = (event) => {
+      // if (this.moveDirection.length > 2) {
+      //   return
+      // }
+
       const key = event.key
 
       switch (key) {
         case 'ArrowDown':
-          this.headDirection = 'down'
+          if (
+            this.moveDirection[this.moveDirection.length - 1] === 'up' ||
+            this.moveDirection[this.moveDirection.length - 1] === 'down'
+          ) {
+            break
+          }
+
+          this.moveDirection.push('down')
           break
         case 'ArrowRight':
-          this.headDirection = 'right'
+          if (
+            this.moveDirection[this.moveDirection.length - 1] === 'left' ||
+            this.moveDirection[this.moveDirection.length - 1] === 'right'
+          ) {
+            break
+          }
+
+          this.moveDirection.push('right')
+
           break
         case 'ArrowUp':
-          this.headDirection = 'up'
+          if (
+            this.moveDirection[this.moveDirection.length - 1] === 'down' ||
+            this.moveDirection[this.moveDirection.length - 1] === 'up'
+          ) {
+            break
+          }
+
+          this.moveDirection.push('up')
+
           break
         case 'ArrowLeft':
-          this.headDirection = 'left'
+          if (
+            this.moveDirection[this.moveDirection.length - 1] === 'right' ||
+            this.moveDirection[this.moveDirection.length - 1] === 'left'
+          ) {
+            break
+          }
+
+          this.moveDirection.push('left')
+
           break
       }
-    })
+    }
+
+    this.keyboardListener = document.addEventListener('keydown', cb)
   }
 
   createSnake() {
@@ -124,16 +163,20 @@ export class SnakeScene {
     this.snakeMoveTicker = new PIXI.Ticker()
     this.snakeMoveTicker.add(() => {
       this.snakeArray.forEach((snakePart) => {
-        // console.log(snakePart.container.x % 10)
-        // console.log(snakePart.container.y % 10)
         snakePart.move()
-        if (snakePart.container.x % BLOCK_WIDTH === 0) {
-          console.log('CHANGE DIRECTION')
+
+        // only when snake is moved to grid could change direction
+        if (
+          snakePart.container.x % BLOCK_WIDTH === 0 &&
+          snakePart.container.y % BLOCK_WIDTH === 0 &&
+          this.moveDirection.length > 0
+        ) {
+          snakePart.direction = this.moveDirection.shift()
         }
       })
     })
 
-    // this.snakeMoveTicker.start()
+    this.snakeMoveTicker.start()
   }
 
   deadMonitor() {}
