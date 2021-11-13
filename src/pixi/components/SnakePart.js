@@ -3,15 +3,18 @@ import * as PIXI from 'pixi.js'
 const MOVE_SPEED = 2
 const BLOCK_WIDTH = 16
 
-export class SnakePart {
-  constructor(args = { i: 3, j: 4, id: 0 }) {
-    this.container = new PIXI.Container()
-    this.id = args.id
+const I = 4
+const J = 3
 
-    this.currentPosition = { i: args.i, j: args.j }
-    this.nextPosition = { i: args.i + 1, j: args.j }
-    this.direction = 'right'
-    this.prevDirection = 'right'
+export class SnakePart {
+  constructor(index = 0) {
+    this.container = new PIXI.Container()
+    this.id = index
+
+    this.direction = _getDefaultDirection(index)
+    this.prevDirection = _getDefaultPrevDirection(index)
+    this.currentPosition = _getDefaultPosition(index)
+    this.nextPosition = _getDefaultPosition(index)
 
     // set initial position in pixel
     this.container.x = this.currentPosition.i * BLOCK_WIDTH
@@ -122,6 +125,29 @@ export class SnakePart {
           }
         }
         break
+    }
+  }
+}
+
+function _getDefaultDirection(index) {
+  if (index <= I) return 'right'
+  else return 'up'
+}
+function _getDefaultPrevDirection(index) {
+  if (index < I) return 'right'
+  else return 'up'
+}
+
+function _getDefaultPosition(index) {
+  if (index < I) {
+    return {
+      i: I - index,
+      j: J,
+    }
+  } else {
+    return {
+      i: 0,
+      j: J + index - I,
     }
   }
 }

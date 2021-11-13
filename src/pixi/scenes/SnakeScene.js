@@ -6,7 +6,7 @@ import { SnakePart } from '../components/SnakePart'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
-const INIT_SNAKE_LENGTH = 10
+const INIT_SNAKE_LENGTH = 15
 
 export class SnakeScene {
   constructor() {
@@ -155,11 +155,7 @@ export class SnakeScene {
 
     this.gameStage.sortableChildren = true
     for (let i = 0; i < INIT_SNAKE_LENGTH; i++) {
-      const snakePart = new SnakePart({
-        i: INIT_SNAKE_LENGTH + 2 - i,
-        j: 3,
-        id: i,
-      })
+      const snakePart = new SnakePart(i)
       snakePart.container.zIndex = INIT_SNAKE_LENGTH - 1 - i
       this.snakeArray.push(snakePart)
     }
