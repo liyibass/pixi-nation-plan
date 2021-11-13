@@ -174,24 +174,6 @@ export class SnakeScene {
 
     this.snakeMoveTicker = new PIXI.Ticker()
     this.snakeMoveTicker.add(() => {
-      // this.snakeArray.forEach((snakePart) => {
-      //   snakePart.move()
-
-      //   // only when snake is moved to grid could change direction
-      //   if (
-      //     snakePart.container.x % BLOCK_WIDTH === 0 &&
-      //     snakePart.container.y % BLOCK_WIDTH === 0 &&
-      //     this.moveDirection.length > 0
-      //   ) {
-      //     const nextDirection = this.moveDirection.shift()
-      //     if (snakePart.direction !== getOppositeDirection(nextDirection)) {
-      //       snakePart.direction = nextDirection
-      //     }
-      //   }
-      // })
-
-      // snakeBody
-
       for (let i = 0; i < this.snakeArray.length; i++) {
         const snakePart = this.snakeArray[i]
         snakePart.move()
@@ -214,20 +196,22 @@ export class SnakeScene {
           }
 
           if (this.moveDirection.length > 0) {
+            // has new direction
             // backup prev direction and update direction newer
             snakePart.prevDirection = snakePart.direction
             snakePart.direction = this.moveDirection.shift()
           } else {
+            // no direction
             snakePart.prevDirection = snakePart.direction
           }
         }
         //  body
         else {
           const frontSnakePart = this.snakeArray[i - 1]
-          // console.log(snakePart)
 
           snakePart.prevDirection = snakePart.direction
           snakePart.direction = frontSnakePart.prevDirection
+
           snakePart.currentPosition = frontSnakePart.currentPosition
           snakePart.nextPosition = frontSnakePart.nextPosition
         }
