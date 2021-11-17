@@ -5,18 +5,17 @@ export const Globals = {
   width: window.innerWidth,
   height: window.innerHeight,
   maxContentWidth:
-    window.innerWidth < 500 ? window.innerWidth - 2 * gameStagePadding : 500,
-
+    window.innerWidth < 500 ? window.innerWidth - 3 * gameStagePadding : 500,
+  contentHeight:
+    window.innerHeight / 2 < 450 ? window.innerHeight / 2 - 30 : 500,
   isSmallScreen: function () {
     return !!this.width < 1280
   },
+  GROUND_HEIGHT: 101,
   getGroundDimention: function () {
     return {
       x: this.width / 2,
-      y:
-        window.innerWidth < 1280
-          ? (this.height * 6) / 7
-          : (this.height * 4) / 5,
+      y: this.height / 2 + gameStagePadding + (this.contentHeight / 6) * 5,
     }
   },
   getDoctorDimention: function () {
@@ -39,11 +38,13 @@ export const Globals = {
     let shortLength
 
     if (this.width > this.height / 2) {
-      shortLength = parseInt(this.height / 2 / BLOCK_WIDTH) * BLOCK_WIDTH
+      shortLength =
+        parseInt((this.height / 2 - 2 * gameStagePadding) / BLOCK_WIDTH) *
+        BLOCK_WIDTH
 
       return {
         x: (this.width - shortLength) / 2,
-        y: this.height / 2 - shortLength + gameStagePadding,
+        y: this.height / 2 - (shortLength + gameStagePadding),
         width: shortLength,
         height: shortLength,
       }
@@ -64,7 +65,23 @@ export const Globals = {
   getSnakeControllerPosition: function () {
     return {
       x: this.width / 2 - this.CONTROLLER_WIDTH / 2,
-      y: this.height / 2 + 40,
+      y:
+        this.height / 2 +
+        gameStagePadding +
+        this.contentHeight / 6 -
+        this.CONTROLLER_WIDTH / 2,
+    }
+  },
+  BUTTON_CONTAINER_WIDTH: 194,
+  BUTTON_CONTAINER_HEIGHT: 32,
+  getSnakeMenuPosition: function () {
+    return {
+      x: this.width / 2 - this.BUTTON_CONTAINER_WIDTH / 2,
+      y:
+        this.height / 2 +
+        gameStagePadding +
+        (this.contentHeight / 6) * 3 -
+        this.BUTTON_CONTAINER_HEIGHT / 2,
     }
   },
 }

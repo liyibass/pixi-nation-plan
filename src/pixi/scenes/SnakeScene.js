@@ -7,6 +7,7 @@ import { SnakeFood } from '../components/SnakeFood'
 import { SnakeController } from '../components/SnakeController'
 import { DoctorSay } from '../components/DoctorSay'
 import { CountDown } from '../components/CountDown'
+import { TwoButtons } from '../components/TwoButtons'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
@@ -114,6 +115,8 @@ export class SnakeScene {
     this.createItems()
     this.createGameStage()
     this.createSnakeController()
+
+    this.createMenuButtons()
     // this.createChessBoard()
 
     // todo introduce
@@ -320,6 +323,7 @@ export class SnakeScene {
   async startGame() {
     console.log('game started')
     await this.countDownHandler(3)
+    this.createMenuButtons()
 
     this.snakeMoveTicker = new PIXI.Ticker()
     this.snakeMoveTicker.add(async () => {
@@ -383,6 +387,21 @@ export class SnakeScene {
     if (i < 0 || j < 0 || i > this.totalI - 1 || j > this.totalJ - 1) {
       this.gameOver()
     }
+  }
+
+  createMenuButtons() {
+    const menuPosition = Globals.getSnakeMenuPosition()
+
+    this.menuButtons = new TwoButtons(this.menuChosenHandler)
+    this.container.addChild(this.menuButtons.container)
+
+    this.menuButtons.container.x = menuPosition.x
+
+    this.menuButtons.container.y = menuPosition.y
+  }
+
+  menuChosenHandler(chosen) {
+    console.log(chosen)
   }
 
   async countDownHandler(countNumber) {
