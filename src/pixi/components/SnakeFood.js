@@ -11,7 +11,6 @@ export class SnakeFood {
     this.color = `0x${Math.floor(Math.random() * 999999)}`
 
     this.currentPosition = { i, j }
-    console.log(`${i},${j}`)
 
     // set initial position in pixel
     this.container.x = this.currentPosition.i * BLOCK_WIDTH

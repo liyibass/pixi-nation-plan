@@ -41,7 +41,7 @@ export class CountDown {
           clearInterval(countDown)
           resolve(true)
         }
-      }, 1000)
+      }, 800)
     })
   }
 }

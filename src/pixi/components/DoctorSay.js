@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 import { DialogBox } from './DialogBox'
 import { DoctorDialogBox } from './DoctorDialogBox'
+import { SpeakDialog } from './SpeakDialog'
 
 export class DoctorSay {
   constructor() {
@@ -45,6 +46,8 @@ export class DoctorSay {
   chooseSay(text) {
     return new Promise((resolve) => {
       const chosenHandler = (chosen) => {
+        this.container.removeChildren()
+        this.container.removeAllListeners()
         resolve(chosen)
       }
 
@@ -59,7 +62,24 @@ export class DoctorSay {
         fontSize: 16,
         chosenHandler,
       })
+
       this.container.addChild(dialogBox.container)
+    })
+  }
+
+  newSay(text) {
+    const speakDialog = new SpeakDialog(text)
+    this.container.addChild(speakDialog.container)
+
+    return new Promise((resolve) => {
+      this.container.addListener('pointerdown', () => {
+        this.container.removeChild(speakDialog.container)
+        this.container.removeAllListeners()
+
+        setTimeout(() => {
+          resolve()
+        }, 200)
+      })
     })
   }
 }

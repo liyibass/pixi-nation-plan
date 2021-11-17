@@ -7,6 +7,7 @@ import taiwan from '../assets/images/taiwan.png'
 import doctorStand from '../assets/images/doctorStand.png'
 import snakePart0 from '../assets/images/snakeHead.png'
 import snakePart1 from '../assets/images/snakeBody1.png'
+import doctorBig from '../assets/images/doctorBig.png'
 
 export const LoaderConfig = {
   player,
@@ -18,4 +19,5 @@ export const LoaderConfig = {
   doctorStand,
   snakePart0,
   snakePart1,
+  doctorBig,
 }

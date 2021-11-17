@@ -289,36 +289,37 @@ export class SnakeScene {
 
   async startGameFlow() {
     console.log('startGameFlow')
-    // this.startGame()
+    await wait(500)
+
     const doctorSay = new DoctorSay()
     this.container.addChild(doctorSay.container)
 
-    await doctorSay.say('經營村莊的不二法門，就是別讓村民不開心')
-    await doctorSay.say(
+    await doctorSay.newSay('經營村莊的不二法門，就是別讓村民不開心')
+    await doctorSay.newSay(
       '但村子久了總是會出現一些狀況，像是垃圾變多、公共設備損壞'
     )
-    await doctorSay.say('你的任務就是要幫我解決問題')
+    await doctorSay.newSay('你的任務就是要幫我解決問題')
     const chosen = await doctorSay.chooseSay(
       '既然你先選了臺東縣，這裡最大的困境就是垃圾太多了，準備好幫我排除障礙了嗎？',
       this.chosenHandler
     )
 
     if (chosen === 'play') {
-      await doctorSay.say('遊戲目標：把場上的焚化爐全都圍起來消滅掉')
-      await doctorSay.say(
+      await doctorSay.newSay('遊戲目標：把場上的焚化爐全都圍起來消滅掉')
+      await doctorSay.newSay(
         '村裡人越來越多，垃圾量就增加得很快，可是村民又不想蓋焚化爐，你幫我把垃圾變不見！'
       )
-      await doctorSay.say('處理的方式很簡單，你就把垃圾吃掉就好。')
+      await doctorSay.newSay('處理的方式很簡單，你就把垃圾吃掉就好。')
       this.startGame()
     } else {
-      await doctorSay.say('靠')
+      await doctorSay.newSay('靠')
     }
   }
 
   // ===== start game =====
   async startGame() {
     console.log('game started')
-    // await this.countDownHandler(3)
+    await this.countDownHandler(3)
 
     this.snakeMoveTicker = new PIXI.Ticker()
     this.snakeMoveTicker.add(async () => {
@@ -463,4 +464,12 @@ function getInitSnakePartData(prevSnakePart) {
   }
 
   return data
+}
+
+function wait(delayTime) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, delayTime)
+  })
 }

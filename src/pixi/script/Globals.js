@@ -4,6 +4,9 @@ export const Globals = {
   resources: {},
   width: window.innerWidth,
   height: window.innerHeight,
+  maxContentWidth:
+    window.innerWidth < 500 ? window.innerWidth - 2 * gameStagePadding : 500,
+
   isSmallScreen: function () {
     return !!this.width < 1280
   },
@@ -12,8 +15,8 @@ export const Globals = {
       x: this.width / 2,
       y:
         window.innerWidth < 1280
-          ? (this.height * 5) / 6
-          : (this.height * 3) / 4,
+          ? (this.height * 6) / 7
+          : (this.height * 4) / 5,
     }
   },
   getDoctorDimention: function () {
