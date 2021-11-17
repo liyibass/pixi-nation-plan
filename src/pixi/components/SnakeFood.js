@@ -8,6 +8,7 @@ export class SnakeFood {
     this.id = index
     this.i = i
     this.j = j
+    this.color = `0x${Math.floor(Math.random() * 100000)}`
 
     this.currentPosition = { i, j }
     console.log(`${i},${j}`)
@@ -22,7 +23,7 @@ export class SnakeFood {
 
   createSprite() {
     const color = new PIXI.Graphics()
-    color.beginFill(0xff775a)
+    color.beginFill(this.color)
     color.drawRoundedRect(0, 0, BLOCK_WIDTH * 1, BLOCK_WIDTH * 1, 5)
 
     this.container.addChild(color)

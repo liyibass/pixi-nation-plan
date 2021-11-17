@@ -204,13 +204,12 @@ export class SnakeScene {
   }
 
   createFood() {
-    console.log('createFood')
     if (this.snakeFoodArray.length > 0) return
 
     this.snakeFoodGroup = new PIXI.Container()
 
     for (let id = 0; id < INIT_FOOD_COUNT; id++) {
-      const { i, j } = getRandomFoodPosition.bind(this)()
+      const { i, j } = this.getRandomFoodPosition.bind(this)()
       const snakeFood = new SnakeFood(id, i, j)
 
       this.snakeFoodArray.push(snakeFood)
@@ -220,14 +219,14 @@ export class SnakeScene {
       this.snakeFoodGroup.addChild(this.snakeFoodArray[i].container)
     }
     this.gameStage.addChild(this.snakeFoodGroup)
+  }
 
-    function getRandomFoodPosition() {
-      const randomI = Math.floor(Math.random() * (this.totalI - 1))
-      const randomJ = Math.floor(Math.random() * (this.totalJ - 1))
-      return {
-        i: randomI,
-        j: randomJ,
-      }
+  getRandomFoodPosition() {
+    const randomI = Math.floor(Math.random() * (this.totalI - 1))
+    const randomJ = Math.floor(Math.random() * (this.totalJ - 1))
+    return {
+      i: randomI,
+      j: randomJ,
     }
   }
 
@@ -254,10 +253,24 @@ export class SnakeScene {
       const snakeTail = this.snakeArray[this.snakeArray.length - 1]
 
       const { i, j, direction, index } = getInitSnakePartData(snakeTail)
-      const newSnakePart = new SnakePart(i, j, direction, index)
+      const newSnakePart = new SnakePart(
+        i,
+        j,
+        direction,
+        index,
+        removedFood[0].color
+      )
 
       this.snakeGroup.addChild(newSnakePart.container)
       this.snakeArray.push(newSnakePart)
+
+      // add new food
+      if (this.snakeFoodArray.length < INIT_FOOD_COUNT) {
+        const { i, j } = this.getRandomFoodPosition.bind(this)()
+        const newSnakeFood = new SnakeFood(eatenFoodIndex, i, j)
+        this.snakeFoodArray.push(newSnakeFood)
+        this.snakeFoodGroup.addChild(newSnakeFood.container)
+      }
     }
   }
 
@@ -383,6 +396,14 @@ function getInitSnakePartData(prevSnakePart) {
         i: prevSnakePart.i,
         j: prevSnakePart.j - 1,
         direct: 'down',
+        index: prevSnakePart.id + 1,
+      }
+
+    default:
+      return {
+        i: prevSnakePart.i,
+        j: prevSnakePart.j + 1,
+        direct: 'up',
         index: prevSnakePart.id + 1,
       }
   }
