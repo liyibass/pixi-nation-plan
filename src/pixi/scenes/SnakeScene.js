@@ -27,7 +27,7 @@ export class SnakeScene {
 
     this.initGame()
   }
-
+  // ===== init game =====
   createBackground() {
     const bg = new PIXI.Graphics()
     // bg.lineStyle(4, 0x00000, 1)
@@ -117,6 +117,7 @@ export class SnakeScene {
     this.startGame()
   }
 
+  // ===== snake =====
   createKeyboardListener() {
     //  add keyboard listener
     this.keyboardListenerCallBack = (event) => {
@@ -203,6 +204,7 @@ export class SnakeScene {
     this.gameStage.addChild(this.snakeGroup)
   }
 
+  // ===== food =====
   createFood() {
     if (this.snakeFoodArray.length > 0) return
 
@@ -252,6 +254,9 @@ export class SnakeScene {
       // create new snakePart and add behind tail
       const snakeTail = this.snakeArray[this.snakeArray.length - 1]
 
+      const initSnakePartData = getInitSnakePartData(snakeTail)
+      if (!initSnakePartData) return
+
       const { i, j, direction, index } = getInitSnakePartData(snakeTail)
       const newSnakePart = new SnakePart(
         i,
@@ -274,6 +279,7 @@ export class SnakeScene {
     }
   }
 
+  // ===== start game =====
   startGame() {
     console.log('game started')
 
@@ -369,42 +375,43 @@ function getOppositeDirection(direction) {
 }
 
 function getInitSnakePartData(prevSnakePart) {
+  if (!prevSnakePart.direction) return
+
+  let data = {}
   switch (prevSnakePart.direction) {
     case 'right':
-      return {
+      data = {
         i: prevSnakePart.i - 1,
         j: prevSnakePart.j,
         direct: 'right',
         index: prevSnakePart.id + 1,
       }
+      break
     case 'left':
-      return {
+      data = {
         i: prevSnakePart.i + 1,
         j: prevSnakePart.j,
         direct: 'left',
         index: prevSnakePart.id + 1,
       }
+      break
     case 'up':
-      return {
+      data = {
         i: prevSnakePart.i,
         j: prevSnakePart.j + 1,
         direct: 'up',
         index: prevSnakePart.id + 1,
       }
+      break
     case 'down':
-      return {
+      data = {
         i: prevSnakePart.i,
         j: prevSnakePart.j - 1,
         direct: 'down',
         index: prevSnakePart.id + 1,
       }
-
-    default:
-      return {
-        i: prevSnakePart.i,
-        j: prevSnakePart.j + 1,
-        direct: 'up',
-        index: prevSnakePart.id + 1,
-      }
+      break
   }
+
+  return data
 }

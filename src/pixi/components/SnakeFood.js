@@ -8,7 +8,7 @@ export class SnakeFood {
     this.id = index
     this.i = i
     this.j = j
-    this.color = `0x${Math.floor(Math.random() * 100000)}`
+    this.color = `0x${Math.floor(Math.random() * 999999)}`
 
     this.currentPosition = { i, j }
     console.log(`${i},${j}`)
