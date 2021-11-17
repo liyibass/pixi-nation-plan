@@ -8,6 +8,7 @@ import { SnakeController } from '../components/SnakeController'
 import { DoctorSay } from '../components/DoctorSay'
 import { CountDown } from '../components/CountDown'
 import { TwoButtons } from '../components/TwoButtons'
+import { PauseGame } from '../components/PauseGame'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
@@ -116,7 +117,6 @@ export class SnakeScene {
     this.createGameStage()
     this.createSnakeController()
 
-    this.createMenuButtons()
     // this.createChessBoard()
 
     // todo introduce
@@ -323,7 +323,6 @@ export class SnakeScene {
   async startGame() {
     console.log('game started')
     await this.countDownHandler(3)
-    this.createMenuButtons()
 
     this.snakeMoveTicker = new PIXI.Ticker()
     this.snakeMoveTicker.add(async () => {
@@ -392,16 +391,26 @@ export class SnakeScene {
   createMenuButtons() {
     const menuPosition = Globals.getSnakeMenuPosition()
 
-    this.menuButtons = new TwoButtons(this.menuChosenHandler)
+    this.menuButtons = new TwoButtons(
+      menuChosenHandler.bind(this),
+      { text: '暫停', color: 0xffffff, bgColor: '0xAD4B64', value: 'pause' },
+      { text: '回主畫面', color: 0x000000, bgColor: '0xC4C4C4', value: 'menu' }
+    )
     this.container.addChild(this.menuButtons.container)
 
     this.menuButtons.container.x = menuPosition.x
-
     this.menuButtons.container.y = menuPosition.y
-  }
 
-  menuChosenHandler(chosen) {
-    console.log(chosen)
+    function menuChosenHandler(chosen) {
+      switch (chosen) {
+        case 'pause':
+          this.pauseGame()
+          break
+
+        default:
+          break
+      }
+    }
   }
 
   async countDownHandler(countNumber) {
@@ -412,15 +421,52 @@ export class SnakeScene {
 
     if (isDone) {
       this.container.removeChild(countContainer.container)
+      this.createMenuButtons()
     }
+  }
+
+  pauseGame() {
+    console.log('pause game')
+    this.snakeMoveTicker.stop()
+    this.container.removeChild(this.menuButtons.container)
+
+    const pauseMenuButtons = new TwoButtons(
+      pauseGameChooseHandler.bind(this),
+      { text: '繼續', color: 0xffffff, bgColor: '0x3B6BD6', value: 'resume' },
+      { text: '回主畫面', color: 0x000000, bgColor: '0xC4C4C4', value: 'menu' }
+    )
+
+    const pauseGame = new PauseGame(pauseMenuButtons)
+
+    this.container.addChild(pauseGame.container)
+
+    function pauseGameChooseHandler(chosen) {
+      switch (chosen) {
+        case 'resume':
+          this.container.removeChild(pauseGame.container)
+          this.resumeGame()
+          break
+
+        default:
+          break
+      }
+    }
+  }
+
+  async resumeGame() {
+    console.log('resume game')
+    await this.countDownHandler(3)
+
+    this.snakeMoveTicker.start()
   }
 
   gameOver() {
     this.snakeMoveTicker.destroy()
+    this.container.removeChild(this.menuButtons.container)
     window.removeEventListener('keydown', this.keyboardListener)
 
     this.snakeArray = []
-    this.moveDirection = []
+    this.moveDirection = ['right']
 
     setTimeout(() => {
       this.snakeGroup.destroy()
