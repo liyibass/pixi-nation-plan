@@ -4,6 +4,7 @@ import { Globals } from '../script/Globals'
 import { GroundGroup } from '../components/GroundGroup'
 import { SnakePart } from '../components/SnakePart'
 import { SnakeFood } from '../components/SnakeFood'
+import { SnakeController } from '../components/SnakeController'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
@@ -101,10 +102,15 @@ export class SnakeScene {
     }
   }
 
+  createSnakeController() {
+    const controller = new SnakeController(Globals.getSnakeControllerPosition())
+    this.container.addChild(controller.container)
+  }
   createSnakeScene() {
     this.createBackground()
     this.createItems()
     this.createGameStage()
+    this.createSnakeController()
     // this.createChessBoard()
 
     // todo introduce

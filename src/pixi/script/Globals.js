@@ -1,4 +1,4 @@
-const gameStagePadding = 20
+const gameStagePadding = 10
 
 export const Globals = {
   resources: {},
@@ -53,6 +53,13 @@ export const Globals = {
         width: shortLength,
         height: shortLength,
       }
+    }
+  },
+  CONTROLLER_WIDTH: 75,
+  getSnakeControllerPosition: function () {
+    return {
+      x: this.width / 2 - this.CONTROLLER_WIDTH / 2,
+      y: this.height / 2 + 40,
     }
   },
 }
