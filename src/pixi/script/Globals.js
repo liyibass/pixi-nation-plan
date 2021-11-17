@@ -16,16 +16,18 @@ export const Globals = {
           : (this.height * 3) / 4,
     }
   },
-  getDoctorDimention: function (getGroundDimention) {
+  getDoctorDimention: function () {
+    const groundGroupDimention = this.getGroundDimention()
     return {
-      x: getGroundDimention.x - 100,
-      y: getGroundDimention.y - 33,
+      x: groundGroupDimention.x - 100,
+      y: groundGroupDimention.y - 33,
     }
   },
-  getPlayerDimention: function (getGroundDimention) {
+  getPlayerDimention: function () {
+    const groundGroupDimention = this.getGroundDimention()
     return {
-      x: getGroundDimention.x - 60,
-      y: getGroundDimention.y,
+      x: groundGroupDimention.x - 60,
+      y: groundGroupDimention.y,
     }
   },
   getGameStageDimention: function () {

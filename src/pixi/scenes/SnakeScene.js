@@ -5,6 +5,8 @@ import { GroundGroup } from '../components/GroundGroup'
 import { SnakePart } from '../components/SnakePart'
 import { SnakeFood } from '../components/SnakeFood'
 import { SnakeController } from '../components/SnakeController'
+import { DoctorSay } from '../components/DoctorSay'
+import { CountDown } from '../components/CountDown'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
@@ -27,6 +29,7 @@ export class SnakeScene {
     this.snakeFoodArray = []
 
     this.initGame()
+    this.startGameFlow()
   }
   // ===== init game =====
   createBackground() {
@@ -120,7 +123,6 @@ export class SnakeScene {
     this.createKeyboardListener()
     this.createSnake()
     this.createFood()
-    this.startGame()
   }
 
   // ===== snake =====
@@ -285,9 +287,38 @@ export class SnakeScene {
     }
   }
 
+  async startGameFlow() {
+    console.log('startGameFlow')
+    // this.startGame()
+    const doctorSay = new DoctorSay()
+    this.container.addChild(doctorSay.container)
+
+    await doctorSay.say('經營村莊的不二法門，就是別讓村民不開心')
+    await doctorSay.say(
+      '但村子久了總是會出現一些狀況，像是垃圾變多、公共設備損壞'
+    )
+    await doctorSay.say('你的任務就是要幫我解決問題')
+    const chosen = await doctorSay.chooseSay(
+      '既然你先選了臺東縣，這裡最大的困境就是垃圾太多了，準備好幫我排除障礙了嗎？',
+      this.chosenHandler
+    )
+
+    if (chosen === 'play') {
+      await doctorSay.say('遊戲目標：把場上的焚化爐全都圍起來消滅掉')
+      await doctorSay.say(
+        '村裡人越來越多，垃圾量就增加得很快，可是村民又不想蓋焚化爐，你幫我把垃圾變不見！'
+      )
+      await doctorSay.say('處理的方式很簡單，你就把垃圾吃掉就好。')
+      this.startGame()
+    } else {
+      await doctorSay.say('靠')
+    }
+  }
+
   // ===== start game =====
-  startGame() {
+  async startGame() {
     console.log('game started')
+    // await this.countDownHandler(3)
 
     this.snakeMoveTicker = new PIXI.Ticker()
     this.snakeMoveTicker.add(async () => {
@@ -353,6 +384,17 @@ export class SnakeScene {
     }
   }
 
+  async countDownHandler(countNumber) {
+    const countContainer = new CountDown(countNumber)
+    this.container.addChild(countContainer.container)
+
+    const isDone = await countContainer.start()
+
+    if (isDone) {
+      this.container.removeChild(countContainer.container)
+    }
+  }
+
   gameOver() {
     this.snakeMoveTicker.destroy()
     window.removeEventListener('keydown', this.keyboardListener)
@@ -363,6 +405,7 @@ export class SnakeScene {
     setTimeout(() => {
       this.snakeGroup.destroy()
       this.initGame()
+      this.startGame()
     }, 1000)
   }
 }
