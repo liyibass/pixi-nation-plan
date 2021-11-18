@@ -8,6 +8,10 @@ import doctorStand from '../assets/images/doctorStand.png'
 import snakePart0 from '../assets/images/snakeHead.png'
 import snakePart1 from '../assets/images/snakeBody1.png'
 import doctorBig from '../assets/images/doctorBig.png'
+import water from '../assets/images/water.png'
+import garbage from '../assets/images/garbage.png'
+import fauset from '../assets/images/fauset.png'
+import incinerator from '../assets/images/incinerator.png'
 
 export const LoaderConfig = {
   player,
@@ -20,4 +24,8 @@ export const LoaderConfig = {
   snakePart0,
   snakePart1,
   doctorBig,
+  water,
+  garbage,
+  fauset,
+  incinerator,
 }

@@ -12,7 +12,7 @@ import { PauseGame } from '../components/PauseGame'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
-const INIT_SNAKE_LENGTH = 5
+const INIT_SNAKE_LENGTH = 2
 const INIT_FOOD_COUNT = 5
 
 export class SnakeScene {
@@ -196,14 +196,26 @@ export class SnakeScene {
     console.log('createSnake')
     this.snakeGroup = new PIXI.Container()
 
-    this.snakeGroup.sortableChildren = true
-    for (let i = 0; i < INIT_SNAKE_LENGTH; i++) {
-      const initI = 5 - i
-      const initJ = 3
-      const initDirection = 'right'
-      const initColor = `0x${Math.floor(Math.random() * 100000)}`
+    // create snake head
+    const initI = 5
+    const initJ = 3
+    const initDirection = 'right'
+    const initColor = `0xdddddd`
+    const snakeHead = new SnakePart(initI, initJ, initDirection, 0, initColor)
+    this.snakeArray.push(snakeHead)
 
-      const snakePart = new SnakePart(initI, initJ, initDirection, i, initColor)
+    // create rest body
+    this.snakeGroup.sortableChildren = true
+    for (let i = 1; i < INIT_SNAKE_LENGTH; i++) {
+      const initSnakePartData = getInitSnakePartData(
+        this.snakeArray[this.snakeArray.length - 1]
+      )
+      if (!initSnakePartData) return
+
+      const { i, j, direction, index } = initSnakePartData
+
+      const snakePart = new SnakePart(i, j, direction, index, 0xdddddd)
+      console.log(snakePart)
       snakePart.container.zIndex = INIT_SNAKE_LENGTH - 1 - i
       this.snakeArray.push(snakePart)
     }
@@ -243,9 +255,10 @@ export class SnakeScene {
     }
   }
 
-  eatingFoodHandler() {
+  async eatingFoodHandler() {
     const { i: headI, j: headJ } = this.snakeArray[0]
 
+    // find out whether a food is been eaten
     let eatenFoodIndex = -1
     for (let x = 0; x < this.snakeFoodArray.length; x++) {
       const { i: foodI, j: foodJ } = this.snakeFoodArray[x]
@@ -256,11 +269,18 @@ export class SnakeScene {
         break
       }
     }
+
+    // if so, record it food id, and do following process
     if (eatenFoodIndex >= 0) {
       // remove eaten food
       const removedFood = this.snakeFoodArray.splice(eatenFoodIndex, 1)
-      this.snakeFoodGroup.removeChild(removedFood[0]?.container)
-      eatenFoodIndex = -1
+
+      // if (
+      //   removedFood.type === 'fauset' ||
+      //   removedFood.type === 'incinerator'
+      // ) {
+      //   return false
+      // }
 
       // create new snakePart and add behind tail
       const snakeTail = this.snakeArray[this.snakeArray.length - 1]
@@ -268,13 +288,19 @@ export class SnakeScene {
       const initSnakePartData = getInitSnakePartData(snakeTail)
       if (!initSnakePartData) return
 
-      const { i, j, direction, index } = getInitSnakePartData(snakeTail)
+      console.log(
+        snakeTail.i + ' , ' + snakeTail.j + ' , ' + snakeTail.direction
+      )
+      console.log(initSnakePartData)
+
+      const { i, j, direction, index } = initSnakePartData
       const newSnakePart = new SnakePart(
         i,
         j,
         direction,
         index,
-        removedFood[0].color
+        // removedFood[0].color
+        getNewBodyColor.bind(this)(removedFood[0])
       )
 
       this.snakeGroup.addChild(newSnakePart.container)
@@ -287,10 +313,27 @@ export class SnakeScene {
         this.snakeFoodArray.push(newSnakeFood)
         this.snakeFoodGroup.addChild(newSnakeFood.container)
       }
+
+      this.snakeFoodGroup.removeChild(removedFood[0]?.container)
+      eatenFoodIndex = -1
+    }
+
+    return true
+
+    function getNewBodyColor(food) {
+      switch (food.type) {
+        case 'garbage':
+          return this.snakeArray.length % 2 === 0 ? '0x9f523e' : '0xcc8053'
+        case 'water':
+          return this.snakeArray.length % 2 === 0 ? '0x464f7c' : '0x6e90ba'
+
+        default:
+          break
+      }
     }
   }
 
-  async startGameFlow() {
+  async startGameFlowOld() {
     console.log('startGameFlow')
     await wait(500)
 
@@ -319,6 +362,10 @@ export class SnakeScene {
     }
   }
 
+  async startGameFlow() {
+    this.startGame()
+  }
+
   // ===== start game =====
   async startGame() {
     console.log('game started')
@@ -326,16 +373,10 @@ export class SnakeScene {
 
     this.snakeMoveTicker = new PIXI.Ticker()
     this.snakeMoveTicker.add(async () => {
-      // const snakeHead = this.snakeArray[0].currentPosition
-      // console.log(`${snakeHead.i},${snakeHead.j}`)
-
       for (let i = 0; i < this.snakeArray.length; i++) {
         const snakePart = this.snakeArray[i]
         const frontSnakePart = this.snakeArray[i - 1]
         await snakePart.move()
-
-        // handle eating food
-        this.eatingFoodHandler()
 
         // only when snake is moved to grid could change direction
         if (
@@ -373,6 +414,14 @@ export class SnakeScene {
         }
       }
 
+      // handle eating food
+      const eatResult = await this.eatingFoodHandler()
+
+      if (typeof eatResult === 'boolean' && !eatResult) {
+        this.gameOver()
+        return
+      }
+      // handle if dead
       this.deadMonitor()
     })
 
@@ -571,42 +620,48 @@ function getOppositeDirection(direction) {
 }
 
 function getInitSnakePartData(prevSnakePart) {
-  if (!prevSnakePart.direction) return
+  const { i, j, direction, id } = prevSnakePart
 
   let data = {}
-  switch (prevSnakePart.direction) {
+  switch (direction) {
     case 'right':
       data = {
-        i: prevSnakePart.i - 1,
-        j: prevSnakePart.j,
+        i: i - 1,
+        j: j,
         direct: 'right',
-        index: prevSnakePart.id + 1,
+        index: id + 1,
       }
       break
     case 'left':
       data = {
-        i: prevSnakePart.i + 1,
-        j: prevSnakePart.j,
+        i: i + 1,
+        j: j,
         direct: 'left',
-        index: prevSnakePart.id + 1,
+        index: id + 1,
       }
       break
     case 'up':
       data = {
-        i: prevSnakePart.i,
-        j: prevSnakePart.j + 1,
+        i: i,
+        j: j + 1,
         direct: 'up',
-        index: prevSnakePart.id + 1,
+        index: id + 1,
       }
       break
     case 'down':
       data = {
-        i: prevSnakePart.i,
-        j: prevSnakePart.j - 1,
+        i: i,
+        j: j - 1,
         direct: 'down',
-        index: prevSnakePart.id + 1,
+        index: id + 1,
       }
       break
+
+    default:
+      console.log(i)
+      console.log(j)
+      console.log(direction)
+      console.log(id)
   }
 
   return data

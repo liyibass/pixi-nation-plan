@@ -22,7 +22,7 @@ export class Loader {
 
       // throughout the process multiple signals can be dispatched.
       this.loader.onProgress.add((event) => {
-        this.topLevelThis.progress = event.progress
+        this.topLevelThis.progress = event.progress > 99 ? 100 : event.progress
       }) // called once per loaded/errored file
     })
   }
