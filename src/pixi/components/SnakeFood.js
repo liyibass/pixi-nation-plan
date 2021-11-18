@@ -39,7 +39,7 @@ export class SnakeFood {
   createSprite() {
     const blockFrame = new PIXI.Graphics()
 
-    blockFrame.lineStyle(1, 0x000000, 1)
+    // blockFrame.lineStyle(1, 0x000000, 1)
     blockFrame.drawRoundedRect(0, 0, BLOCK_WIDTH * 1, BLOCK_WIDTH * 1, 5)
 
     this.container.addChild(blockFrame)

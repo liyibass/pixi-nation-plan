@@ -15,13 +15,13 @@ export class SnakePoison {
 
     this.currentPosition = { i, j }
 
-    this.getFoodType()
+    this.getPoisonType()
     this.createSprite()
 
     this.setupPositionInPixel()
   }
 
-  getFoodType() {
+  getPoisonType() {
     const random = Math.floor(Math.random() * 2)
 
     switch (random) {
@@ -44,11 +44,11 @@ export class SnakePoison {
   createSprite() {
     const blockFrame = new PIXI.Graphics()
 
+    // blockFrame.lineStyle(1, 0x000000, 1)
+
     if (this.type === 'incinerator') {
-      blockFrame.lineStyle(1, 0x000000, 1)
       blockFrame.drawRoundedRect(0, 0, BLOCK_WIDTH * 3, BLOCK_WIDTH * 3, 5)
     } else {
-      blockFrame.lineStyle(1, 0x000000, 1)
       blockFrame.drawRoundedRect(0, 0, BLOCK_WIDTH * 2, BLOCK_WIDTH * 1, 5)
     }
     this.container.addChild(blockFrame)

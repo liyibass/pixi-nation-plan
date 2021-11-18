@@ -39,6 +39,7 @@ export class SnakeScene {
 
     this.initGame()
     this.startGameFlow()
+    // this.startGameTest()
   }
   // ===== init game =====
   createBackground() {
@@ -373,7 +374,7 @@ export class SnakeScene {
     }
   }
 
-  async startGameFlowOld() {
+  async startGameFlow() {
     console.log('startGameFlow')
     await wait(500)
 
@@ -402,7 +403,7 @@ export class SnakeScene {
     }
   }
 
-  async startGameFlow() {
+  async startGameTest() {
     this.startGame()
   }
 
@@ -488,7 +489,7 @@ export class SnakeScene {
 
     // get circle's boundray
     if (isCircle) {
-      console.log('=========has circle=========')
+      // console.log('=========has circle=========')
 
       let leftBoundary = snakeHead.i
       let rightBoundary = snakeHead.i
@@ -537,36 +538,25 @@ export class SnakeScene {
       isCircle = false
       circleEndIndex = 0
     } else {
-      console.log('no cicle')
+      // console.log('no cicle')
     }
   }
 
   deadMonitor() {
     const { i, j } = this.snakeArray[0].getPosition()
 
-    const notFoodArray = this.snakeFoodArray.filter((food) => {
-      return food.type === 'incinerator' || food.type === 'fauset'
-    })
-    if (notFoodArray.length) {
-      notFoodArray.forEach((notFood) => {
-        const { i: I, j: J, type: foodType } = notFood
-        switch (foodType) {
-          case 'incinerator':
-            if (i >= I && i <= I + 2 && j >= J && j <= J + 2) {
-              this.gameOver()
-            }
-            break
-          case 'fauset':
-            if (i >= I && i <= I + 1 && j === J) {
-              this.gameOver()
-            }
-            break
+    if (this.snakePoisionArray.length) {
+      for (let index = 0; index < this.snakePoisionArray.length; index++) {
+        const poison = this.snakePoisionArray[index]
+        const { i: I, j: J, width, height } = poison
+
+        if (i >= I && i <= I + width - 1 && j >= J && j <= J + height - 1) {
+          this.gameOver()
+          break
         }
-      })
+      }
     }
 
-    // console.log(`${i},${j}`)
-    // console.log(`${this.totalI},${this.totalJ}`)
     if (i < 0 || j < 0 || i > this.totalI - 1 || j > this.totalJ - 1) {
       if (easterEggString !== 'readr') {
         this.gameOver()
