@@ -207,15 +207,15 @@ export class SnakeScene {
 
     // create rest body
     this.snakeGroup.sortableChildren = true
-    for (let i = 1; i < INIT_SNAKE_LENGTH; i++) {
+    for (let x = 1; x < INIT_SNAKE_LENGTH; x++) {
       const initSnakePartData = getInitSnakePartData(
         this.snakeArray[this.snakeArray.length - 1]
       )
       if (!initSnakePartData) return
 
-      const { i, j, direction, index } = initSnakePartData
+      const { i, j, direction, id } = initSnakePartData
 
-      const snakePart = new SnakePart(i, j, direction, index, undefined)
+      const snakePart = new SnakePart(i, j, direction, id, undefined)
       snakePart.container.zIndex = INIT_SNAKE_LENGTH - 1 - i
       this.snakeArray.push(snakePart)
     }
@@ -295,7 +295,7 @@ export class SnakeScene {
       eatenFoodIndex = -1
 
       // add snakeBody
-      // await this.createNewBodyWithFood(removedFood)
+      await this.createNewBodyWithFood(removedFood)
 
       // add new food
       if (this.snakeFoodArray.length < INIT_FOOD_COUNT) {
@@ -312,21 +312,26 @@ export class SnakeScene {
 
     // create new snakePart and add behind tail
     const snakeTail = this.snakeArray[this.snakeArray.length - 1]
+
     // recorrect position
     const initSnakePartData = getInitSnakePartData(snakeTail)
     if (!initSnakePartData) return
-    console.log(snakeTail)
+
+    const { i, j, direction, id, x, y } = initSnakePartData
     console.log(initSnakePartData)
     const newSnakePart = new SnakePart(
-      initSnakePartData.i,
-      initSnakePartData.j,
-      initSnakePartData.direction,
-      initSnakePartData.id,
+      i,
+      j,
+      direction,
+      id,
       getNewBodyColor.bind(this)(removedFood)
     )
+    console.log(newSnakePart)
 
     this.snakeArray.push(newSnakePart)
     this.snakeGroup.addChild(newSnakePart.container)
+    newSnakePart.container.x = x
+    newSnakePart.container.y = y
 
     function getNewBodyColor(food) {
       switch (food?.type) {
@@ -633,7 +638,7 @@ function getOppositeDirection(direction) {
 }
 
 function getInitSnakePartData(prevSnakePart) {
-  const { i, j, direction, id } = prevSnakePart
+  const { i, j, direction, id, container } = prevSnakePart
 
   let data = {}
   switch (direction) {
@@ -641,32 +646,40 @@ function getInitSnakePartData(prevSnakePart) {
       data = {
         i: i - 1,
         j: j,
-        direct: 'right',
-        index: id + 1,
+        direction: 'right',
+        id: id + 1,
+        x: container.x - BLOCK_WIDTH,
+        y: container.y,
       }
       break
     case 'left':
       data = {
         i: i + 1,
         j: j,
-        direct: 'left',
-        index: id + 1,
+        direction: 'left',
+        id: id + 1,
+        x: container.x + BLOCK_WIDTH,
+        y: container.y,
       }
       break
     case 'up':
       data = {
         i: i,
         j: j + 1,
-        direct: 'up',
-        index: id + 1,
+        direction: 'up',
+        id: id + 1,
+        x: container.x,
+        y: container.y + BLOCK_WIDTH,
       }
       break
     case 'down':
       data = {
         i: i,
         j: j - 1,
-        direct: 'down',
-        index: id + 1,
+        direction: 'down',
+        id: id + 1,
+        x: container.x,
+        y: container.y - BLOCK_WIDTH,
       }
       break
 
