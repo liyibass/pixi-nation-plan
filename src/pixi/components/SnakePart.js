@@ -4,12 +4,12 @@ const MOVE_SPEED = 2
 const BLOCK_WIDTH = 16
 
 export class SnakePart {
-  constructor(i, j, direction, index, color) {
+  constructor(i, j, direction = 'right', index, color) {
     this.container = new PIXI.Container()
     this.id = index
     this.i = i
     this.j = j
-    this.color = color
+    this.color = color ? color : `0x${Math.floor(Math.random() * 999999)}`
 
     this.direction = direction
     this.prevDirection = direction
@@ -17,8 +17,7 @@ export class SnakePart {
     // this.nextPosition = _getDefaultPosition(index)
 
     // set initial position in pixel
-    this.container.x = this.i * BLOCK_WIDTH
-    this.container.y = this.j * BLOCK_WIDTH
+    this.setupPositionInPixel(this.i, this.j)
 
     this.createSprite()
     // this.setupPositionInPixel(this.i, this.j)
@@ -54,23 +53,51 @@ export class SnakePart {
     this.container.y = j * BLOCK_WIDTH
   }
 
-  getPositionInPixel({ i, j }) {
+  getPosition() {
     return {
-      x: BLOCK_WIDTH / 2 + i * BLOCK_WIDTH,
-      y: BLOCK_WIDTH / 2 + j * BLOCK_WIDTH,
+      i: this.i,
+      j: this.j,
+    }
+  }
+  getNextPosition() {
+    switch (this.direction) {
+      case 'right':
+        return {
+          i: this.i + 1,
+          j: this.j,
+        }
+      case 'left':
+        return {
+          i: this.i - 1,
+          j: this.j,
+        }
+      case 'up':
+        return {
+          i: this.i,
+          j: this.j - 1,
+        }
+      case 'down':
+        return {
+          i: this.i,
+          j: this.j + 1,
+        }
+
+      default:
+        break
     }
   }
 
   move() {
     const { x, y } = this.container
     const { i, j } = this
+    // console.log(x, y)
     switch (this.direction) {
       case 'right':
         this.container.x += MOVE_SPEED
         // this.container.angle = 0
-
-        if (x >= i * BLOCK_WIDTH) {
-          this.i = this.i + 1
+        if (x > i * BLOCK_WIDTH) {
+          this.i = Math.floor(x / BLOCK_WIDTH + 1)
+          this.j = Math.floor(y / BLOCK_WIDTH)
         }
         break
 
@@ -78,8 +105,9 @@ export class SnakePart {
         this.container.x -= MOVE_SPEED
         // this.container.angle = 0
 
-        if (x <= i * BLOCK_WIDTH) {
-          this.i = this.i - 1
+        if (x < i * BLOCK_WIDTH) {
+          this.i = Math.floor(x / BLOCK_WIDTH)
+          this.j = Math.floor(y / BLOCK_WIDTH)
         }
         break
 
@@ -87,8 +115,9 @@ export class SnakePart {
         this.container.y += MOVE_SPEED
         // this.container.angle = 90
 
-        if (y >= j * BLOCK_WIDTH) {
-          this.j = this.j + 1
+        if (y > j * BLOCK_WIDTH) {
+          this.i = Math.floor(x / BLOCK_WIDTH)
+          this.j = Math.floor(y / BLOCK_WIDTH + 1)
         }
         break
 
@@ -96,8 +125,9 @@ export class SnakePart {
         this.container.y -= MOVE_SPEED
         // this.container.angle = 90
 
-        if (y <= j * BLOCK_WIDTH) {
-          this.j = this.j - 1
+        if (y < j * BLOCK_WIDTH) {
+          this.i = Math.floor(x / BLOCK_WIDTH)
+          this.j = Math.floor(y / BLOCK_WIDTH)
         }
         break
     }

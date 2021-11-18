@@ -12,7 +12,7 @@ import { PauseGame } from '../components/PauseGame'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
-const INIT_SNAKE_LENGTH = 2
+const INIT_SNAKE_LENGTH = 1
 const INIT_FOOD_COUNT = 5
 
 export class SnakeScene {
@@ -26,6 +26,7 @@ export class SnakeScene {
     // snake property
     this.snakeArray = []
     this.moveDirection = ['right']
+    this.newBodyQueue = []
 
     // food property
     this.snakeFoodArray = []
@@ -197,8 +198,8 @@ export class SnakeScene {
     this.snakeGroup = new PIXI.Container()
 
     // create snake head
-    const initI = 5
-    const initJ = 3
+    const initI = 0
+    const initJ = 0
     const initDirection = 'right'
     const initColor = `0xdddddd`
     const snakeHead = new SnakePart(initI, initJ, initDirection, 0, initColor)
@@ -214,8 +215,7 @@ export class SnakeScene {
 
       const { i, j, direction, index } = initSnakePartData
 
-      const snakePart = new SnakePart(i, j, direction, index, 0xdddddd)
-      console.log(snakePart)
+      const snakePart = new SnakePart(i, j, direction, index, undefined)
       snakePart.container.zIndex = INIT_SNAKE_LENGTH - 1 - i
       this.snakeArray.push(snakePart)
     }
@@ -256,8 +256,8 @@ export class SnakeScene {
   }
 
   async eatingFoodHandler() {
-    const { i: headI, j: headJ } = this.snakeArray[0]
-
+    const { i: headI, j: headJ } = this.snakeArray[0].getPosition()
+    // console.log(`${headI},${headJ}`)
     // find out whether a food is been eaten
     let eatenFoodIndex = -1
     for (let x = 0; x < this.snakeFoodArray.length; x++) {
@@ -268,43 +268,34 @@ export class SnakeScene {
         eatenFoodIndex = x
         break
       }
+
+      // if (type === 'incinerator' || type === 'fauset') {
+      //   if (
+      //     (headI === foodI - 1 && headJ === foodJ - 1) ||
+      //     (headI === foodI && headJ === foodJ - 1) ||
+      //     (headI === foodI + 1 && headJ === foodJ - 1) ||
+      //     (headI === foodI - 1 && headJ === foodJ) ||
+      //     (headI === foodI + 1 && headJ === foodJ) ||
+      //     (headI === foodI - 1 && headJ === foodJ + 1) ||
+      //     (headI === foodI && headJ === foodJ + 1) ||
+      //     (headI === foodI + 1 && headJ === foodJ + 1)
+      //   ) {
+      //     return false
+      //   }
+      // }
     }
 
     // if so, record it food id, and do following process
     if (eatenFoodIndex >= 0) {
-      // remove eaten food
-      const removedFood = this.snakeFoodArray.splice(eatenFoodIndex, 1)
+      // get eatenFood data(and remove it from snakeFoodArray)
+      const removedFood = this.snakeFoodArray.splice(eatenFoodIndex, 1)?.[0]
 
-      // if (
-      //   removedFood.type === 'fauset' ||
-      //   removedFood.type === 'incinerator'
-      // ) {
-      //   return false
-      // }
+      // remove eaten food from container
+      this.snakeFoodGroup.removeChild(removedFood.container)
+      eatenFoodIndex = -1
 
-      // create new snakePart and add behind tail
-      const snakeTail = this.snakeArray[this.snakeArray.length - 1]
-
-      const initSnakePartData = getInitSnakePartData(snakeTail)
-      if (!initSnakePartData) return
-
-      console.log(
-        snakeTail.i + ' , ' + snakeTail.j + ' , ' + snakeTail.direction
-      )
-      console.log(initSnakePartData)
-
-      const { i, j, direction, index } = initSnakePartData
-      const newSnakePart = new SnakePart(
-        i,
-        j,
-        direction,
-        index,
-        // removedFood[0].color
-        getNewBodyColor.bind(this)(removedFood[0])
-      )
-
-      this.snakeGroup.addChild(newSnakePart.container)
-      this.snakeArray.push(newSnakePart)
+      // add snakeBody
+      // await this.createNewBodyWithFood(removedFood)
 
       // add new food
       if (this.snakeFoodArray.length < INIT_FOOD_COUNT) {
@@ -313,22 +304,39 @@ export class SnakeScene {
         this.snakeFoodArray.push(newSnakeFood)
         this.snakeFoodGroup.addChild(newSnakeFood.container)
       }
-
-      this.snakeFoodGroup.removeChild(removedFood[0]?.container)
-      eatenFoodIndex = -1
     }
+  }
 
-    return true
+  async createNewBodyWithFood(removedFood) {
+    console.log('createNewBody start')
+
+    // create new snakePart and add behind tail
+    const snakeTail = this.snakeArray[this.snakeArray.length - 1]
+    // recorrect position
+    const initSnakePartData = getInitSnakePartData(snakeTail)
+    if (!initSnakePartData) return
+    console.log(snakeTail)
+    console.log(initSnakePartData)
+    const newSnakePart = new SnakePart(
+      initSnakePartData.i,
+      initSnakePartData.j,
+      initSnakePartData.direction,
+      initSnakePartData.id,
+      getNewBodyColor.bind(this)(removedFood)
+    )
+
+    this.snakeArray.push(newSnakePart)
+    this.snakeGroup.addChild(newSnakePart.container)
 
     function getNewBodyColor(food) {
-      switch (food.type) {
+      switch (food?.type) {
         case 'garbage':
           return this.snakeArray.length % 2 === 0 ? '0x9f523e' : '0xcc8053'
         case 'water':
           return this.snakeArray.length % 2 === 0 ? '0x464f7c' : '0x6e90ba'
 
         default:
-          break
+          return 0xdddddd
       }
     }
   }
@@ -387,9 +395,8 @@ export class SnakeScene {
         } else {
           // head
           if (i === 0) {
-            const nextHeadDirection = this.moveDirection[0]
-
             // remove invalid move direction
+            const nextHeadDirection = this.moveDirection[0]
             if (
               snakePart.direction === getOppositeDirection(nextHeadDirection)
             ) {
@@ -414,13 +421,19 @@ export class SnakeScene {
         }
       }
 
-      // handle eating food
-      const eatResult = await this.eatingFoodHandler()
+      // console.log(`${this.snakeArray[0].i},${this.snakeArray[0].j}`)
 
-      if (typeof eatResult === 'boolean' && !eatResult) {
-        this.gameOver()
-        return
-      }
+      // handle eating food
+
+      await this.eatingFoodHandler()
+
+      // if (canAddNewSnakePart) {
+      //   if (typeof eatResult === 'boolean' && !eatResult) {
+      //     this.gameOver()
+      //     return
+      //   }
+      // }
+
       // handle if dead
       this.deadMonitor()
     })
@@ -429,7 +442,7 @@ export class SnakeScene {
   }
 
   deadMonitor() {
-    const { i, j } = this.snakeArray[0]
+    const { i, j } = this.snakeArray[0].getPosition()
     // console.log(`${i},${j}`)
     // console.log(`${this.totalI},${this.totalJ}`)
     if (i < 0 || j < 0 || i > this.totalI - 1 || j > this.totalJ - 1) {
@@ -674,3 +687,29 @@ function wait(delayTime) {
     }, delayTime)
   })
 }
+
+// function contain(A, B) {
+//   let collision = undefined
+//   //Left
+//   if (A.x < B.x) {
+//     A.x = B.x
+//     collision = 'left'
+//   }
+//   //Top
+//   if (A.y < B.y) {
+//     A.y = B.y
+//     collision = 'top'
+//   }
+//   //Right
+//   if (A.x + A.width > B.width) {
+//     A.x = B.width - A.width
+//     collision = 'right'
+//   }
+//   //Bottom
+//   if (A.y + A.height > B.height) {
+//     A.y = B.height - A.height
+//     collision = 'bottom'
+//   }
+//   //Return the `collision` value
+//   return collision
+// }
