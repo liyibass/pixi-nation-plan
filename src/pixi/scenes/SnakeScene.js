@@ -298,17 +298,9 @@ export class SnakeScene {
     // find out whether a food is been eaten
     let eatenFoodIndex = -1
     for (let x = 0; x < this.snakeFoodArray.length; x++) {
-      const { i: foodI, j: foodJ, type: foodType } = this.snakeFoodArray[x]
+      const { i: foodI, j: foodJ } = this.snakeFoodArray[x]
 
-      // console.log(`${i},${j}`)
-      if (
-        foodI === headI &&
-        foodJ === headJ
-        // foodType !== 'fauset' &&
-        // foodType !== 'incinerator'
-      ) {
-        console.log('EAT')
-        console.log(foodType)
+      if (foodI === headI && foodJ === headJ) {
         eatenFoodIndex = x
         break
       }
@@ -342,8 +334,6 @@ export class SnakeScene {
   }
 
   async createNewBodyWithFood(removedFood) {
-    console.log('createNewBody start')
-
     // create new snakePart and add behind tail
     const snakeTail = this.snakeArray[this.snakeArray.length - 1]
 
@@ -476,31 +466,78 @@ export class SnakeScene {
   }
 
   circleMonitor() {
-    const snakeHead = this.snakeArray[0]
+    if (!this.snakePoisionArray.length) return
 
+    const snakeHead = this.snakeArray[0]
     let isCircle = false
+    let circleEndIndex = 0
+
+    // check if there is a circle made by snake
     for (let i = 1; i < this.snakeArray.length; i++) {
       const snakePart = this.snakeArray[i]
 
       if (snakeHead.i === snakePart.i && snakeHead.j === snakePart.j) {
         isCircle = true
+        circleEndIndex = i
+        break
+      } else {
+        isCircle = false
+        circleEndIndex = 0
       }
     }
 
+    // get circle's boundray
     if (isCircle) {
-      let leftBound = snakeHead.i
-      let rightBound = snakeHead.i
-      let upBound = snakeHead.j
-      let downBound = snakeHead.j
+      console.log('=========has circle=========')
 
-      for (let i = 1; i < this.snakeArray.length; i++) {
+      let leftBoundary = snakeHead.i
+      let rightBoundary = snakeHead.i
+      let topBoundary = snakeHead.j
+      let bottomBoundary = snakeHead.j
+
+      for (let i = 1; i < circleEndIndex; i++) {
         const snakePart = this.snakeArray[i]
 
-        if (snakePart.i < leftBound) leftBound = snakePart.i
-        if (snakePart.i > rightBound) rightBound = snakePart.i
-        if (snakePart.j < upBound) upBound = snakePart.j
-        if (snakePart.j > downBound) downBound = snakePart.j
+        if (snakePart.i < leftBoundary) leftBoundary = snakePart.i
+        if (snakePart.i > rightBoundary) rightBoundary = snakePart.i
+        if (snakePart.j < topBoundary) topBoundary = snakePart.j
+        if (snakePart.j > bottomBoundary) bottomBoundary = snakePart.j
       }
+
+      // console.log(leftBoundary)
+      // console.log(rightBoundary)
+      // console.log(topBoundary)
+      // console.log(bottomBoundary)
+
+      // check if the poison's position is within circle boundary
+      for (let inext = 0; inext < this.snakePoisionArray.length; inext++) {
+        const targetPoison = this.snakePoisionArray[inext]
+        const { i, j, width, height } = targetPoison
+        // console.log(i + ',' + j + ' .  ' + width + ' .  ' + height)
+
+        if (
+          i > leftBoundary &&
+          i + width - 1 < rightBoundary &&
+          j > topBoundary &&
+          j + height - 1 < bottomBoundary
+        ) {
+          console.log('CATCHA')
+
+          this.snakeFoodGroup.removeChild(targetPoison.container)
+
+          this.snakePoisionArray.forEach((poison, x, arr) => {
+            if (targetPoison.id === poison.id) {
+              arr.splice(x, 1)
+            }
+          })
+
+          break
+        }
+      }
+      isCircle = false
+      circleEndIndex = 0
+    } else {
+      console.log('no cicle')
     }
   }
 

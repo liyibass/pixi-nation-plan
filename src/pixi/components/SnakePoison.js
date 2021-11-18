@@ -28,11 +28,15 @@ export class SnakePoison {
       case 0:
         this.type = 'fauset'
         this.color = 0x000000
+        this.width = 2
+        this.height = 1
         break
 
       case 1:
         this.type = 'incinerator'
         this.color = 0x000000
+        this.width = 3
+        this.height = 3
         break
     }
   }
