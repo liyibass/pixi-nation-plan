@@ -14,7 +14,7 @@ import { PauseGame } from '../components/PauseGame'
 const BLOCK_WIDTH = 16
 const INIT_SNAKE_LENGTH = 5
 const INIT_FOOD_COUNT = 5
-let easterEgg = false
+let easterEggString = ''
 
 export class SnakeScene {
   constructor() {
@@ -189,6 +189,30 @@ export class SnakeScene {
           this.moveDirection.push('left')
 
           break
+
+        case 'r':
+          if (easterEggString === '' || easterEggString === 'read') {
+            easterEggString += 'r'
+          }
+          break
+
+        case 'e':
+          if (easterEggString === 'r') {
+            easterEggString += 'e'
+          }
+          break
+
+        case 'a':
+          if (easterEggString === 're') {
+            easterEggString += 'a'
+          }
+          break
+
+        case 'd':
+          if (easterEggString === 'rea') {
+            easterEggString += 'd'
+          }
+          break
       }
     }
 
@@ -270,21 +294,6 @@ export class SnakeScene {
         eatenFoodIndex = x
         break
       }
-
-      // if (type === 'incinerator' || type === 'fauset') {
-      //   if (
-      //     (headI === foodI - 1 && headJ === foodJ - 1) ||
-      //     (headI === foodI && headJ === foodJ - 1) ||
-      //     (headI === foodI + 1 && headJ === foodJ - 1) ||
-      //     (headI === foodI - 1 && headJ === foodJ) ||
-      //     (headI === foodI + 1 && headJ === foodJ) ||
-      //     (headI === foodI - 1 && headJ === foodJ + 1) ||
-      //     (headI === foodI && headJ === foodJ + 1) ||
-      //     (headI === foodI + 1 && headJ === foodJ + 1)
-      //   ) {
-      //     return false
-      //   }
-      // }
     }
 
     // if so, record it food id, and do following process
@@ -456,7 +465,7 @@ export class SnakeScene {
     // console.log(`${i},${j}`)
     // console.log(`${this.totalI},${this.totalJ}`)
     if (i < 0 || j < 0 || i > this.totalI - 1 || j > this.totalJ - 1) {
-      if (!easterEgg) {
+      if (easterEggString !== 'readr') {
         this.gameOver()
       } else {
         this.easterEggMode()
@@ -542,6 +551,7 @@ export class SnakeScene {
     window.removeEventListener('keydown', this.keyboardListener)
 
     await this.crashAnimation()
+    await wait(500)
     await this.deadAnimation()
 
     this.snakeArray = []
