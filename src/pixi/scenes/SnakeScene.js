@@ -23,6 +23,8 @@ export class SnakeScene {
 
     this.totalI = Math.floor(this.gameStageWidth / BLOCK_WIDTH)
     this.totalJ = Math.floor(this.gameStageHeight / BLOCK_WIDTH)
+    Globals.snakeTotalI = this.totalI
+    Globals.snakeTotalJ = this.totalJ
 
     // snake property
     this.snakeArray = []
@@ -287,10 +289,17 @@ export class SnakeScene {
     // find out whether a food is been eaten
     let eatenFoodIndex = -1
     for (let x = 0; x < this.snakeFoodArray.length; x++) {
-      const { i: foodI, j: foodJ } = this.snakeFoodArray[x]
+      const { i: foodI, j: foodJ, type: foodType } = this.snakeFoodArray[x]
+
       // console.log(`${i},${j}`)
-      if (foodI === headI && foodJ === headJ) {
+      if (
+        foodI === headI &&
+        foodJ === headJ &&
+        foodType !== 'fauset' &&
+        foodType !== 'incinerator'
+      ) {
         console.log('EAT')
+        console.log(foodType)
         eatenFoodIndex = x
         break
       }
@@ -440,18 +449,8 @@ export class SnakeScene {
         }
       }
 
-      // console.log(`${this.snakeArray[0].i},${this.snakeArray[0].j}`)
-
       // handle eating food
-
       await this.eatingFoodHandler()
-
-      // if (canAddNewSnakePart) {
-      //   if (typeof eatResult === 'boolean' && !eatResult) {
-      //     this.gameOver()
-      //     return
-      //   }
-      // }
 
       // handle if dead
       this.deadMonitor()
@@ -462,6 +461,28 @@ export class SnakeScene {
 
   deadMonitor() {
     const { i, j } = this.snakeArray[0].getPosition()
+
+    const notFoodArray = this.snakeFoodArray.filter((food) => {
+      return food.type === 'incinerator' || food.type === 'fauset'
+    })
+    if (notFoodArray.length) {
+      notFoodArray.forEach((notFood) => {
+        const { i: I, j: J, type: foodType } = notFood
+        switch (foodType) {
+          case 'incinerator':
+            if (i >= I && i <= I + 2 && j >= J && j <= J + 2) {
+              this.gameOver()
+            }
+            break
+          case 'fauset':
+            if (i >= I && i <= I + 1 && j === J) {
+              this.gameOver()
+            }
+            break
+        }
+      })
+    }
+
     // console.log(`${i},${j}`)
     // console.log(`${this.totalI},${this.totalJ}`)
     if (i < 0 || j < 0 || i > this.totalI - 1 || j > this.totalJ - 1) {

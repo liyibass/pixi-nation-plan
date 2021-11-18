@@ -16,12 +16,13 @@ export class SnakeFood {
     this.currentPosition = { i, j }
 
     // set initial position in pixel
-    this.container.x = this.currentPosition.i * BLOCK_WIDTH
-    this.container.y = this.currentPosition.j * BLOCK_WIDTH
+    // this.container.x = this.currentPosition.i * BLOCK_WIDTH
+    // this.container.y = this.currentPosition.j * BLOCK_WIDTH
 
     this.getFoodType()
     this.createSprite()
-    this.setupPositionInPixel(this.currentPosition.i, this.currentPosition.j)
+
+    this.setupPositionInPixel()
   }
 
   getFoodType() {
@@ -62,22 +63,49 @@ export class SnakeFood {
   createSprite() {
     const blockFrame = new PIXI.Graphics()
 
-    blockFrame.lineStyle(1, 0x000000, 0)
-    blockFrame.drawRoundedRect(0, 0, BLOCK_WIDTH * 1, BLOCK_WIDTH * 1, 5)
+    if (this.type === 'incinerator') {
+      blockFrame.lineStyle(1, 0x000000, 1)
+      blockFrame.drawRoundedRect(0, 0, BLOCK_WIDTH * 3, BLOCK_WIDTH * 3, 5)
+    } else if (this.type === 'fauset') {
+      blockFrame.lineStyle(1, 0x000000, 1)
+      blockFrame.drawRoundedRect(0, 0, BLOCK_WIDTH * 2, BLOCK_WIDTH * 1, 5)
+    } else {
+      blockFrame.lineStyle(1, 0x000000, 1)
+      blockFrame.drawRoundedRect(0, 0, BLOCK_WIDTH * 1, BLOCK_WIDTH * 1, 5)
+    }
+
     this.container.addChild(blockFrame)
 
     const texture = Globals.resources[this.type].texture
-    const sprite = new PIXI.Sprite(texture)
-    sprite.anchor.set(0.5, 0.5)
+    const iconSprite = new PIXI.Sprite(texture)
+    iconSprite.anchor.set(0.5, 0.5)
 
-    this.container.addChild(sprite)
+    this.container.addChild(iconSprite)
 
-    sprite.x = blockFrame.width / 2
-    sprite.y = blockFrame.height / 2
+    iconSprite.x = blockFrame.width / 2
+    iconSprite.y = blockFrame.height / 2
   }
 
-  setupPositionInPixel(i, j) {
-    this.container.x = i * BLOCK_WIDTH
-    this.container.y = j * BLOCK_WIDTH
+  adjustNotFoodPosition() {
+    if (this.type === 'incinerator' || this.type === 'fauset') {
+      if (this.i < 5) {
+        this.i = 5
+      } else if (this.i > Globals.snakeTotalI - 5) {
+        this.i = Globals.snakeTotalI - 5
+      }
+
+      if (this.j < 5) {
+        this.j = 5
+      } else if (this.j > Globals.snakeTotalJ - 5) {
+        this.j = Globals.snakeTotalJ - 5
+      }
+    }
+  }
+
+  setupPositionInPixel() {
+    this.adjustNotFoodPosition()
+
+    this.container.x = this.i * BLOCK_WIDTH
+    this.container.y = this.j * BLOCK_WIDTH
   }
 }
