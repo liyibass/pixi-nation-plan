@@ -4,6 +4,7 @@ import { Globals } from '../script/Globals'
 import { GroundGroup } from '../components/GroundGroup'
 import { SnakePart } from '../components/SnakePart'
 import { SnakeFood } from '../components/SnakeFood'
+import { SnakePoison } from '../components/SnakePoison'
 import { SnakeController } from '../components/SnakeController'
 import { DoctorSay } from '../components/DoctorSay'
 import { CountDown } from '../components/CountDown'
@@ -12,8 +13,9 @@ import { PauseGame } from '../components/PauseGame'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
-const INIT_SNAKE_LENGTH = 5
-const INIT_FOOD_COUNT = 5
+const INIT_SNAKE_LENGTH = 4
+const INIT_FOOD_COUNT = 4
+const INIT_POISON_COUNT = 3
 let easterEggString = ''
 
 export class SnakeScene {
@@ -33,6 +35,7 @@ export class SnakeScene {
 
     // food property
     this.snakeFoodArray = []
+    this.snakePoisionArray = []
 
     this.initGame()
     this.startGameFlow()
@@ -131,6 +134,7 @@ export class SnakeScene {
     this.createKeyboardListener()
     this.createSnake()
     this.createFood()
+    this.createPosition()
   }
 
   // ===== snake =====
@@ -257,30 +261,35 @@ export class SnakeScene {
 
   // ===== food =====
   createFood() {
-    if (this.snakeFoodArray.length > 0) return
-
     this.snakeFoodGroup = new PIXI.Container()
 
     for (let id = 0; id < INIT_FOOD_COUNT; id++) {
-      const { i, j } = this.getRandomFoodPosition.bind(this)()
+      const { i, j } = getRandomFoodPosition.bind(this)()
       const snakeFood = new SnakeFood(id, i, j)
 
       this.snakeFoodArray.push(snakeFood)
+      this.snakeFoodGroup.addChild(snakeFood.container)
     }
 
-    for (let i = 0; i < this.snakeFoodArray.length; i++) {
-      this.snakeFoodGroup.addChild(this.snakeFoodArray[i].container)
-    }
     this.gameStage.addChild(this.snakeFoodGroup)
+
+    // this.foodInterval = setInterval(() => {
+    //   if (this.snakeFoodArray.length < INIT_FOOD_COUNT) {
+    //     console.log('create')
+    //   }
+    // }, 5000)
   }
 
-  getRandomFoodPosition() {
-    const randomI = Math.floor(Math.random() * (this.totalI - 1))
-    const randomJ = Math.floor(Math.random() * (this.totalJ - 1))
-    return {
-      i: randomI,
-      j: randomJ,
-    }
+  createPosition() {
+    this.poisonInterval = setInterval(() => {
+      if (this.snakePoisionArray.length < INIT_POISON_COUNT) {
+        const { i, j } = getRandomFoodPosition.bind(this)(true)
+        const snakePoison = new SnakePoison(0, i, j)
+
+        this.snakePoisionArray.push(snakePoison)
+        this.snakeFoodGroup.addChild(snakePoison.container)
+      }
+    }, 15000)
   }
 
   async eatingFoodHandler() {
@@ -294,9 +303,9 @@ export class SnakeScene {
       // console.log(`${i},${j}`)
       if (
         foodI === headI &&
-        foodJ === headJ &&
-        foodType !== 'fauset' &&
-        foodType !== 'incinerator'
+        foodJ === headJ
+        // foodType !== 'fauset' &&
+        // foodType !== 'incinerator'
       ) {
         console.log('EAT')
         console.log(foodType)
@@ -309,22 +318,27 @@ export class SnakeScene {
     if (eatenFoodIndex >= 0) {
       // get eatenFood data(and remove it from snakeFoodArray)
       const removedFood = this.snakeFoodArray.splice(eatenFoodIndex, 1)?.[0]
-
-      // remove eaten food from container
-      this.snakeFoodGroup.removeChild(removedFood.container)
+      this.eatFood(removedFood)
       eatenFoodIndex = -1
+    }
+  }
 
-      // add snakeBody
-      await this.createNewBodyWithFood(removedFood)
+  async eatFood(removedFood) {
+    // remove eaten food from container
+    this.snakeFoodGroup.removeChild(removedFood.container)
 
-      // add new food
+    // add snakeBody
+    await this.createNewBodyWithFood(removedFood)
+
+    // add new food
+    setTimeout(() => {
       if (this.snakeFoodArray.length < INIT_FOOD_COUNT) {
-        const { i, j } = this.getRandomFoodPosition.bind(this)()
-        const newSnakeFood = new SnakeFood(eatenFoodIndex, i, j)
+        const { i, j } = getRandomFoodPosition.bind(this)()
+        const newSnakeFood = new SnakeFood(removedFood.id, i, j)
         this.snakeFoodArray.push(newSnakeFood)
         this.snakeFoodGroup.addChild(newSnakeFood.container)
       }
-    }
+    }, Math.floor(Math.random() * 5000))
   }
 
   async createNewBodyWithFood(removedFood) {
@@ -452,11 +466,42 @@ export class SnakeScene {
       // handle eating food
       await this.eatingFoodHandler()
 
+      this.circleMonitor()
+
       // handle if dead
       this.deadMonitor()
     })
 
     this.snakeMoveTicker.start()
+  }
+
+  circleMonitor() {
+    const snakeHead = this.snakeArray[0]
+
+    let isCircle = false
+    for (let i = 1; i < this.snakeArray.length; i++) {
+      const snakePart = this.snakeArray[i]
+
+      if (snakeHead.i === snakePart.i && snakeHead.j === snakePart.j) {
+        isCircle = true
+      }
+    }
+
+    if (isCircle) {
+      let leftBound = snakeHead.i
+      let rightBound = snakeHead.i
+      let upBound = snakeHead.j
+      let downBound = snakeHead.j
+
+      for (let i = 1; i < this.snakeArray.length; i++) {
+        const snakePart = this.snakeArray[i]
+
+        if (snakePart.i < leftBound) leftBound = snakePart.i
+        if (snakePart.i > rightBound) rightBound = snakePart.i
+        if (snakePart.j < upBound) upBound = snakePart.j
+        if (snakePart.j > downBound) downBound = snakePart.j
+      }
+    }
   }
 
   deadMonitor() {
@@ -805,4 +850,28 @@ function wait(delayTime) {
       resolve()
     }, delayTime)
   })
+}
+
+function getRandomFoodPosition(isPoison) {
+  let randomI = Math.floor(Math.random() * (this.totalI - 1))
+  let randomJ = Math.floor(Math.random() * (this.totalJ - 1))
+
+  if (isPoison) {
+    if (randomI < 5) {
+      randomI = 5
+    } else if (randomI > this.totalI - 5) {
+      randomI = this.totalI - 5
+    }
+
+    if (randomJ < 5) {
+      randomJ = 5
+    } else if (randomJ > this.totalJ - 5) {
+      randomJ = this.totalJ - 5
+    }
+  }
+
+  return {
+    i: randomI,
+    j: randomJ,
+  }
 }

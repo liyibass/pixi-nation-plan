@@ -3,20 +3,21 @@ import { Globals } from '../script/Globals'
 // import { Globals } from '../script/Globals'
 const BLOCK_WIDTH = 16
 
-export class SnakeFood {
+export class SnakePoison {
   constructor(id, i, j) {
     this.container = new PIXI.Container()
     this.id = id
     this.i = i
     this.j = j
 
-    this.type = 'water'
+    this.type = 'fauset'
     this.color = `0x000000`
 
     this.currentPosition = { i, j }
 
     this.getFoodType()
     this.createSprite()
+
     this.setupPositionInPixel()
   }
 
@@ -25,13 +26,13 @@ export class SnakeFood {
 
     switch (random) {
       case 0:
-        this.type = 'garbage'
-        this.color = 0x9f523e
+        this.type = 'fauset'
+        this.color = 0x000000
         break
 
       case 1:
-        this.type = 'water'
-        this.color = 0x464f7c
+        this.type = 'incinerator'
+        this.color = 0x000000
         break
     }
   }
@@ -39,9 +40,13 @@ export class SnakeFood {
   createSprite() {
     const blockFrame = new PIXI.Graphics()
 
-    blockFrame.lineStyle(1, 0x000000, 1)
-    blockFrame.drawRoundedRect(0, 0, BLOCK_WIDTH * 1, BLOCK_WIDTH * 1, 5)
-
+    if (this.type === 'incinerator') {
+      blockFrame.lineStyle(1, 0x000000, 1)
+      blockFrame.drawRoundedRect(0, 0, BLOCK_WIDTH * 3, BLOCK_WIDTH * 3, 5)
+    } else {
+      blockFrame.lineStyle(1, 0x000000, 1)
+      blockFrame.drawRoundedRect(0, 0, BLOCK_WIDTH * 2, BLOCK_WIDTH * 1, 5)
+    }
     this.container.addChild(blockFrame)
 
     const texture = Globals.resources[this.type].texture
