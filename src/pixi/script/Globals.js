@@ -39,7 +39,7 @@ export const Globals = {
 
     if (this.width > this.height / 2) {
       shortLength =
-        parseInt((this.height / 2 - 2 * gameStagePadding) / BLOCK_WIDTH) *
+        parseInt((this.height / 2 - 2 * gameStagePadding) / BLOCK_WIDTH - 2) *
         BLOCK_WIDTH
 
       return {
@@ -81,7 +81,8 @@ export const Globals = {
         this.height / 2 +
         gameStagePadding +
         (this.contentHeight / 6) * 3 -
-        this.BUTTON_CONTAINER_HEIGHT / 2,
+        this.BUTTON_CONTAINER_HEIGHT / 2 -
+        10,
     }
   },
 }

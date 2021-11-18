@@ -460,19 +460,100 @@ export class SnakeScene {
     this.snakeMoveTicker.start()
   }
 
-  gameOver() {
+  async gameOver() {
     this.snakeMoveTicker.destroy()
     this.container.removeChild(this.menuButtons.container)
     window.removeEventListener('keydown', this.keyboardListener)
 
+    await this.crashAnimation()
+    await this.deadAnimation()
+
     this.snakeArray = []
     this.moveDirection = ['right']
 
-    setTimeout(() => {
-      this.snakeGroup.destroy()
-      this.initGame()
-      this.startGame()
-    }, 1000)
+    // setTimeout(() => {
+    //   this.snakeGroup.destroy()
+    //   this.initGame()
+    //   this.startGame()
+    // }, 1000)
+  }
+
+  crashAnimation() {
+    const snakeHead = this.snakeArray[0]
+
+    // dead animation
+    return new Promise((resolve) => {
+      const crashAnimationTicker = new PIXI.Ticker()
+      let bounceCount = 0
+      let coord = 'x'
+      let dirctionVariable = 1
+
+      crashAnimationTicker.add(() => {
+        switch (snakeHead.direction) {
+          case 'right':
+            coord = 'x'
+            dirctionVariable = 1
+            break
+          case 'left':
+            coord = 'x'
+            dirctionVariable = -1
+            break
+          case 'up':
+            coord = 'y'
+            dirctionVariable = -1
+            break
+          case 'down':
+            coord = 'y'
+            dirctionVariable = 1
+            break
+
+          default:
+            break
+        }
+
+        if (bounceCount < 3) {
+          this.gameStage[coord] = this.gameStage[coord] + 3 * dirctionVariable
+          bounceCount++
+        } else if (bounceCount < 8) {
+          this.gameStage[coord] = this.gameStage[coord] - 3 * dirctionVariable
+          bounceCount++
+        } else if (bounceCount < 11) {
+          this.gameStage[coord] = this.gameStage[coord] + 3 * dirctionVariable
+          bounceCount++
+        } else {
+          crashAnimationTicker.destroy()
+          resolve()
+        }
+      })
+      crashAnimationTicker.start()
+    })
+  }
+
+  deadAnimation() {
+    return new Promise((resolve) => {
+      const snakeDropTicker = new PIXI.Ticker()
+
+      snakeDropTicker.add(() => {
+        console.log('ticker on')
+        for (let i = 0; i < this.snakeArray.length; i++) {
+          const snakePart = this.snakeArray[i]
+
+          if (snakePart.container.alpha > 0) {
+            setTimeout(() => {
+              snakePart.container.y = snakePart.container.y + 2
+              snakePart.container.alpha -= 0.02
+            }, 200 * i)
+          }
+        }
+
+        if (this.snakeArray[this.snakeArray.length - 1].container.alpha <= 0) {
+          snakeDropTicker.destroy()
+          resolve()
+        }
+      })
+
+      snakeDropTicker.start()
+    })
   }
 }
 
