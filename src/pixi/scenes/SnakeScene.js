@@ -12,8 +12,9 @@ import { PauseGame } from '../components/PauseGame'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
-const INIT_SNAKE_LENGTH = 1
+const INIT_SNAKE_LENGTH = 5
 const INIT_FOOD_COUNT = 5
+let easterEgg = false
 
 export class SnakeScene {
   constructor() {
@@ -112,6 +113,7 @@ export class SnakeScene {
     const controller = new SnakeController(Globals.getSnakeControllerPosition())
     this.container.addChild(controller.container)
   }
+
   createSnakeScene() {
     this.createBackground()
     this.createItems()
@@ -198,8 +200,8 @@ export class SnakeScene {
     this.snakeGroup = new PIXI.Container()
 
     // create snake head
-    const initI = 0
-    const initJ = 0
+    const initI = 5
+    const initJ = 5
     const initDirection = 'right'
     const initColor = `0xdddddd`
     const snakeHead = new SnakePart(initI, initJ, initDirection, 0, initColor)
@@ -318,7 +320,6 @@ export class SnakeScene {
     if (!initSnakePartData) return
 
     const { i, j, direction, id, x, y } = initSnakePartData
-    console.log(initSnakePartData)
     const newSnakePart = new SnakePart(
       i,
       j,
@@ -326,7 +327,6 @@ export class SnakeScene {
       id,
       getNewBodyColor.bind(this)(removedFood)
     )
-    console.log(newSnakePart)
 
     this.snakeArray.push(newSnakePart)
     this.snakeGroup.addChild(newSnakePart.container)
@@ -340,8 +340,13 @@ export class SnakeScene {
         case 'water':
           return this.snakeArray.length % 2 === 0 ? '0x464f7c' : '0x6e90ba'
 
+        case 'incinerator':
+          return '0x000000'
+        case 'fauset':
+          return '0x000000'
+
         default:
-          return 0xdddddd
+          return `0x${Math.floor(Math.random() * 999999)}`
       }
     }
   }
@@ -451,7 +456,11 @@ export class SnakeScene {
     // console.log(`${i},${j}`)
     // console.log(`${this.totalI},${this.totalJ}`)
     if (i < 0 || j < 0 || i > this.totalI - 1 || j > this.totalJ - 1) {
-      this.gameOver()
+      if (!easterEgg) {
+        this.gameOver()
+      } else {
+        this.easterEggMode()
+      }
     }
   }
 
@@ -543,6 +552,72 @@ export class SnakeScene {
     //   this.initGame()
     //   this.startGame()
     // }, 1000)
+  }
+
+  easterEggMode() {
+    this.snakeMoveTicker.stop()
+    const pushTicker = new PIXI.Ticker()
+
+    const snakeHead = this.snakeArray[0]
+
+    pushTicker.add(() => {
+      switch (snakeHead.direction) {
+        case 'right':
+          this.gameStage.x = this.gameStage.x + 1
+          break
+
+        case 'left':
+          this.gameStage.x = this.gameStage.x - 1
+          break
+        case 'up':
+          this.gameStage.y = this.gameStage.y - 1
+          break
+        case 'down':
+          this.gameStage.y = this.gameStage.y + 1
+          break
+      }
+
+      if (this.moveDirection[0]) {
+        console.log('RESUME')
+        pushTicker.destroy()
+
+        let key = 'i'
+        let containerKey = 'x'
+        let constant = 1
+
+        if (snakeHead.i < 0) {
+          key = 'i'
+          containerKey = 'x'
+          constant = 1
+        } else if (snakeHead.i > this.totalI - 1) {
+          key = 'i'
+          containerKey = 'x'
+          constant = -1
+        } else if (snakeHead.j < 0) {
+          key = 'j'
+          containerKey = 'y'
+          constant = 1
+        } else if (snakeHead.j > this.totalJ - 1) {
+          key = 'j'
+          containerKey = 'y'
+          constant = -1
+        }
+
+        this.snakeArray.forEach((snakePart) => {
+          snakePart[key] = snakePart[key] + constant
+
+          snakePart.container[containerKey] =
+            snakePart.container[containerKey] + constant * BLOCK_WIDTH
+        })
+
+        // snakeHead.prevDirection = snakeHead.direction
+        // snakeHead.direction = this.moveDirection.pop()
+
+        this.snakeMoveTicker.start()
+      }
+    })
+
+    pushTicker.start()
   }
 
   crashAnimation() {
@@ -700,29 +775,3 @@ function wait(delayTime) {
     }, delayTime)
   })
 }
-
-// function contain(A, B) {
-//   let collision = undefined
-//   //Left
-//   if (A.x < B.x) {
-//     A.x = B.x
-//     collision = 'left'
-//   }
-//   //Top
-//   if (A.y < B.y) {
-//     A.y = B.y
-//     collision = 'top'
-//   }
-//   //Right
-//   if (A.x + A.width > B.width) {
-//     A.x = B.width - A.width
-//     collision = 'right'
-//   }
-//   //Bottom
-//   if (A.y + A.height > B.height) {
-//     A.y = B.height - A.height
-//     collision = 'bottom'
-//   }
-//   //Return the `collision` value
-//   return collision
-// }

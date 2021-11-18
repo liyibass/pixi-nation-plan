@@ -4,14 +4,14 @@ const MOVE_SPEED = 2
 const BLOCK_WIDTH = 16
 
 export class SnakePart {
-  constructor(i, j, direction, index, color) {
+  constructor(i, j, direction, id, color) {
     this.container = new PIXI.Container()
-    this.id = index
+    this.id = id
     this.i = i
     this.j = j
     this.direction = direction
     this.prevDirection = direction
-    this.color = color ? color : `0x${Math.floor(Math.random() * 999999)}`
+    this.color = color ? color : `0xaaaaaa`
 
     // this.nextPosition = _getDefaultPosition(index)
 
@@ -29,6 +29,9 @@ export class SnakePart {
       color.drawRoundedRect(0, 0, BLOCK_WIDTH * 1.1, BLOCK_WIDTH * 1.1, 5)
     } else if (this.id === 1) {
       color.beginFill(0xdddddd)
+      color.drawRoundedRect(0, 0, BLOCK_WIDTH * 1.1, BLOCK_WIDTH * 1.1, 1)
+    } else if (this.id < 5) {
+      color.beginFill(this.id % 2 === 0 ? 0x6e90ba : 0xcc8053)
       color.drawRoundedRect(0, 0, BLOCK_WIDTH * 1.1, BLOCK_WIDTH * 1.1, 1)
     } else {
       color.beginFill(this.color)
