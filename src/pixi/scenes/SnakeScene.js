@@ -10,6 +10,7 @@ import { DoctorSay } from '../components/DoctorSay'
 import { CountDown } from '../components/CountDown'
 import { TwoButtons } from '../components/TwoButtons'
 import { PauseGame } from '../components/PauseGame'
+import { GameFail } from '../components/GameFail'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
@@ -38,8 +39,8 @@ export class SnakeScene {
     this.snakePoisionArray = []
 
     this.initGame()
-    this.startGameFlow()
-    // this.startGameTest()
+    // this.startGameFlow()
+    this.startGameTest()
   }
   // ===== init game =====
   createBackground() {
@@ -582,7 +583,11 @@ export class SnakeScene {
     function menuChosenHandler(chosen) {
       switch (chosen) {
         case 'pause':
-          this.pauseGame()
+          this.pauseGameHint()
+          break
+
+        case 'menu':
+          console.log('back to menu')
           break
 
         default:
@@ -603,18 +608,15 @@ export class SnakeScene {
     }
   }
 
-  pauseGame() {
-    console.log('pause game')
+  pauseGameHint() {
     this.snakeMoveTicker.stop()
     this.container.removeChild(this.menuButtons.container)
 
-    const pauseMenuButtons = new TwoButtons(
+    const pauseGame = new PauseGame(
       pauseGameChooseHandler.bind(this),
       { text: '繼續', color: 0xffffff, bgColor: '0x3B6BD6', value: 'resume' },
       { text: '回主畫面', color: 0x000000, bgColor: '0xC4C4C4', value: 'menu' }
     )
-
-    const pauseGame = new PauseGame(pauseMenuButtons)
 
     this.container.addChild(pauseGame.container)
 
@@ -631,6 +633,40 @@ export class SnakeScene {
     }
   }
 
+  failGameHint() {
+    this.snakeMoveTicker.stop()
+    this.container.removeChild(this.menuButtons.container)
+
+    const gameFail = new GameFail(
+      failGameChooseHandler.bind(this),
+      {
+        text: '再玩一次',
+        color: 0x000000,
+        bgColor: '0xC4C4C4',
+        value: 'restart',
+      },
+      { text: '回主畫面', color: 0xffffff, bgColor: '0x3B6BD6', value: 'menu' }
+    )
+
+    this.container.addChild(gameFail.container)
+
+    function failGameChooseHandler(chosen) {
+      switch (chosen) {
+        case 'restart':
+          this.container.removeChild(gameFail.container)
+          this.resumeGame()
+          break
+
+        case 'menu':
+          console.log('back to menu')
+          break
+
+        default:
+          break
+      }
+    }
+  }
+
   async resumeGame() {
     console.log('resume game')
     await this.countDownHandler(3)
@@ -638,17 +674,37 @@ export class SnakeScene {
     this.snakeMoveTicker.start()
   }
 
-  async gameOver() {
+  restartGame() {
+    this.snakeGroup.destroy()
+    this.initGame()
+    this.startGame()
+  }
+
+  resetGameSetting() {
     this.snakeMoveTicker.destroy()
     this.container.removeChild(this.menuButtons.container)
     window.removeEventListener('keydown', this.keyboardListener)
+
+    clearInterval(this.poisonInterval)
+
+    this.snakeArray = []
+    this.moveDirection = ['right']
+  }
+
+  async gameOver() {
+    this.snakeMoveTicker.stop()
+    this.container.removeChild(this.menuButtons.container)
+    // window.removeEventListener('keydown', this.keyboardListener)
 
     await this.crashAnimation()
     await wait(500)
     await this.deadAnimation()
 
-    this.snakeArray = []
-    this.moveDirection = ['right']
+    this.resetGameSetting()
+    // this.snakeArray = []
+    // this.moveDirection = ['right']
+
+    this.failGameHint()
 
     // setTimeout(() => {
     //   this.snakeGroup.destroy()

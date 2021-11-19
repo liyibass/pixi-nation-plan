@@ -12,6 +12,9 @@ import water from '../assets/images/water.png'
 import garbage from '../assets/images/garbage.png'
 import fauset from '../assets/images/fauset.png'
 import incinerator from '../assets/images/incinerator.png'
+import docIcon from '../assets/images/docIcon.png'
+import stampFailed from '../assets/images/stampFailed.png'
+import stampCompleted from '../assets/images/stampCompleted.png'
 
 export const LoaderConfig = {
   player,
@@ -28,4 +31,7 @@ export const LoaderConfig = {
   garbage,
   fauset,
   incinerator,
+  docIcon,
+  stampFailed,
+  stampCompleted,
 }

@@ -3,7 +3,7 @@
 // import { TwoButtons } from './TwoButtons'
 import { Stop } from './Stop'
 
-export class PauseGame extends Stop {
+export class GameSuccess extends Stop {
   constructor() {
     super()
     this.init()

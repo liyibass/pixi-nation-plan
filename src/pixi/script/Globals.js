@@ -7,7 +7,11 @@ export const Globals = {
   maxContentWidth:
     window.innerWidth < 500 ? window.innerWidth - 3 * gameStagePadding : 500,
   contentHeight:
-    window.innerHeight / 2 < 450 ? window.innerHeight / 2 - 30 : 500,
+    window.innerHeight / 2 < 450
+      ? window.innerHeight / 2 - 30
+      : window.innerHeight / 2 < 500
+      ? window.innerHeight / 2 - 100
+      : 500,
   isSmallScreen: function () {
     return !!this.width < 1280
   },
