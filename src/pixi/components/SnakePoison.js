@@ -61,10 +61,38 @@ export class SnakePoison {
 
     iconSprite.x = blockFrame.width / 2
     iconSprite.y = blockFrame.height / 2
+
+    this.container.pivot.set(blockFrame.width / 2, blockFrame.height / 2)
   }
 
   setupPositionInPixel() {
-    this.container.x = this.i * BLOCK_WIDTH
-    this.container.y = this.j * BLOCK_WIDTH
+    switch (this.type) {
+      case 'fauset':
+        this.container.x = (this.i + 1) * BLOCK_WIDTH
+        this.container.y = this.j * BLOCK_WIDTH + BLOCK_WIDTH / 2
+
+        break
+      case 'incinerator':
+        this.container.x = this.i * BLOCK_WIDTH + BLOCK_WIDTH / 2
+        this.container.y = this.j * BLOCK_WIDTH + BLOCK_WIDTH / 2
+        break
+    }
+  }
+
+  eaten() {
+    const eatenTicker = new PIXI.Ticker()
+    const rotateConstant = Math.floor(Math.random() * 2 - 1)
+
+    eatenTicker.add(() => {
+      if (this.container.alpha > 0) {
+        this.container.angle += rotateConstant * 2
+        // this.container.width -= 0.01
+        this.container.alpha -= 0.002
+      } else {
+        eatenTicker.destroy()
+      }
+    })
+
+    eatenTicker.start()
   }
 }

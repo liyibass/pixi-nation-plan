@@ -14,10 +14,11 @@ import { GameFail } from '../components/GameFail'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
-const INIT_SNAKE_LENGTH = 4
+const INIT_SNAKE_LENGTH = 10
 const INIT_FOOD_COUNT = 4
 const INIT_POISON_COUNT = 3
 const POISON_SPAWN_BOUNDARY = 4
+const POISON_RESPAWN_INTERVAL = 10000
 let easterEggString = ''
 
 export class SnakeScene {
@@ -38,6 +39,8 @@ export class SnakeScene {
     // food property
     this.snakeFoodArray = []
     this.snakePoisionArray = []
+    this.createFoodQuery = []
+    this.createPoisonQuery = []
 
     this.initGame()
     // this.startGameFlow()
@@ -136,8 +139,8 @@ export class SnakeScene {
   initGame() {
     this.createKeyboardListener()
     this.createSnake()
-    this.createFood()
-    this.createPosition()
+    this.createInitFoods()
+    this.createPoisonInterval()
   }
 
   // ===== snake =====
@@ -263,39 +266,97 @@ export class SnakeScene {
   }
 
   // ===== food =====
-  createFood() {
+  createInitFoods() {
     this.snakeFoodGroup = new PIXI.Container()
 
     for (let id = 0; id < INIT_FOOD_COUNT; id++) {
-      const { i, j } = getRandomFoodPosition.bind(this)()
-      const snakeFood = new SnakeFood(id, i, j)
-
-      this.snakeFoodArray.push(snakeFood)
-      this.snakeFoodGroup.addChild(snakeFood.container)
+      this.createFood(id)
     }
 
     this.gameStage.addChild(this.snakeFoodGroup)
-
-    // this.foodInterval = setInterval(() => {
-    //   if (this.snakeFoodArray.length < INIT_FOOD_COUNT) {
-    //     console.log('create')
-    //   }
-    // }, 5000)
   }
 
-  createPosition() {
+  createFood(id) {
+    const { i, j } = getRandomFoodPosition.bind(this)()
+    const snakeFood = new SnakeFood(id, i, j)
+
+    this.snakeFoodArray.push(snakeFood)
+    this.snakeFoodGroup.addChild(snakeFood.container)
+  }
+
+  createFoodTimeout(id) {
+    this.createFoodQuery.push(id)
+
+    const foodNextSpawnTime =
+      this.snakeArray.length > 15
+        ? Math.floor(Math.random() * 9000)
+        : Math.floor(Math.random() * 5000)
+
+    const createNewFoodTimeout = () => {
+      setTimeout(() => {
+        if (!this.snakeMoveTicker) {
+          return
+        }
+
+        if (!this.snakeMoveTicker.started) {
+          createNewFoodTimeout()
+          return
+        }
+
+        if (
+          this.createFoodQuery.length > 0 &&
+          this.snakeFoodArray.length < INIT_FOOD_COUNT
+        ) {
+          const foodId = this.createFoodQuery.shift()
+          this.createFood(foodId)
+        }
+      }, foodNextSpawnTime)
+    }
+
+    createNewFoodTimeout()
+  }
+
+  createPoisonInterval() {
     this.snakePoisonGroup = new PIXI.Container()
-    this.poisonInterval = setInterval(() => {
-      if (this.snakePoisionArray.length < INIT_POISON_COUNT) {
-        const { i, j } = getRandomFoodPosition.bind(this)(true)
-        const snakePoison = new SnakePoison(0, i, j)
-
-        this.snakePoisionArray.push(snakePoison)
-        this.snakePoisonGroup.addChild(snakePoison.container)
-      }
-    }, 14000)
-
     this.gameStage.addChild(this.snakePoisonGroup)
+    this.createPoisonQuery.push(0)
+
+    const createPoisonTimeout = () => {
+      setTimeout(() => {
+        if (!this.snakeMoveTicker) {
+          return
+        }
+
+        if (!this.snakeMoveTicker.started) {
+          createPoisonTimeout()
+          return
+        }
+        console.log(this.snakeMoveTicker)
+
+        if (
+          this.createPoisonQuery.length > 0 &&
+          this.snakePoisionArray.length < INIT_POISON_COUNT
+        ) {
+          const poisonId = this.createPoisonQuery.shift()
+          this.createPoison(poisonId)
+
+          this.createPoisonQuery.push(poisonId + 1)
+
+          // recall timeout(as an interval)
+          createPoisonTimeout()
+        }
+      }, POISON_RESPAWN_INTERVAL)
+    }
+
+    createPoisonTimeout()
+  }
+
+  createPoison(id) {
+    const { i, j } = getRandomFoodPosition.bind(this)(true)
+    const snakePoison = new SnakePoison(id, i, j)
+
+    this.snakePoisionArray.push(snakePoison)
+    this.snakePoisonGroup.addChild(snakePoison.container)
   }
 
   async eatingFoodHandler() {
@@ -329,19 +390,7 @@ export class SnakeScene {
     await this.createNewBodyWithFood(removedFood)
 
     // add new food
-    const foodNextSpawnTime =
-      this.snakeArray.length > 15
-        ? Math.floor(Math.random() * 9000)
-        : Math.floor(Math.random() * 5000)
-
-    setTimeout(() => {
-      if (this.snakeFoodArray.length < INIT_FOOD_COUNT) {
-        const { i, j } = getRandomFoodPosition.bind(this)()
-        const newSnakeFood = new SnakeFood(removedFood.id, i, j)
-        this.snakeFoodArray.push(newSnakeFood)
-        this.snakeFoodGroup.addChild(newSnakeFood.container)
-      }
-    }, foodNextSpawnTime)
+    this.createFoodTimeout(removedFood.id)
   }
 
   async createNewBodyWithFood(removedFood) {
@@ -418,9 +467,21 @@ export class SnakeScene {
   }
 
   // ===== start game =====
+  async countDown(countNumber) {
+    const countContainer = new CountDown(countNumber)
+    this.container.addChild(countContainer.container)
+
+    const isDone = await countContainer.start()
+
+    if (isDone) {
+      this.container.removeChild(countContainer.container)
+      this.createMenuButtons()
+    }
+  }
+
   async startGame() {
     console.log('game started')
-    await this.countDownHandler(3)
+    await this.countDown(3)
 
     this.snakeMoveTicker = new PIXI.Ticker()
     this.snakeMoveTicker.add(async () => {
@@ -476,7 +537,7 @@ export class SnakeScene {
     this.snakeMoveTicker.start()
   }
 
-  circleMonitor() {
+  async circleMonitor() {
     if (!this.snakePoisionArray.length) {
       // no poison on the stage,
       // remove snakePoisonGroup just in case
@@ -528,25 +589,46 @@ export class SnakeScene {
       // check if the poison's position is within circle boundary
       for (let inext = 0; inext < this.snakePoisionArray.length; inext++) {
         const targetPoison = this.snakePoisionArray[inext]
-        const { i, j, width, height } = targetPoison
+        const { i, j, width, height, type } = targetPoison
         // console.log(i + ',' + j + ' .  ' + width + ' .  ' + height)
 
-        if (
-          i > leftBoundary &&
-          i + width - 1 < rightBoundary &&
-          j > topBoundary &&
-          j + height - 1 < bottomBoundary
-        ) {
-          console.log('CATCHA')
+        let isWithinBoundary = false
+        switch (type) {
+          case 'incinerator':
+            if (
+              i - 1 > leftBoundary &&
+              i + 1 < rightBoundary &&
+              j - 1 > topBoundary &&
+              j + 1 < bottomBoundary
+            ) {
+              isWithinBoundary = true
+            }
+            break
 
-          this.snakePoisonGroup.removeChild(targetPoison.container)
+          case 'fauset':
+            if (
+              i > leftBoundary &&
+              i + width - 1 < rightBoundary &&
+              j > topBoundary &&
+              j + height - 1 < bottomBoundary
+            ) {
+              isWithinBoundary = true
+            }
+            break
+        }
+
+        if (isWithinBoundary) {
+          console.log('CATCHA')
+          console.log(this.snakePoisionArray)
+          targetPoison.eaten()
 
           this.snakePoisionArray.forEach((poison, x, arr) => {
             if (targetPoison.id === poison.id) {
               arr.splice(x, 1)
             }
           })
-
+          this.snakePoisonGroup.removeChild(targetPoison.container)
+          console.log(this.snakePoisionArray)
           break
         }
       }
@@ -563,9 +645,32 @@ export class SnakeScene {
     if (this.snakePoisionArray.length) {
       for (let index = 0; index < this.snakePoisionArray.length; index++) {
         const poison = this.snakePoisionArray[index]
-        const { i: I, j: J, width, height } = poison
+        const { i: I, j: J, width, height, type } = poison
 
-        if (i >= I && i <= I + width - 1 && j >= J && j <= J + height - 1) {
+        let leftBoundray
+        let rightBoundary
+        let topBoundary = J - Math.floor(height / 2)
+        let bottomBoundary = J + Math.floor(height / 2)
+
+        switch (type) {
+          case 'incinerator':
+            leftBoundray = I - Math.floor(width / 2)
+            rightBoundary = I + Math.floor(width / 2)
+
+            break
+          case 'fauset':
+            leftBoundray = I
+
+            rightBoundary = I + width - 1
+            break
+        }
+
+        if (
+          i >= leftBoundray &&
+          i <= rightBoundary &&
+          j >= topBoundary &&
+          j <= bottomBoundary
+        ) {
           this.gameOver()
           break
         }
@@ -597,7 +702,7 @@ export class SnakeScene {
     function menuChosenHandler(chosen) {
       switch (chosen) {
         case 'pause':
-          this.pauseGameHint()
+          this.pauseGame()
           break
 
         case 'menu':
@@ -610,19 +715,7 @@ export class SnakeScene {
     }
   }
 
-  async countDownHandler(countNumber) {
-    const countContainer = new CountDown(countNumber)
-    this.container.addChild(countContainer.container)
-
-    const isDone = await countContainer.start()
-
-    if (isDone) {
-      this.container.removeChild(countContainer.container)
-      this.createMenuButtons()
-    }
-  }
-
-  pauseGameHint() {
+  pauseGame() {
     this.snakeMoveTicker.stop()
     this.container.removeChild(this.menuButtons.container)
 
@@ -647,8 +740,28 @@ export class SnakeScene {
     }
   }
 
-  failGameHint() {
+  async resumeGame() {
+    console.log('resume game')
+    await this.countDown(3)
+
+    this.snakeMoveTicker.start()
+  }
+
+  async gameOver() {
     this.snakeMoveTicker.stop()
+    this.container.removeChild(this.menuButtons.container)
+    // window.removeEventListener('keydown', this.keyboardListener)
+
+    await this.crashAnimation()
+    await wait(500)
+    await this.deadAnimation()
+
+    this.resetGameSetting()
+
+    this.failGameHint()
+  }
+
+  failGameHint() {
     this.container.removeChild(this.menuButtons.container)
 
     const gameFail = new GameFail(
@@ -682,13 +795,6 @@ export class SnakeScene {
     }
   }
 
-  async resumeGame() {
-    console.log('resume game')
-    await this.countDownHandler(3)
-
-    this.snakeMoveTicker.start()
-  }
-
   restartGame() {
     this.snakeGroup.destroy()
     this.initGame()
@@ -697,6 +803,10 @@ export class SnakeScene {
 
   resetGameSetting() {
     this.snakeMoveTicker.destroy()
+    console.log('=====================')
+    console.log(this.snakeMoveTicker)
+    console.log('=====================')
+    this.snakeMoveTicker = null
     this.container.removeChild(this.menuButtons.container)
 
     window.removeEventListener('keydown', this.keyboardListener)
@@ -704,35 +814,14 @@ export class SnakeScene {
     // clear food and poison
     this.snakeFoodArray = []
     this.snakePoisionArray = []
+    this.createFoodQuery = []
+    this.createPoisonQuery = []
+
     this.snakeFoodGroup.removeChildren()
     this.snakePoisonGroup.removeChildren()
 
-    clearInterval(this.poisonInterval)
-
     this.snakeArray = []
     this.moveDirection = ['right']
-  }
-
-  async gameOver() {
-    this.snakeMoveTicker.stop()
-    this.container.removeChild(this.menuButtons.container)
-    // window.removeEventListener('keydown', this.keyboardListener)
-
-    await this.crashAnimation()
-    await wait(500)
-    await this.deadAnimation()
-
-    this.resetGameSetting()
-    // this.snakeArray = []
-    // this.moveDirection = ['right']
-
-    this.failGameHint()
-
-    // setTimeout(() => {
-    //   this.snakeGroup.destroy()
-    //   this.initGame()
-    //   this.startGame()
-    // }, 1000)
   }
 
   easterEggMode() {
