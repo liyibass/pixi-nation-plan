@@ -284,15 +284,18 @@ export class SnakeScene {
   }
 
   createPosition() {
+    this.snakePoisonGroup = new PIXI.Container()
     this.poisonInterval = setInterval(() => {
       if (this.snakePoisionArray.length < INIT_POISON_COUNT) {
         const { i, j } = getRandomFoodPosition.bind(this)(true)
         const snakePoison = new SnakePoison(0, i, j)
 
         this.snakePoisionArray.push(snakePoison)
-        this.snakeFoodGroup.addChild(snakePoison.container)
+        this.snakePoisonGroup.addChild(snakePoison.container)
       }
     }, 14000)
+
+    this.gameStage.addChild(this.snakePoisonGroup)
   }
 
   async eatingFoodHandler() {
@@ -326,6 +329,11 @@ export class SnakeScene {
     await this.createNewBodyWithFood(removedFood)
 
     // add new food
+    const foodNextSpawnTime =
+      this.snakeArray.length > 15
+        ? Math.floor(Math.random() * 9000)
+        : Math.floor(Math.random() * 5000)
+
     setTimeout(() => {
       if (this.snakeFoodArray.length < INIT_FOOD_COUNT) {
         const { i, j } = getRandomFoodPosition.bind(this)()
@@ -333,7 +341,7 @@ export class SnakeScene {
         this.snakeFoodArray.push(newSnakeFood)
         this.snakeFoodGroup.addChild(newSnakeFood.container)
       }
-    }, Math.floor(Math.random() * 5000))
+    }, foodNextSpawnTime)
   }
 
   async createNewBodyWithFood(removedFood) {
@@ -469,7 +477,12 @@ export class SnakeScene {
   }
 
   circleMonitor() {
-    if (!this.snakePoisionArray.length) return
+    if (!this.snakePoisionArray.length) {
+      // no poison on the stage,
+      // remove snakePoisonGroup just in case
+      this.snakePoisonGroup.removeChildren()
+      return
+    }
 
     const snakeHead = this.snakeArray[0]
     let isCircle = false
@@ -526,7 +539,7 @@ export class SnakeScene {
         ) {
           console.log('CATCHA')
 
-          this.snakeFoodGroup.removeChild(targetPoison.container)
+          this.snakePoisonGroup.removeChild(targetPoison.container)
 
           this.snakePoisionArray.forEach((poison, x, arr) => {
             if (targetPoison.id === poison.id) {
@@ -622,7 +635,6 @@ export class SnakeScene {
     this.container.addChild(pauseGame.container)
 
     function pauseGameChooseHandler(chosen) {
-      console.log(chosen)
       switch (chosen) {
         case 'resume':
           this.container.removeChild(pauseGame.container)
@@ -693,6 +705,7 @@ export class SnakeScene {
     this.snakeFoodArray = []
     this.snakePoisionArray = []
     this.snakeFoodGroup.removeChildren()
+    this.snakePoisonGroup.removeChildren()
 
     clearInterval(this.poisonInterval)
 
