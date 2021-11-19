@@ -17,6 +17,7 @@ const BLOCK_WIDTH = 16
 const INIT_SNAKE_LENGTH = 4
 const INIT_FOOD_COUNT = 4
 const INIT_POISON_COUNT = 3
+const POISON_SPAWN_BOUNDARY = 4
 let easterEggString = ''
 
 export class SnakeScene {
@@ -291,7 +292,7 @@ export class SnakeScene {
         this.snakePoisionArray.push(snakePoison)
         this.snakeFoodGroup.addChild(snakePoison.container)
       }
-    }, 15000)
+    }, 14000)
   }
 
   async eatingFoodHandler() {
@@ -621,6 +622,7 @@ export class SnakeScene {
     this.container.addChild(pauseGame.container)
 
     function pauseGameChooseHandler(chosen) {
+      console.log(chosen)
       switch (chosen) {
         case 'resume':
           this.container.removeChild(pauseGame.container)
@@ -651,10 +653,11 @@ export class SnakeScene {
     this.container.addChild(gameFail.container)
 
     function failGameChooseHandler(chosen) {
+      console.log(chosen)
       switch (chosen) {
         case 'restart':
           this.container.removeChild(gameFail.container)
-          this.resumeGame()
+          this.restartGame()
           break
 
         case 'menu':
@@ -683,7 +686,13 @@ export class SnakeScene {
   resetGameSetting() {
     this.snakeMoveTicker.destroy()
     this.container.removeChild(this.menuButtons.container)
+
     window.removeEventListener('keydown', this.keyboardListener)
+
+    // clear food and poison
+    this.snakeFoodArray = []
+    this.snakePoisionArray = []
+    this.snakeFoodGroup.removeChildren()
 
     clearInterval(this.poisonInterval)
 
@@ -831,6 +840,11 @@ export class SnakeScene {
   }
 
   deadAnimation() {
+    const totalDeadTime = 2000
+    const snakeBodyFadeInterval =
+      this.snakeArray.length > 7
+        ? Math.floor(totalDeadTime / this.snakeArray.length)
+        : 200
     return new Promise((resolve) => {
       const snakeDropTicker = new PIXI.Ticker()
 
@@ -843,7 +857,7 @@ export class SnakeScene {
             setTimeout(() => {
               snakePart.container.y = snakePart.container.y + 2
               snakePart.container.alpha -= 0.02
-            }, 200 * i)
+            }, snakeBodyFadeInterval * i)
           }
         }
 
@@ -936,25 +950,45 @@ function wait(delayTime) {
 }
 
 function getRandomFoodPosition(isPoison) {
-  let randomI = Math.floor(Math.random() * (this.totalI - 1))
-  let randomJ = Math.floor(Math.random() * (this.totalJ - 1))
+  let randomI = generateRandom(this.totalI)
+  let randomJ = generateRandom(this.totalJ)
 
   if (isPoison) {
-    if (randomI < 5) {
-      randomI = 5
-    } else if (randomI > this.totalI - 5) {
-      randomI = this.totalI - 5
+    // try not too close to head
+    const { i: headI, j: headJ } = this.snakeArray[0]
+
+    if (
+      headI + POISON_SPAWN_BOUNDARY > randomI &&
+      headI - POISON_SPAWN_BOUNDARY < randomI &&
+      headJ + POISON_SPAWN_BOUNDARY > randomJ &&
+      headJ - POISON_SPAWN_BOUNDARY < randomJ
+    ) {
+      // regenerate random position
+      const newPosition = getRandomFoodPosition.bind(this)(isPoison)
+      randomI = newPosition.i
+      randomJ = newPosition.j
     }
 
-    if (randomJ < 5) {
-      randomJ = 5
-    } else if (randomJ > this.totalJ - 5) {
-      randomJ = this.totalJ - 5
+    // try not too close to boundray
+    if (randomI < POISON_SPAWN_BOUNDARY) {
+      randomI = POISON_SPAWN_BOUNDARY
+    } else if (randomI > this.totalI - POISON_SPAWN_BOUNDARY) {
+      randomI = this.totalI - POISON_SPAWN_BOUNDARY
+    }
+
+    if (randomJ < POISON_SPAWN_BOUNDARY) {
+      randomJ = POISON_SPAWN_BOUNDARY
+    } else if (randomJ > this.totalJ - POISON_SPAWN_BOUNDARY) {
+      randomJ = this.totalJ - POISON_SPAWN_BOUNDARY
     }
   }
 
   return {
     i: randomI,
     j: randomJ,
+  }
+
+  function generateRandom(total) {
+    return Math.floor(Math.random() * (total - 1))
   }
 }

@@ -73,7 +73,7 @@ export class TwoButtons {
 
     const buttonBackground = new PIXI.Graphics()
     buttonBackground.beginFill(bgColor)
-    buttonBackground.drawRect(0, 0, BUTTON_WIDTH, BUTTON_HEIGHT)
+    buttonBackground.drawRoundedRect(0, 0, BUTTON_WIDTH, BUTTON_HEIGHT, 5)
     buttonBackground.endFill()
 
     const buttonText = new PIXI.Text(text, { fontSize: 14, fill: [color] })

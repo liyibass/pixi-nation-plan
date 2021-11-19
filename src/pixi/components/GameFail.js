@@ -4,8 +4,8 @@ import { Globals } from '../script/Globals'
 import { Stop } from './Stop'
 
 export class GameFail extends Stop {
-  constructor() {
-    super()
+  constructor(chooseHandler, button1Setting, button2Setting) {
+    super(chooseHandler, button1Setting, button2Setting)
     this.init()
   }
 

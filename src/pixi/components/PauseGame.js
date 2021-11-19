@@ -4,8 +4,8 @@
 import { Stop } from './Stop'
 
 export class PauseGame extends Stop {
-  constructor() {
-    super()
+  constructor(chooseHandler, button1Setting, button2Setting) {
+    super(chooseHandler, button1Setting, button2Setting)
     this.init()
   }
 
