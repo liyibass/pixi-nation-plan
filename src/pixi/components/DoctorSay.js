@@ -68,15 +68,18 @@ export class DoctorSay {
   }
 
   hint(text, timeout) {
+    const fontSize = 14
+    const blobWidth = 16 * 2 + text.length * fontSize
+    const blobHeight = 16 * 2 + (Math.floor(text.length / 20) + 1) * fontSize
     const dialogBox = new DialogBox({
       text,
-      x: (Globals.width - 300) / 2,
-      y: Globals.height / 2 - 30,
-      talkerX: this.doctorDimention.x + 30,
-      talkerY: this.doctorDimention.y,
-      width: 300,
-      height: 150,
-      fontSize: 16,
+      x: this.doctorDimention.x + 50,
+      y: this.doctorDimention.y - blobHeight - 20,
+      talkerX: this.doctorDimention.x + 60,
+      talkerY: this.doctorDimention.y + 30,
+      width: blobWidth,
+      height: blobHeight,
+      fontSize: fontSize,
     })
     this.container.addChild(dialogBox.container)
 

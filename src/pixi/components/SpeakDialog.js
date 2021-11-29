@@ -22,7 +22,7 @@ export class SpeakDialog {
     bg.beginFill(0x000000)
     bg.drawRect(0, 0, Globals.width, Globals.height)
     bg.endFill()
-    bg.alpha = 0.6
+    bg.alpha = 0.1
 
     this.container.addChild(bg)
   }

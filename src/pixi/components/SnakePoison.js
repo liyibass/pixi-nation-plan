@@ -109,4 +109,31 @@ export class SnakePoison {
 
     eatenTicker.start()
   }
+
+  startHighlight() {
+    this.highlightTicker = new PIXI.Ticker()
+    let direction = 'dark'
+    this.highlightTicker.add(() => {
+      if (direction === 'dark') {
+        this.container.alpha -= 0.02
+
+        if (this.container.alpha <= 0.5) {
+          direction = 'light'
+        }
+      } else if (direction === 'light') {
+        this.container.alpha += 0.02
+
+        if (this.container.alpha >= 1) {
+          direction = 'dark'
+        }
+      }
+    })
+
+    this.highlightTicker.start()
+  }
+
+  stopHighlight() {
+    this.highlightTicker.stop()
+    this.container.alpha = 1
+  }
 }

@@ -15,7 +15,7 @@ import { FoodScore } from '../components/FoodScore'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
-const INIT_SNAKE_LENGTH = 4
+const INIT_SNAKE_LENGTH = 7
 const INIT_FOOD_COUNT = 4
 const INIT_POISON_COUNT = 3
 const POISON_SPAWN_BOUNDARY = 4
@@ -42,6 +42,8 @@ export class SnakeScene {
     this.snakePoisionArray = []
     this.createFoodQuery = []
     this.createPoisonQuery = []
+    this.snakePoisonGroup = new PIXI.Container()
+    this.gameStage.addChild(this.snakePoisonGroup)
 
     // this.initGame()
     this.startGameFlow()
@@ -316,9 +318,7 @@ export class SnakeScene {
   }
 
   createPoisonInterval(poisonType) {
-    this.snakePoisonGroup = new PIXI.Container()
-    this.gameStage.addChild(this.snakePoisonGroup)
-    this.createPoisonQuery.push(0)
+    this.createPoisonQuery.push(1)
 
     const createPoisonTimeout = () => {
       setTimeout(() => {
@@ -354,9 +354,10 @@ export class SnakeScene {
   createPoison(id, poisonType) {
     const { i, j } = getRandomFoodPosition.bind(this)(true)
     const snakePoison = new SnakePoison(id, i, j, poisonType)
-
     this.snakePoisionArray.push(snakePoison)
     this.snakePoisonGroup.addChild(snakePoison.container)
+
+    return snakePoison
   }
 
   async eatingFoodHandler() {
@@ -438,6 +439,7 @@ export class SnakeScene {
     await wait(500)
 
     const doctorSay = new DoctorSay()
+    // doctorSay.hint('YOYO', 3000)
     this.container.addChild(doctorSay.container)
 
     await doctorSay.newSay('經營村莊的不二法門，就是別讓村民不開心')
@@ -458,14 +460,32 @@ export class SnakeScene {
       // init game
       this.createSnake()
       this.createInitFoods('garbage')
-      this.createPoisonInterval('incinerator')
+
       await doctorSay.newSay('處理的方式很簡單，只要把它們吃掉就好。')
       await doctorSay.newSay(
         '垃圾會隨機出現，你可不要漏掉囉。也要小心不要撞到牆，可能會沒命的！。'
       )
       this.startGame()
       await wait(3000)
-      doctorSay.hint('YOYO', 3000)
+      doctorSay.hint('加油！', 3000)
+      await wait(3000)
+      // first poison show up
+      const createdPoison = this.createPoison(0, 'incinerator')
+      this.snakeMoveTicker.stop()
+      this.container.removeChild(this.menuButtons.container)
+      createdPoison.startHighlight()
+
+      await doctorSay.newSay('欸！村莊裡怎麼出現了焚化爐！？')
+      await doctorSay.newSay('村民看到會生氣的，快去把它們銷毀！')
+      await doctorSay.newSay(
+        '消滅的方式也很容易，你只要用身體把它們圍起來，焚化爐就會自動爆炸了。你先圍一個試試看'
+      )
+
+      createdPoison.stopHighlight()
+      await this.countDown(3)
+      this.snakeMoveTicker.start()
+
+      this.createPoisonInterval('incinerator')
     } else {
       await doctorSay.newSay('靠')
     }
@@ -558,10 +578,13 @@ export class SnakeScene {
   }
 
   async circleMonitor() {
-    if (!this.snakePoisionArray.length) {
+    if (!this.snakePoisionArray?.length) {
       // no poison on the stage,
       // remove snakePoisonGroup just in case
-      this.snakePoisonGroup.removeChildren()
+
+      if (this.snakePoisonGroup?.length) {
+        this.snakePoisonGroup.removeChildren()
+      }
       return
     }
 
