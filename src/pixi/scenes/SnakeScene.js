@@ -11,6 +11,7 @@ import { CountDown } from '../components/CountDown'
 import { TwoButtons } from '../components/TwoButtons'
 import { PauseGame } from '../components/PauseGame'
 import { GameFail } from '../components/GameFail'
+import { GameSuccess } from '../components/GameSuccess'
 import { FoodScore } from '../components/FoodScore'
 // import { SnakeBody } from '../components/SnakeBody'
 
@@ -46,6 +47,7 @@ export class SnakeScene {
     this.gameStage.addChild(this.snakePoisonGroup)
 
     // this.initGame()
+    this.createFoodScore()
     this.startGameFlow()
     // this.startGameTest()
   }
@@ -140,8 +142,8 @@ export class SnakeScene {
   }
 
   createFoodScore() {
-    const foodScore = new FoodScore()
-    this.container.addChild(foodScore.container)
+    this.foodScore = new FoodScore()
+    this.container.addChild(this.foodScore.container)
   }
 
   // ===== snake =====
@@ -467,8 +469,8 @@ export class SnakeScene {
       )
       this.startGame()
       await wait(3000)
-      doctorSay.hint('加油！', 3000)
-      await wait(3000)
+      // doctorSay.hint('加油！', 3000)
+      await wait(10000)
       // first poison show up
       const createdPoison = this.createPoison(0, 'incinerator')
       this.snakeMoveTicker.stop()
@@ -495,7 +497,7 @@ export class SnakeScene {
     this.createSnake()
     this.createInitFoods('garbage')
     this.createPoisonInterval('incinerator')
-    // this.createFoodScore()
+    this.createFoodScore()
   }
 
   async startGameTest() {
@@ -518,6 +520,7 @@ export class SnakeScene {
   async startGame() {
     console.log('game started')
     await this.countDown(3)
+
     this.createKeyboardListener()
     this.startSnakeMoveTicker()
   }
@@ -679,10 +682,25 @@ export class SnakeScene {
         arr.splice(x, 1)
       }
     })
+
+    console.log(poison.type)
+    // add score
+    const isGamePassed = this.foodScore.eatPoisonAndVerifyIfPassedGame(
+      poison.type
+    )
+    console.log(isGamePassed)
+
+    if (isGamePassed) {
+      this.gamePassed()
+    }
   }
 
   deadMonitor() {
-    const { i, j } = this.snakeArray[0].getPosition()
+    const position = this.snakeArray[0]?.getPosition()
+
+    if (!position) return
+
+    const { i, j } = position
 
     if (this.snakePoisionArray.length) {
       for (let index = 0; index < this.snakePoisionArray.length; index++) {
@@ -789,6 +807,16 @@ export class SnakeScene {
     this.snakeMoveTicker.start()
   }
 
+  async gamePassed() {
+    this.snakeMoveTicker.stop()
+    this.container.removeChild(this.menuButtons.container)
+    // window.removeEventListener('keydown', this.keyboardListener)
+
+    this.resetGameSetting()
+
+    this.successGameHint()
+  }
+
   async gameOver() {
     this.snakeMoveTicker.stop()
     this.container.removeChild(this.menuButtons.container)
@@ -807,6 +835,40 @@ export class SnakeScene {
     this.container.removeChild(this.menuButtons.container)
 
     const gameFail = new GameFail(
+      failGameChooseHandler.bind(this),
+      {
+        text: '再玩一次',
+        color: 0x000000,
+        bgColor: '0xC4C4C4',
+        value: 'restart',
+      },
+      { text: '回主畫面', color: 0xffffff, bgColor: '0x3B6BD6', value: 'menu' }
+    )
+
+    this.container.addChild(gameFail.container)
+
+    function failGameChooseHandler(chosen) {
+      console.log(chosen)
+      switch (chosen) {
+        case 'restart':
+          this.container.removeChild(gameFail.container)
+          this.restartGame()
+          break
+
+        case 'menu':
+          console.log('back to menu')
+          break
+
+        default:
+          break
+      }
+    }
+  }
+
+  successGameHint() {
+    this.container.removeChild(this.menuButtons.container)
+
+    const gameFail = new GameSuccess(
       failGameChooseHandler.bind(this),
       {
         text: '再玩一次',

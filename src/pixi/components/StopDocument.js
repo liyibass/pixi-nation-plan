@@ -3,7 +3,7 @@ import { Globals } from '../script/Globals'
 // import { TwoButtons } from './TwoButtons'
 import { Stop } from './Stop'
 
-export class GameSuccess extends Stop {
+export class GameFail extends Stop {
   constructor(chooseHandler, button1Setting, button2Setting) {
     super(chooseHandler, button1Setting, button2Setting)
     this.init()
@@ -58,7 +58,7 @@ export class GameSuccess extends Stop {
   }
 
   createStamp() {
-    const texture = Globals.resources['stampCompleted'].texture
+    const texture = Globals.resources['stampFailed'].texture
     const stampSprite = new PIXI.Sprite(texture)
 
     stampSprite.x = this.docGroup.width * 0.15
@@ -85,7 +85,7 @@ export class GameSuccess extends Stop {
   }
 
   createWording() {
-    const wording = new PIXI.Text('闖關成功', {
+    const wording = new PIXI.Text('闖關失敗！', {
       align: 'center', // 對齊
       fontSize: 16,
       wordWrap: true,
