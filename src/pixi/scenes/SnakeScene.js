@@ -46,8 +46,10 @@ export class SnakeScene {
     this.snakePoisonGroup = new PIXI.Container()
     this.gameStage.addChild(this.snakePoisonGroup)
 
+    this.gameLevel = 0
+
     // this.initGame()
-    this.createFoodScore()
+    this.createFoodScore('incinerator')
     this.startGameFlow()
     // this.startGameTest()
   }
@@ -141,8 +143,8 @@ export class SnakeScene {
     this.container.addChild(controller.container)
   }
 
-  createFoodScore() {
-    this.foodScore = new FoodScore()
+  createFoodScore(poisonType) {
+    this.foodScore = new FoodScore(poisonType)
     this.container.addChild(this.foodScore.container)
   }
 
@@ -440,6 +442,25 @@ export class SnakeScene {
     console.log('startGameFlow')
     await wait(500)
 
+    switch (this.gameLevel) {
+      case 0:
+        this.gameLevel0()
+        break
+
+      case 1:
+        this.gameLevel1()
+        break
+
+      case 2:
+        this.gameLevel2()
+        break
+
+      default:
+        break
+    }
+  }
+
+  async gameLevel0() {
     const doctorSay = new DoctorSay()
     // doctorSay.hint('YOYO', 3000)
     this.container.addChild(doctorSay.container)
@@ -493,11 +514,105 @@ export class SnakeScene {
     }
   }
 
+  async gameLevel1() {
+    const doctorSay = new DoctorSay()
+    // doctorSay.hint('YOYO', 3000)
+    this.container.addChild(doctorSay.container)
+
+    await doctorSay.newSay(
+      '你的表現超乎我的預期！看來缺水的問題對你來說也是游刃有餘。'
+    )
+    await doctorSay.newSay('你可以幫忙搜集水源嗎？村民快沒水可以用了。')
+
+    // init game
+    this.createSnake()
+    this.createInitFoods('water')
+
+    this.startGame()
+    await wait(3000)
+    // doctorSay.hint('加油！', 3000)
+    await wait(10000)
+    // first poison show up
+    const createdPoison = this.createPoison(0, 'fauset')
+    this.snakeMoveTicker.stop()
+    this.container.removeChild(this.menuButtons.container)
+    createdPoison.startHighlight()
+
+    await doctorSay.newSay(
+      '啊，村裡的輸水管線用太久，一直在漏水，你可以幫我把壞掉的水管給處理掉嗎？'
+    )
+    await doctorSay.newSay(
+      '同樣要注意，一個不小心撞到壞掉的水管，可能會釀嚴重災情！'
+    )
+
+    createdPoison.stopHighlight()
+    await this.countDown(3)
+    this.snakeMoveTicker.start()
+
+    this.createPoisonInterval('fauset')
+  }
+
+  async gameLevel2() {
+    const doctorSay = new DoctorSay()
+    // doctorSay.hint('YOYO', 3000)
+    this.container.addChild(doctorSay.container)
+
+    await doctorSay.newSay(
+      '你的表現超乎我的預期！看來缺水的問題對你來說也是游刃有餘。'
+    )
+    await doctorSay.newSay('你可以幫忙搜集水源嗎？村民快沒水可以用了。')
+
+    // init game
+    this.createSnake()
+    this.createInitFoods('water')
+
+    this.startGame()
+    await wait(3000)
+    // doctorSay.hint('加油！', 3000)
+    await wait(10000)
+    // first poison show up
+    const createdPoison = this.createPoison(0, 'fauset')
+    this.snakeMoveTicker.stop()
+    this.container.removeChild(this.menuButtons.container)
+    createdPoison.startHighlight()
+
+    await doctorSay.newSay(
+      '啊，村裡的輸水管線用太久，一直在漏水，你可以幫我把壞掉的水管給處理掉嗎？'
+    )
+    await doctorSay.newSay(
+      '同樣要注意，一個不小心撞到壞掉的水管，可能會釀嚴重災情！'
+    )
+
+    createdPoison.stopHighlight()
+    await this.countDown(3)
+    this.snakeMoveTicker.start()
+
+    this.createPoisonInterval('fauset')
+  }
+
   initGame() {
     this.createSnake()
-    this.createInitFoods('garbage')
-    this.createPoisonInterval('incinerator')
-    this.createFoodScore()
+
+    switch (this.gameLevel) {
+      case 0:
+        this.createInitFoods('garbage')
+        this.createPoisonInterval('incinerator')
+        this.createFoodScore('incinerator')
+        break
+
+      default:
+      case 1:
+        this.createInitFoods('water')
+        this.createPoisonInterval('fauset')
+        this.createFoodScore('fauset')
+        break
+
+      case 2:
+        this.createInitFoods('all')
+        this.createPoisonInterval('all')
+        this.createFoodScore('all')
+        break
+    }
   }
 
   async startGameTest() {
@@ -856,7 +971,7 @@ export class SnakeScene {
           break
 
         case 'menu':
-          console.log('back to menu')
+          this.goToMenu()
           break
 
         default:
@@ -868,29 +983,31 @@ export class SnakeScene {
   successGameHint() {
     this.container.removeChild(this.menuButtons.container)
 
-    const gameFail = new GameSuccess(
-      failGameChooseHandler.bind(this),
+    const gameSuccess = new GameSuccess(
+      successGameChooseHandler.bind(this),
       {
-        text: '再玩一次',
+        text: '繼續挑戰',
         color: 0x000000,
         bgColor: '0xC4C4C4',
-        value: 'restart',
+        value: 'nextLevel',
       },
       { text: '回主畫面', color: 0xffffff, bgColor: '0x3B6BD6', value: 'menu' }
     )
 
-    this.container.addChild(gameFail.container)
+    this.container.addChild(gameSuccess.container)
 
-    function failGameChooseHandler(chosen) {
+    function successGameChooseHandler(chosen) {
       console.log(chosen)
       switch (chosen) {
-        case 'restart':
-          this.container.removeChild(gameFail.container)
-          this.restartGame()
+        case 'nextLevel':
+          this.container.removeChild(gameSuccess.container)
+
+          this.gameLevel++
+          this.startGameFlow()
           break
 
         case 'menu':
-          console.log('back to menu')
+          this.goToMenu()
           break
 
         default:
@@ -927,6 +1044,7 @@ export class SnakeScene {
     this.snakePoisonGroup.removeChildren()
 
     this.snakeArray = []
+    this.snakeGroup.destroy()
     this.moveDirection = ['right']
   }
 
@@ -1077,6 +1195,10 @@ export class SnakeScene {
 
       snakeDropTicker.start()
     })
+  }
+
+  goToMenu() {
+    console.log('go to menu')
   }
 }
 

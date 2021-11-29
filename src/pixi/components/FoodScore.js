@@ -2,7 +2,8 @@ import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 
 export class FoodScore {
-  constructor() {
+  constructor(poisonType) {
+    this.poisonType = poisonType
     this.score = {
       fauset: 0,
       incinerator: 0,
@@ -24,23 +25,22 @@ export class FoodScore {
   }
 
   createFoodScore() {
-    this.incineratorScoreGroup = this.createScoreGroup('incinerator')
-    // const fausetScoreGroup = this.createScoreGroup('fauset')
+    this.incineratorScoreGroup = this.createScoreGroup(this.poisonType)
 
     this.container.addChild(this.incineratorScoreGroup)
   }
 
-  createScoreGroup(poisonName) {
+  createScoreGroup(poisonType) {
     const scoreContainer = new PIXI.Container()
 
-    const texture = Globals.resources[poisonName].texture
+    const texture = Globals.resources[poisonType].texture
 
     const sprite = new PIXI.Sprite(texture)
     sprite.width = 25
     sprite.height = 25
 
     const poisonScore = new PIXI.Text(
-      `${this.score[poisonName]} / ${this.passScore[poisonName]}`,
+      `${this.score[poisonType]} / ${this.passScore[poisonType]}`,
       {
         fontSize: 16,
 
@@ -48,8 +48,9 @@ export class FoodScore {
       }
     )
 
-    this[`${poisonName}ScoreText`] = poisonScore
-
+    this[`${poisonType}ScoreText`] = poisonScore
+    console.log(`${poisonType}ScoreText`)
+    console.log(this[`${poisonType}ScoreText`])
     scoreContainer.addChild(sprite, poisonScore)
     poisonScore.x = 25 + 8
     poisonScore.y = scoreContainer.height / 2 - poisonScore.height / 2
@@ -57,6 +58,8 @@ export class FoodScore {
   }
 
   eatPoisonAndVerifyIfPassedGame(poisonType) {
+    console.log(poisonType)
+    console.log(this)
     this.score[poisonType] += 1
     this.updateScoreWord(poisonType)
 
