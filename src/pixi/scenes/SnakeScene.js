@@ -956,9 +956,8 @@ export class SnakeScene {
     this.failGameHint()
   }
 
-  failGameHint() {
+  async failGameHint() {
     this.container.removeChild(this.menuButtons.container)
-
     const gameFail = new GameFail(
       failGameChooseHandler.bind(this),
       {
@@ -967,17 +966,34 @@ export class SnakeScene {
         bgColor: '0x3B6BD6',
         value: 'restart',
       },
-      { text: '我想回家', color: 0x000000, bgColor: '0xC4C4C4', value: 'menu' }
+      {
+        text: '我想回家',
+        color: 0x000000,
+        bgColor: '0xC4C4C4',
+        value: 'menu',
+      }
     )
 
     this.container.addChild(gameFail.container)
-
     // reset doctorSay
     this.doctorSay.container.destroy()
     this.createDoctorSay()
 
+    switch (this.gameLevel) {
+      case 1:
+        await this.doctorSay.newSay(
+          '雖然缺水的問題處理得不順利，但整體表現還算不錯！'
+        )
+        await this.doctorSay.newSay(
+          '恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
+        )
+        await this.doctorSay.newSay(
+          '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
+        )
+        break
+    }
+
     async function failGameChooseHandler(chosen) {
-      console.log(chosen)
       switch (chosen) {
         case 'restart':
           this.container.removeChild(gameFail.container)
@@ -985,22 +1001,11 @@ export class SnakeScene {
           break
 
         case 'menu':
-          if (this.gameLevel === 0) {
-            await this.doctorSay.newSay(
-              '什麼！這麼快就要放棄啦？那只好請你幫我找下一個替死鬼，我才能放你回家。'
-            )
-          } else if (this.gameLevel === 1) {
-            await this.doctorSay.newSay(
-              '雖然缺水的問題處理得不順利，但整體表現還算不錯！'
-            )
-            await this.doctorSay.newSay(
-              '恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
-            )
-          }
-          this.goToMenu()
-          break
+          await this.doctorSay.newSay(
+            '什麼！這麼快就要放棄啦？那只好請你幫我找下一個替死鬼，我才能放你回家。'
+          )
 
-        default:
+          this.goToMenu()
           break
       }
     }
