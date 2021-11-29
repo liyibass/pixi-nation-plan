@@ -9,7 +9,7 @@ export class FoodScore {
       incinerator: 0,
     }
     this.passScore = {
-      fauset: 3,
+      fauset: 1,
       incinerator: 1,
     }
     this.container = new PIXI.Container()

@@ -49,7 +49,7 @@ export class SnakeScene {
     this.gameLevel = 0
 
     // this.initGame()
-    this.createFoodScore('incinerator')
+
     this.startGameFlow()
     // this.startGameTest()
   }
@@ -59,6 +59,7 @@ export class SnakeScene {
     this.createItems()
     this.createGameStage()
     this.createSnakeController()
+    this.createDoctorSay()
 
     // this.createChessBoard()
 
@@ -143,9 +144,9 @@ export class SnakeScene {
     this.container.addChild(controller.container)
   }
 
-  createFoodScore(poisonType) {
-    this.foodScore = new FoodScore(poisonType)
-    this.container.addChild(this.foodScore.container)
+  createDoctorSay() {
+    this.doctorSay = new DoctorSay()
+    this.container.addChild(this.doctorSay.container)
   }
 
   // ===== snake =====
@@ -438,20 +439,30 @@ export class SnakeScene {
     }
   }
 
+  createFoodScore(poisonType) {
+    this.foodScore = new FoodScore(poisonType)
+    this.container.addChild(this.foodScore.container)
+  }
+
   async startGameFlow() {
     console.log('startGameFlow')
+    this.createSnake()
+
     await wait(500)
 
     switch (this.gameLevel) {
       case 0:
+        this.createFoodScore('incinerator')
         this.gameLevel0()
         break
 
       case 1:
+        this.createFoodScore('fauset')
         this.gameLevel1()
         break
 
       case 2:
+        this.createFoodScore('all')
         this.gameLevel2()
         break
 
@@ -461,46 +472,45 @@ export class SnakeScene {
   }
 
   async gameLevel0() {
-    const doctorSay = new DoctorSay()
-    // doctorSay.hint('YOYO', 3000)
-    this.container.addChild(doctorSay.container)
-
-    await doctorSay.newSay('經營村莊的不二法門，就是別讓村民不開心')
-    await doctorSay.newSay(
+    await this.doctorSay.newSay('經營村莊的不二法門，就是別讓村民不開心')
+    await this.doctorSay.newSay(
       '但村子久了總是會出現一些狀況，像是垃圾變多、公共設備損壞'
     )
-    await doctorSay.newSay('你的任務就是要幫我解決問題')
-    const chosen = await doctorSay.chooseSay(
+    await this.doctorSay.newSay('你的任務就是要幫我解決問題')
+    const chosen = await this.doctorSay.chooseSay(
       '既然你先選了臺東縣，這裡最大的困境就是垃圾太多了，準備好幫我排除障礙了嗎？',
       this.chosenHandler
     )
 
     if (chosen === 'play') {
-      await doctorSay.newSay(
+      await this.doctorSay.newSay(
         '村裡住的人越來越多，垃圾量就增加得很快，可是村民又不想蓋焚化爐，你幫我把垃圾變不見！'
       )
 
       // init game
-      this.createSnake()
       this.createInitFoods('garbage')
 
-      await doctorSay.newSay('處理的方式很簡單，只要把它們吃掉就好。')
-      await doctorSay.newSay(
+      await this.doctorSay.newSay('處理的方式很簡單，只要把它們吃掉就好。')
+      await this.doctorSay.newSay(
         '垃圾會隨機出現，你可不要漏掉囉。也要小心不要撞到牆，可能會沒命的！。'
       )
       this.startGame()
       await wait(3000)
       // doctorSay.hint('加油！', 3000)
       await wait(10000)
+
+      // if snake is dead, then just leave this function
+      if (!this.snakeMoveTicker?.started) return
+
       // first poison show up
       const createdPoison = this.createPoison(0, 'incinerator')
       this.snakeMoveTicker.stop()
       this.container.removeChild(this.menuButtons.container)
       createdPoison.startHighlight()
 
-      await doctorSay.newSay('欸！村莊裡怎麼出現了焚化爐！？')
-      await doctorSay.newSay('村民看到會生氣的，快去把它們銷毀！')
-      await doctorSay.newSay(
+      await this.doctorSay.newSay('欸！村莊裡怎麼出現了焚化爐！？')
+      await this.doctorSay.newSay('村民看到會生氣的，快去把它們銷毀！')
+      await this.doctorSay.newSay(
         '消滅的方式也很容易，你只要用身體把它們圍起來，焚化爐就會自動爆炸了。你先圍一個試試看'
       )
 
@@ -510,38 +520,38 @@ export class SnakeScene {
 
       this.createPoisonInterval('incinerator')
     } else {
-      await doctorSay.newSay('靠')
+      await this.doctorSay.newSay('靠')
     }
   }
 
   async gameLevel1() {
     const doctorSay = new DoctorSay()
-    // doctorSay.hint('YOYO', 3000)
     this.container.addChild(doctorSay.container)
 
-    await doctorSay.newSay(
+    await this.doctorSay.newSay(
       '你的表現超乎我的預期！看來缺水的問題對你來說也是游刃有餘。'
     )
-    await doctorSay.newSay('你可以幫忙搜集水源嗎？村民快沒水可以用了。')
-
-    // init game
-    this.createSnake()
     this.createInitFoods('water')
+    await this.doctorSay.newSay('你可以幫忙搜集水源嗎？村民快沒水可以用了。')
 
     this.startGame()
     await wait(3000)
     // doctorSay.hint('加油！', 3000)
     await wait(10000)
+
+    // if snake is dead, then just leave this function
+    if (!this.snakeMoveTicker?.started) return
+
     // first poison show up
     const createdPoison = this.createPoison(0, 'fauset')
     this.snakeMoveTicker.stop()
     this.container.removeChild(this.menuButtons.container)
     createdPoison.startHighlight()
 
-    await doctorSay.newSay(
+    await this.doctorSay.newSay(
       '啊，村裡的輸水管線用太久，一直在漏水，你可以幫我把壞掉的水管給處理掉嗎？'
     )
-    await doctorSay.newSay(
+    await this.doctorSay.newSay(
       '同樣要注意，一個不小心撞到壞掉的水管，可能會釀嚴重災情！'
     )
 
@@ -553,18 +563,18 @@ export class SnakeScene {
   }
 
   async gameLevel2() {
+    // init game
+    this.createSnake()
+    this.createInitFoods('water')
+
     const doctorSay = new DoctorSay()
     // doctorSay.hint('YOYO', 3000)
     this.container.addChild(doctorSay.container)
 
-    await doctorSay.newSay(
+    await this.doctorSay.newSay(
       '你的表現超乎我的預期！看來缺水的問題對你來說也是游刃有餘。'
     )
-    await doctorSay.newSay('你可以幫忙搜集水源嗎？村民快沒水可以用了。')
-
-    // init game
-    this.createSnake()
-    this.createInitFoods('water')
+    await this.doctorSay.newSay('你可以幫忙搜集水源嗎？村民快沒水可以用了。')
 
     this.startGame()
     await wait(3000)
@@ -576,10 +586,10 @@ export class SnakeScene {
     this.container.removeChild(this.menuButtons.container)
     createdPoison.startHighlight()
 
-    await doctorSay.newSay(
+    await this.doctorSay.newSay(
       '啊，村裡的輸水管線用太久，一直在漏水，你可以幫我把壞掉的水管給處理掉嗎？'
     )
-    await doctorSay.newSay(
+    await this.doctorSay.newSay(
       '同樣要注意，一個不小心撞到壞掉的水管，可能會釀嚴重災情！'
     )
 
@@ -953,16 +963,20 @@ export class SnakeScene {
       failGameChooseHandler.bind(this),
       {
         text: '再玩一次',
-        color: 0x000000,
-        bgColor: '0xC4C4C4',
+        color: 0xffffff,
+        bgColor: '0x3B6BD6',
         value: 'restart',
       },
-      { text: '回主畫面', color: 0xffffff, bgColor: '0x3B6BD6', value: 'menu' }
+      { text: '我想回家', color: 0x000000, bgColor: '0xC4C4C4', value: 'menu' }
     )
 
     this.container.addChild(gameFail.container)
 
-    function failGameChooseHandler(chosen) {
+    // reset doctorSay
+    this.doctorSay.container.destroy()
+    this.createDoctorSay()
+
+    async function failGameChooseHandler(chosen) {
       console.log(chosen)
       switch (chosen) {
         case 'restart':
@@ -971,6 +985,18 @@ export class SnakeScene {
           break
 
         case 'menu':
+          if (this.gameLevel === 0) {
+            await this.doctorSay.newSay(
+              '什麼！這麼快就要放棄啦？那只好請你幫我找下一個替死鬼，我才能放你回家。'
+            )
+          } else if (this.gameLevel === 1) {
+            await this.doctorSay.newSay(
+              '雖然缺水的問題處理得不順利，但整體表現還算不錯！'
+            )
+            await this.doctorSay.newSay(
+              '恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
+            )
+          }
           this.goToMenu()
           break
 
@@ -980,23 +1006,47 @@ export class SnakeScene {
     }
   }
 
-  successGameHint() {
+  async successGameHint() {
     this.container.removeChild(this.menuButtons.container)
 
     const gameSuccess = new GameSuccess(
       successGameChooseHandler.bind(this),
       {
         text: '繼續挑戰',
-        color: 0x000000,
-        bgColor: '0xC4C4C4',
+        color: 0xffffff,
+        bgColor: '0x3B6BD6',
         value: 'nextLevel',
       },
-      { text: '回主畫面', color: 0xffffff, bgColor: '0x3B6BD6', value: 'menu' }
+      {
+        text: '想看結果',
+        color: 0x000000,
+        bgColor: '0xC4C4C4',
+
+        value: 'result',
+      }
     )
 
     this.container.addChild(gameSuccess.container)
 
-    function successGameChooseHandler(chosen) {
+    // reset doctorSay
+    this.doctorSay.container.destroy()
+    this.createDoctorSay()
+
+    if (this.gameLevel === 1) {
+      await this.doctorSay.newSay('沒想到你這麼優秀，我真是找對人了！')
+      await this.doctorSay.newSay(
+        '先恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算怎麼處理。'
+      )
+
+      await this.doctorSay.newSay(
+        '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
+      )
+      await this.doctorSay.newSay(
+        '因為你也順利解決了缺水的問題，可以點選有此困擾的縣市，看各地政府如何因應。'
+      )
+    }
+
+    async function successGameChooseHandler(chosen) {
       console.log(chosen)
       switch (chosen) {
         case 'nextLevel':
@@ -1004,6 +1054,16 @@ export class SnakeScene {
 
           this.gameLevel++
           this.startGameFlow()
+          break
+
+        case 'result':
+          await this.doctorSay.newSay(
+            '表現得很不錯哦！恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
+          )
+          await this.doctorSay.newSay(
+            '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
+          )
+
           break
 
         case 'menu':
@@ -1039,6 +1099,7 @@ export class SnakeScene {
       fauset: 0,
       incinerator: 0,
     }
+    this.foodScore.container.destroy()
 
     this.snakeFoodGroup.removeChildren()
     this.snakePoisonGroup.removeChildren()
@@ -1046,6 +1107,9 @@ export class SnakeScene {
     this.snakeArray = []
     this.snakeGroup.destroy()
     this.moveDirection = ['right']
+
+    // init doctorSay
+    this.container.removeChild(this.doctorSay.container)
   }
 
   easterEggMode() {

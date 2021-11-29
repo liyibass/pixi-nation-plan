@@ -55,12 +55,12 @@ export class TwoButtons {
     this.skipButton.y = 0
 
     this.playButton.on('pointerdown', async () => {
-      this.chosenHandler(this.playButton.value)
+      await this.chosenHandler(this.playButton.value)
       this.playButton.removeListener()
       this.container.destroy()
     })
     this.skipButton.on('pointerdown', async () => {
-      this.chosenHandler(this.skipButton.value)
+      await this.chosenHandler(this.skipButton.value)
       this.skipButton.removeListener()
       this.container.destroy()
     })
