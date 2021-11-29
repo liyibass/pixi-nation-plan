@@ -43,11 +43,22 @@ export class SnakeScene {
     this.createFoodQuery = []
     this.createPoisonQuery = []
 
-    this.initGame()
+    // this.initGame()
     this.startGameFlow()
     // this.startGameTest()
   }
   // ===== init game =====
+  createSnakeScene() {
+    this.createBackground()
+    this.createItems()
+    this.createGameStage()
+    this.createSnakeController()
+
+    // this.createChessBoard()
+
+    // todo introduce
+  }
+
   createBackground() {
     const bg = new PIXI.Graphics()
     // bg.lineStyle(4, 0x00000, 1)
@@ -124,25 +135,6 @@ export class SnakeScene {
   createSnakeController() {
     const controller = new SnakeController(Globals.getSnakeControllerPosition())
     this.container.addChild(controller.container)
-  }
-
-  createSnakeScene() {
-    this.createBackground()
-    this.createItems()
-    this.createGameStage()
-    this.createSnakeController()
-
-    // this.createChessBoard()
-
-    // todo introduce
-  }
-
-  initGame() {
-    this.createKeyboardListener()
-    this.createSnake()
-    this.createInitFoods()
-    this.createPoisonInterval()
-    // this.createFoodScore()
   }
 
   createFoodScore() {
@@ -273,25 +265,25 @@ export class SnakeScene {
   }
 
   // ===== food =====
-  createInitFoods() {
+  createInitFoods(foodType) {
     this.snakeFoodGroup = new PIXI.Container()
 
     for (let id = 0; id < INIT_FOOD_COUNT; id++) {
-      this.createFood(id)
+      this.createFood(id, foodType)
     }
 
     this.gameStage.addChild(this.snakeFoodGroup)
   }
 
-  createFood(id) {
+  createFood(id, foodType) {
     const { i, j } = getRandomFoodPosition.bind(this)()
-    const snakeFood = new SnakeFood(id, i, j)
+    const snakeFood = new SnakeFood(id, i, j, foodType)
 
     this.snakeFoodArray.push(snakeFood)
     this.snakeFoodGroup.addChild(snakeFood.container)
   }
 
-  createFoodTimeout(id) {
+  createFoodTimeout(id, foodType) {
     this.createFoodQuery.push(id)
 
     const foodNextSpawnTime =
@@ -315,7 +307,7 @@ export class SnakeScene {
           this.snakeFoodArray.length < INIT_FOOD_COUNT
         ) {
           const foodId = this.createFoodQuery.shift()
-          this.createFood(foodId)
+          this.createFood(foodId, foodType)
         }
       }, foodNextSpawnTime)
     }
@@ -323,7 +315,7 @@ export class SnakeScene {
     createNewFoodTimeout()
   }
 
-  createPoisonInterval() {
+  createPoisonInterval(poisonType) {
     this.snakePoisonGroup = new PIXI.Container()
     this.gameStage.addChild(this.snakePoisonGroup)
     this.createPoisonQuery.push(0)
@@ -347,7 +339,7 @@ export class SnakeScene {
           this.snakePoisionArray.length < INIT_POISON_COUNT
         ) {
           const poisonId = this.createPoisonQuery.shift()
-          this.createPoison(poisonId)
+          this.createPoison(poisonId, poisonType)
 
           this.createPoisonQuery.push(poisonId + 1)
         }
@@ -359,9 +351,9 @@ export class SnakeScene {
     createPoisonTimeout()
   }
 
-  createPoison(id) {
+  createPoison(id, poisonType) {
     const { i, j } = getRandomFoodPosition.bind(this)(true)
-    const snakePoison = new SnakePoison(id, i, j)
+    const snakePoison = new SnakePoison(id, i, j, poisonType)
 
     this.snakePoisionArray.push(snakePoison)
     this.snakePoisonGroup.addChild(snakePoison.container)
@@ -398,7 +390,7 @@ export class SnakeScene {
     await this.createNewBodyWithFood(removedFood)
 
     // add new food
-    this.createFoodTimeout(removedFood.id)
+    this.createFoodTimeout(removedFood.id, removedFood.type)
   }
 
   async createNewBodyWithFood(removedFood) {
@@ -459,15 +451,31 @@ export class SnakeScene {
     )
 
     if (chosen === 'play') {
-      await doctorSay.newSay('遊戲目標：把場上的焚化爐全都圍起來消滅掉')
       await doctorSay.newSay(
-        '村裡人越來越多，垃圾量就增加得很快，可是村民又不想蓋焚化爐，你幫我把垃圾變不見！'
+        '村裡住的人越來越多，垃圾量就增加得很快，可是村民又不想蓋焚化爐，你幫我把垃圾變不見！'
       )
-      await doctorSay.newSay('處理的方式很簡單，你就把垃圾吃掉就好。')
+
+      // init game
+      this.createSnake()
+      this.createInitFoods('garbage')
+      this.createPoisonInterval('incinerator')
+      await doctorSay.newSay('處理的方式很簡單，只要把它們吃掉就好。')
+      await doctorSay.newSay(
+        '垃圾會隨機出現，你可不要漏掉囉。也要小心不要撞到牆，可能會沒命的！。'
+      )
       this.startGame()
+      await wait(3000)
+      doctorSay.hint('YOYO', 3000)
     } else {
       await doctorSay.newSay('靠')
     }
+  }
+
+  initGame() {
+    this.createSnake()
+    this.createInitFoods('garbage')
+    this.createPoisonInterval('incinerator')
+    // this.createFoodScore()
   }
 
   async startGameTest() {
@@ -490,7 +498,11 @@ export class SnakeScene {
   async startGame() {
     console.log('game started')
     await this.countDown(3)
+    this.createKeyboardListener()
+    this.startSnakeMoveTicker()
+  }
 
+  startSnakeMoveTicker() {
     this.snakeMoveTicker = new PIXI.Ticker()
     this.snakeMoveTicker.add(async () => {
       for (let i = 0; i < this.snakeArray.length; i++) {

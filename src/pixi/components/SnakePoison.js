@@ -4,13 +4,13 @@ import { Globals } from '../script/Globals'
 const BLOCK_WIDTH = 16
 
 export class SnakePoison {
-  constructor(id, i, j) {
+  constructor(id, i, j, poisonType = 'all') {
     this.container = new PIXI.Container()
     this.id = id
     this.i = i
     this.j = j
 
-    this.type = 'fauset'
+    this.type = poisonType
     this.color = `0x000000`
 
     this.currentPosition = { i, j }
@@ -22,9 +22,23 @@ export class SnakePoison {
   }
 
   getPoisonType() {
-    const random = Math.floor(Math.random() * 2)
+    let typeNumber
+    switch (this.type) {
+      case 'fauset':
+        typeNumber = 0
+        break
 
-    switch (random) {
+      case 'incinerator':
+        typeNumber = 1
+        break
+
+      default:
+      case 'any':
+        typeNumber = Math.floor(Math.random() * 2)
+        break
+    }
+
+    switch (typeNumber) {
       case 0:
         this.type = 'fauset'
         this.color = 0x000000

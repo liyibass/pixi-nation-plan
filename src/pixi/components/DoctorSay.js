@@ -67,6 +67,25 @@ export class DoctorSay {
     })
   }
 
+  hint(text, timeout) {
+    const dialogBox = new DialogBox({
+      text,
+      x: (Globals.width - 300) / 2,
+      y: Globals.height / 2 - 30,
+      talkerX: this.doctorDimention.x + 30,
+      talkerY: this.doctorDimention.y,
+      width: 300,
+      height: 150,
+      fontSize: 16,
+    })
+    this.container.addChild(dialogBox.container)
+
+    setTimeout(() => {
+      this.container.removeChildren()
+      this.container.removeAllListeners()
+    }, timeout)
+  }
+
   newSay(text) {
     const speakDialog = new SpeakDialog(text)
     this.container.addChild(speakDialog.container)

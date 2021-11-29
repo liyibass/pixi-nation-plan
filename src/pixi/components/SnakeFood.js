@@ -4,13 +4,13 @@ import { Globals } from '../script/Globals'
 const BLOCK_WIDTH = 16
 
 export class SnakeFood {
-  constructor(id, i, j) {
+  constructor(id, i, j, foodType = 'all') {
     this.container = new PIXI.Container()
     this.id = id
     this.i = i
     this.j = j
 
-    this.type = 'water'
+    this.type = foodType
     this.color = `0x000000`
 
     this.currentPosition = { i, j }
@@ -21,17 +21,29 @@ export class SnakeFood {
   }
 
   getFoodType() {
-    const random = Math.floor(Math.random() * 2)
-
-    switch (random) {
-      case 0:
-        this.type = 'garbage'
+    switch (this.type) {
+      case 'water':
         this.color = 0x9f523e
         break
-
-      case 1:
-        this.type = 'water'
+      case 'gargage':
         this.color = 0x464f7c
+        break
+
+      case 'all':
+        switch (Math.floor(Math.random() * 2)) {
+          case 0:
+            this.type = 'garbage'
+            this.color = 0x9f523e
+            break
+
+          case 1:
+            this.type = 'water'
+            this.color = 0x464f7c
+            break
+        }
+
+        break
+      default:
         break
     }
   }
