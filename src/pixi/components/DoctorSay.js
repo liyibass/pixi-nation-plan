@@ -43,7 +43,7 @@ export class DoctorSay {
     })
   }
 
-  chooseSay(text) {
+  chooseSay(text, button1, button2) {
     return new Promise((resolve) => {
       const chosenHandler = (chosen) => {
         this.container.removeChildren()
@@ -61,6 +61,8 @@ export class DoctorSay {
         height: 150,
         fontSize: 16,
         chosenHandler,
+        button1,
+        button2,
       })
 
       this.container.addChild(dialogBox.container)

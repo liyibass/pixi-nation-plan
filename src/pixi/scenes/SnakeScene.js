@@ -479,7 +479,18 @@ export class SnakeScene {
     await this.doctorSay.newSay('你的任務就是要幫我解決問題')
     const chosen = await this.doctorSay.chooseSay(
       '既然你先選了臺東縣，這裡最大的困境就是垃圾太多了，準備好幫我排除障礙了嗎？',
-      this.chosenHandler
+      {
+        text: '玩玩看吧',
+        color: '0x000000',
+        bgColor: '0xc4c4c4',
+        value: 'play',
+      },
+      {
+        text: '先不用',
+        color: '0x000000',
+        bgColor: '0xFF8B29',
+        value: 'skip',
+      }
     )
 
     if (chosen === 'play') {
@@ -1026,7 +1037,6 @@ export class SnakeScene {
         text: '想看結果',
         color: 0x000000,
         bgColor: '0xC4C4C4',
-
         value: 'result',
       }
     )

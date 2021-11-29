@@ -11,12 +11,7 @@ export class Stop {
       bgColor: '0x3B6BD6',
       value: 'resume',
     },
-    button2Setting = {
-      text: '回主畫面',
-      color: 0x000000,
-      bgColor: '0xC4C4C4',
-      value: 'menu',
-    }
+    button2Setting
   ) {
     this.container = new PIXI.Container()
     this.button1Setting = button1Setting
@@ -42,7 +37,9 @@ export class Stop {
 
     this.container.addChild(this.TwoButtons.container)
 
-    const menuPosition = Globals.getSnakeMenuPosition()
+    const menuPosition = Globals.getSnakeMenuPosition(
+      this.button2Setting ? 2 : 1
+    )
     this.TwoButtons.container.x = menuPosition.x
     this.TwoButtons.container.y = menuPosition.y
   }

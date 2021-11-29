@@ -76,11 +76,17 @@ export const Globals = {
         this.CONTROLLER_WIDTH / 2,
     }
   },
+
   BUTTON_CONTAINER_WIDTH: 194,
   BUTTON_CONTAINER_HEIGHT: 32,
-  getSnakeMenuPosition: function () {
+
+  BUTTON_WIDTH: 88,
+  BUTTON_HEIGHT: 32,
+  getSnakeMenuPosition: function (buttonCount) {
+    const containerWidth =
+      buttonCount === 2 ? this.BUTTON_CONTAINER_WIDTH : this.BUTTON_WIDTH
     return {
-      x: this.width / 2 - this.BUTTON_CONTAINER_WIDTH / 2,
+      x: this.width / 2 - containerWidth / 2,
       y:
         this.height / 2 +
         gameStagePadding +
