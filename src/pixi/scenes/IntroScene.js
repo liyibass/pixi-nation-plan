@@ -7,6 +7,7 @@ import { Spotlight } from '../components/Spotlight'
 import { Doctor } from '../components/Doctor'
 import { Taiwan } from '../components/Taiwan'
 import { DoctorDialogBox } from '../components/DoctorDialogBox'
+
 export class IntroScene {
   constructor(selectStage) {
     this.selectStage = selectStage
@@ -62,13 +63,13 @@ export class IntroScene {
     this.container.addChild(this.startButton)
   }
 
-  createSelectStageButton(stageName) {
+  createSelectStageButton(stageName, position) {
     this.stageButton = new PIXI.Text(stageName, {
       fill: '0xeeeeee',
       fontSize: '24px',
     })
     this.stageButton.position.x = 0
-    this.stageButton.position.y = 0
+    this.stageButton.position.y = position * 30
 
     this.stageButton.interactive = true
     this.stageButton.buttonMode = true
@@ -82,7 +83,8 @@ export class IntroScene {
   async createIntro() {
     this.createBackground()
     this.createStartButton()
-    this.createSelectStageButton('snake')
+    this.createSelectStageButton('snake', 1)
+    this.createSelectStageButton('balance', 2)
 
     const startFilmScript = async () => {
       if (this.filmScriptStep === 0) {

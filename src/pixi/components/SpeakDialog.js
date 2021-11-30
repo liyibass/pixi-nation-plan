@@ -10,6 +10,8 @@ export class SpeakDialog {
     this.container = new PIXI.Container()
     this.text = text
     this.init()
+
+    this.speakDialogGroup.y = Globals.height - this.whiteBackground.height
   }
 
   init() {
@@ -22,23 +24,21 @@ export class SpeakDialog {
     bg.beginFill(0x000000)
     bg.drawRect(0, 0, Globals.width, Globals.height)
     bg.endFill()
-    bg.alpha = 0.1
+    bg.alpha = 0.7
 
     this.container.addChild(bg)
   }
 
   createDialog() {
     this.speakDialogGroup = new PIXI.Container()
-    this.speakDialogGroup.y = (Globals.height * 3) / 5
 
     // create white bg
     this.whiteBackground = new PIXI.Graphics()
     this.whiteBackground.beginFill(0xffffff)
     this.whiteBackground.drawRect(0, 0, DIALOG_WIDTH, DIALOG_HEIGHT)
     this.whiteBackground.endFill()
-    this.speakDialogGroup.addChild(this.whiteBackground)
 
-    this.whiteBackground.alpha = 0.8
+    // this.whiteBackground.alpha = 0.8
 
     this.container.addChild(this.speakDialogGroup)
 
@@ -51,15 +51,14 @@ export class SpeakDialog {
     this.doctor.width = Globals.maxContentWidth / 2
     this.doctor.height = this.doctor.width * ratio
 
-    this.doctorOriginX =
-      (Globals.width - Globals.maxContentWidth) / 2 -
-      Globals.maxContentWidth / 7
+    this.doctorOriginX = (Globals.width - Globals.maxContentWidth) / 2
 
     this.doctor.x = this.doctorOriginX - 50
-    this.doctor.y = this.whiteBackground.height / 2 - this.doctor.height / 2
+    this.doctor.y = -this.doctor.height / 2
     this.doctor.alpha = 0
 
     this.speakDialogGroup.addChild(this.doctor)
+    this.speakDialogGroup.addChild(this.whiteBackground)
 
     // create text
     const text = new PIXI.Text(this.text, {
@@ -69,7 +68,7 @@ export class SpeakDialog {
       breakWords: true,
       wordWrapWidth: (Globals.maxContentWidth * 2) / 3 - 5,
     })
-    text.x = Globals.width / 2 - Globals.maxContentWidth / 6
+    text.x = (Globals.width - text.width) / 2
     text.y = (this.whiteBackground.height - text.height) / 2
     this.speakDialogGroup.addChild(text)
 

@@ -95,4 +95,18 @@ export const Globals = {
         10,
     }
   },
+  getSeesawGameStageDimention: function () {
+    let height = Math.floor((this.height * 5) / 8)
+    let width =
+      this.width - 2 * gameStagePadding > height
+        ? height
+        : this.width - 2 * gameStagePadding
+
+    return {
+      x: (this.width - width) / 2,
+      y: 0 + gameStagePadding,
+      width: width,
+      height: height,
+    }
+  },
 }

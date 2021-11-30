@@ -15,6 +15,8 @@ import incinerator from '../assets/images/incinerator.png'
 import docIcon from '../assets/images/docIcon.png'
 import stampFailed from '../assets/images/stampFailed.png'
 import stampCompleted from '../assets/images/stampCompleted.png'
+import pivotBase from '../assets/images/pivotBase.png'
+import pivotPin from '../assets/images/pivotPin.png'
 
 export const LoaderConfig = {
   player,
@@ -34,4 +36,6 @@ export const LoaderConfig = {
   docIcon,
   stampFailed,
   stampCompleted,
+  pivotBase,
+  pivotPin,
 }
