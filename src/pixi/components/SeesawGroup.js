@@ -8,14 +8,22 @@ export class SeesawGroup {
   constructor() {
     this.container = new PIXI.Container()
     this.createSeesaw()
+    this.setPosition()
   }
 
   createSeesaw() {
-    const pivot = new SeesawPivot()
-    this.container.addChild(pivot.container)
-    const board = new SeesawBoard()
-    this.container.addChild(board.container)
+    this.board = new SeesawBoard()
+    this.board.container.x = this.board.width / 2
 
-    pivot.container.x = (board.container.width - pivot.container.width) / 2
+    this.pivot = new SeesawPivot()
+    this.pivot.container.x = this.board.container.width / 2
+
+    this.container.addChild(this.board.container, this.pivot.container)
+  }
+
+  setPosition() {
+    this.container.pivot.x = this.container.width / 2
+    // this.container.pivot.y = 0
+    this.container.pivot.y = this.pivot.container.height
   }
 }

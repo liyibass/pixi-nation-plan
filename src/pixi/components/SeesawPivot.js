@@ -7,6 +7,7 @@ export class SeesawPivot {
     this.container = new PIXI.Container()
     this.level = level
     this.createPivot()
+    this.setPosition()
   }
 
   createPivot() {
@@ -32,5 +33,9 @@ export class SeesawPivot {
 
     // console.log(this.container.width)
     // console.log(this.container.height)
+  }
+
+  setPosition() {
+    this.container.pivot.x = this.container.width / 2
   }
 }

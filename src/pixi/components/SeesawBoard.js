@@ -8,15 +8,23 @@ export class SeesawBoard {
     this.container = new PIXI.Container()
     this.weight = weight
     this.maxWeight = maxWeight
-    this.width = Globals.getSeesawGameStageDimention().width
-    this.createBoard()
-    this.createWeightScale()
-  }
 
-  createBoard() {
+    this.width = Globals.getSeesawGameStageDimention().width
     this.colorBarLength = Math.floor(this.width / 9)
     this.colorBarHeight = Math.floor((this.colorBarLength * 6.63) / 37.45)
 
+    this.createBoard()
+    this.createWeightScale()
+
+    this.container.pivot.x = this.container.width / 2
+    this.container.pivot.y = this.colorBarHeight
+
+    // setInterval(() => {
+    //   this.container.angle++
+    // }, 100)
+  }
+
+  createBoard() {
     for (let i = 0; i < 9; i++) {
       const colorBar = new PIXI.Graphics()
       const filledColot = i === 4 ? 0x9e523e : i % 2 === 0 ? 0x3b6bd5 : 0x0e427f
@@ -52,11 +60,10 @@ export class SeesawBoard {
         2 +
       1
 
-    this.container.addChild(weightScaleGroup)
-
-    weightScaleGroup.x = (this.container.width - weightScaleGroup.width) / 2
+    weightScaleGroup.x = (this.width - weightScaleGroup.width) / 2
     weightScaleGroup.y = -degreeScaleSprite.height
-    console.log(weightScaleGroup)
+
+    this.container.addChild(weightScaleGroup)
   }
 
   createWeightText() {
