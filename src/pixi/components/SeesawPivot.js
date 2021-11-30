@@ -30,7 +30,7 @@ export class SeesawPivot {
     this.levelText.x = (baseSprite.width - this.levelText.width) / 2
     this.levelText.y = (baseSprite.height - this.levelText.height) / 2
 
-    console.log(this.container.width)
-    console.log(this.container.height)
+    // console.log(this.container.width)
+    // console.log(this.container.height)
   }
 }

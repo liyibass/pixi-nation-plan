@@ -119,8 +119,8 @@ export class BalanceScene {
   // ===== snake =====
   createSeesaw() {
     const seesawGroup = new SeesawGroup()
-    console.log(this.gameStage.width)
-    console.log(seesawGroup.container.width)
+    // console.log(this.gameStage.width)
+    // console.log(seesawGroup.container.width)
     seesawGroup.container.x =
       (this.gameStage.width - seesawGroup.container.width) / 2
     seesawGroup.container.y =

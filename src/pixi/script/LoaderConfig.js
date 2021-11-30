@@ -17,6 +17,7 @@ import stampFailed from '../assets/images/stampFailed.png'
 import stampCompleted from '../assets/images/stampCompleted.png'
 import pivotBase from '../assets/images/pivotBase.png'
 import pivotPin from '../assets/images/pivotPin.png'
+import degreeScale from '../assets/images/degreeScale.png'
 
 export const LoaderConfig = {
   player,
@@ -38,4 +39,5 @@ export const LoaderConfig = {
   stampCompleted,
   pivotBase,
   pivotPin,
+  degreeScale,
 }
