@@ -4,16 +4,21 @@ import { WeightCard } from './WeightCard'
 
 const TIMER_WIDTH = 69
 const TOP_PADDING = 31
+
+// const TOP_PADDING = 0
 export class Conveyor {
-  constructor() {
+  constructor(getChoosedWeightCard) {
     this.container = new PIXI.Container()
+    this.getChoosedWeightCard = getChoosedWeightCard
 
     this.width = Globals.getSeesawGameStageDimention().width - TIMER_WIDTH
     this.container.x = TIMER_WIDTH
     this.container.y = TOP_PADDING
 
+    this.gameStage = this.container.parent
+
+    this.weightCardArray = []
     this.createConveyor()
-    this.createMask()
 
     // this.container.pivot.x = this.container.width / 2
     // this.container.pivot.y = this.colorBarHeight
@@ -26,20 +31,18 @@ export class Conveyor {
   createConveyor() {
     for (let i = 0; i < 10; i++) {
       const { name, weight } = this.getRandomWeight()
-      const weightCard = new WeightCard(weight, name)
-      weightCard.container.x = this.container.width
+
+      const weightCard = new WeightCard(
+        weight,
+        name,
+        i,
+        this.weightCardHandler.bind(this)
+      )
+      weightCard.positionCard(this.weightCardArray)
 
       this.container.addChild(weightCard.container)
+      this.weightCardArray.push(weightCard)
     }
-  }
-
-  createMask() {
-    const mask = new PIXI.Graphics()
-    mask.beginFill(0xffffff)
-    mask.drawRect(0, 0, this.width, 70)
-
-    this.container.mask = mask
-    this.container.addChild(mask)
   }
 
   getRandomWeight() {
@@ -88,4 +91,29 @@ export class Conveyor {
         }
     }
   }
+
+  weightCardHandler(removedWeightCard) {
+    // remove selected card
+    this.container.removeChild(removedWeightCard.container)
+    this.weightCardArray.splice(removedWeightCard.index, 1)
+
+    // align rest cards
+    this._moveWeightCardAlign(removedWeightCard)
+
+    // pass selected card to parent
+    this.getChoosedWeightCard(removedWeightCard)
+  }
+
+  _moveWeightCardAlign(removedWeightCard) {
+    const nextWeightCardIndex = removedWeightCard.index
+
+    // update rest card's index
+    for (let i = nextWeightCardIndex; i < this.weightCardArray.length; i++) {
+      const nextCard = this.weightCardArray[i]
+      nextCard.index -= 1
+      nextCard.shiftPosition()
+    }
+  }
+
+  _addNewWeightCard() {}
 }

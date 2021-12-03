@@ -4,18 +4,27 @@ import { Globals } from '../script/Globals'
 const CARD_PADDING = 10
 const MIN_SPRITE_WIDTH = 30
 
+const TIMER_WIDTH = 69
+const TOP_PADDING = 31
+
+const { width: GAMESTAGE_WIDTH, height: GAMESTAGE_HEIGHT } =
+  Globals.getSeesawGameStageDimention()
+
 export class WeightCard {
-  constructor(weight = 100, name = 'weightAdult') {
+  constructor(weight = 100, name = 'weightAdult', index, weightCardHandler) {
     this.container = new PIXI.Container()
     this.weight = weight
     this.name = name
+    this.index = index
+    this.weightCardHandler = weightCardHandler
 
     this.weightWidth = this.getWeightWidth()
     this.weightHeight = 70
+    this.isDragging = false
 
     this.createWeightCard()
-    this.container.interactive = true
-    this.container.buttonMode = true
+
+    this.createDraggableBehavior()
   }
 
   getWeightWidth() {
@@ -42,6 +51,22 @@ export class WeightCard {
       this.weightHeight - weightText.height - 5 - weightSprite.height
 
     this.container.addChild(weightSprite, weightText)
+    this.container.pivot.set(this.weightWidth / 2, this.weightHeight / 2)
+  }
+
+  positionCard(weightCardArray) {
+    const currentConveyorWidth = weightCardArray.reduce(
+      (accumulator, currentValue) => {
+        return accumulator + currentValue.weightWidth
+      },
+      0
+    )
+    console.log(weightCardArray)
+    console.log(currentConveyorWidth)
+
+    this.container.x = currentConveyorWidth + this.container.width / 2
+    this.container.y = this.weightHeight / 2
+    this.container.zIndex = 0
   }
 
   createFrame() {
@@ -68,5 +93,96 @@ export class WeightCard {
     this.weightText.x = this.weightWidth / 2
 
     return this.weightText
+  }
+
+  createDraggableBehavior() {
+    this.container.interactive = true
+    this.container.buttonMode = true
+
+    this.container.on('pointerdown', this.onTouchStart.bind(this))
+    this.container.on('pointermove', this.onTouchMove.bind(this))
+  }
+
+  onTouchStart() {
+    // set the dragging state for this sprite
+    this.isDragging = !this.isDragging
+
+    if (this.isDragging) {
+      // remember the position of the mouse cursor
+      this._rememberOriginalPosition()
+
+      // set card's zIndex to top
+      this.container.parent.setChildIndex(
+        this.container,
+        this.container.parent.children.length - 1
+      )
+    } else {
+      this.container.parent.setChildIndex(this.container, 0)
+
+      const { x, y } = this.container
+      const { x: originalX, y: originalY } = this.originalPosition
+      if (x !== originalX && y !== originalY && y > originalY + 60) {
+        this._dropWeightCardToSeesaw(this)
+      } else {
+        this._resetToOriginalPosition()
+      }
+    }
+  }
+
+  onTouchMove(event) {
+    if (!this.isDragging) return
+
+    const { x, y } = this._getPositionRelativeToGameStage(event)
+
+    if (x - this.container.width / 2 < 0) {
+      this.container.x = 0 - TIMER_WIDTH + this.container.width / 2
+    } else if (x + this.container.width / 2 > GAMESTAGE_WIDTH) {
+      this.container.x =
+        GAMESTAGE_HEIGHT - TIMER_WIDTH - this.container.width / 2
+    } else if (y - this.container.height / 2 < 0) {
+      this.container.y = 0 - TOP_PADDING + this.container.height / 2
+    } else if (y + this.container.height / 2 > GAMESTAGE_HEIGHT) {
+      this.container.y =
+        GAMESTAGE_WIDTH - TOP_PADDING - this.container.width / 2
+    } else {
+      // 3. apply the rusulting offset
+      this.container.x = x - TIMER_WIDTH
+      this.container.y = y - TOP_PADDING
+    }
+  }
+
+  _rememberOriginalPosition() {
+    this.originalPosition = {
+      x: this.container.x,
+      y: this.container.y,
+    }
+  }
+
+  _resetToOriginalPosition() {
+    this.container.x = this.originalPosition.x
+    this.container.y = this.originalPosition.y
+  }
+
+  _getPositionRelativeToGameStage(event) {
+    const gameStage = this.container.parent.parent
+
+    return {
+      x: event.data.global.x - gameStage.x,
+      y: event.data.global.y - gameStage.y,
+    }
+  }
+
+  _leftOrRight(event) {
+    const { x } = event.data.global
+
+    return x < Globals.width / 2 ? 'left' : 'right'
+  }
+
+  _dropWeightCardToSeesaw(weightCard) {
+    this.weightCardHandler(weightCard)
+  }
+
+  shiftPosition() {
+    console.log(this.index)
   }
 }

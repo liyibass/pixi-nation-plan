@@ -94,8 +94,8 @@ export class BalanceScene {
     const gameStageFrame = new PIXI.Graphics()
     const frameLineWeight = 1
     gameStageFrame.lineStyle(frameLineWeight, 0xdddddd, 0)
-    gameStageFrame.beginFill(0xaaaaaa)
-    // gameStageFrame.beginFill(0x92b79c)
+    // gameStageFrame.beginFill(0xaaaaaa)
+    gameStageFrame.beginFill(0x92b79c)
 
     /*
      * NOTE: We use gameStageFrame(which is a Graphics) to bump up outer container
@@ -154,8 +154,13 @@ export class BalanceScene {
   }
 
   createConveyor() {
-    this.conveyor = new Conveyor()
+    this.conveyor = new Conveyor(this.getChoosedWeightCard)
     this.gameStage.addChild(this.conveyor.container)
+  }
+
+  getChoosedWeightCard(weightCard) {
+    console.log('DROP')
+    console.log(weightCard)
   }
 
   async gameLevel0() {
