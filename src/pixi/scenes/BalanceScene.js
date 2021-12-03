@@ -10,6 +10,7 @@ import { PauseGame } from '../components/PauseGame'
 import { GameFail } from '../components/GameFail'
 import { GameSuccess } from '../components/GameSuccess'
 import { SeesawGroup } from '../components/SeesawGroup'
+import { Conveyor } from '../components/Conveyor'
 
 // import { SnakeBody } from '../components/SnakeBody'
 
@@ -61,7 +62,8 @@ export class BalanceScene {
   createBackground() {
     const bg = new PIXI.Graphics()
     // bg.lineStyle(4, 0x00000, 1)
-    bg.beginFill(0xe5e5e5)
+    bg.beginFill(0xaaaaaa)
+
     bg.drawRect(0, 0, Globals.width, Globals.height)
     bg.endFill()
 
@@ -92,7 +94,8 @@ export class BalanceScene {
     const gameStageFrame = new PIXI.Graphics()
     const frameLineWeight = 1
     gameStageFrame.lineStyle(frameLineWeight, 0xdddddd, 0)
-    gameStageFrame.beginFill(0x92b79c)
+    gameStageFrame.beginFill(0xaaaaaa)
+    // gameStageFrame.beginFill(0x92b79c)
 
     /*
      * NOTE: We use gameStageFrame(which is a Graphics) to bump up outer container
@@ -150,8 +153,14 @@ export class BalanceScene {
     }
   }
 
+  createConveyor() {
+    this.conveyor = new Conveyor()
+    this.gameStage.addChild(this.conveyor.container)
+  }
+
   async gameLevel0() {
     this.createSeesaw()
+    this.createConveyor()
     await this.doctorSay.newSay('現在有些人想要搬來你的村莊了')
     await this.doctorSay.newSay('有沒有看到那個翹翹板？')
 
