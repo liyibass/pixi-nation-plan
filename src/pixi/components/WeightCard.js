@@ -11,24 +11,18 @@ const { width: GAMESTAGE_WIDTH, height: GAMESTAGE_HEIGHT } =
   Globals.getSeesawGameStageDimention()
 
 export class WeightCard {
-  constructor(
-    weight = 100,
-    name = 'weightAdult',
-    index,
-    weightCardArray,
-    weightCardHandler
-  ) {
+  constructor(weight = 100, name = 'weightAdult', weightCardHandler) {
     this.container = new PIXI.Container()
     this.weight = weight
     this.name = name
-    this.index = index
-    this.weightCardArray = weightCardArray
     this.weightCardHandler = weightCardHandler
+    // linkList
+    this.nextCard = null
+    this.prevCard = null
 
     this.width = this._getWeightWidth()
     this.height = 70
     this.isDragging = false
-    this.currentConveyorWidth = this._getCurrentWeightCardArrayWidth()
 
     // card position which card need bo be in
     this.targetX
@@ -41,8 +35,6 @@ export class WeightCard {
     this.createWeightCard()
 
     this.createDraggableBehavior()
-
-    this.startPositionCard()
   }
 
   createWeightCard() {
@@ -79,40 +71,14 @@ export class WeightCard {
     }
   }
 
-  _getCurrentWeightCardArrayWidth() {
-    const width = this.weightCardArray.reduce((accumulator, card) => {
-      return accumulator + card.width
-    }, 0)
-
-    return width
-  }
-
-  // positionCard(weightCardArray) {
-  //   const currentConveyorWidth = weightCardArray.reduce(
-  //     (accumulator, currentValue) => {
-  //       return accumulator + currentValue.width
-  //     },
-  //     0
-  //   )
-
-  //   this.container.x = currentConveyorWidth + this.container.width / 2
-  //   this.container.y = this.height / 2
-  //   this.container.zIndex = 0
-  // }
-
   startPositionCard() {
-    // calculate targetX
-    let frontCardsWidth = 0
-    for (let i = 0; i < this.weightCardArray.length; i++) {
-      const weightCard = this.weightCardArray[i]
-
-      if (weightCard.index < this.index) {
-        frontCardsWidth += weightCard.width
-      } else {
-        break
-      }
+    // remove ongoing ticker if existed
+    if (this.positionTicker?.started) {
+      this.positionTicker.destroy()
     }
 
+    // calculate targetX
+    const frontCardsWidth = this._getPrevCardsWidth(this.prevCard)
     this.targetX = this._getXValue(frontCardsWidth)
 
     // if container.x > targetX, then move card
@@ -133,6 +99,22 @@ export class WeightCard {
     })
 
     this.positionTicker.start()
+  }
+
+  _getPrevCardsWidth(prevCard) {
+    if (!prevCard) return 0
+
+    let accumulator = 0
+    accumulator = getPrevCardWidth(prevCard)
+    return accumulator
+
+    function getPrevCardWidth(currentCard) {
+      if (currentCard.prevCard) {
+        return currentCard.width + getPrevCardWidth(currentCard.prevCard)
+      } else {
+        return currentCard.width
+      }
+    }
   }
 
   _getXValue(x) {
@@ -193,8 +175,7 @@ export class WeightCard {
 
       const { x, y } = this.container
       const { x: originalX, y: originalY } = this.originalPosition
-      console.log(`${x},${y}`)
-      console.log(`${originalX},${originalY}`)
+
       if (x !== originalX && y !== originalY && y > originalY + 60) {
         this._dropWeightCardToSeesaw(this)
       } else {
@@ -269,6 +250,6 @@ export class WeightCard {
   }
 
   shiftPosition() {
-    console.log(this.index)
+    this.startPositionCard()
   }
 }

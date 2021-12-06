@@ -18,6 +18,8 @@ export class Conveyor {
     this.gameStage = this.container.parent
 
     this.weightCardArray = []
+    this.firstWeightCard = null
+    this.lastWeightCard = null
     this.createConveyor()
 
     // this.container.pivot.x = this.container.width / 2
@@ -31,24 +33,40 @@ export class Conveyor {
   createConveyor() {
     for (let i = 0; i < 5; i++) {
       setTimeout(() => {
-        this.addNewWeightCard(i)
+        this.addNewWeightCard()
       }, i * 1000)
     }
   }
 
-  addNewWeightCard(index) {
+  addNewWeightCard() {
     const { name, weight } = this.getRandomWeight()
     const weightCard = new WeightCard(
       weight,
       name,
-      index,
-      this.weightCardArray,
       this.weightCardHandler.bind(this)
     )
     // weightCard.positionCard(this.weightCardArray)
 
+    // linkList
+    const prevCard = this.lastWeightCard
+    if (prevCard) {
+      prevCard.nextCard = weightCard
+    }
+    weightCard.prevCard = prevCard
+
+    // update first/last linkList card
+    if (weightCard.prevCard === null) {
+      this.firstWeightCard = weightCard
+    }
+    if (weightCard.nextCard === null) {
+      this.lastWeightCard = weightCard
+    }
+
+    // display card
     this.container.addChild(weightCard.container)
-    this.weightCardArray.push(weightCard)
+    weightCard.startPositionCard()
+
+    // this.weightCardArray.push(weightCard)
   }
 
   startConveyor() {
@@ -109,23 +127,34 @@ export class Conveyor {
   weightCardHandler(removedWeightCard) {
     // remove selected card
     this.container.removeChild(removedWeightCard.container)
-    this.weightCardArray.splice(removedWeightCard.index, 1)
+    // this.weightCardArray.splice(removedWeightCard.index, 1)
+
+    // aligh linkList
+    if (removedWeightCard.prevCard) {
+      removedWeightCard.prevCard.nextCard = removedWeightCard.nextCard
+    }
+    if (removedWeightCard.nextCard) {
+      removedWeightCard.nextCard.prevCard = removedWeightCard.prevCard
+    }
 
     // align rest cards
-    this._moveWeightCardAlign(removedWeightCard)
+    this._alignRestCards(removedWeightCard)
 
     // pass selected card to parent
     this.getChoosedWeightCard(removedWeightCard)
   }
 
-  _moveWeightCardAlign(removedWeightCard) {
-    const nextWeightCardIndex = removedWeightCard.index
+  _alignRestCards(removedWeightCard) {
+    alignCard(removedWeightCard.nextCard)
 
-    // update rest card's index
-    for (let i = nextWeightCardIndex; i < this.weightCardArray.length; i++) {
-      const nextCard = this.weightCardArray[i]
-      nextCard.index -= 1
-      nextCard.shiftPosition()
+    function alignCard(card) {
+      if (!card) return
+
+      card.shiftPosition()
+
+      if (card.nextCard) {
+        alignCard(card.nextCard)
+      }
     }
   }
 
