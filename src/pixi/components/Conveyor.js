@@ -17,9 +17,9 @@ export class Conveyor {
 
     this.gameStage = this.container.parent
 
-    this.weightCardArray = []
     this.firstWeightCard = null
     this.lastWeightCard = null
+    this.weightCardCount = 0
     this.createConveyor()
 
     // this.container.pivot.x = this.container.width / 2
@@ -45,7 +45,6 @@ export class Conveyor {
       name,
       this.weightCardHandler.bind(this)
     )
-    // weightCard.positionCard(this.weightCardArray)
 
     // linkList
     const prevCard = this.lastWeightCard
@@ -64,9 +63,8 @@ export class Conveyor {
 
     // display card
     this.container.addChild(weightCard.container)
+    this.weightCardCount++
     weightCard.startPositionCard()
-
-    // this.weightCardArray.push(weightCard)
   }
 
   startConveyor() {
@@ -127,9 +125,9 @@ export class Conveyor {
   weightCardHandler(removedWeightCard) {
     // remove selected card
     this.container.removeChild(removedWeightCard.container)
-    // this.weightCardArray.splice(removedWeightCard.index, 1)
+    this.weightCardCount--
 
-    // aligh linkList
+    // align linkList
     if (removedWeightCard.prevCard) {
       removedWeightCard.prevCard.nextCard = removedWeightCard.nextCard
     }
