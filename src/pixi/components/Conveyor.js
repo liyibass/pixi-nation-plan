@@ -29,20 +29,34 @@ export class Conveyor {
   }
 
   createConveyor() {
-    for (let i = 0; i < 10; i++) {
-      const { name, weight } = this.getRandomWeight()
-
-      const weightCard = new WeightCard(
-        weight,
-        name,
-        i,
-        this.weightCardHandler.bind(this)
-      )
-      weightCard.positionCard(this.weightCardArray)
-
-      this.container.addChild(weightCard.container)
-      this.weightCardArray.push(weightCard)
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => {
+        this.addNewWeightCard(i)
+      }, i * 1000)
     }
+  }
+
+  addNewWeightCard(index) {
+    const { name, weight } = this.getRandomWeight()
+    const weightCard = new WeightCard(
+      weight,
+      name,
+      index,
+      this.weightCardArray,
+      this.weightCardHandler.bind(this)
+    )
+    // weightCard.positionCard(this.weightCardArray)
+
+    this.container.addChild(weightCard.container)
+    this.weightCardArray.push(weightCard)
+  }
+
+  startConveyor() {
+    this.conveyorTicker = new PIXI.Ticker()
+
+    this.conveyorTicker.add(() => {})
+
+    // this.conveyorTicker.start()
   }
 
   getRandomWeight() {

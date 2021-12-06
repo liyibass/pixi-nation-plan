@@ -11,23 +11,62 @@ const { width: GAMESTAGE_WIDTH, height: GAMESTAGE_HEIGHT } =
   Globals.getSeesawGameStageDimention()
 
 export class WeightCard {
-  constructor(weight = 100, name = 'weightAdult', index, weightCardHandler) {
+  constructor(
+    weight = 100,
+    name = 'weightAdult',
+    index,
+    weightCardArray,
+    weightCardHandler
+  ) {
     this.container = new PIXI.Container()
     this.weight = weight
     this.name = name
     this.index = index
+    this.weightCardArray = weightCardArray
     this.weightCardHandler = weightCardHandler
 
-    this.weightWidth = this.getWeightWidth()
-    this.weightHeight = 70
+    this.width = this._getWeightWidth()
+    this.height = 70
     this.isDragging = false
+    this.currentConveyorWidth = this._getCurrentWeightCardArrayWidth()
+
+    // card position which card need bo be in
+    this.targetX
+    this.targetY
+
+    // primary card's position data, need to set them first, then set container.x/y
+    this.x
+    this.y
 
     this.createWeightCard()
 
     this.createDraggableBehavior()
+
+    this.startPositionCard()
   }
 
-  getWeightWidth() {
+  createWeightCard() {
+    // create every component we nedded
+    this.createFrame()
+    const weightSprite = this.createWeightIcon()
+    const weightText = this.createWeightText()
+
+    // position components in card
+    weightText.y = this.height - weightText.height
+    weightSprite.y = this.height - weightText.height - 5 - weightSprite.height
+
+    // set card container's init position
+    this.container.pivot.set(this.width / 2, this.height / 2)
+    this.x = GAMESTAGE_WIDTH
+    this.y = TOP_PADDING
+    this.container.x = this.x
+    this.container.y = this.y
+
+    // add all component into card container
+    this.container.addChild(weightSprite, weightText)
+  }
+
+  _getWeightWidth() {
     switch (this.name) {
       case 'weightBus':
         return 90 + CARD_PADDING * 2
@@ -40,38 +79,70 @@ export class WeightCard {
     }
   }
 
-  createWeightCard() {
-    this.createFrame()
+  _getCurrentWeightCardArrayWidth() {
+    const width = this.weightCardArray.reduce((accumulator, card) => {
+      return accumulator + card.width
+    }, 0)
 
-    const weightSprite = this.createWeightIcon()
-    const weightText = this.createWeightText()
-
-    weightText.y = this.weightHeight - weightText.height
-    weightSprite.y =
-      this.weightHeight - weightText.height - 5 - weightSprite.height
-
-    this.container.addChild(weightSprite, weightText)
-    this.container.pivot.set(this.weightWidth / 2, this.weightHeight / 2)
+    return width
   }
 
-  positionCard(weightCardArray) {
-    const currentConveyorWidth = weightCardArray.reduce(
-      (accumulator, currentValue) => {
-        return accumulator + currentValue.weightWidth
-      },
-      0
-    )
-    console.log(weightCardArray)
-    console.log(currentConveyorWidth)
+  // positionCard(weightCardArray) {
+  //   const currentConveyorWidth = weightCardArray.reduce(
+  //     (accumulator, currentValue) => {
+  //       return accumulator + currentValue.width
+  //     },
+  //     0
+  //   )
 
-    this.container.x = currentConveyorWidth + this.container.width / 2
-    this.container.y = this.weightHeight / 2
-    this.container.zIndex = 0
+  //   this.container.x = currentConveyorWidth + this.container.width / 2
+  //   this.container.y = this.height / 2
+  //   this.container.zIndex = 0
+  // }
+
+  startPositionCard() {
+    // calculate targetX
+    let frontCardsWidth = 0
+    for (let i = 0; i < this.weightCardArray.length; i++) {
+      const weightCard = this.weightCardArray[i]
+
+      if (weightCard.index < this.index) {
+        frontCardsWidth += weightCard.width
+      } else {
+        break
+      }
+    }
+
+    this.targetX = this._getXValue(frontCardsWidth)
+
+    // if container.x > targetX, then move card
+    this.positionTicker = new PIXI.Ticker()
+
+    this.positionTicker.add(() => {
+      console.log('tickerON')
+
+      if (this.x > this.targetX) {
+        this.x -= 1
+
+        if (!this.isDragging) {
+          this.container.x = this.x
+        }
+      } else {
+        this.positionTicker.destroy()
+      }
+    })
+
+    this.positionTicker.start()
+  }
+
+  _getXValue(x) {
+    return this.width / 2 + x
   }
 
   createFrame() {
     const frame = new PIXI.Graphics()
-    frame.drawRect(0, 0, this.weightWidth, this.weightHeight)
+    frame.lineStyle(1, 0xdddddd, 0.6)
+    frame.drawRect(0, 0, this.width, this.height)
     this.container.addChild(frame)
   }
 
@@ -80,7 +151,7 @@ export class WeightCard {
     const weightSprite = new PIXI.Sprite(weightTexture)
 
     weightSprite.anchor.set(0.5, 0)
-    weightSprite.x = this.weightWidth / 2
+    weightSprite.x = this.width / 2
     return weightSprite
   }
 
@@ -90,7 +161,7 @@ export class WeightCard {
       fontSize: 14,
     })
     this.weightText.anchor.set(0.5, 0)
-    this.weightText.x = this.weightWidth / 2
+    this.weightText.x = this.width / 2
 
     return this.weightText
   }
@@ -117,10 +188,13 @@ export class WeightCard {
         this.container.parent.children.length - 1
       )
     } else {
+      // reset card's zIndex
       this.container.parent.setChildIndex(this.container, 0)
 
       const { x, y } = this.container
       const { x: originalX, y: originalY } = this.originalPosition
+      console.log(`${x},${y}`)
+      console.log(`${originalX},${originalY}`)
       if (x !== originalX && y !== originalY && y > originalY + 60) {
         this._dropWeightCardToSeesaw(this)
       } else {
@@ -152,15 +226,27 @@ export class WeightCard {
   }
 
   _rememberOriginalPosition() {
-    this.originalPosition = {
-      x: this.container.x,
-      y: this.container.y,
+    if (this.positionTicker.started) {
+      this.originalPosition = {
+        x: this.container.x,
+        y: this.container.y,
+      }
+    } else {
+      this.originalPosition = {
+        x: this.x,
+        y: this.y,
+      }
     }
   }
 
   _resetToOriginalPosition() {
-    this.container.x = this.originalPosition.x
-    this.container.y = this.originalPosition.y
+    if (!this.positionTicker.started) {
+      // this.container.x = this.x
+      // this.container.y = this.y
+    } else {
+      this.container.x = this.originalPosition.x
+      this.container.y = this.originalPosition.y
+    }
   }
 
   _getPositionRelativeToGameStage(event) {
