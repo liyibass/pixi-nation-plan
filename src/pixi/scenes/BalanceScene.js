@@ -158,9 +158,9 @@ export class BalanceScene {
     this.gameStage.addChild(this.conveyor.container)
   }
 
-  getChoosedWeightCard(weightCard) {
-    console.log('DROP')
-    console.log(weightCard)
+  getChoosedWeightCard() {
+    // console.log('DROP')
+    // console.log(weightCard)
   }
 
   async gameLevel0() {

@@ -123,8 +123,9 @@ export class WeightCard {
 
   createFrame() {
     const frame = new PIXI.Graphics()
-    frame.lineStyle(1, 0xdddddd, 0.6)
+    frame.beginFill(0xaaaaaa, 0.1)
     frame.drawRect(0, 0, this.width, this.height)
+    frame.endFill()
     this.container.addChild(frame)
   }
 

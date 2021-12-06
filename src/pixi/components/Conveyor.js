@@ -21,6 +21,7 @@ export class Conveyor {
     this.lastWeightCard = null
     this.weightCardCount = 0
     this.createConveyor()
+    this.startConveyor()
 
     // this.container.pivot.x = this.container.width / 2
     // this.container.pivot.y = this.colorBarHeight
@@ -31,11 +32,11 @@ export class Conveyor {
   }
 
   createConveyor() {
-    for (let i = 0; i < 5; i++) {
-      setTimeout(() => {
-        this.addNewWeightCard()
-      }, i * 1000)
-    }
+    // for (let i = 0; i < 8; i++) {
+    //   this.addNewWeightCard()
+    //   setTimeout(() => {
+    //   }, i * 2000)
+    // }
   }
 
   addNewWeightCard() {
@@ -68,11 +69,25 @@ export class Conveyor {
   }
 
   startConveyor() {
-    this.conveyorTicker = new PIXI.Ticker()
+    this._addWeightCardContinously()
+  }
 
-    this.conveyorTicker.add(() => {})
+  stopConveyor() {
+    clearTimeout(this.addNewCardTimeout)
+  }
 
-    // this.conveyorTicker.start()
+  _addWeightCardContinously() {
+    const createNewWeightCardTimeout = () => {
+      this.addNewWeightCardTimeout = setTimeout(() => {
+        if (this.weightCardCount < 8) {
+          this.addNewWeightCard()
+        }
+
+        createNewWeightCardTimeout()
+      }, 3000)
+    }
+
+    createNewWeightCardTimeout()
   }
 
   getRandomWeight() {
@@ -123,20 +138,25 @@ export class Conveyor {
   }
 
   weightCardHandler(removedWeightCard) {
-    // remove selected card
-    this.container.removeChild(removedWeightCard.container)
-    this.weightCardCount--
-
+    console.log(removedWeightCard)
     // align linkList
     if (removedWeightCard.prevCard) {
       removedWeightCard.prevCard.nextCard = removedWeightCard.nextCard
+    } else {
+      this.firstWeightCard = null
     }
     if (removedWeightCard.nextCard) {
       removedWeightCard.nextCard.prevCard = removedWeightCard.prevCard
+    } else {
+      this.lastWeightCard = removedWeightCard.prevCard
     }
 
     // align rest cards
     this._alignRestCards(removedWeightCard)
+
+    // remove selected card
+    this.container.removeChild(removedWeightCard.container)
+    this.weightCardCount--
 
     // pass selected card to parent
     this.getChoosedWeightCard(removedWeightCard)
@@ -155,6 +175,4 @@ export class Conveyor {
       }
     }
   }
-
-  _addNewWeightCard() {}
 }
