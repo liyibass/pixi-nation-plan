@@ -9,6 +9,7 @@ const TOP_PADDING = 31
 export class Conveyor {
   constructor(getChoosedWeightCard) {
     this.container = new PIXI.Container()
+    this.container.name = 'conveyor'
     this.getChoosedWeightCard = getChoosedWeightCard
 
     this.width = Globals.getSeesawGameStageDimention().width - TIMER_WIDTH
@@ -79,7 +80,7 @@ export class Conveyor {
   _addWeightCardContinously() {
     const createNewWeightCardTimeout = () => {
       this.addNewWeightCardTimeout = setTimeout(() => {
-        if (this.weightCardCount < 8) {
+        if (this.weightCardCount < 2) {
           this.addNewWeightCard()
         }
 
@@ -139,27 +140,36 @@ export class Conveyor {
 
   weightCardHandler(removedWeightCard) {
     console.log(removedWeightCard)
-    // align linkList
-    if (removedWeightCard.prevCard) {
-      removedWeightCard.prevCard.nextCard = removedWeightCard.nextCard
+    if (removedWeightCard.isOnConveyor) {
+      console.log('if in weightCardHandler')
+      removedWeightCard.isOnConveyor = false
+
+      // align linkList
+      if (removedWeightCard.prevCard) {
+        removedWeightCard.prevCard.nextCard = removedWeightCard.nextCard
+      } else {
+        this.firstWeightCard = null
+      }
+      if (removedWeightCard.nextCard) {
+        removedWeightCard.nextCard.prevCard = removedWeightCard.prevCard
+      } else {
+        this.lastWeightCard = removedWeightCard.prevCard
+      }
+
+      // align rest cards
+      this._alignRestCards(removedWeightCard)
+
+      // remove selected card
+      this.container.removeChild(removedWeightCard.container)
+      this.weightCardCount--
+
+      // pass selected card to parent
+      this.getChoosedWeightCard(removedWeightCard)
     } else {
-      this.firstWeightCard = null
+      console.log('else in weightCardHandler')
+      // pass selected card to parent
+      this.getChoosedWeightCard(removedWeightCard)
     }
-    if (removedWeightCard.nextCard) {
-      removedWeightCard.nextCard.prevCard = removedWeightCard.prevCard
-    } else {
-      this.lastWeightCard = removedWeightCard.prevCard
-    }
-
-    // align rest cards
-    this._alignRestCards(removedWeightCard)
-
-    // remove selected card
-    this.container.removeChild(removedWeightCard.container)
-    this.weightCardCount--
-
-    // pass selected card to parent
-    this.getChoosedWeightCard(removedWeightCard)
   }
 
   _alignRestCards(removedWeightCard) {

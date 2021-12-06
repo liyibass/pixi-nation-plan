@@ -13,6 +13,7 @@ const { width: GAMESTAGE_WIDTH, height: GAMESTAGE_HEIGHT } =
 export class WeightCard {
   constructor(weight = 100, name = 'weightAdult', weightCardHandler) {
     this.container = new PIXI.Container()
+    this.container.name = 'weightCard'
     this.weight = weight
     this.name = name
     this.weightCardHandler = weightCardHandler
@@ -31,6 +32,8 @@ export class WeightCard {
     // primary card's position data, need to set them first, then set container.x/y
     this.x
     this.y
+
+    this.isOnConveyor = true
 
     this.createWeightCard()
 
@@ -72,6 +75,7 @@ export class WeightCard {
   }
 
   startPositionCard() {
+    console.log('startPositionCard in ' + this.name)
     // remove ongoing ticker if existed
     if (this.positionTicker?.started) {
       this.positionTicker.destroy()
@@ -161,26 +165,52 @@ export class WeightCard {
     // set the dragging state for this sprite
     this.isDragging = !this.isDragging
 
-    if (this.isDragging) {
-      // remember the position of the mouse cursor
-      this._rememberOriginalPosition()
+    if (this.isOnConveyor) {
+      if (this.isDragging) {
+        // remember the position of the mouse cursor
+        this._rememberOriginalPosition()
 
-      // set card's zIndex to top
-      this.container.parent.setChildIndex(
-        this.container,
-        this.container.parent.children.length - 1
-      )
-    } else {
-      // reset card's zIndex
-      this.container.parent.setChildIndex(this.container, 0)
-
-      const { x, y } = this.container
-      const { x: originalX, y: originalY } = this.originalPosition
-
-      if (x !== originalX && y !== originalY && y > originalY + 60) {
-        this._dropWeightCardToSeesaw(this)
+        // set card's zIndex to top
+        this.container.parent.setChildIndex(
+          this.container,
+          this.container.parent.children.length - 1
+        )
       } else {
-        this._resetToOriginalPosition()
+        // reset card's zIndex
+        this.container.parent.setChildIndex(this.container, 0)
+
+        const { x, y } = this.container
+        const { x: originalX, y: originalY } = this.originalPosition
+
+        if (x !== originalX && y !== originalY && y > originalY + 60) {
+          this._dropWeightCardToSeesaw(this)
+        } else {
+          this._resetToOriginalPosition()
+        }
+      }
+    } else {
+      if (this.isDragging) {
+        // remember the position of the mouse cursor
+        this._rememberOriginalPosition()
+
+        // set card's zIndex to top
+        this.container.parent.setChildIndex(
+          this.container,
+          this.container.parent.children.length - 1
+        )
+      } else {
+        const { x, y } = this.container
+        const { x: originalX, y: originalY } = this.originalPosition
+
+        // console.log(`${x},${y}`)
+        // console.log(`${originalX},${originalY}`)
+
+        if (x !== originalX && y !== originalY) {
+          console.log('drop card in seesaw')
+          this._dropWeightCardToSeesaw(this)
+        } else {
+          this._resetToOriginalPosition()
+        }
       }
     }
   }
@@ -188,22 +218,29 @@ export class WeightCard {
   onTouchMove(event) {
     if (!this.isDragging) return
 
-    const { x, y } = this._getPositionRelativeToGameStage(event)
+    if (this.isOnConveyor) {
+      const { x, y } = this._getPositionRelativeToGameStage(event)
 
-    if (x - this.container.width / 2 < 0) {
-      this.container.x = 0 - TIMER_WIDTH + this.container.width / 2
-    } else if (x + this.container.width / 2 > GAMESTAGE_WIDTH) {
-      this.container.x =
-        GAMESTAGE_HEIGHT - TIMER_WIDTH - this.container.width / 2
-    } else if (y - this.container.height / 2 < 0) {
-      this.container.y = 0 - TOP_PADDING + this.container.height / 2
-    } else if (y + this.container.height / 2 > GAMESTAGE_HEIGHT) {
-      this.container.y =
-        GAMESTAGE_WIDTH - TOP_PADDING - this.container.width / 2
+      if (x - this.container.width / 2 < 0) {
+        this.container.x = 0 - TIMER_WIDTH + this.container.width / 2
+      } else if (x + this.container.width / 2 > GAMESTAGE_WIDTH) {
+        this.container.x =
+          GAMESTAGE_HEIGHT - TIMER_WIDTH - this.container.width / 2
+      } else if (y - this.container.height / 2 < 0) {
+        this.container.y = 0 - TOP_PADDING + this.container.height / 2
+      } else if (y + this.container.height / 2 > GAMESTAGE_HEIGHT) {
+        this.container.y =
+          GAMESTAGE_WIDTH - TOP_PADDING - this.container.width / 2
+      } else {
+        // 3. apply the rusulting offset
+        this.container.x = x - TIMER_WIDTH
+        this.container.y = y - TOP_PADDING
+      }
     } else {
-      // 3. apply the rusulting offset
-      this.container.x = x - TIMER_WIDTH
-      this.container.y = y - TOP_PADDING
+      const { x, y } = this._getPositionRelativeToSeesawGroup(event)
+
+      this.container.x = x
+      this.container.y = y
     }
   }
 
@@ -232,11 +269,20 @@ export class WeightCard {
   }
 
   _getPositionRelativeToGameStage(event) {
+    const relativeParent = this.container.parent.parent
+
+    return {
+      x: event.data.global.x - relativeParent.x,
+      y: event.data.global.y - relativeParent.y,
+    }
+  }
+
+  _getPositionRelativeToSeesawGroup(event) {
     const gameStage = this.container.parent.parent
 
     return {
       x: event.data.global.x - gameStage.x,
-      y: event.data.global.y - gameStage.y,
+      y: event.data.global.y - gameStage.height + 60,
     }
   }
 

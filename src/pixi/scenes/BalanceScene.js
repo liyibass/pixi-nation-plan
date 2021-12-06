@@ -26,23 +26,12 @@ export class BalanceScene {
     Globals.snakeTotalI = this.totalI
     Globals.snakeTotalJ = this.totalJ
 
-    // snake property
-    this.snakeArray = []
-    this.moveDirection = ['right']
-    this.newBodyQueue = []
-
-    // food property
-    this.snakeFoodArray = []
-    this.snakePoisionArray = []
-    this.createFoodQuery = []
-    this.createPoisonQuery = []
-    this.snakePoisonGroup = new PIXI.Container()
-    this.gameStage.addChild(this.snakePoisonGroup)
+    this.leftSideFirstCard = null
+    this.leftSideLastCard = null
+    this.rightSideFirstCard = null
+    this.rightSideLastCard = null
 
     this.gameLevel = 0
-
-    // this.initGame()
-
     this.startGameFlow()
     // this.startGameTest()
   }
@@ -119,15 +108,15 @@ export class BalanceScene {
     this.container.addChild(this.doctorSay.container)
   }
 
-  // ===== snake =====
+  // ===== seesaw =====
   createSeesaw() {
-    const seesawGroup = new SeesawGroup()
+    this.seesawGroup = new SeesawGroup()
     // console.log(this.gameStage.width)
     // console.log(seesawGroup.container.width)
 
-    seesawGroup.container.x = this.gameStage.width / 2
-    seesawGroup.container.y = this.gameStage.height
-    this.gameStage.addChild(seesawGroup.container)
+    this.seesawGroup.container.x = this.gameStage.width / 2
+    this.seesawGroup.container.y = this.gameStage.height
+    this.gameStage.addChild(this.seesawGroup.container)
   }
 
   async startGameFlow() {
@@ -154,13 +143,72 @@ export class BalanceScene {
   }
 
   createConveyor() {
-    this.conveyor = new Conveyor(this.getChoosedWeightCard)
+    this.conveyor = new Conveyor(this.getChoosedWeightCard.bind(this))
     this.gameStage.addChild(this.conveyor.container)
   }
 
-  getChoosedWeightCard() {
-    // console.log('DROP')
-    // console.log(weightCard)
+  getChoosedWeightCard(weightCard) {
+    console.log('DROP')
+    console.log(weightCard)
+
+    // clean linkList
+    weightCard.prevCard = null
+    weightCard.nextCard = null
+
+    if (weightCard.positionTicker && weightCard.positionTicker?.started) {
+      weightCard.positionTicker.destroy()
+    }
+    const { width } = Globals.getSeesawGameStageDimention()
+
+    if (weightCard.container.x < width / 2) {
+      addToLeft.bind(this)()
+    } else {
+      addToRight.bind(this)()
+    }
+
+    // display card
+    this.seesawGroup.container.addChild(weightCard.container)
+
+    function addToLeft() {
+      weightCard.container.x =
+        width / 4 + Math.floor(Math.random() * 8 - 4) * 20
+      weightCard.container.y = -20
+
+      // linkList
+      const prevCard = this.leftSideLastCard
+      if (prevCard) {
+        prevCard.nextCard = weightCard
+      }
+      weightCard.prevCard = prevCard
+
+      // update first/last linkList card
+      if (weightCard.prevCard === null) {
+        this.leftSideFirstCard = weightCard
+      }
+      if (weightCard.nextCard === null) {
+        this.leftSideLastCard = weightCard
+      }
+    }
+
+    function addToRight() {
+      weightCard.container.x =
+        (width * 3) / 4 + Math.floor(Math.random() * 8 - 4) * 20
+      weightCard.container.y = -20
+
+      // linkList
+      const prevCard = this.rightSideLastCard
+      if (prevCard) {
+        prevCard.nextCard = weightCard
+      }
+      weightCard.prevCard = prevCard
+      // update first/last linkList card
+      if (weightCard.prevCard === null) {
+        this.rightSideLastCard = weightCard
+      }
+      if (weightCard.nextCard === null) {
+        this.rightSideLastCard = weightCard
+      }
+    }
   }
 
   async gameLevel0() {
