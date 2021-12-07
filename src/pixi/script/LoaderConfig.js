@@ -26,6 +26,7 @@ import weightElder1 from '../assets/images/weightElder1.png'
 import weightElder2 from '../assets/images/weightElder2.png'
 import weightBus from '../assets/images/weightBus.png'
 import weightShop from '../assets/images/weightShop.png'
+import circle from '../assets/images/circle.png'
 
 export const LoaderConfig = {
   player,
@@ -56,4 +57,5 @@ export const LoaderConfig = {
   weightElder2,
   weightBus,
   weightShop,
+  circle,
 }
