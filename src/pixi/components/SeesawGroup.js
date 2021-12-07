@@ -16,6 +16,9 @@ export class SeesawGroup {
     this.leftSideLastCard = null
     this.rightSideFirstCard = null
     this.rightSideLastCard = null
+
+    this.leftTotalWeight = 0
+    this.rightTotalWeight = 0
   }
 
   createSeesaw() {
@@ -39,17 +42,22 @@ export class SeesawGroup {
     this.container.pivot.x = this.container.width / 2
     // this.container.pivot.y = 0
     this.container.pivot.y = this.pivot.container.height
+    Globals.SEESAW_HEIGHT = this.container.height
   }
 
   getChoosedWeightCard(weightCard) {
     console.log('DROP')
-    console.log(this)
     console.log(weightCard)
+
+    // add seesaw ref into card
+    weightCard.seesawGroupRef = this
+    weightCard.seesawBoardRef = this.board
 
     // clean linkList
     weightCard.prevCard = null
     weightCard.nextCard = null
 
+    // clear card's position ticker
     if (weightCard.positionTicker && weightCard.positionTicker?.started) {
       weightCard.positionTicker.destroy()
     }
@@ -57,23 +65,42 @@ export class SeesawGroup {
 
     // put card onto seesaw
     if (weightCard.isOnConveyor) {
+      // card is from conveyor to seesaw
       weightCard.isOnConveyor = false
 
+      // display card
+      this.board.container.addChild(weightCard.container)
+
+      // put card onto board,and calculate each side's weight
       if (weightCard.container.x + TIMER_WIDTH < width / 2) {
+        weightCard.seesawSide = 'left'
         addToLeft.bind(this)()
+        this.leftTotalWeight += weightCard.weight
       } else {
+        weightCard.seesawSide = 'right'
         addToRight.bind(this)()
+        this.rightTotalWeight += weightCard.weight
       }
     } else {
+      // card is from seesaw's another side,and re calculate each side's weight
       if (weightCard.container.x < width / 2) {
         addToLeft.bind(this)()
+
+        if (weightCard.seesawDide === 'right') {
+          this.leftTotalWeight += weightCard.weight
+          this.rightTotalWeight -= weightCard.weight
+        }
       } else {
         addToRight.bind(this)()
+
+        if (weightCard.seesawDide === 'left') {
+          this.rightTotalWeight += weightCard.weight
+          this.leftTotalWeight -= weightCard.weight
+        }
       }
     }
 
-    // display card
-    this.container.addChild(weightCard.container)
+    this.rotateBoard()
 
     function addToLeft() {
       // linkList
@@ -91,9 +118,11 @@ export class SeesawGroup {
         this.leftSideLastCard = weightCard
       }
 
-      weightCard.container.x =
-        width / 4 + Math.floor(Math.random() * 8 - 4) * 15
-      weightCard.container.y = -20
+      // weightCard.container.x =
+      //   width / 4 + Math.floor(Math.random() * 8 - 4) * 15
+      // weightCard.container.y = -20
+      weightCard.container.x = 0
+      weightCard.container.y = 0
     }
 
     function addToRight() {
@@ -115,5 +144,15 @@ export class SeesawGroup {
         (width * 3) / 4 + Math.floor(Math.random() * 8 - 4) * 20
       weightCard.container.y = -20
     }
+  }
+
+  rotateBoard() {
+    const difference = this.rightTotalWeight - this.leftTotalWeight
+
+    const tick = Math.floor(difference / 50)
+
+    console.log(this)
+    console.log(tick)
+    this.board.container.angle = tick * 2
   }
 }

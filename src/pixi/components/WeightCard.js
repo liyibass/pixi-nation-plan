@@ -38,6 +38,8 @@ export class WeightCard {
     this.createWeightCard()
 
     this.createDraggableBehavior()
+
+    this.seesawSide = ''
   }
 
   createWeightCard() {
@@ -189,6 +191,12 @@ export class WeightCard {
         }
       }
     } else {
+      // we put card on board before
+      // however while board is rotating, card's position will be chaos
+      // so need to set card's parent to seesawGroup temporary
+      const seesawBoard = this.seesawBoardRef.container
+      const seesawGroup = this.seesawGroupRef.container
+
       if (this.isDragging) {
         // remember the position of the mouse cursor
         this._rememberOriginalPosition()
@@ -198,6 +206,9 @@ export class WeightCard {
           this.container,
           this.container.parent.children.length - 1
         )
+
+        seesawBoard.removeChild(this.container)
+        seesawGroup.addChild(this.container)
       } else {
         const { x, y } = this.container
         const { x: originalX, y: originalY } = this.originalPosition
@@ -211,6 +222,9 @@ export class WeightCard {
         } else {
           this._resetToOriginalPosition()
         }
+
+        seesawGroup.removeChild(this.container)
+        seesawBoard.addChild(this.container)
       }
     }
   }
@@ -278,11 +292,16 @@ export class WeightCard {
   }
 
   _getPositionRelativeToSeesawGroup(event) {
-    const gameStage = this.container.parent.parent
+    const seesawGameStageDimention = Globals.getSeesawGameStageDimention()
 
     return {
-      x: event.data.global.x - gameStage.x,
-      y: event.data.global.y - gameStage.height + 60,
+      x: event.data.global.x - seesawGameStageDimention.x,
+      y:
+        event.data.global.y -
+        seesawGameStageDimention.y -
+        seesawGameStageDimention.height +
+        Globals.SEESAW_HEIGHT -
+        20,
     }
   }
 
