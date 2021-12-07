@@ -85,7 +85,7 @@ export class Conveyor {
         }
 
         createNewWeightCardTimeout()
-      }, 3000)
+      }, 2000)
     }
 
     createNewWeightCardTimeout()

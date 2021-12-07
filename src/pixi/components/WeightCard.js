@@ -77,7 +77,6 @@ export class WeightCard {
   }
 
   startPositionCard() {
-    console.log('startPositionCard in ' + this.name)
     // remove ongoing ticker if existed
     if (this.positionTicker?.started) {
       this.positionTicker.destroy()
@@ -91,8 +90,6 @@ export class WeightCard {
     this.positionTicker = new PIXI.Ticker()
 
     this.positionTicker.add(() => {
-      console.log('tickerON')
-
       if (this.x > this.targetX) {
         this.x -= 1
 

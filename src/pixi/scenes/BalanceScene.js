@@ -79,8 +79,8 @@ export class BalanceScene {
     const gameStageFrame = new PIXI.Graphics()
     const frameLineWeight = 1
     gameStageFrame.lineStyle(frameLineWeight, 0xdddddd, 0)
-    // gameStageFrame.beginFill(0xaaaaaa)
-    gameStageFrame.beginFill(0x92b79c)
+    gameStageFrame.beginFill(0xaaaaaa)
+    // gameStageFrame.beginFill(0x92b79c)
 
     /*
      * NOTE: We use gameStageFrame(which is a Graphics) to bump up outer container

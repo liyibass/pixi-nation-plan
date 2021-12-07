@@ -19,6 +19,9 @@ export class SeesawGroup {
 
     this.leftTotalWeight = 0
     this.rightTotalWeight = 0
+
+    this.tick = 0
+    this.prevTick = 0
   }
 
   createSeesaw() {
@@ -118,11 +121,9 @@ export class SeesawGroup {
         this.leftSideLastCard = weightCard
       }
 
-      // weightCard.container.x =
-      //   width / 4 + Math.floor(Math.random() * 8 - 4) * 15
-      // weightCard.container.y = -20
-      weightCard.container.x = 0
-      weightCard.container.y = 0
+      weightCard.container.x =
+        width / 4 + Math.floor(Math.random() * 8 - 4) * 15
+      weightCard.container.y = -20
     }
 
     function addToRight() {
@@ -147,12 +148,32 @@ export class SeesawGroup {
   }
 
   rotateBoard() {
-    const difference = this.rightTotalWeight - this.leftTotalWeight
+    this.seesawRotateTicker = new PIXI.Ticker()
 
-    const tick = Math.floor(difference / 50)
+    this.seesawRotateTicker.add(() => {
+      const difference = this.rightTotalWeight - this.leftTotalWeight
+      this.tick = Math.floor(difference / 50)
+      const direction = this.tick - this.prevTick
+      const targetAngle = this.tick * 2
 
-    console.log(this)
-    console.log(tick)
-    this.board.container.angle = tick * 2
+      console.log(this.leftTotalWeight)
+      console.log(this.rightTotalWeight)
+      console.log(direction)
+      console.log(targetAngle)
+
+      if (direction > 0 && this.board.container.angle < targetAngle) {
+        this.seesawRotateTicker.start()
+        this.board.container.angle += 0.1
+      } else if (direction < 0 && this.board.container.angle > targetAngle) {
+        this.seesawRotateTicker.start()
+        this.board.container.angle -= 0.1
+      } else {
+        // this.board.container.angle = 0
+        this.seesawRotateTicker.stop()
+        this.prevTick = this.tick
+      }
+    })
+
+    this.seesawRotateTicker.start()
   }
 }
