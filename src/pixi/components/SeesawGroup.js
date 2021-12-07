@@ -105,6 +105,9 @@ export class SeesawGroup {
       }
     }
 
+    // hide card's weight text
+    weightCard.weightText.alpha = 0
+
     this.rotateBoard()
 
     function addToLeft() {

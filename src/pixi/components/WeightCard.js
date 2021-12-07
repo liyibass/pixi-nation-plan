@@ -164,6 +164,8 @@ export class WeightCard {
     // set the dragging state for this sprite
     this.isDragging = !this.isDragging
 
+    this.weightText.alpha = 1
+
     if (this.isOnConveyor) {
       if (this.isDragging) {
         // remember the position of the mouse cursor
