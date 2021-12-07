@@ -80,7 +80,7 @@ export class Conveyor {
   _addWeightCardContinously() {
     const createNewWeightCardTimeout = () => {
       this.addNewWeightCardTimeout = setTimeout(() => {
-        if (this.weightCardCount < 2) {
+        if (this.weightCardCount < 8) {
           this.addNewWeightCard()
         }
 
@@ -142,7 +142,6 @@ export class Conveyor {
     console.log(removedWeightCard)
     if (removedWeightCard.isOnConveyor) {
       console.log('if in weightCardHandler')
-      removedWeightCard.isOnConveyor = false
 
       // align linkList
       if (removedWeightCard.prevCard) {

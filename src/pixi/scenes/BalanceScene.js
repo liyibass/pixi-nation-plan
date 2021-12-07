@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+window.PIXI = PIXI
 // import _ from 'lodash'
 import { Globals } from '../script/Globals'
 import { GroundGroup } from '../components/GroundGroup'
@@ -15,6 +16,7 @@ import { Conveyor } from '../components/Conveyor'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
+const TIMER_WIDTH = 69
 
 export class BalanceScene {
   constructor() {
@@ -160,20 +162,29 @@ export class BalanceScene {
     }
     const { width } = Globals.getSeesawGameStageDimention()
 
-    if (weightCard.container.x < width / 2) {
-      addToLeft.bind(this)()
+    console.log(weightCard.isOnConveyor)
+    console.log(width)
+    console.log(weightCard.container.x)
+
+    if (weightCard.isOnConveyor) {
+      weightCard.isOnConveyor = false
+      if (weightCard.container.x + TIMER_WIDTH < width / 2) {
+        addToLeft.bind(this)()
+      } else {
+        addToRight.bind(this)()
+      }
     } else {
-      addToRight.bind(this)()
+      if (weightCard.container.x < width / 2) {
+        addToLeft.bind(this)()
+      } else {
+        addToRight.bind(this)()
+      }
     }
 
     // display card
     this.seesawGroup.container.addChild(weightCard.container)
 
     function addToLeft() {
-      weightCard.container.x =
-        width / 4 + Math.floor(Math.random() * 8 - 4) * 20
-      weightCard.container.y = -20
-
       // linkList
       const prevCard = this.leftSideLastCard
       if (prevCard) {
@@ -188,13 +199,13 @@ export class BalanceScene {
       if (weightCard.nextCard === null) {
         this.leftSideLastCard = weightCard
       }
+
+      weightCard.container.x =
+        width / 4 + Math.floor(Math.random() * 8 - 4) * 15
+      weightCard.container.y = -20
     }
 
     function addToRight() {
-      weightCard.container.x =
-        (width * 3) / 4 + Math.floor(Math.random() * 8 - 4) * 20
-      weightCard.container.y = -20
-
       // linkList
       const prevCard = this.rightSideLastCard
       if (prevCard) {
@@ -208,6 +219,10 @@ export class BalanceScene {
       if (weightCard.nextCard === null) {
         this.rightSideLastCard = weightCard
       }
+
+      weightCard.container.x =
+        (width * 3) / 4 + Math.floor(Math.random() * 8 - 4) * 20
+      weightCard.container.y = -20
     }
   }
 
