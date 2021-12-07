@@ -4,6 +4,7 @@ import { WeightCard } from './WeightCard'
 
 const TIMER_WIDTH = 69
 const TOP_PADDING = 31
+const TOTAL_CARD_COUNT = 10
 
 // const TOP_PADDING = 0
 export class Conveyor {
@@ -20,7 +21,9 @@ export class Conveyor {
 
     this.firstWeightCard = null
     this.lastWeightCard = null
-    this.weightCardCount = 0
+    this.conveyorCardCount = 0
+    this.showedCardCount = 0
+
     this.createConveyor()
     this.startConveyor()
 
@@ -65,7 +68,8 @@ export class Conveyor {
 
     // display card
     this.container.addChild(weightCard.container)
-    this.weightCardCount++
+    this.conveyorCardCount++
+    this.showedCardCount++
     weightCard.startPositionCard()
   }
 
@@ -80,7 +84,10 @@ export class Conveyor {
   _addWeightCardContinously() {
     const createNewWeightCardTimeout = () => {
       this.addNewWeightCardTimeout = setTimeout(() => {
-        if (this.weightCardCount < 8) {
+        if (
+          this.conveyorCardCount < 7 &&
+          this.showedCardCount < TOTAL_CARD_COUNT
+        ) {
           this.addNewWeightCard()
         }
 
@@ -160,7 +167,7 @@ export class Conveyor {
 
       // remove selected card
       this.container.removeChild(removedWeightCard.container)
-      this.weightCardCount--
+      this.conveyorCardCount--
 
       // pass selected card to parent
       this.getChoosedWeightCard(removedWeightCard)
