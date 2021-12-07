@@ -43,6 +43,7 @@ export class SeesawGroup {
 
   getChoosedWeightCard(weightCard) {
     console.log('DROP')
+    console.log(this)
     console.log(weightCard)
 
     // clean linkList
@@ -72,7 +73,7 @@ export class SeesawGroup {
     }
 
     // display card
-    this.seesawGroup.container.addChild(weightCard.container)
+    this.container.addChild(weightCard.container)
 
     function addToLeft() {
       // linkList

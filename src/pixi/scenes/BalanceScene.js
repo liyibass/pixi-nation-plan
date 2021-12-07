@@ -140,7 +140,7 @@ export class BalanceScene {
 
   createConveyor() {
     this.conveyor = new Conveyor(
-      this.seesawGroup.getChoosedWeightCard.bind(this)
+      this.seesawGroup.getChoosedWeightCard.bind(this.seesawGroup)
     )
     this.gameStage.addChild(this.conveyor.container)
   }
