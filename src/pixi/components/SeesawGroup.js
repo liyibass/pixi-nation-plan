@@ -79,30 +79,36 @@ export class SeesawGroup {
         weightCard.seesawSide = 'left'
         addToLeft.bind(this)()
         this.leftTotalWeight += weightCard.weight
-        this.board.setLeftWeight(this.leftTotalWeight)
       } else {
         weightCard.seesawSide = 'right'
         addToRight.bind(this)()
         this.rightTotalWeight += weightCard.weight
-        this.board.setRightWeight(this.rightTotalWeight)
       }
+
+      // update left/right weight text
+      this.board.setLeftWeight(this.leftTotalWeight)
+      this.board.setRightWeight(this.rightTotalWeight)
     } else {
       // card is from seesaw's another side,and re calculate each side's weight
       if (weightCard.container.x < width / 2) {
         addToLeft.bind(this)()
 
-        if (weightCard.seesawDide === 'right') {
+        if (weightCard.seesawSide === 'right') {
           this.leftTotalWeight += weightCard.weight
           this.rightTotalWeight -= weightCard.weight
         }
       } else {
         addToRight.bind(this)()
 
-        if (weightCard.seesawDide === 'left') {
+        if (weightCard.seesawSide === 'left') {
           this.rightTotalWeight += weightCard.weight
           this.leftTotalWeight -= weightCard.weight
         }
       }
+
+      // update left/right weight text
+      this.board.setLeftWeight(this.leftTotalWeight)
+      this.board.setRightWeight(this.rightTotalWeight)
     }
 
     // hide card's weight text
