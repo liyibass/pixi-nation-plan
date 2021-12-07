@@ -159,29 +159,46 @@ export class SeesawGroup {
   }
 
   rotateBoard() {
+    if (this.seesawRotateTicker?.started) {
+      this.seesawRotateTicker.destroy()
+    }
+
     this.seesawRotateTicker = new PIXI.Ticker()
 
     this.seesawRotateTicker.add(() => {
       const difference = this.rightTotalWeight - this.leftTotalWeight
-      this.tick = Math.floor(difference / 50)
-      const direction = this.tick - this.prevTick
-      const targetAngle = this.tick * 2
-
+      const speed = Math.abs(Math.floor(difference / 50))
       // console.log(this.leftTotalWeight)
       // console.log(this.rightTotalWeight)
       // console.log(direction)
       // console.log(targetAngle)
 
-      if (direction > 0 && this.board.container.angle < targetAngle) {
+      if (difference > 0) {
         this.seesawRotateTicker.start()
-        this.board.container.angle += 0.1
-      } else if (direction < 0 && this.board.container.angle > targetAngle) {
+
+        if (this.board.container.angle < 20) {
+          this.board.container.angle += 0.01 * speed
+        } else {
+          console.log('warning!')
+          this.seesawRotateTicker.destroy()
+        }
+      } else if (difference < 0) {
         this.seesawRotateTicker.start()
-        this.board.container.angle -= 0.1
+        if (this.board.container.angle > -20) {
+          this.board.container.angle -= 0.01 * speed
+        } else {
+          console.log('warning!')
+          this.seesawRotateTicker.destroy()
+        }
+      } else if (difference === 0 && this.board.container.angle > 0) {
+        this.seesawRotateTicker.start()
+        this.board.container.angle -= 0.02
+      } else if (difference === 0 && this.board.container.angle < 0) {
+        this.seesawRotateTicker.start()
+        this.board.container.angle += 0.02
       } else {
         // this.board.container.angle = 0
-        this.seesawRotateTicker.stop()
-        this.prevTick = this.tick
+        this.seesawRotateTicker.destroy()
       }
     })
 
