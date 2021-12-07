@@ -1,8 +1,9 @@
 import * as PIXI from 'pixi.js'
-// import { Globals } from '../script/Globals'
+import { Globals } from '../script/Globals'
 
 import { SeesawPivot } from '../components/SeesawPivot'
 import { SeesawBoard } from '../components/SeesawBoard'
+const TIMER_WIDTH = 69
 
 export class SeesawGroup {
   constructor() {
@@ -10,6 +11,11 @@ export class SeesawGroup {
     this.container.name = 'seesawGroup'
     this.createSeesaw()
     this.setPosition()
+
+    this.leftSideFirstCard = null
+    this.leftSideLastCard = null
+    this.rightSideFirstCard = null
+    this.rightSideLastCard = null
   }
 
   createSeesaw() {
@@ -33,5 +39,80 @@ export class SeesawGroup {
     this.container.pivot.x = this.container.width / 2
     // this.container.pivot.y = 0
     this.container.pivot.y = this.pivot.container.height
+  }
+
+  getChoosedWeightCard(weightCard) {
+    console.log('DROP')
+    console.log(weightCard)
+
+    // clean linkList
+    weightCard.prevCard = null
+    weightCard.nextCard = null
+
+    if (weightCard.positionTicker && weightCard.positionTicker?.started) {
+      weightCard.positionTicker.destroy()
+    }
+    const { width } = Globals.getSeesawGameStageDimention()
+
+    // put card onto seesaw
+    if (weightCard.isOnConveyor) {
+      weightCard.isOnConveyor = false
+
+      if (weightCard.container.x + TIMER_WIDTH < width / 2) {
+        addToLeft.bind(this)()
+      } else {
+        addToRight.bind(this)()
+      }
+    } else {
+      if (weightCard.container.x < width / 2) {
+        addToLeft.bind(this)()
+      } else {
+        addToRight.bind(this)()
+      }
+    }
+
+    // display card
+    this.seesawGroup.container.addChild(weightCard.container)
+
+    function addToLeft() {
+      // linkList
+      const prevCard = this.leftSideLastCard
+      if (prevCard) {
+        prevCard.nextCard = weightCard
+      }
+      weightCard.prevCard = prevCard
+
+      // update first/last linkList card
+      if (weightCard.prevCard === null) {
+        this.leftSideFirstCard = weightCard
+      }
+      if (weightCard.nextCard === null) {
+        this.leftSideLastCard = weightCard
+      }
+
+      weightCard.container.x =
+        width / 4 + Math.floor(Math.random() * 8 - 4) * 15
+      weightCard.container.y = -20
+    }
+
+    function addToRight() {
+      // linkList
+      const prevCard = this.rightSideLastCard
+      if (prevCard) {
+        prevCard.nextCard = weightCard
+      }
+      weightCard.prevCard = prevCard
+      // update first/last linkList card
+      if (weightCard.prevCard === null) {
+        this.rightSideLastCard = weightCard
+      }
+      if (weightCard.nextCard === null) {
+        this.rightSideLastCard = weightCard
+      }
+
+      weightCard.container.x =
+        (width * 3) / 4 + Math.floor(Math.random() * 8 - 4) * 20
+      weightCard.container.y = -20
+    }
   }
 }

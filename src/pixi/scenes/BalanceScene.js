@@ -16,7 +16,6 @@ import { Conveyor } from '../components/Conveyor'
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
-const TIMER_WIDTH = 69
 
 export class BalanceScene {
   constructor() {
@@ -27,11 +26,6 @@ export class BalanceScene {
     this.totalJ = Math.floor(this.gameStageHeight / BLOCK_WIDTH)
     Globals.snakeTotalI = this.totalI
     Globals.snakeTotalJ = this.totalJ
-
-    this.leftSideFirstCard = null
-    this.leftSideLastCard = null
-    this.rightSideFirstCard = null
-    this.rightSideLastCard = null
 
     this.gameLevel = 0
     this.startGameFlow()
@@ -145,85 +139,10 @@ export class BalanceScene {
   }
 
   createConveyor() {
-    this.conveyor = new Conveyor(this.getChoosedWeightCard.bind(this))
+    this.conveyor = new Conveyor(
+      this.seesawGroup.getChoosedWeightCard.bind(this)
+    )
     this.gameStage.addChild(this.conveyor.container)
-  }
-
-  getChoosedWeightCard(weightCard) {
-    console.log('DROP')
-    console.log(weightCard)
-
-    // clean linkList
-    weightCard.prevCard = null
-    weightCard.nextCard = null
-
-    if (weightCard.positionTicker && weightCard.positionTicker?.started) {
-      weightCard.positionTicker.destroy()
-    }
-    const { width } = Globals.getSeesawGameStageDimention()
-
-    console.log(weightCard.isOnConveyor)
-    console.log(width)
-    console.log(weightCard.container.x)
-
-    if (weightCard.isOnConveyor) {
-      weightCard.isOnConveyor = false
-      if (weightCard.container.x + TIMER_WIDTH < width / 2) {
-        addToLeft.bind(this)()
-      } else {
-        addToRight.bind(this)()
-      }
-    } else {
-      if (weightCard.container.x < width / 2) {
-        addToLeft.bind(this)()
-      } else {
-        addToRight.bind(this)()
-      }
-    }
-
-    // display card
-    this.seesawGroup.container.addChild(weightCard.container)
-
-    function addToLeft() {
-      // linkList
-      const prevCard = this.leftSideLastCard
-      if (prevCard) {
-        prevCard.nextCard = weightCard
-      }
-      weightCard.prevCard = prevCard
-
-      // update first/last linkList card
-      if (weightCard.prevCard === null) {
-        this.leftSideFirstCard = weightCard
-      }
-      if (weightCard.nextCard === null) {
-        this.leftSideLastCard = weightCard
-      }
-
-      weightCard.container.x =
-        width / 4 + Math.floor(Math.random() * 8 - 4) * 15
-      weightCard.container.y = -20
-    }
-
-    function addToRight() {
-      // linkList
-      const prevCard = this.rightSideLastCard
-      if (prevCard) {
-        prevCard.nextCard = weightCard
-      }
-      weightCard.prevCard = prevCard
-      // update first/last linkList card
-      if (weightCard.prevCard === null) {
-        this.rightSideLastCard = weightCard
-      }
-      if (weightCard.nextCard === null) {
-        this.rightSideLastCard = weightCard
-      }
-
-      weightCard.container.x =
-        (width * 3) / 4 + Math.floor(Math.random() * 8 - 4) * 20
-      weightCard.container.y = -20
-    }
   }
 
   async gameLevel0() {
