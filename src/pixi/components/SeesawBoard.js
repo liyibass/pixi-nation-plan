@@ -8,16 +8,20 @@ export class SeesawBoard {
     this.container = new PIXI.Container()
     this.weight = weight
     this.maxWeight = maxWeight
+    this.leftLoad = 0
+    this.leftMaxLoad = 32
+    this.rightLoad = 0
+    this.rightMaxLoad = 32
+
     this.leftWeight = 0
-    this.leftMaxWeight = 32
     this.rightWeight = 0
-    this.rightMaxWeight = 32
 
     this.width = Globals.getSeesawGameStageDimention().width
     this.colorBarLength = Math.floor(this.width / 9)
     this.colorBarHeight = 15
 
     this.createBoard()
+    this.createWeightText()
     this.createWeightScale()
 
     this.container.pivot.x = this.container.width / 2
@@ -42,6 +46,32 @@ export class SeesawBoard {
     }
   }
 
+  createWeightText() {
+    // add weight text
+    this.leftWeightText = new PIXI.Text(this.leftWeight, {
+      fill: [0xffffff],
+      fontSize: 14,
+      align: 'center',
+    })
+    this.rightWeightText = new PIXI.Text(this.rightWeight, {
+      fill: [0xffffff],
+      fontSize: 14,
+      align: 'center',
+    })
+
+    this.leftWeightText.x =
+      (this.colorBarLength - this.leftWeightText.width) / 2
+    this.leftWeightText.y =
+      (this.colorBarHeight - this.leftWeightText.height) / 2
+
+    this.rightWeightText.x =
+      this.width - (this.colorBarLength + this.rightWeightText.width) / 2
+    this.rightWeightText.y =
+      (this.colorBarHeight - this.rightWeightText.height) / 2
+
+    this.container.addChild(this.leftWeightText, this.rightWeightText)
+  }
+
   createWeightScale() {
     const weightScaleGroup = new PIXI.Container()
 
@@ -54,19 +84,20 @@ export class SeesawBoard {
     degreeScaleSprite.height *= scale
     weightScaleGroup.addChild(degreeScaleSprite)
 
-    const leftWeightTextGroup = this.createWeightText('left')
-    weightScaleGroup.addChild(leftWeightTextGroup)
-    const rightWeightTextGroup = this.createWeightText('right')
-    weightScaleGroup.addChild(rightWeightTextGroup)
+    // text
+    const leftLoadTextGroup = this.createLoadText('left')
+    weightScaleGroup.addChild(leftLoadTextGroup)
+    const rightLoadTextGroup = this.createLoadText('right')
+    weightScaleGroup.addChild(rightLoadTextGroup)
 
-    leftWeightTextGroup.x =
-      (weightScaleGroup.width - leftWeightTextGroup.width) / 2 - 11
-    leftWeightTextGroup.y =
-      (degreeScaleSprite.height - rightWeightTextGroup.height) / 2
-    rightWeightTextGroup.x =
-      (weightScaleGroup.width - rightWeightTextGroup.width) / 2 + 11
-    rightWeightTextGroup.y =
-      (degreeScaleSprite.height - rightWeightTextGroup.height) / 2
+    leftLoadTextGroup.x =
+      (weightScaleGroup.width - leftLoadTextGroup.width) / 2 - 11
+    leftLoadTextGroup.y =
+      (degreeScaleSprite.height - rightLoadTextGroup.height) / 2
+    rightLoadTextGroup.x =
+      (weightScaleGroup.width - rightLoadTextGroup.width) / 2 + 11
+    rightLoadTextGroup.y =
+      (degreeScaleSprite.height - rightLoadTextGroup.height) / 2
 
     weightScaleGroup.x = (this.width - weightScaleGroup.width) / 2
     weightScaleGroup.y = -degreeScaleSprite.height / 2 + this.colorBarHeight / 2
@@ -74,20 +105,17 @@ export class SeesawBoard {
     this.container.addChild(weightScaleGroup)
   }
 
-  createWeightText(side) {
-    const leftWeightTextGroup = new PIXI.Container()
+  createLoadText(side) {
+    const leftLoadTextGroup = new PIXI.Container()
 
-    this[`${side}WeightText`] = new PIXI.Text(`${this[`${side}Weight`]}`, {
+    this[`${side}LoadText`] = new PIXI.Text(`${this[`${side}Load`]}`, {
       fill: [0xffffff],
       fontSize: 10,
     })
-    this[`${side}MaxWeightText`] = new PIXI.Text(
-      `${this[`${side}MaxWeight`]}`,
-      {
-        fill: [0xffffff],
-        fontSize: 10,
-      }
-    )
+    this[`${side}MaxLoadText`] = new PIXI.Text(`${this[`${side}MaxLoad`]}`, {
+      fill: [0xffffff],
+      fontSize: 10,
+    })
 
     const devider = new PIXI.Graphics()
     const frameLineWeight = 1
@@ -101,25 +129,37 @@ export class SeesawBoard {
     devider.drawRect(0, 0, TEXT_WIDTH, 1)
     devider.endFill()
 
-    leftWeightTextGroup.addChild(
-      this[`${side}WeightText`],
+    leftLoadTextGroup.addChild(
+      this[`${side}LoadText`],
       devider,
-      this[`${side}MaxWeightText`]
+      this[`${side}MaxLoadText`]
     )
 
-    this[`${side}WeightText`].x =
-      (TEXT_WIDTH - this[`${side}WeightText`].width) / 2
-    devider.y = this[`${side}WeightText`].height + 1
+    this[`${side}LoadText`].x = (TEXT_WIDTH - this[`${side}LoadText`].width) / 2
+    devider.y = this[`${side}LoadText`].height + 1
 
-    this[`${side}MaxWeightText`].x =
-      (TEXT_WIDTH - this[`${side}MaxWeightText`].width) / 2
-    this[`${side}MaxWeightText`].y = devider.y + devider.height + 1
+    this[`${side}MaxLoadText`].x =
+      (TEXT_WIDTH - this[`${side}MaxLoadText`].width) / 2
+    this[`${side}MaxLoadText`].y = devider.y + devider.height + 1
 
-    return leftWeightTextGroup
+    return leftLoadTextGroup
   }
 
   increaseWeight(increaseWeight) {
     this.weight += increaseWeight
     this.weightText.text = this.weight
+  }
+
+  setLeftWeight(newWeight) {
+    this.leftWeightText.text = newWeight
+
+    this.leftWeightText.x =
+      (this.colorBarLength - this.leftWeightText.width) / 2
+  }
+  setRightWeight(newWeight) {
+    this.rightWeightText.text = newWeight
+
+    this.rightWeightText.x =
+      this.width - (this.colorBarLength + this.rightWeightText.width) / 2
   }
 }

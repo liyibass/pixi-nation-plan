@@ -193,6 +193,8 @@ export class WeightCard {
       // so need to set card's parent to seesawGroup temporary
       const seesawBoard = this.seesawBoardRef.container
       const seesawGroup = this.seesawGroupRef.container
+      seesawBoard.removeChild(this.container)
+      seesawGroup.addChild(this.container)
 
       if (this.isDragging) {
         // remember the position of the mouse cursor
@@ -203,10 +205,10 @@ export class WeightCard {
           this.container,
           this.container.parent.children.length - 1
         )
-
-        seesawBoard.removeChild(this.container)
-        seesawGroup.addChild(this.container)
       } else {
+        seesawGroup.removeChild(this.container)
+        seesawBoard.addChild(this.container)
+
         const { x, y } = this.container
         const { x: originalX, y: originalY } = this.originalPosition
 
@@ -219,9 +221,6 @@ export class WeightCard {
         } else {
           this._resetToOriginalPosition()
         }
-
-        seesawGroup.removeChild(this.container)
-        seesawBoard.addChild(this.container)
       }
     }
   }

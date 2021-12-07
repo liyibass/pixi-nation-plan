@@ -79,10 +79,12 @@ export class SeesawGroup {
         weightCard.seesawSide = 'left'
         addToLeft.bind(this)()
         this.leftTotalWeight += weightCard.weight
+        this.board.setLeftWeight(this.leftTotalWeight)
       } else {
         weightCard.seesawSide = 'right'
         addToRight.bind(this)()
         this.rightTotalWeight += weightCard.weight
+        this.board.setRightWeight(this.rightTotalWeight)
       }
     } else {
       // card is from seesaw's another side,and re calculate each side's weight
@@ -156,10 +158,10 @@ export class SeesawGroup {
       const direction = this.tick - this.prevTick
       const targetAngle = this.tick * 2
 
-      console.log(this.leftTotalWeight)
-      console.log(this.rightTotalWeight)
-      console.log(direction)
-      console.log(targetAngle)
+      // console.log(this.leftTotalWeight)
+      // console.log(this.rightTotalWeight)
+      // console.log(direction)
+      // console.log(targetAngle)
 
       if (direction > 0 && this.board.container.angle < targetAngle) {
         this.seesawRotateTicker.start()
