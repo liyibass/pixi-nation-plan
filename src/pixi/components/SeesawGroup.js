@@ -94,6 +94,7 @@ export class SeesawGroup {
         addToLeft.bind(this)()
 
         if (weightCard.seesawSide === 'right') {
+          weightCard.seesawSide = 'left'
           this.leftTotalWeight += weightCard.weight
           this.rightTotalWeight -= weightCard.weight
         }
@@ -101,10 +102,14 @@ export class SeesawGroup {
         addToRight.bind(this)()
 
         if (weightCard.seesawSide === 'left') {
+          weightCard.seesawSide = 'right'
           this.rightTotalWeight += weightCard.weight
           this.leftTotalWeight -= weightCard.weight
         }
       }
+      console.log(weightCard.seesawSide)
+      console.log(this.leftTotalWeight)
+      console.log(this.rightTotalWeight)
 
       // update left/right weight text
       this.board.setLeftWeight(this.leftTotalWeight)
@@ -175,7 +180,6 @@ export class SeesawGroup {
 
       if (difference > 0) {
         this.seesawRotateTicker.start()
-
         if (this.board.container.angle < 20) {
           this.board.container.angle += 0.01 * speed
         } else {
