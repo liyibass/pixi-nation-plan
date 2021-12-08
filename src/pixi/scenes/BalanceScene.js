@@ -12,6 +12,7 @@ import { GameFail } from '../components/GameFail'
 import { GameSuccess } from '../components/GameSuccess'
 import { SeesawGroup } from '../components/SeesawGroup'
 import { Conveyor } from '../components/Conveyor'
+import { Timer } from '../components/Timer'
 
 // import { SnakeBody } from '../components/SnakeBody'
 
@@ -143,9 +144,17 @@ export class BalanceScene {
     this.gameStage.addChild(this.conveyor.container)
   }
 
+  createTimer() {
+    this.timer = new Timer()
+    this.gameStage.addChild(this.timer.container)
+    console.log(this.timer)
+  }
+
   async gameLevel0() {
     this.createSeesaw()
     this.createConveyor()
+    this.createTimer()
+    this.timer.startTimer()
     await this.doctorSay.newSay('現在有些人想要搬來你的村莊了')
     await this.doctorSay.newSay('有沒有看到那個翹翹板？')
 
