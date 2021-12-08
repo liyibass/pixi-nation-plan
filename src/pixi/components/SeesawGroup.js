@@ -30,6 +30,7 @@ export class SeesawGroup {
     this.prevTick = 0
 
     this.isDead = false
+    this.isClear = false
   }
 
   createSeesaw() {
@@ -222,15 +223,19 @@ export class SeesawGroup {
           this.leftButton.warning()
           this.setDeathCountDown()
         }
+      } else if (
+        difference === 0 &&
+        Math.abs(this.board.container.angle) <= 0.02
+      ) {
+        this.board.container.angle = 0
+        this.seesawRotateTicker.stop()
+        this.setClearCountDown()
       } else if (difference === 0 && this.board.container.angle > 0) {
         this.seesawRotateTicker.start()
         this.board.container.angle -= 0.02
       } else if (difference === 0 && this.board.container.angle < 0) {
         this.seesawRotateTicker.start()
         this.board.container.angle += 0.02
-      } else {
-        // this.board.container.angle = 0
-        this.seesawRotateTicker.stop()
       }
 
       if (
@@ -273,5 +278,19 @@ export class SeesawGroup {
 
   clearDeathCountDown() {
     clearInterval(this.deathCountDown)
+  }
+
+  setClearCountDown() {
+    this.clearCountDown = setTimeout(() => {
+      if (
+        this.leftTotalWeight > 0 &&
+        this.leftTotalWeight === this.rightTotalWeight
+      ) {
+        this.isClear = true
+        console.log('CLEAR')
+      } else {
+        clearInterval(this.clearCountDown)
+      }
+    }, 6000)
   }
 }

@@ -26,7 +26,7 @@ export class SeesawBoard {
     this.container.pivot.x = this.container.width / 2
     this.container.pivot.y = this.colorBarHeight
 
-    this.dead = false
+    this.isDead = false
 
     // setInterval(() => {
     //   this.container.angle++

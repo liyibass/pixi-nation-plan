@@ -156,9 +156,7 @@ export class BalanceScene {
   }
 
   async gameLevel0() {
-    this.createSeesaw()
-    this.createConveyor()
-    this.createTimer()
+    this.initGame()
 
     await this.doctorSay.newSay('現在有些人想要搬來你的村莊了')
     await this.doctorSay.newSay('有沒有看到那個翹翹板？')
@@ -172,79 +170,16 @@ export class BalanceScene {
   }
 
   async gameLevel1() {
-    const doctorSay = new DoctorSay()
-    this.container.addChild(doctorSay.container)
-
-    await this.doctorSay.newSay(
-      '你的表現超乎我的預期！看來缺水的問題對你來說也是游刃有餘。'
-    )
-    this.createInitFoods('water')
-    await this.doctorSay.newSay('你可以幫忙搜集水源嗎？村民快沒水可以用了。')
-
+    this.initGame()
+    await this.doctorSay.newSay('level 2!')
     this.startGame()
-    await wait(3000)
-    // doctorSay.hint('加油！', 3000)
-    await wait(10000)
-
-    // if snake is dead, then just leave this function
-    if (!this.snakeMoveTicker?.started) return
-
-    // first poison show up
-    const createdPoison = this.createPoison(0, 'fauset')
-    this.snakeMoveTicker.stop()
-    this.container.removeChild(this.menuButtons.container)
-    createdPoison.startHighlight()
-
-    await this.doctorSay.newSay(
-      '啊，村裡的輸水管線用太久，一直在漏水，你可以幫我把壞掉的水管給處理掉嗎？'
-    )
-    await this.doctorSay.newSay(
-      '同樣要注意，一個不小心撞到壞掉的水管，可能會釀嚴重災情！'
-    )
-
-    createdPoison.stopHighlight()
-    await this.countDown(3)
-    this.snakeMoveTicker.start()
-
-    this.createPoisonInterval('fauset')
   }
 
   async gameLevel2() {
-    // init game
-    this.createSnake()
-    this.createInitFoods('water')
+    this.initGame()
 
-    const doctorSay = new DoctorSay()
-    // doctorSay.hint('YOYO', 3000)
-    this.container.addChild(doctorSay.container)
-
-    await this.doctorSay.newSay(
-      '你的表現超乎我的預期！看來缺水的問題對你來說也是游刃有餘。'
-    )
-    await this.doctorSay.newSay('你可以幫忙搜集水源嗎？村民快沒水可以用了。')
-
+    await this.doctorSay.newSay('final level!')
     this.startGame()
-    await wait(3000)
-    // doctorSay.hint('加油！', 3000)
-    await wait(10000)
-    // first poison show up
-    const createdPoison = this.createPoison(0, 'fauset')
-    this.snakeMoveTicker.stop()
-    this.container.removeChild(this.menuButtons.container)
-    createdPoison.startHighlight()
-
-    await this.doctorSay.newSay(
-      '啊，村裡的輸水管線用太久，一直在漏水，你可以幫我把壞掉的水管給處理掉嗎？'
-    )
-    await this.doctorSay.newSay(
-      '同樣要注意，一個不小心撞到壞掉的水管，可能會釀嚴重災情！'
-    )
-
-    createdPoison.stopHighlight()
-    await this.countDown(3)
-    this.snakeMoveTicker.start()
-
-    this.createPoisonInterval('fauset')
   }
 
   // ===== start game =====
@@ -273,19 +208,23 @@ export class BalanceScene {
   startBalanceTicker() {
     this.balanceTicker = new PIXI.Ticker()
     this.balanceTicker.add(async () => {
-      this.deadMonitor()
+      this.gameStateMonitor()
     })
 
     this.balanceTicker.start()
   }
 
-  deadMonitor() {
+  gameStateMonitor() {
     if (
       this.seesawGroup.isDead ||
       (this.timer.time === 0 &&
         this.seesawGroup.leftTotalWeight !== this.seesawGroup.rightTotalWeight)
     ) {
       this.gameOver()
+    }
+
+    if (this.seesawGroup.isClear) {
+      this.gamePassed()
     }
   }
 
@@ -369,7 +308,6 @@ export class BalanceScene {
   async gameOver() {
     this.balanceTicker.stop()
     this.container.removeChild(this.menuButtons.container)
-    // window.removeEventListener('keydown', this.keyboardListener)
 
     this._pauseAllGameActivity()
     this.failGameHint()
@@ -394,29 +332,33 @@ export class BalanceScene {
     )
 
     this.container.addChild(gameFail.container)
+
     // reset doctorSay
     this.doctorSay.container.destroy()
     this.createDoctorSay()
 
-    // switch (this.gameLevel) {
-    //   case 1:
-    //     await this.doctorSay.newSay(
-    //       '雖然缺水的問題處理得不順利，但整體表現還算不錯！'
-    //     )
-    //     await this.doctorSay.newSay(
-    //       '恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
-    //     )
-    //     await this.doctorSay.newSay(
-    //       '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
-    //     )
-    //     break
-    // }
+    switch (this.gameLevel) {
+      case 1:
+        await this.doctorSay.newSay(
+          '雖然缺水的問題處理得不順利，但整體表現還算不錯！'
+        )
+        await this.doctorSay.newSay(
+          '恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
+        )
+        await this.doctorSay.newSay(
+          '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
+        )
+        break
+    }
 
     async function failGameChooseHandler(chosen) {
       switch (chosen) {
         case 'restart':
           this.container.removeChild(gameFail.container)
-          this.restartGame()
+
+          this.resetGameSetting()
+          this.initGame()
+          this.startGame()
           break
 
         case 'menu':
@@ -432,11 +374,10 @@ export class BalanceScene {
 
   // ===== game pass =====
   async gamePassed() {
-    this.snakeMoveTicker.stop()
+    this.balanceTicker.stop()
     this.container.removeChild(this.menuButtons.container)
-    // window.removeEventListener('keydown', this.keyboardListener)
 
-    this.resetGameSetting()
+    this._pauseAllGameActivity()
 
     this.successGameHint()
   }
@@ -465,6 +406,7 @@ export class BalanceScene {
     // reset doctorSay
     this.doctorSay.container.destroy()
     this.createDoctorSay()
+    await this.doctorSay.newSay('成功！！')
 
     if (this.gameLevel === 1) {
       await this.doctorSay.newSay('沒想到你這麼優秀，我真是找對人了！')
@@ -487,6 +429,9 @@ export class BalanceScene {
           this.container.removeChild(gameSuccess.container)
 
           this.gameLevel++
+
+          this.resetGameSetting()
+          // this.initGame()
           this.startGameFlow()
           break
 
@@ -510,20 +455,11 @@ export class BalanceScene {
     }
   }
 
-  restartGame() {
-    this.resetGameSetting()
-    this.initGame()
-    this.startGame()
-  }
-
   resetGameSetting() {
     this.balanceTicker.destroy()
     this.balanceTicker = null
 
     this.container.removeChild(this.menuButtons.container)
-
-    // init doctorSay
-    this.container.removeChild(this.doctorSay.container)
 
     this.gameStage.removeChild(
       this.seesawGroup.container,
