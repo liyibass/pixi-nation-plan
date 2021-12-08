@@ -3,6 +3,7 @@ import { Globals } from '../script/Globals'
 
 import { SeesawPivot } from '../components/SeesawPivot'
 import { SeesawBoard } from '../components/SeesawBoard'
+import { SeesawButton } from '../components/SeesawButton'
 const TIMER_WIDTH = 69
 
 export class SeesawGroup {
@@ -10,6 +11,7 @@ export class SeesawGroup {
     this.container = new PIXI.Container()
     this.container.name = 'seesawGroup'
     this.createSeesaw()
+    this.createSeesawButton()
     this.setPosition()
 
     this.leftSideFirstCard = null
@@ -35,13 +37,22 @@ export class SeesawGroup {
     this.pivot.container.x = this.board.container.width / 2
 
     this.container.addChild(this.board.container, this.pivot.container)
+  }
 
-    // const frame = new PIXI.Graphics()
-    // // frame.beginFill(0xaaaaaa, 0.1)
-    // frame.beginFill(0xffffff)
-    // frame.drawRect(0, 0, this.container.width, this.container.height)
-    // frame.endFill()
-    // this.container.addChild(frame)
+  createSeesawButton() {
+    this.leftButton = new SeesawButton()
+    this.rightButton = new SeesawButton()
+    this.container.addChild(
+      this.leftButton.container,
+      this.rightButton.container
+    )
+    this.leftButton.container.x = 0
+    this.leftButton.container.y =
+      this.pivot.container.height - this.leftButton.container.height
+    this.rightButton.container.x =
+      this.board.container.width - this.rightButton.container.width
+    this.rightButton.container.y =
+      this.pivot.container.height - this.rightButton.container.height
   }
 
   setPosition() {

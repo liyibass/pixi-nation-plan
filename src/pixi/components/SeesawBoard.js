@@ -76,7 +76,7 @@ export class SeesawBoard {
     const weightScaleGroup = new PIXI.Container()
 
     //  circle
-    const degreeScaleTexture = Globals.resources['circle']?.texture
+    const degreeScaleTexture = Globals.resources['seesawCircle']?.texture
     const degreeScaleSprite = new PIXI.Sprite(degreeScaleTexture)
 
     const scale = this.colorBarLength / 37
