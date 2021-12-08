@@ -267,16 +267,18 @@ export class WeightCard {
       }
     } else {
       this.originalPosition = {
-        x: this.x,
-        y: this.y,
+        x: this.container.x,
+        y: this.container.y,
       }
     }
+
+    console.log(this.originalPosition)
   }
 
   _resetToOriginalPosition() {
     if (!this.positionTicker?.started) {
-      // this.container.x = this.x
-      // this.container.y = this.y
+      this.container.x = this.x
+      this.container.y = this.y
     } else {
       this.container.x = this.originalPosition.x
       this.container.y = this.originalPosition.y
