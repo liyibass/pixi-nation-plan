@@ -108,14 +108,17 @@ export class SeesawBoard {
   createLoadText(side) {
     const leftLoadTextGroup = new PIXI.Container()
 
-    this[`${side}LoadText`] = new PIXI.Text(`${this[`${side}Load`]}`, {
+    this[`${side}LoadTextContainer`] = new PIXI.Text(`${this[`${side}Load`]}`, {
       fill: [0xffffff],
       fontSize: 10,
     })
-    this[`${side}MaxLoadText`] = new PIXI.Text(`${this[`${side}MaxLoad`]}`, {
-      fill: [0xffffff],
-      fontSize: 10,
-    })
+    this[`${side}MaxLoadTextContainer`] = new PIXI.Text(
+      `${this[`${side}MaxLoad`]}`,
+      {
+        fill: [0xffffff],
+        fontSize: 10,
+      }
+    )
 
     const devider = new PIXI.Graphics()
     const frameLineWeight = 1
@@ -130,17 +133,18 @@ export class SeesawBoard {
     devider.endFill()
 
     leftLoadTextGroup.addChild(
-      this[`${side}LoadText`],
+      this[`${side}LoadTextContainer`],
       devider,
-      this[`${side}MaxLoadText`]
+      this[`${side}MaxLoadTextContainer`]
     )
 
-    this[`${side}LoadText`].x = (TEXT_WIDTH - this[`${side}LoadText`].width) / 2
-    devider.y = this[`${side}LoadText`].height + 1
+    this[`${side}LoadTextContainer`].x =
+      (TEXT_WIDTH - this[`${side}LoadTextContainer`].width) / 2
+    devider.y = this[`${side}LoadTextContainer`].height + 1
 
-    this[`${side}MaxLoadText`].x =
-      (TEXT_WIDTH - this[`${side}MaxLoadText`].width) / 2
-    this[`${side}MaxLoadText`].y = devider.y + devider.height + 1
+    this[`${side}MaxLoadTextContainer`].x =
+      (TEXT_WIDTH - this[`${side}MaxLoadTextContainer`].width) / 2
+    this[`${side}MaxLoadTextContainer`].y = devider.y + devider.height + 1
 
     return leftLoadTextGroup
   }
@@ -151,15 +155,25 @@ export class SeesawBoard {
   }
 
   setLeftWeight(newWeight) {
-    this.leftWeightText.text = newWeight
+    this.leftWeight = newWeight
+    this.leftWeightText.text = this.leftWeight
 
     this.leftWeightText.x =
       (this.colorBarLength - this.leftWeightText.width) / 2
   }
   setRightWeight(newWeight) {
-    this.rightWeightText.text = newWeight
+    this.rightWeight = newWeight
+    this.rightWeightText.text = this.rightWeight
 
     this.rightWeightText.x =
       this.width - (this.colorBarLength + this.rightWeightText.width) / 2
+  }
+  setLeftLoad(newLoad) {
+    this.leftLoad = newLoad
+    this.leftLoadTextContainer.text = this.leftLoad
+  }
+  setRightLoad(newLoad) {
+    this.rightLoad = newLoad
+    this.rightLoadTextContainer.text = this.rightLoad
   }
 }

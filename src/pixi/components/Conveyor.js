@@ -44,10 +44,11 @@ export class Conveyor {
   }
 
   addNewWeightCard() {
-    const { name, weight } = this.getRandomWeight()
+    const { name, weight, load } = this.getRandomWeight()
     const weightCard = new WeightCard(
       weight,
       name,
+      load,
       this.weightCardHandler.bind(this)
     )
 
@@ -106,41 +107,49 @@ export class Conveyor {
         return {
           name: 'weightAdult1',
           weight: 100,
+          load: 1,
         }
       case 1:
         return {
           name: 'weightAdult2',
           weight: 100,
+          load: 1,
         }
       case 2:
         return {
           name: 'weightChild1',
           weight: 50,
+          load: 1,
         }
       case 3:
         return {
           name: 'weightChild2',
           weight: 50,
+          load: 1,
         }
       case 4:
         return {
           name: 'weightElder1',
           weight: 150,
+          load: 1,
         }
       case 5:
         return {
           name: 'weightElder2',
           weight: 150,
+          load: 1,
         }
       case 6:
         return {
           name: 'weightBus',
           weight: 500,
+          load: 4,
         }
       case 7:
         return {
           name: 'weightShop',
           weight: 750,
+          load: 4,
         }
     }
   }

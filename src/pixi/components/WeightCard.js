@@ -11,11 +11,12 @@ const { width: GAMESTAGE_WIDTH, height: GAMESTAGE_HEIGHT } =
   Globals.getSeesawGameStageDimention()
 
 export class WeightCard {
-  constructor(weight = 100, name = 'weightAdult', weightCardHandler) {
+  constructor(weight = 100, name = 'weightAdult', load = 1, weightCardHandler) {
     this.container = new PIXI.Container()
     this.container.name = 'weightCard'
-    this.weight = weight
     this.name = name
+    this.weight = weight
+    this.load = load
     this.weightCardHandler = weightCardHandler
     // linkList
     this.nextCard = null
