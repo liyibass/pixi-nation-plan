@@ -81,6 +81,7 @@ export class WeightCard {
     // remove ongoing ticker if existed
     if (this.positionTicker?.started) {
       this.positionTicker.destroy()
+      this.positionTicker = null
     }
 
     // calculate targetX
@@ -99,6 +100,7 @@ export class WeightCard {
         }
       } else {
         this.positionTicker.destroy()
+        this.positionTicker = null
       }
     })
 
@@ -258,7 +260,7 @@ export class WeightCard {
   }
 
   _rememberOriginalPosition() {
-    if (this.positionTicker.started) {
+    if (this.positionTicker?.started) {
       this.originalPosition = {
         x: this.container.x,
         y: this.container.y,
@@ -272,7 +274,7 @@ export class WeightCard {
   }
 
   _resetToOriginalPosition() {
-    if (!this.positionTicker.started) {
+    if (!this.positionTicker?.started) {
       // this.container.x = this.x
       // this.container.y = this.y
     } else {

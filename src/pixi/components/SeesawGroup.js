@@ -293,4 +293,8 @@ export class SeesawGroup {
       }
     }, 6000)
   }
+
+  clearClearCountDown() {
+    clearInterval(this.clearCountDown)
+  }
 }

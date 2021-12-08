@@ -82,13 +82,20 @@ export class Conveyor {
     startPositionCard(this.firstWeightCard)
 
     function startPositionCard(card) {
-      if (!card || !card?.positionTicker) return
+      try {
+        if (!card) return
 
-      // for handling start after pause
-      card.positionTicker.start()
+        // for handling start after pause
+        if (card?.positionTicker) {
+          card.positionTicker.start()
+        }
 
-      if (card.nextCard) {
-        startPositionCard(card.nextCard)
+        if (card.nextCard) {
+          startPositionCard(card.nextCard)
+        }
+      } catch (error) {
+        console.error(error)
+        console.log(card)
       }
     }
   }
@@ -97,13 +104,14 @@ export class Conveyor {
     this.stop = true
     clearTimeout(this.addNewCardTimeout)
 
-    console.log(this.firstWeightCard)
     stopPositioningCard(this.firstWeightCard)
 
     function stopPositioningCard(card) {
       if (!card) return
 
-      card.positionTicker.stop()
+      if (card?.positionTicker) {
+        card.positionTicker.stop()
+      }
 
       if (card.nextCard) {
         stopPositioningCard(card.nextCard)

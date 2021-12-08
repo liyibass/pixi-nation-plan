@@ -296,6 +296,7 @@ export class BalanceScene {
     this.timer.stopTimer()
     this.seesawGroup.stopSeesawGroup()
     this.seesawGroup.clearDeathCountDown()
+    this.seesawGroup.clearClearCountDown()
   }
 
   _resumeAllGameActivity() {
