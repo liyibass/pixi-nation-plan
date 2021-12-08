@@ -7,6 +7,7 @@ export class GameSuccess extends Stop {
   constructor(chooseHandler, button1Setting, button2Setting) {
     super(chooseHandler, button1Setting, button2Setting)
     this.init()
+    this.container.name = 'GameSuccess'
   }
 
   async init() {

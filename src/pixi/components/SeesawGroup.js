@@ -28,6 +28,8 @@ export class SeesawGroup {
 
     this.tick = 0
     this.prevTick = 0
+
+    this.isDead = false
   }
 
   createSeesaw() {
@@ -61,8 +63,8 @@ export class SeesawGroup {
   }
 
   getChoosedWeightCard(weightCard) {
-    console.log('DROP')
-    console.log(weightCard)
+    // console.log('DROP')
+    // console.log(weightCard)
 
     // add seesaw ref into card
     weightCard.seesawGroupRef = this
@@ -187,7 +189,7 @@ export class SeesawGroup {
 
   rotateBoard() {
     if (this.seesawRotateTicker?.started) {
-      this.seesawRotateTicker.destroy()
+      this.seesawRotateTicker.stop()
     }
 
     this.seesawRotateTicker = new PIXI.Ticker()
@@ -205,18 +207,20 @@ export class SeesawGroup {
         if (this.board.container.angle < LIMIT) {
           this.board.container.angle += 0.01 * speed
         } else {
+          this.seesawRotateTicker.stop()
           console.log('warning!')
-          this.seesawRotateTicker.destroy()
           this.rightButton.warning()
+          this.setDeathCountDown()
         }
       } else if (difference < 0) {
         this.seesawRotateTicker.start()
         if (this.board.container.angle > -LIMIT) {
           this.board.container.angle -= 0.01 * speed
         } else {
+          this.seesawRotateTicker.stop()
           console.log('warning!')
-          this.seesawRotateTicker.destroy()
           this.leftButton.warning()
+          this.setDeathCountDown()
         }
       } else if (difference === 0 && this.board.container.angle > 0) {
         this.seesawRotateTicker.start()
@@ -226,7 +230,7 @@ export class SeesawGroup {
         this.board.container.angle += 0.02
       } else {
         // this.board.container.angle = 0
-        this.seesawRotateTicker.destroy()
+        this.seesawRotateTicker.stop()
       }
 
       if (
@@ -240,5 +244,34 @@ export class SeesawGroup {
     })
 
     this.seesawRotateTicker.start()
+  }
+
+  stopSeesawGroup() {
+    if (this.seesawRotateTicker) {
+      this.seesawRotateTicker.stop()
+    }
+  }
+
+  startSeesawGroup() {
+    if (this.seesawRotateTicker) {
+      this.seesawRotateTicker.start()
+    }
+  }
+
+  setDeathCountDown() {
+    this.deathCountDown = setTimeout(() => {
+      if (
+        this.board.container.angle >= LIMIT ||
+        this.board.container.angle <= -LIMIT
+      ) {
+        this.isDead = true
+      } else {
+        clearInterval(this.deathCountDown)
+      }
+    }, 6000)
+  }
+
+  clearDeathCountDown() {
+    clearInterval(this.deathCountDown)
   }
 }

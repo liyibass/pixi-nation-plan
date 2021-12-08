@@ -32,7 +32,7 @@ export class BalanceScene {
     this.startGameFlow()
     // this.startGameTest()
   }
-  // ===== init game =====
+  // ===== init system =====
   createBalanceScene() {
     this.createBackground()
     this.createItems()
@@ -80,8 +80,8 @@ export class BalanceScene {
     const gameStageFrame = new PIXI.Graphics()
     const frameLineWeight = 1
     gameStageFrame.lineStyle(frameLineWeight, 0xdddddd, 0)
-    // gameStageFrame.beginFill(0xaaaaaa)
-    gameStageFrame.beginFill(0x92b79c)
+    gameStageFrame.beginFill(0xaaaaaa)
+    // gameStageFrame.beginFill(0x92b79c)
 
     /*
      * NOTE: We use gameStageFrame(which is a Graphics) to bump up outer container
@@ -105,7 +105,12 @@ export class BalanceScene {
     this.container.addChild(this.doctorSay.container)
   }
 
-  // ===== seesaw =====
+  // ===== init game =====
+  initGame() {
+    this.createSeesaw()
+    this.createConveyor()
+    this.createTimer()
+  }
   createSeesaw() {
     this.seesawGroup = new SeesawGroup()
 
@@ -154,7 +159,7 @@ export class BalanceScene {
     this.createSeesaw()
     this.createConveyor()
     this.createTimer()
-    this.timer.startTimer()
+
     await this.doctorSay.newSay('現在有些人想要搬來你的村莊了')
     await this.doctorSay.newSay('有沒有看到那個翹翹板？')
 
@@ -162,6 +167,8 @@ export class BalanceScene {
       '左邊、右邊各有 4 個格子，每格最多可以放 4 個人'
     )
     await this.doctorSay.newSay('你可以先試著放看看，就是這麼簡單')
+
+    this.startGame()
   }
 
   async gameLevel1() {
@@ -240,31 +247,6 @@ export class BalanceScene {
     this.createPoisonInterval('fauset')
   }
 
-  initGame() {
-    this.createSnake()
-
-    switch (this.gameLevel) {
-      case 0:
-        this.createInitFoods('garbage')
-        this.createPoisonInterval('incinerator')
-        this.createFoodScore('incinerator')
-        break
-
-      default:
-      case 1:
-        this.createInitFoods('water')
-        this.createPoisonInterval('fauset')
-        this.createFoodScore('fauset')
-        break
-
-      case 2:
-        this.createInitFoods('all')
-        this.createPoisonInterval('all')
-        this.createFoodScore('all')
-        break
-    }
-  }
-
   // ===== start game =====
   async countDown(countNumber) {
     const countContainer = new CountDown(countNumber)
@@ -280,21 +262,35 @@ export class BalanceScene {
 
   async startGame() {
     console.log('game started')
-    await this.countDown(3)
 
-    this.createKeyboardListener()
-    this.startSnakeMoveTicker()
+    await this.countDown(3)
+    this.conveyor.startConveyor()
+    this.timer.startTimer()
+
+    this.startBalanceTicker()
   }
 
-  startSnakeMoveTicker() {
-    this.snakeMoveTicker = new PIXI.Ticker()
-    this.snakeMoveTicker.add(async () => {})
+  startBalanceTicker() {
+    this.balanceTicker = new PIXI.Ticker()
+    this.balanceTicker.add(async () => {
+      this.deadMonitor()
+    })
 
-    this.snakeMoveTicker.start()
+    this.balanceTicker.start()
+  }
+
+  deadMonitor() {
+    if (
+      this.seesawGroup.isDead ||
+      (this.timer.time === 0 &&
+        this.seesawGroup.leftTotalWeight !== this.seesawGroup.rightTotalWeight)
+    ) {
+      this.gameOver()
+    }
   }
 
   createMenuButtons() {
-    const menuPosition = Globals.getSnakeMenuPosition()
+    const menuPosition = Globals.getSnakeMenuPosition(2)
 
     this.menuButtons = new TwoButtons(
       menuChosenHandler.bind(this),
@@ -322,8 +318,10 @@ export class BalanceScene {
     }
   }
 
+  // ===== game pause =====
   pauseGame() {
-    this.snakeMoveTicker.stop()
+    // this.snakeMoveTicker.stop()
+    this._pauseAllGameActivity()
     this.container.removeChild(this.menuButtons.container)
 
     const pauseGame = new PauseGame(
@@ -351,30 +349,29 @@ export class BalanceScene {
     console.log('resume game')
     await this.countDown(3)
 
-    this.snakeMoveTicker.start()
+    this._resumeAllGameActivity()
   }
 
-  async gamePassed() {
-    this.snakeMoveTicker.stop()
-    this.container.removeChild(this.menuButtons.container)
-    // window.removeEventListener('keydown', this.keyboardListener)
-
-    this.resetGameSetting()
-
-    this.successGameHint()
+  _pauseAllGameActivity() {
+    this.conveyor.stopConveyor()
+    this.timer.stopTimer()
+    this.seesawGroup.stopSeesawGroup()
+    this.seesawGroup.clearDeathCountDown()
   }
 
+  _resumeAllGameActivity() {
+    this.conveyor.startConveyor()
+    this.timer.startTimer()
+    this.seesawGroup.startSeesawGroup()
+  }
+
+  // ===== game over =====
   async gameOver() {
-    this.snakeMoveTicker.stop()
+    this.balanceTicker.stop()
     this.container.removeChild(this.menuButtons.container)
     // window.removeEventListener('keydown', this.keyboardListener)
 
-    await this.crashAnimation()
-    await wait(500)
-    await this.deadAnimation()
-
-    this.resetGameSetting()
-
+    this._pauseAllGameActivity()
     this.failGameHint()
   }
 
@@ -401,19 +398,19 @@ export class BalanceScene {
     this.doctorSay.container.destroy()
     this.createDoctorSay()
 
-    switch (this.gameLevel) {
-      case 1:
-        await this.doctorSay.newSay(
-          '雖然缺水的問題處理得不順利，但整體表現還算不錯！'
-        )
-        await this.doctorSay.newSay(
-          '恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
-        )
-        await this.doctorSay.newSay(
-          '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
-        )
-        break
-    }
+    // switch (this.gameLevel) {
+    //   case 1:
+    //     await this.doctorSay.newSay(
+    //       '雖然缺水的問題處理得不順利，但整體表現還算不錯！'
+    //     )
+    //     await this.doctorSay.newSay(
+    //       '恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
+    //     )
+    //     await this.doctorSay.newSay(
+    //       '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
+    //     )
+    //     break
+    // }
 
     async function failGameChooseHandler(chosen) {
       switch (chosen) {
@@ -431,6 +428,17 @@ export class BalanceScene {
           break
       }
     }
+  }
+
+  // ===== game pass =====
+  async gamePassed() {
+    this.snakeMoveTicker.stop()
+    this.container.removeChild(this.menuButtons.container)
+    // window.removeEventListener('keydown', this.keyboardListener)
+
+    this.resetGameSetting()
+
+    this.successGameHint()
   }
 
   async successGameHint() {
@@ -503,39 +511,25 @@ export class BalanceScene {
   }
 
   restartGame() {
-    this.snakeGroup.destroy()
+    this.resetGameSetting()
     this.initGame()
     this.startGame()
   }
 
   resetGameSetting() {
-    this.snakeMoveTicker.destroy()
-    this.snakeMoveTicker = null
+    this.balanceTicker.destroy()
+    this.balanceTicker = null
 
     this.container.removeChild(this.menuButtons.container)
 
-    window.removeEventListener('keydown', this.keyboardListener)
-
-    // clear food and poison
-    this.snakeFoodArray = []
-    this.snakePoisionArray = []
-    this.createFoodQuery = []
-    this.createPoisonQuery = []
-    this.score = {
-      fauset: 0,
-      incinerator: 0,
-    }
-    this.foodScore.container.destroy()
-
-    this.snakeFoodGroup.removeChildren()
-    this.snakePoisonGroup.removeChildren()
-
-    this.snakeArray = []
-    this.snakeGroup.destroy()
-    this.moveDirection = ['right']
-
     // init doctorSay
     this.container.removeChild(this.doctorSay.container)
+
+    this.gameStage.removeChild(
+      this.seesawGroup.container,
+      this.timer.container,
+      this.conveyor.container
+    )
   }
 
   goToMenu() {

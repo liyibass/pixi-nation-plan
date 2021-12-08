@@ -24,8 +24,9 @@ export class Conveyor {
     this.conveyorCardCount = 0
     this.showedCardCount = 0
 
+    this.stop = false
+
     this.createConveyor()
-    this.startConveyor()
 
     // this.container.pivot.x = this.container.width / 2
     // this.container.pivot.y = this.colorBarHeight
@@ -75,16 +76,46 @@ export class Conveyor {
   }
 
   startConveyor() {
+    this.stop = false
     this._addWeightCardContinously()
+
+    startPositionCard(this.firstWeightCard)
+
+    function startPositionCard(card) {
+      if (!card || !card?.positionTicker) return
+
+      // for handling start after pause
+      card.positionTicker.start()
+
+      if (card.nextCard) {
+        startPositionCard(card.nextCard)
+      }
+    }
   }
 
   stopConveyor() {
+    this.stop = true
     clearTimeout(this.addNewCardTimeout)
+
+    console.log(this.firstWeightCard)
+    stopPositioningCard(this.firstWeightCard)
+
+    function stopPositioningCard(card) {
+      if (!card) return
+
+      card.positionTicker.stop()
+
+      if (card.nextCard) {
+        stopPositioningCard(card.nextCard)
+      }
+    }
   }
 
   _addWeightCardContinously() {
     const createNewWeightCardTimeout = () => {
       this.addNewWeightCardTimeout = setTimeout(() => {
+        if (this.stop) return
+
         if (
           this.conveyorCardCount < 7 &&
           this.showedCardCount < TOTAL_CARD_COUNT
@@ -155,13 +186,14 @@ export class Conveyor {
   }
 
   weightCardHandler(removedWeightCard) {
-    console.log(removedWeightCard)
     if (removedWeightCard.isOnConveyor) {
       console.log('if in weightCardHandler')
 
       // align linkList
       if (removedWeightCard.prevCard) {
         removedWeightCard.prevCard.nextCard = removedWeightCard.nextCard
+      } else if (removedWeightCard.nextCard) {
+        this.firstWeightCard = removedWeightCard.nextCard
       } else {
         this.firstWeightCard = null
       }

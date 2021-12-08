@@ -883,7 +883,7 @@ export class SnakeScene {
   }
 
   createMenuButtons() {
-    const menuPosition = Globals.getSnakeMenuPosition()
+    const menuPosition = Globals.getSnakeMenuPosition(2)
 
     this.menuButtons = new TwoButtons(
       menuChosenHandler.bind(this),

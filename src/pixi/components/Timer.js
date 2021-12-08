@@ -47,4 +47,8 @@ export class Timer {
       this.timerText.x = (this.timerBg.width - this.timerText.width) / 2
     }, 1000)
   }
+
+  stopTimer() {
+    clearInterval(this.timerInterval)
+  }
 }

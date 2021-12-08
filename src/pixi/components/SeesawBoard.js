@@ -4,14 +4,13 @@ import { Globals } from '../script/Globals'
 const TEXT_WIDTH = 16
 
 export class SeesawBoard {
-  constructor(weight = 0, maxWeight = 32) {
+  constructor() {
     this.container = new PIXI.Container()
-    this.weight = weight
-    this.maxWeight = maxWeight
+
     this.leftLoad = 0
-    this.leftMaxLoad = 32
+    this.leftMaxLoad = 16
     this.rightLoad = 0
-    this.rightMaxLoad = 32
+    this.rightMaxLoad = 16
 
     this.leftWeight = 0
     this.rightWeight = 0
@@ -26,6 +25,8 @@ export class SeesawBoard {
 
     this.container.pivot.x = this.container.width / 2
     this.container.pivot.y = this.colorBarHeight
+
+    this.dead = false
 
     // setInterval(() => {
     //   this.container.angle++
@@ -147,11 +148,6 @@ export class SeesawBoard {
     this[`${side}MaxLoadTextContainer`].y = devider.y + devider.height + 1
 
     return leftLoadTextGroup
-  }
-
-  increaseWeight(increaseWeight) {
-    this.weight += increaseWeight
-    this.weightText.text = this.weight
   }
 
   setLeftWeight(newWeight) {

@@ -12,5 +12,6 @@ export class PauseGame extends Stop {
   init() {
     this.createMask()
     this.createTwoButtons()
+    this.container.name = 'PauseGame'
   }
 }
