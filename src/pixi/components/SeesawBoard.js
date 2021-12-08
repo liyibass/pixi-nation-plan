@@ -171,9 +171,14 @@ export class SeesawBoard {
   setLeftLoad(newLoad) {
     this.leftLoad = newLoad
     this.leftLoadTextContainer.text = this.leftLoad
+    console.log(this.leftLoadTextContainer)
+    this.leftLoadTextContainer.x =
+      (TEXT_WIDTH - this.leftLoadTextContainer.width) / 2
   }
   setRightLoad(newLoad) {
     this.rightLoad = newLoad
     this.rightLoadTextContainer.text = this.rightLoad
+    this.rightLoadTextContainer.x =
+      (TEXT_WIDTH - this.rightLoadTextContainer.width) / 2
   }
 }

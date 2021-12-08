@@ -300,7 +300,7 @@ export class WeightCard {
         seesawGameStageDimention.y -
         seesawGameStageDimention.height +
         Globals.SEESAW_HEIGHT -
-        20,
+        60,
     }
   }
 

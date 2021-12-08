@@ -79,8 +79,8 @@ export class BalanceScene {
     const gameStageFrame = new PIXI.Graphics()
     const frameLineWeight = 1
     gameStageFrame.lineStyle(frameLineWeight, 0xdddddd, 0)
-    gameStageFrame.beginFill(0xaaaaaa)
-    // gameStageFrame.beginFill(0x92b79c)
+    // gameStageFrame.beginFill(0xaaaaaa)
+    gameStageFrame.beginFill(0x92b79c)
 
     /*
      * NOTE: We use gameStageFrame(which is a Graphics) to bump up outer container
@@ -107,10 +107,8 @@ export class BalanceScene {
   // ===== seesaw =====
   createSeesaw() {
     this.seesawGroup = new SeesawGroup()
-    // console.log(this.gameStage.width)
-    // console.log(seesawGroup.container.width)
 
-    this.seesawGroup.container.x = this.gameStage.width / 2
+    this.seesawGroup.container.x = this.seesawGroup.container.width / 2
     this.seesawGroup.container.y = this.gameStage.height
     this.gameStage.addChild(this.seesawGroup.container)
   }

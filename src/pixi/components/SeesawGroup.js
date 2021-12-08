@@ -5,6 +5,7 @@ import { SeesawPivot } from '../components/SeesawPivot'
 import { SeesawBoard } from '../components/SeesawBoard'
 import { SeesawButton } from '../components/SeesawButton'
 const TIMER_WIDTH = 69
+const LIMIT = 17
 
 export class SeesawGroup {
   constructor() {
@@ -31,12 +32,11 @@ export class SeesawGroup {
 
   createSeesaw() {
     this.board = new SeesawBoard()
-    this.board.container.x = this.board.width / 2
-
     this.pivot = new SeesawPivot()
-    this.pivot.container.x = this.board.container.width / 2
-
     this.container.addChild(this.board.container, this.pivot.container)
+
+    this.board.container.x = this.container.width / 2
+    this.pivot.container.x = this.board.container.width / 2
   }
 
   createSeesawButton() {
@@ -47,12 +47,10 @@ export class SeesawGroup {
       this.rightButton.container
     )
     this.leftButton.container.x = 0
-    this.leftButton.container.y =
-      this.pivot.container.height - this.leftButton.container.height
-    this.rightButton.container.x =
-      this.board.container.width - this.rightButton.container.width
-    this.rightButton.container.y =
-      this.pivot.container.height - this.rightButton.container.height
+    this.leftButton.container.y = this.pivot.container.height
+
+    this.rightButton.container.x = this.board.container.width
+    this.rightButton.container.y = this.pivot.container.height
   }
 
   setPosition() {
@@ -204,19 +202,21 @@ export class SeesawGroup {
 
       if (difference > 0) {
         this.seesawRotateTicker.start()
-        if (this.board.container.angle < 20) {
+        if (this.board.container.angle < LIMIT) {
           this.board.container.angle += 0.01 * speed
         } else {
           console.log('warning!')
           this.seesawRotateTicker.destroy()
+          this.rightButton.warning()
         }
       } else if (difference < 0) {
         this.seesawRotateTicker.start()
-        if (this.board.container.angle > -20) {
+        if (this.board.container.angle > -LIMIT) {
           this.board.container.angle -= 0.01 * speed
         } else {
           console.log('warning!')
           this.seesawRotateTicker.destroy()
+          this.leftButton.warning()
         }
       } else if (difference === 0 && this.board.container.angle > 0) {
         this.seesawRotateTicker.start()
@@ -227,6 +227,15 @@ export class SeesawGroup {
       } else {
         // this.board.container.angle = 0
         this.seesawRotateTicker.destroy()
+      }
+
+      if (
+        this.board.container.angle < LIMIT &&
+        this.board.container.angle > -LIMIT &&
+        (this.leftButton.isWarning || this.rightButton.isWarning)
+      ) {
+        this.leftButton.unWarning()
+        this.rightButton.unWarning()
       }
     })
 
