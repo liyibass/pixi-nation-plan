@@ -9,6 +9,8 @@ export class Player {
     this.setupPosition()
     // this.setInteractive()
     this.dragging = false
+
+    this.isJumping = false
   }
 
   createSprite() {
@@ -23,42 +25,39 @@ export class Player {
     this.sprite.y = this.y
   }
 
-  // setInteractive() {
-  //   this.sprite.interactive = true
-
-  //   this.sprite.on('mousedown', this.onTouchStart.bind(this))
-  //   this.sprite.on('mousemove', this.onTouchMove.bind(this))
-  // }
-
-  // onTouchStart(event) {
-  //   // 1. remember the position of the mouse cursor
-  //   this.touchPosition = {
-  //     x: event.data.global.x,
-  //     y: event.data.global.y,
-  //   }
-
-  //   // 2.set the dragging state for this sprite
-  //   this.dragging = !this.dragging
-  // }
-  // onTouchMove(event) {
-  //   if (!this.dragging) return
-
-  //   // 1. get the corrdinates of ther cursor
-  //   const currentPosition = {
-  //     x: event.data.global.x,
-  //     y: event.data.global.y,
-  //   }
-
-  //   // 3. apply the rusulting offset
-  //   this.sprite.x = currentPosition.x
-  //   this.sprite.y = currentPosition.y
-  // }
-
   async lookAround(time = 2) {
     for (let i = 0; i < time; i++) {
       this.sprite.scale.x *= -1
       await wait(600)
     }
+  }
+
+  jump() {
+    if (this.isJumping) return
+    this.isJumping = true
+
+    let time = 0
+    const v0 = 20
+    const gravity = 1
+    const direction = -1 //to Top
+    const jumpAtY = this.sprite.y
+
+    this.jumpTicker = new PIXI.Ticker()
+    this.jumpTicker.add((deltaMs) => {
+      const jumpHeight = v0 * time + (1 / 2) * -gravity * Math.pow(time, 2)
+
+      if (jumpHeight < 0) {
+        this.isJumping = false
+        this.jumpTicker.stop()
+        this.sprite.y = jumpAtY
+        return
+      }
+
+      this.sprite.y = jumpAtY + jumpHeight * direction
+      time += deltaMs
+    })
+
+    this.jumpTicker.start()
   }
 }
 

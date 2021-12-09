@@ -7,6 +7,10 @@ import { Globals } from '../script/Globals'
 import { Scene } from './Scene'
 
 const BLOCK_WIDTH = 16
+
+const PLAYER_SPEED = 4
+const BOARD_SPEED = 3
+const BACKGROUND_SPEED = 2
 // const gameStageDimention = Globals.getSeesawGameStageDimention()
 
 export class RunScene extends Scene {
@@ -45,7 +49,7 @@ export class RunScene extends Scene {
     const frameLineWeight = 1
     gameStageFrame.lineStyle(frameLineWeight, 0xdddddd, 0)
     // gameStageFrame.beginFill(0x00000)
-    gameStageFrame.beginFill(0x0e3461)
+    gameStageFrame.beginFill(0x0e427f)
 
     /*
      * NOTE: We use gameStageFrame(which is a Graphics) to bump up outer container
@@ -163,9 +167,6 @@ export class RunScene extends Scene {
   }
 
   moveHandler() {
-    const PLAYER_SPEED = 4
-    const BACKGROUND_SPEED = 2
-    const BOARD_SPEED = 3
     //Capture the keyboard arrow keys
     this.left = this.keyboard('ArrowLeft')
     this.up = this.keyboard('ArrowUp')
@@ -178,6 +179,7 @@ export class RunScene extends Scene {
     this.city.cityBackground.container.vx = 0
 
     this.right.press = () => {
+      this.player.sprite.scale.x = 1
       this.player.sprite.vx = PLAYER_SPEED
       this.player.sprite.vy = 0
 
@@ -194,6 +196,7 @@ export class RunScene extends Scene {
     }
 
     this.left.press = () => {
+      this.player.sprite.scale.x = -1
       this.player.sprite.vx = -PLAYER_SPEED
       this.player.sprite.vy = 0
 
@@ -211,29 +214,34 @@ export class RunScene extends Scene {
 
     //Up
     this.up.press = () => {
-      this.player.sprite.vy = -5
-      this.player.sprite.vx = 0
+      // this.player.sprite.vy = -5
+      // this.player.sprite.vx = 0
+
+      if (!this.player.isJumping) {
+        this.player.jump()
+      }
     }
     this.up.release = () => {
-      if (!this.down.isDown && this.player.sprite.vx === 0) {
-        this.player.sprite.vy = 0
-      }
+      // if (!this.down.isDown && this.player.sprite.vx === 0) {
+      //   this.player.sprite.vy = 0
+      // }
     }
 
     //Down
     this.down.press = () => {
-      this.player.sprite.vy = 5
-      this.player.sprite.vx = 0
+      // this.player.sprite.vy = 5
+      // this.player.sprite.vx = 0
     }
     this.down.release = () => {
-      if (!this.up.isDown && this.player.sprite.vx === 0) {
-        this.player.sprite.vy = 0
-      }
+      // if (!this.up.isDown && this.player.sprite.vx === 0) {
+      //   this.player.sprite.vy = 0
+      // }
     }
   }
 
   _startSceneTicker() {
     this.sceneTicker = new PIXI.Ticker()
+
     this.sceneTicker.add(async () => {
       if (
         this.player.sprite.x >= this.gameStageWidth / 2 &&
@@ -251,6 +259,11 @@ export class RunScene extends Scene {
       this.player.sprite.x += this.player.sprite.vx
 
       this.player.sprite.y += this.player.sprite.vy
+
+      if (this.player.isJumping && this.player.sprite.y <= 0) {
+        this.player.isJumping = false
+        this.player.sprite.y = 0
+      }
 
       this.city.cityBoard.container.x += this.city.cityBoard.container.vx
       this.city.cityBackground.container.x +=
