@@ -1,16 +1,11 @@
 import * as PIXI from 'pixi.js'
 window.PIXI = PIXI
-// import _ from 'lodash'
+
 import { Globals } from '../script/Globals'
-
-import { PauseGame } from '../components/PauseGame'
-
-import { SeesawGroup } from '../components/SeesawGroup'
-import { Conveyor } from '../components/Conveyor'
-import { Timer } from '../components/Timer'
 import { Scene } from './Scene'
-
-// import { SnakeBody } from '../components/SnakeBody'
+import { Conveyor } from '../components/Conveyor'
+import { SeesawGroup } from '../components/SeesawGroup'
+import { Timer } from '../components/Timer'
 
 const BLOCK_WIDTH = 16
 
@@ -177,39 +172,6 @@ export class BalanceScene extends Scene {
   }
 
   // ===== game pause =====
-  pauseGame() {
-    // this.snakeMoveTicker.stop()
-    this._pauseAllGameActivity()
-    this.container.removeChild(this.menuButtons.container)
-
-    const pauseGame = new PauseGame(
-      pauseGameChooseHandler.bind(this),
-      { text: '繼續', color: 0xffffff, bgColor: '0x3B6BD6', value: 'resume' },
-      { text: '回主畫面', color: 0x000000, bgColor: '0xC4C4C4', value: 'menu' }
-    )
-
-    this.container.addChild(pauseGame.container)
-
-    function pauseGameChooseHandler(chosen) {
-      switch (chosen) {
-        case 'resume':
-          this.container.removeChild(pauseGame.container)
-          this.resumeGame()
-          break
-
-        default:
-          break
-      }
-    }
-  }
-
-  async resumeGame() {
-    console.log('resume game')
-    await this._countDown(3)
-
-    this._resumeAllGameActivity()
-  }
-
   _pauseAllGameActivity() {
     this.conveyor.stopConveyor()
     this.timer.stopTimer()

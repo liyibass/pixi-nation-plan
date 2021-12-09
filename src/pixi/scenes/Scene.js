@@ -11,7 +11,6 @@ import { PauseGame } from '../components/PauseGame'
 import { GameFail } from '../components/GameFail'
 import { GameSuccess } from '../components/GameSuccess'
 
-// import { SnakeBody } from '../components/SnakeBody'
 const BLOCK_WIDTH = 16
 
 export class Scene {
@@ -103,7 +102,7 @@ export class Scene {
 
   // ===== game pause =====
   pauseGame() {
-    // this.snakeMoveTicker.stop()
+    console.log('pause game')
     this._pauseAllGameActivity()
     this.container.removeChild(this.menuButtons.container)
 
