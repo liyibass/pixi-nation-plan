@@ -15,7 +15,7 @@ export class Player {
     const texture = Globals.resources['player']?.texture
 
     this.sprite = new PIXI.Sprite(texture)
-    this.sprite.anchor.set(0.5, 0.5)
+    this.sprite.anchor.set(0.5, 1)
   }
 
   setupPosition() {

@@ -4,7 +4,7 @@ import { WeightCard } from './WeightCard'
 
 const TIMER_WIDTH = 69
 const TOP_PADDING = 31
-const TOTAL_CARD_COUNT = 10
+const TOTAL_CARD_COUNT = 32
 
 // const TOP_PADDING = 0
 export class Conveyor {

@@ -5,6 +5,7 @@ import * as PIXI from 'pixi.js'
 import { IntroScene } from './IntroScene'
 import { SnakeScene } from './SnakeScene'
 import { BalanceScene } from './BalanceScene'
+import { RunScene } from './RunScene'
 
 export class MainScene {
   constructor() {
@@ -42,6 +43,16 @@ export class MainScene {
     this.container.addChild(balanceScene.container)
   }
 
+  createRunScene() {
+    // remove unuse scene
+    this.container.removeChildren()
+    this.container.removeAllListeners()
+
+    // create snake scene
+    const runScene = new RunScene()
+    this.container.addChild(runScene.container)
+  }
+
   selectStage(stageName) {
     console.log('clicked ' + stageName)
     switch (stageName) {
@@ -50,6 +61,9 @@ export class MainScene {
         break
       case 'balance':
         this.createBalanceScene()
+        break
+      case 'run':
+        this.createRunScene()
         break
 
       default:

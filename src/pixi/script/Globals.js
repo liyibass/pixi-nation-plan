@@ -33,7 +33,7 @@ export const Globals = {
     const groundGroupDimention = this.getGroundDimention()
     return {
       x: groundGroupDimention.x - 60,
-      y: groundGroupDimention.y,
+      y: groundGroupDimention.y + 35,
     }
   },
   getGameStageDimention: function () {
