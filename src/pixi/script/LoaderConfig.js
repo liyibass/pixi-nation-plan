@@ -28,6 +28,15 @@ import weightBus from '../assets/images/weightBus.png'
 import weightShop from '../assets/images/weightShop.png'
 import seesawCircle from '../assets/images/seesawCircle.png'
 import seesawButton from '../assets/images/seesawButton.png'
+import boardHsinchu from '../assets/images/boardHsinchu.png'
+import boardKaohsiung from '../assets/images/boardKaohsiung.png'
+import boardMiaoli from '../assets/images/boardMiaoli.png'
+import boardTaoyuan from '../assets/images/boardTaoyuan.png'
+import boardYilan from '../assets/images/boardYilan.png'
+import boardYunlin from '../assets/images/boardYunlin.png'
+import factory1 from '../assets/images/factory1.png'
+import factory2 from '../assets/images/factory2.png'
+import factory3 from '../assets/images/factory3.png'
 
 export const LoaderConfig = {
   player,
@@ -60,4 +69,13 @@ export const LoaderConfig = {
   weightShop,
   seesawCircle,
   seesawButton,
+  boardHsinchu,
+  boardKaohsiung,
+  boardMiaoli,
+  boardTaoyuan,
+  boardYilan,
+  boardYunlin,
+  factory1,
+  factory2,
+  factory3,
 }

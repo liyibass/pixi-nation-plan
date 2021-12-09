@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Player } from '../components/Player'
+import { RunBgLayer } from '../components/RunBgLayer'
 window.PIXI = PIXI
 
 import { Globals } from '../script/Globals'
@@ -17,7 +18,7 @@ export class RunScene extends Scene {
   createScene() {
     this._createBackground(0x0e427f)
     this._createGameStage()
-    this._createGroundBackground()
+    // this._createGroundBackground()
     this._createItems()
 
     this._createDoctorSay()
@@ -35,6 +36,7 @@ export class RunScene extends Scene {
     this.totalJ = Math.floor(this.gameStageHeight / BLOCK_WIDTH)
 
     this.gameStage = new PIXI.Container()
+    this.gameStage.name = 'gameStage'
 
     // create a color region
     const gameStageFrame = new PIXI.Graphics()
@@ -84,6 +86,7 @@ export class RunScene extends Scene {
   // ===== init game =====
   initGame() {
     this._createPlayer()
+    this._createBgLayer()
   }
 
   _createPlayer() {
@@ -92,6 +95,11 @@ export class RunScene extends Scene {
       y: this.gameStageHeight,
     })
     this.gameStage.addChild(this.player.sprite)
+  }
+
+  _createBgLayer() {
+    this.backgroundLayer = new RunBgLayer()
+    this.gameStage.addChild(this.backgroundLayer.container)
   }
 
   // ===== game flow =====
