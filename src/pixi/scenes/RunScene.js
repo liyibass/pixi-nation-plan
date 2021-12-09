@@ -16,6 +16,7 @@ const BACKGROUND_SPEED = 2
 export class RunScene extends Scene {
   constructor() {
     super()
+    this.currentCityIndex = 0
     this.createScene()
     this.startGameFlow()
   }
@@ -91,7 +92,7 @@ export class RunScene extends Scene {
 
   // ===== init game =====
   initGame() {
-    this._createBuildingLayer()
+    this._createCity(this.currentCityIndex)
     this._createPlayer()
   }
 
@@ -103,15 +104,26 @@ export class RunScene extends Scene {
     this.gameStage.addChild(this.player.sprite)
   }
 
-  _createBuildingLayer() {
-    const city = new City(0)
-    this.city = city
-    console.log(this.city)
+  _createCity() {
+    this.cityLayer = new PIXI.Container()
+    this.boardLayer = new PIXI.Container()
 
-    this.gameStage.addChild(this.city.cityBackground.container)
-    this.gameStage.addChild(this.city.cityBoard.container)
-    this.city.cityBackground.container.x = this.gameStageWidth
-    this.city.cityBoard.container.x = this.gameStageWidth * 1.5
+    for (let i = 0; i < 6; i++) {
+      const city = new City(i)
+
+      let interval = (i === 0 ? 0 : 1 * (this.gameStageWidth * 1)) / 3
+      const offset = this.gameStageWidth / 4
+      city.cityBackground.container.x =
+        this.cityLayer.width + this.gameStageWidth + interval
+      city.cityBoard.container.x =
+        ((this.cityLayer.width + this.gameStageWidth + interval) * 3) / 2 -
+        offset
+
+      this.cityLayer.addChild(city.cityBackground.container)
+      this.boardLayer.addChild(city.cityBoard.container)
+    }
+
+    this.gameStage.addChild(this.cityLayer, this.boardLayer)
   }
 
   // ===== game flow =====
@@ -175,23 +187,24 @@ export class RunScene extends Scene {
 
     this.player.sprite.vx = 0
     this.player.sprite.vy = 0
-    this.city.cityBoard.container.vx = 0
-    this.city.cityBackground.container.vx = 0
+
+    this.cityLayer.vx = 0
+    this.boardLayer.vx = 0
 
     this.right.press = () => {
       this.player.sprite.scale.x = 1
       this.player.sprite.vx = PLAYER_SPEED
       this.player.sprite.vy = 0
 
-      this.city.cityBoard.container.vx = -BOARD_SPEED
-      this.city.cityBackground.container.vx = -BACKGROUND_SPEED
+      this.cityLayer.vx = -BACKGROUND_SPEED
+      this.boardLayer.vx = -BOARD_SPEED
     }
     this.right.release = () => {
       if (!this.left.isDown && this.player.sprite.vy === 0) {
         this.player.sprite.vx = 0
 
-        this.city.cityBoard.container.vx = 0
-        this.city.cityBackground.container.vx = 0
+        this.cityLayer.vx = 0
+        this.boardLayer.vx = 0
       }
     }
 
@@ -200,15 +213,15 @@ export class RunScene extends Scene {
       this.player.sprite.vx = -PLAYER_SPEED
       this.player.sprite.vy = 0
 
-      this.city.cityBoard.container.vx = BOARD_SPEED
-      this.city.cityBackground.container.vx = BACKGROUND_SPEED
+      this.cityLayer.vx = BACKGROUND_SPEED
+      this.boardLayer.vx = BOARD_SPEED
     }
     this.left.release = () => {
       if (!this.right.isDown && this.player.sprite.vy === 0) {
         this.player.sprite.vx = 0
 
-        this.city.cityBoard.container.vx = 0
-        this.city.cityBackground.container.vx = 0
+        this.cityLayer.vx = 0
+        this.boardLayer.vx = 0
       }
     }
 
@@ -253,8 +266,6 @@ export class RunScene extends Scene {
         this.left.isDown
       ) {
         this.player.sprite.vx = 0
-        // this.city.cityBoard.container.vx = 0
-        // this.city.cityBackground.container.vx = 0
       }
       this.player.sprite.x += this.player.sprite.vx
 
@@ -265,25 +276,8 @@ export class RunScene extends Scene {
         this.player.sprite.y = 0
       }
 
-      this.city.cityBoard.container.x += this.city.cityBoard.container.vx
-      this.city.cityBackground.container.x +=
-        this.city.cityBackground.container.vx
-
-      // console.log('ticker on')
-      // switch (this.direction) {
-      //   case 'right':
-      //     if (this.player.sprite.x < gameStageDimention.width / 2 + 15) {
-      //       this.player.sprite.x += 3
-      //     }
-      //     break
-      //   case 'left':
-      //     if (this.player.sprite.x > gameStageDimention.width / 2 - 15) {
-      //       this.player.sprite.x -= 3
-      //     }
-      //     break
-      //   default:
-      //     break
-      // }
+      this.cityLayer.x += this.cityLayer.vx
+      this.boardLayer.x += this.boardLayer.vx
     })
 
     this.sceneTicker.start()
