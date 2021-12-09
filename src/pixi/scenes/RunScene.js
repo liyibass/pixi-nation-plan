@@ -7,12 +7,18 @@ import { Globals } from '../script/Globals'
 import { Scene } from './Scene'
 
 const BLOCK_WIDTH = 16
+// const gameStageDimention = Globals.getSeesawGameStageDimention()
 
 export class RunScene extends Scene {
   constructor() {
     super()
     this.createScene()
     this.startGameFlow()
+
+    this.leftPressed = false
+    this.rightPressed = false
+    this.upPressed = false
+    this.downPressed = false
   }
   // ===== init system =====
   createScene() {
@@ -85,13 +91,13 @@ export class RunScene extends Scene {
 
   // ===== init game =====
   initGame() {
-    this._createPlayer()
     this._createBgLayer()
+    this._createPlayer()
   }
 
   _createPlayer() {
     this.player = new Player({
-      x: this.gameStageWidth / 2,
+      x: 40,
       y: this.gameStageHeight,
     })
     this.gameStage.addChild(this.player.sprite)
@@ -100,6 +106,8 @@ export class RunScene extends Scene {
   _createBgLayer() {
     this.backgroundLayer = new RunBgLayer()
     this.gameStage.addChild(this.backgroundLayer.container)
+
+    this.backgroundLayer.container.x = this.gameStageWidth
   }
 
   // ===== game flow =====
@@ -129,7 +137,7 @@ export class RunScene extends Scene {
   async gameLevel0() {
     this.initGame()
 
-    // this.startGame()
+    this.startGame()
   }
 
   async gameLevel1() {
@@ -148,19 +156,125 @@ export class RunScene extends Scene {
   // ===== start game =====
   async startGame() {
     await super.startGame()
+    // super.createKeyboardListener(this.moveHandler.bind(this))
+    this.moveHandler()
+
+    this._startSceneTicker()
   }
 
-  _startsceneTicker() {
+  moveHandler() {
+    const PLAYER_SPEED = 4
+    const BACKGROUND_SPEED = 2
+    //Capture the keyboard arrow keys
+    this.left = this.keyboard('ArrowLeft')
+    this.up = this.keyboard('ArrowUp')
+    this.right = this.keyboard('ArrowRight')
+    this.down = this.keyboard('ArrowDown')
+
+    this.player.sprite.vx = 0
+    this.player.sprite.vy = 0
+    this.backgroundLayer.container.vx = 0
+
+    this.right.press = () => {
+      this.player.sprite.vx = PLAYER_SPEED
+      this.player.sprite.vy = 0
+
+      this.backgroundLayer.container.vx = -BACKGROUND_SPEED
+    }
+    this.right.release = () => {
+      if (!this.left.isDown && this.player.sprite.vy === 0) {
+        this.player.sprite.vx = 0
+
+        this.backgroundLayer.container.vx = 0
+      }
+    }
+
+    this.left.press = () => {
+      this.player.sprite.vx = -PLAYER_SPEED
+      this.player.sprite.vy = 0
+
+      this.backgroundLayer.container.vx = BACKGROUND_SPEED
+    }
+    this.left.release = () => {
+      if (!this.right.isDown && this.player.sprite.vy === 0) {
+        this.player.sprite.vx = 0
+
+        this.backgroundLayer.container.vx = 0
+      }
+    }
+
+    //Up
+    this.up.press = () => {
+      this.player.sprite.vy = -5
+      this.player.sprite.vx = 0
+    }
+    this.up.release = () => {
+      if (!this.down.isDown && this.player.sprite.vx === 0) {
+        this.player.sprite.vy = 0
+      }
+    }
+
+    //Down
+    this.down.press = () => {
+      this.player.sprite.vy = 5
+      this.player.sprite.vx = 0
+    }
+    this.down.release = () => {
+      if (!this.up.isDown && this.player.sprite.vx === 0) {
+        this.player.sprite.vy = 0
+      }
+    }
+  }
+
+  _startSceneTicker() {
     this.sceneTicker = new PIXI.Ticker()
-    this.sceneTicker.add(async () => {})
+    this.sceneTicker.add(async () => {
+      if (
+        this.player.sprite.x >= this.gameStageWidth / 2 &&
+        this.right.isDown
+      ) {
+        this.player.sprite.vx = 0
+      } else if (
+        this.player.sprite.x <= this.player.sprite.width / 2 &&
+        this.left.isDown
+      ) {
+        this.player.sprite.vx = 0
+        this.backgroundLayer.container.vx = 0
+      }
+      this.player.sprite.x += this.player.sprite.vx
+
+      this.player.sprite.y += this.player.sprite.vy
+
+      this.backgroundLayer.container.x += this.backgroundLayer.container.vx
+
+      // console.log('ticker on')
+      // switch (this.direction) {
+      //   case 'right':
+      //     if (this.player.sprite.x < gameStageDimention.width / 2 + 15) {
+      //       this.player.sprite.x += 3
+      //     }
+      //     break
+      //   case 'left':
+      //     if (this.player.sprite.x > gameStageDimention.width / 2 - 15) {
+      //       this.player.sprite.x -= 3
+      //     }
+      //     break
+      //   default:
+      //     break
+      // }
+    })
 
     this.sceneTicker.start()
   }
 
   // ===== game pause =====
-  _pauseAllGameActivity() {}
+  _pauseAllGameActivity() {
+    // super.removeKeyboardListener()
+  }
 
-  _resumeAllGameActivity() {}
+  _resumeAllGameActivity() {
+    // super.createKeyboardListener()
+  }
 
   // ===== game over =====
   async failGameHint() {
@@ -201,6 +315,7 @@ export class RunScene extends Scene {
   }
 
   resetGameSetting() {
+    // super.removeKeyboardListener()
     super.resetGameSetting()
 
     this.gameStage.removeChild(
@@ -208,5 +323,52 @@ export class RunScene extends Scene {
       this.timer.container,
       this.conveyor.container
     )
+  }
+
+  keyboard(value) {
+    const key = {}
+    key.value = value
+    key.isDown = false
+    key.isUp = true
+    key.press = undefined
+    key.release = undefined
+    //The `downHandler`
+    key.downHandler = (event) => {
+      if (event.key === key.value) {
+        if (key.isUp && key.press) {
+          key.press()
+        }
+        key.isDown = true
+        key.isUp = false
+        event.preventDefault()
+      }
+    }
+
+    //The `upHandler`
+    key.upHandler = (event) => {
+      if (event.key === key.value) {
+        if (key.isDown && key.release) {
+          key.release()
+        }
+        key.isDown = false
+        key.isUp = true
+        event.preventDefault()
+      }
+    }
+
+    //Attach event listeners
+    const downListener = key.downHandler.bind(key)
+    const upListener = key.upHandler.bind(key)
+
+    window.addEventListener('keydown', downListener, false)
+    window.addEventListener('keyup', upListener, false)
+
+    // Detach event listeners
+    key.unsubscribe = () => {
+      window.removeEventListener('keydown', downListener)
+      window.removeEventListener('keyup', upListener)
+    }
+
+    return key
   }
 }

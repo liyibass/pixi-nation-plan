@@ -323,4 +323,35 @@ export class Scene {
       }, delayTime)
     })
   }
+
+  createKeyboardListener(moveHandler) {
+    //  add keyboard listener
+    this.keyboardListenerCallBack = (event) => {
+      const key = event.key
+
+      switch (key) {
+        case 'ArrowDown':
+          moveHandler('down')
+          break
+        case 'ArrowRight':
+          moveHandler('right')
+          break
+        case 'ArrowUp':
+          moveHandler('up')
+          break
+        case 'ArrowLeft':
+          moveHandler('left')
+          break
+      }
+    }
+
+    document.addEventListener('keydown', this.keyboardListenerCallBack)
+    document.addEventListener('keyup', () => moveHandler('null'))
+  }
+
+  removeKeyboardListener() {
+    if (this.keyboardListenerCallBack) {
+      document.removeEventListener('keydown', this.keyboardListenerCallBack)
+    }
+  }
 }

@@ -1100,7 +1100,9 @@ export class SnakeScene {
 
     this.container.removeChild(this.menuButtons.container)
 
-    window.removeEventListener('keydown', this.keyboardListener)
+    if (this.keyboardListenerCallBack) {
+      document.removeEventListener('keydown', this.keyboardListenerCallBack)
+    }
 
     // clear food and poison
     this.snakeFoodArray = []
