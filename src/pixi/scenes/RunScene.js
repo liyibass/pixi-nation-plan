@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { Player } from '../components/Player'
-import { RunBgLayer } from '../components/RunBgLayer'
-window.PIXI = PIXI
+import { City } from '../components/City'
+// window.PIXI = PIXI
 
 import { Globals } from '../script/Globals'
 import { Scene } from './Scene'
@@ -14,17 +14,13 @@ export class RunScene extends Scene {
     super()
     this.createScene()
     this.startGameFlow()
-
-    this.leftPressed = false
-    this.rightPressed = false
-    this.upPressed = false
-    this.downPressed = false
   }
   // ===== init system =====
   createScene() {
     this._createBackground(0x0e427f)
     this._createGameStage()
-    // this._createGroundBackground()
+    this._addMaskToGameStage()
+    this._createGroundBackground()
     this._createItems()
 
     this._createDoctorSay()
@@ -32,7 +28,7 @@ export class RunScene extends Scene {
 
   _createGameStage() {
     // get gameStage dimention
-    const gameStageDimention = Globals.getSeesawGameStageDimention()
+    const gameStageDimention = Globals.getRunGameStageDimention()
 
     this.gameStageX = gameStageDimention.x
     this.gameStageY = gameStageDimention.y
@@ -48,7 +44,7 @@ export class RunScene extends Scene {
     const gameStageFrame = new PIXI.Graphics()
     const frameLineWeight = 1
     gameStageFrame.lineStyle(frameLineWeight, 0xdddddd, 0)
-    // gameStageFrame.beginFill(0x0e427f)
+    // gameStageFrame.beginFill(0x00000)
     gameStageFrame.beginFill(0x0e3461)
 
     /*
@@ -91,7 +87,7 @@ export class RunScene extends Scene {
 
   // ===== init game =====
   initGame() {
-    this._createBgLayer()
+    this._createBuildingLayer()
     this._createPlayer()
   }
 
@@ -103,11 +99,15 @@ export class RunScene extends Scene {
     this.gameStage.addChild(this.player.sprite)
   }
 
-  _createBgLayer() {
-    this.backgroundLayer = new RunBgLayer()
-    this.gameStage.addChild(this.backgroundLayer.container)
+  _createBuildingLayer() {
+    const city = new City(0)
+    this.city = city
+    console.log(this.city)
 
-    this.backgroundLayer.container.x = this.gameStageWidth
+    this.gameStage.addChild(this.city.cityBackground.container)
+    this.gameStage.addChild(this.city.cityBoard.container)
+    this.city.cityBackground.container.x = this.gameStageWidth
+    this.city.cityBoard.container.x = this.gameStageWidth * 1.5
   }
 
   // ===== game flow =====
@@ -165,6 +165,7 @@ export class RunScene extends Scene {
   moveHandler() {
     const PLAYER_SPEED = 4
     const BACKGROUND_SPEED = 2
+    const BOARD_SPEED = 3
     //Capture the keyboard arrow keys
     this.left = this.keyboard('ArrowLeft')
     this.up = this.keyboard('ArrowUp')
@@ -173,19 +174,22 @@ export class RunScene extends Scene {
 
     this.player.sprite.vx = 0
     this.player.sprite.vy = 0
-    this.backgroundLayer.container.vx = 0
+    this.city.cityBoard.container.vx = 0
+    this.city.cityBackground.container.vx = 0
 
     this.right.press = () => {
       this.player.sprite.vx = PLAYER_SPEED
       this.player.sprite.vy = 0
 
-      this.backgroundLayer.container.vx = -BACKGROUND_SPEED
+      this.city.cityBoard.container.vx = -BOARD_SPEED
+      this.city.cityBackground.container.vx = -BACKGROUND_SPEED
     }
     this.right.release = () => {
       if (!this.left.isDown && this.player.sprite.vy === 0) {
         this.player.sprite.vx = 0
 
-        this.backgroundLayer.container.vx = 0
+        this.city.cityBoard.container.vx = 0
+        this.city.cityBackground.container.vx = 0
       }
     }
 
@@ -193,13 +197,15 @@ export class RunScene extends Scene {
       this.player.sprite.vx = -PLAYER_SPEED
       this.player.sprite.vy = 0
 
-      this.backgroundLayer.container.vx = BACKGROUND_SPEED
+      this.city.cityBoard.container.vx = BOARD_SPEED
+      this.city.cityBackground.container.vx = BACKGROUND_SPEED
     }
     this.left.release = () => {
       if (!this.right.isDown && this.player.sprite.vy === 0) {
         this.player.sprite.vx = 0
 
-        this.backgroundLayer.container.vx = 0
+        this.city.cityBoard.container.vx = 0
+        this.city.cityBackground.container.vx = 0
       }
     }
 
@@ -239,13 +245,16 @@ export class RunScene extends Scene {
         this.left.isDown
       ) {
         this.player.sprite.vx = 0
-        this.backgroundLayer.container.vx = 0
+        // this.city.cityBoard.container.vx = 0
+        // this.city.cityBackground.container.vx = 0
       }
       this.player.sprite.x += this.player.sprite.vx
 
       this.player.sprite.y += this.player.sprite.vy
 
-      this.backgroundLayer.container.x += this.backgroundLayer.container.vx
+      this.city.cityBoard.container.x += this.city.cityBoard.container.vx
+      this.city.cityBackground.container.x +=
+        this.city.cityBackground.container.vx
 
       // console.log('ticker on')
       // switch (this.direction) {

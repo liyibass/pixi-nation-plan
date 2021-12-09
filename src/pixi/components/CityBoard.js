@@ -6,7 +6,7 @@ export class CityBoard {
   constructor(cityName) {
     this.cityName = cityName
     this.container = new PIXI.Container()
-    this.container.name = `board${this.cityName}`
+    this.container.name = `cityBoard-${this.cityName}`
 
     this.createCityBoard()
     this.createBar()
@@ -41,22 +41,5 @@ export class CityBoard {
   position() {
     // this.container.pivot
     this.boardSprite.y = -this.bar.height
-  }
-
-  _getCityName(currentCityIndex) {
-    switch (currentCityIndex) {
-      case 0:
-        return 'Taoyuan'
-      case 1:
-        return 'Hsinchu'
-      case 2:
-        return 'Miaoli'
-      case 3:
-        return 'Yunlin'
-      case 4:
-        return 'Kaohsiung'
-      case 5:
-        return 'Yilan'
-    }
   }
 }

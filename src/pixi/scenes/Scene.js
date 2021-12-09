@@ -83,6 +83,13 @@ export class Scene {
     this.gameStage.y = this.gameStageY
   }
 
+  _addMaskToGameStage() {
+    const mask = new PIXI.Graphics()
+    mask.drawRect(0, 0, this.gameStageWidth, this.gameStageHeight)
+    this.gameStage.mask = mask
+    this.gameStage.addChild(mask)
+  }
+
   _createDoctorSay() {
     this.doctorSay = new DoctorSay()
     this.container.addChild(this.doctorSay.container)

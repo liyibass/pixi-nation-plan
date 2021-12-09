@@ -109,4 +109,20 @@ export const Globals = {
       height: height,
     }
   },
+  getRunGameStageDimention: function () {
+    let height = Math.floor((this.height * 5) / 8)
+    let width =
+      this.width - 2 * gameStagePadding < 600
+        ? this.width - 2 * gameStagePadding
+        : this.width - 2 * gameStagePadding < 1280
+        ? (this.width * 2) / 3
+        : this.width / 2
+
+    return {
+      x: (this.width - width) / 2,
+      y: 0 + gameStagePadding,
+      width: width,
+      height: height,
+    }
+  },
 }
