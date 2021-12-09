@@ -31,14 +31,14 @@ export class CountDown {
 
   start() {
     return new Promise((resolve) => {
-      const countDown = setInterval(() => {
+      const _countDown = setInterval(() => {
         if (this.countNumber > 1) {
           this.countNumber--
 
           this.count.text = this.countNumber
         } else {
           // this.container.removeChild(countContainer)
-          clearInterval(countDown)
+          clearInterval(_countDown)
           resolve(true)
         }
       }, 800)

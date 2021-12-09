@@ -7,11 +7,10 @@ import { SpeakDialog } from './SpeakDialog'
 export class DoctorSay {
   constructor() {
     this.container = new PIXI.Container()
+    this.container.name = 'doctorSay'
     this.init()
 
     this.doctorDimention = Globals.getDoctorDimention()
-    // const doctorPosition =
-    // console.log(doctorPosition)
   }
   init() {
     this.container.interactive = true

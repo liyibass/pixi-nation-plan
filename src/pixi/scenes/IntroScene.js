@@ -35,7 +35,7 @@ export class IntroScene {
     this.getGroundPosition = this.getGroundPosition.bind(this)
   }
 
-  createBackground() {
+  _createBackground() {
     const bg = new PIXI.Graphics()
     bg.beginFill(0x92b79c)
     bg.drawRect(0, 0, Globals.width, Globals.height)
@@ -81,7 +81,7 @@ export class IntroScene {
   }
 
   async createIntro() {
-    this.createBackground()
+    this._createBackground()
     this.createStartButton()
     this.createSelectStageButton('snake', 1)
     this.createSelectStageButton('balance', 2)

@@ -49,8 +49,7 @@ export class FoodScore {
     )
 
     this[`${poisonType}ScoreText`] = poisonScore
-    console.log(`${poisonType}ScoreText`)
-    console.log(this[`${poisonType}ScoreText`])
+
     scoreContainer.addChild(sprite, poisonScore)
     poisonScore.x = 25 + 8
     poisonScore.y = scoreContainer.height / 2 - poisonScore.height / 2

@@ -92,7 +92,7 @@ export class SnakePart {
   move() {
     const { x, y } = this.container
     const { i, j } = this
-    // console.log(x, y)
+
     switch (this.direction) {
       case 'right':
         this.container.x += MOVE_SPEED

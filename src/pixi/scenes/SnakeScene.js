@@ -55,18 +55,18 @@ export class SnakeScene {
   }
   // ===== init game =====
   createSnakeScene() {
-    this.createBackground()
-    this.createItems()
-    this.createGameStage()
+    this._createBackground()
+    this._createItems()
+    this._createGameStage()
     this.createSnakeController()
-    this.createDoctorSay()
+    this._createDoctorSay()
 
     // this.createChessBoard()
 
     // todo introduce
   }
 
-  createBackground() {
+  _createBackground() {
     const bg = new PIXI.Graphics()
     // bg.lineStyle(4, 0x00000, 1)
     bg.beginFill(0x92b79c)
@@ -76,14 +76,14 @@ export class SnakeScene {
     this.container.addChild(bg)
   }
 
-  createItems() {
+  _createItems() {
     const groundGroupDimention = Globals.getGroundDimention()
 
     this.groundGroup = new GroundGroup(groundGroupDimention)
     this.container.addChild(this.groundGroup.container)
   }
 
-  createGameStage() {
+  _createGameStage() {
     // get gameStage dimention
     const gameStageDimention = Globals.getGameStageDimention()
 
@@ -144,7 +144,7 @@ export class SnakeScene {
     this.container.addChild(controller.container)
   }
 
-  createDoctorSay() {
+  _createDoctorSay() {
     this.doctorSay = new DoctorSay()
     this.container.addChild(this.doctorSay.container)
   }
@@ -367,7 +367,7 @@ export class SnakeScene {
 
   async eatingFoodHandler() {
     const { i: headI, j: headJ } = this.snakeArray[0].getPosition()
-    // console.log(`${headI},${headJ}`)
+
     // find out whether a food is been eaten
     let eatenFoodIndex = -1
     for (let x = 0; x < this.snakeFoodArray.length; x++) {
@@ -526,7 +526,7 @@ export class SnakeScene {
       )
 
       createdPoison.stopHighlight()
-      await this.countDown(3)
+      await this._countDown(3)
       this.snakeMoveTicker.start()
 
       this.createPoisonInterval('incinerator')
@@ -567,7 +567,7 @@ export class SnakeScene {
     )
 
     createdPoison.stopHighlight()
-    await this.countDown(3)
+    await this._countDown(3)
     this.snakeMoveTicker.start()
 
     this.createPoisonInterval('fauset')
@@ -605,7 +605,7 @@ export class SnakeScene {
     )
 
     createdPoison.stopHighlight()
-    await this.countDown(3)
+    await this._countDown(3)
     this.snakeMoveTicker.start()
 
     this.createPoisonInterval('fauset')
@@ -641,7 +641,7 @@ export class SnakeScene {
   }
 
   // ===== start game =====
-  async countDown(countNumber) {
+  async _countDown(countNumber) {
     const countContainer = new CountDown(countNumber)
     this.container.addChild(countContainer.container)
 
@@ -649,13 +649,13 @@ export class SnakeScene {
 
     if (isDone) {
       this.container.removeChild(countContainer.container)
-      this.createMenuButtons()
+      this._createMenuButtons()
     }
   }
 
   async startGame() {
     console.log('game started')
-    await this.countDown(3)
+    await this._countDown(3)
 
     this.createKeyboardListener()
     this.startSnakeMoveTicker()
@@ -767,7 +767,6 @@ export class SnakeScene {
       for (let inext = 0; inext < this.snakePoisionArray.length; inext++) {
         const targetPoison = this.snakePoisionArray[inext]
         const { i, j, width, height, type } = targetPoison
-        // console.log(i + ',' + j + ' .  ' + width + ' .  ' + height)
 
         let isWithinBoundary = false
         switch (type) {
@@ -819,12 +818,10 @@ export class SnakeScene {
       }
     })
 
-    console.log(poison.type)
     // add score
     const isGamePassed = this.foodScore.eatPoisonAndVerifyIfPassedGame(
       poison.type
     )
-    console.log(isGamePassed)
 
     if (isGamePassed) {
       this.gamePassed()
@@ -882,7 +879,7 @@ export class SnakeScene {
     }
   }
 
-  createMenuButtons() {
+  _createMenuButtons() {
     const menuPosition = Globals.getSnakeMenuPosition(2)
 
     this.menuButtons = new TwoButtons(
@@ -938,7 +935,7 @@ export class SnakeScene {
 
   async resumeGame() {
     console.log('resume game')
-    await this.countDown(3)
+    await this._countDown(3)
 
     this.snakeMoveTicker.start()
   }
@@ -988,7 +985,7 @@ export class SnakeScene {
     this.container.addChild(gameFail.container)
     // reset doctorSay
     this.doctorSay.container.destroy()
-    this.createDoctorSay()
+    this._createDoctorSay()
 
     switch (this.gameLevel) {
       case 1:
@@ -1045,7 +1042,7 @@ export class SnakeScene {
 
     // reset doctorSay
     this.doctorSay.container.destroy()
-    this.createDoctorSay()
+    this._createDoctorSay()
 
     if (this.gameLevel === 1) {
       await this.doctorSay.newSay('沒想到你這麼優秀，我真是找對人了！')
@@ -1339,12 +1336,6 @@ function getInitSnakePartData(prevSnakePart) {
         y: container.y - BLOCK_WIDTH,
       }
       break
-
-    default:
-      console.log(i)
-      console.log(j)
-      console.log(direction)
-      console.log(id)
   }
 
   return data

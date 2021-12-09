@@ -64,8 +64,7 @@ export class SeesawGroup {
   }
 
   getChoosedWeightCard(weightCard) {
-    // console.log('DROP')
-    // console.log(weightCard)
+    // block rest cards
 
     // add seesaw ref into card
     weightCard.seesawGroupRef = this
@@ -130,9 +129,6 @@ export class SeesawGroup {
           this.rightLoad += weightCard.load
         }
       }
-      console.log(weightCard.seesawSide)
-      console.log(this.leftTotalWeight)
-      console.log(this.rightTotalWeight)
 
       // update left/right weight text
       this.board.setLeftWeight(this.leftTotalWeight)
@@ -198,10 +194,6 @@ export class SeesawGroup {
     this.seesawRotateTicker.add(() => {
       const difference = this.rightTotalWeight - this.leftTotalWeight
       const speed = Math.abs(Math.floor(difference / 50))
-      // console.log(this.leftTotalWeight)
-      // console.log(this.rightTotalWeight)
-      // console.log(direction)
-      // console.log(targetAngle)
 
       if (difference > 0) {
         this.seesawRotateTicker.start()

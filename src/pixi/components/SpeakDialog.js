@@ -15,11 +15,11 @@ export class SpeakDialog {
   }
 
   init() {
-    this.createBackground()
+    this._createBackground()
     this.createDialog()
   }
 
-  createBackground() {
+  _createBackground() {
     const bg = new PIXI.Graphics()
     bg.beginFill(0x000000)
     bg.drawRect(0, 0, Globals.width, Globals.height)

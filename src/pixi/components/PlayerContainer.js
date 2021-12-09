@@ -8,7 +8,6 @@ export class Player {
   }
 
   createPlayer() {
-    console.log(this.container)
     const texture = Globals.resources['player']?.texture
     const sprite = new PIXI.Sprite(texture)
     sprite.anchor.set(0.5, 0.5)

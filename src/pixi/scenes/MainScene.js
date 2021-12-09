@@ -10,13 +10,13 @@ export class MainScene {
   constructor() {
     this.container = new PIXI.Container()
 
-    this.createBackground()
+    this._createBackground()
     // this.createPlayer()
     this.createIntroScene()
     // this.createSnakeScene()
   }
 
-  createBackground() {}
+  _createBackground() {}
 
   createIntroScene() {
     const introScene = new IntroScene(this.selectStage.bind(this))

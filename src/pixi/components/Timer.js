@@ -8,12 +8,12 @@ export class Timer {
     this.container.name = 'timer'
 
     this.time = 120
-    this.createBackground()
+    this._createBackground()
     this.createTimerText()
     this.position()
   }
 
-  createBackground() {
+  _createBackground() {
     this.timerBg = new PIXI.Graphics()
     this.timerBg.beginFill(0xffffff)
     this.timerBg.drawCircle(TIMER_RADIUS, TIMER_RADIUS, TIMER_RADIUS)

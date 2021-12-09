@@ -217,9 +217,6 @@ export class WeightCard {
         const { x, y } = this.container
         const { x: originalX, y: originalY } = this.originalPosition
 
-        // console.log(`${x},${y}`)
-        // console.log(`${originalX},${originalY}`)
-
         if (x !== originalX && y !== originalY) {
           console.log('drop card in seesaw')
           this._dropWeightCardToSeesaw(this)
@@ -271,8 +268,6 @@ export class WeightCard {
         y: this.container.y,
       }
     }
-
-    console.log(this.originalPosition)
   }
 
   _resetToOriginalPosition() {

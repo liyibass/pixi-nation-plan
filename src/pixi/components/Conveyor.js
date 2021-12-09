@@ -95,7 +95,6 @@ export class Conveyor {
         }
       } catch (error) {
         console.error(error)
-        console.log(card)
       }
     }
   }
@@ -195,8 +194,6 @@ export class Conveyor {
 
   weightCardHandler(removedWeightCard) {
     if (removedWeightCard.isOnConveyor) {
-      console.log('if in weightCardHandler')
-
       // align linkList
       if (removedWeightCard.prevCard) {
         removedWeightCard.prevCard.nextCard = removedWeightCard.nextCard
@@ -221,7 +218,6 @@ export class Conveyor {
       // pass selected card to parent
       this.getChoosedWeightCard(removedWeightCard)
     } else {
-      console.log('else in weightCardHandler')
       // pass selected card to parent
       this.getChoosedWeightCard(removedWeightCard)
     }
