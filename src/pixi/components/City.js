@@ -17,6 +17,10 @@ export class City {
     board.container.x = 0 + board.container.width / 2
     board.container.y = gameStageDimention.height
 
+    if (this.cityName === 'Mountain') {
+      board.container.alpha = 0
+    }
+
     return board
   }
 
@@ -39,6 +43,8 @@ export class City {
       case 4:
         return 'Kaohsiung'
       case 5:
+        return 'Mountain'
+      case 6:
         return 'Yilan'
     }
   }

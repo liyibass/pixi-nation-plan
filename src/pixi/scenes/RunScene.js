@@ -108,10 +108,11 @@ export class RunScene extends Scene {
     this.cityLayer = new PIXI.Container()
     this.boardLayer = new PIXI.Container()
 
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 7; i++) {
       const city = new City(i)
 
       let interval = (i === 0 ? 0 : 1 * (this.gameStageWidth * 1)) / 3
+
       const offset = this.gameStageWidth / 4
       city.cityBackground.container.x =
         this.cityLayer.width + this.gameStageWidth + interval

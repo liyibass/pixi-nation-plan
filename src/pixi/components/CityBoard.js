@@ -14,8 +14,13 @@ export class CityBoard {
   }
 
   createCityBoard() {
+    if (!Globals.resources[`board${this.cityName}`]?.texture) {
+      this.boardSprite = new PIXI.Sprite()
+      return
+    }
+
     const boardTexture = new PIXI.Texture(
-      Globals.resources[`board${this.cityName}`].texture
+      Globals.resources[`board${this.cityName}`]?.texture
     )
     this.boardSprite = new PIXI.Sprite(boardTexture)
 

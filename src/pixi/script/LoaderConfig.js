@@ -45,6 +45,7 @@ import highway from '../assets/images/highway.png'
 import building from '../assets/images/building.png'
 import eightyFive from '../assets/images/85.png'
 import cityBackground2 from '../assets/images/cityBackground2.png'
+import mountain from '../assets/images/mountain.png'
 
 export const LoaderConfig = {
   player,
@@ -94,4 +95,5 @@ export const LoaderConfig = {
   building,
   eightyFive,
   cityBackground2,
+  mountain,
 }

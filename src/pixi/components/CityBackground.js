@@ -15,7 +15,8 @@ export class CityBackground {
   createCityBackground() {
     switch (this.cityName) {
       case 'Taoyuan':
-        this._createTaoyuan()
+        this._createMountain()
+        // this._createTaoyuan()
 
         break
 
@@ -33,6 +34,10 @@ export class CityBackground {
 
       case 'Kaohsiung':
         this._createKaohsiung()
+        break
+
+      case 'Mountain':
+        this._createMountain()
         break
 
       default:
@@ -154,5 +159,21 @@ export class CityBackground {
     eightyFiveSprite.x = (cityBackgroundSprite.width * 2) / 3
 
     this.container.addChild(eightyFiveSprite)
+  }
+
+  _createMountain() {
+    const mountainTexture = new PIXI.Texture(
+      Globals.resources['mountain'].texture
+    )
+    const HIGHWAY_COUNT = Math.round(proximateCityWidth / mountainTexture.width)
+
+    for (let i = 0; i < HIGHWAY_COUNT; i++) {
+      const mountainSprite = new PIXI.Sprite(mountainTexture)
+      mountainSprite.pivot.y = mountainSprite.height
+      mountainSprite.x = this.container.width - Math.floor(Math.random() * 100)
+      mountainSprite.y =
+        gameStageDimention.height + Math.floor(Math.random() * 20)
+      this.container.addChild(mountainSprite)
+    }
   }
 }
