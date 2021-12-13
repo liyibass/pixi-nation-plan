@@ -8,8 +8,8 @@ import { Scene } from './Scene'
 
 const BLOCK_WIDTH = 16
 
-const PLAYER_SPEED = 4
-const BOARD_SPEED = 3
+const PLAYER_SPEED = 5
+const BOARD_SPEED = 4
 const BACKGROUND_SPEED = 2
 // const gameStageDimention = Globals.getSeesawGameStageDimention()
 
@@ -117,7 +117,9 @@ export class RunScene extends Scene {
       city.cityBackground.container.x =
         this.cityLayer.width + this.gameStageWidth + interval
       city.cityBoard.container.x =
-        ((this.cityLayer.width + this.gameStageWidth + interval) * 3) / 2 -
+        ((this.cityLayer.width + this.gameStageWidth + interval) *
+          BOARD_SPEED) /
+          BACKGROUND_SPEED -
         offset
 
       this.cityLayer.addChild(city.cityBackground.container)

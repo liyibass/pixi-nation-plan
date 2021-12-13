@@ -9,6 +9,8 @@ export class CityBackground {
     this.container = new PIXI.Container()
     this.container.name = `cityBackground-${this.cityName}`
 
+    this.bottomLayerContainer = new PIXI.Container()
+
     this.createCityBackground()
   }
 
