@@ -37,6 +37,14 @@ import boardYunlin from '../assets/images/boardYunlin.png'
 import factory1 from '../assets/images/factory1.png'
 import factory2 from '../assets/images/factory2.png'
 import factory3 from '../assets/images/factory3.png'
+import castle from '../assets/images/castle.png'
+import cityBackground from '../assets/images/cityBackground.png'
+import bush1 from '../assets/images/bush1.png'
+import bush2 from '../assets/images/bush2.png'
+import highway from '../assets/images/highway.png'
+import building from '../assets/images/building.png'
+import eightyFive from '../assets/images/85.png'
+import cityBackground2 from '../assets/images/cityBackground2.png'
 
 export const LoaderConfig = {
   player,
@@ -78,4 +86,12 @@ export const LoaderConfig = {
   factory1,
   factory2,
   factory3,
+  castle,
+  cityBackground,
+  bush1,
+  bush2,
+  highway,
+  building,
+  eightyFive,
+  cityBackground2,
 }
