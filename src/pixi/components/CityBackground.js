@@ -15,8 +15,7 @@ export class CityBackground {
   createCityBackground() {
     switch (this.cityName) {
       case 'Taoyuan':
-        this._createMountain()
-        // this._createTaoyuan()
+        this._createTaoyuan()
 
         break
 
@@ -38,6 +37,10 @@ export class CityBackground {
 
       case 'Mountain':
         this._createMountain()
+        break
+
+      case 'Yilan':
+        this._createYilan()
         break
 
       default:
@@ -165,15 +168,52 @@ export class CityBackground {
     const mountainTexture = new PIXI.Texture(
       Globals.resources['mountain'].texture
     )
-    const HIGHWAY_COUNT = Math.round(proximateCityWidth / mountainTexture.width)
+    const MOUNTAIN_COUNT = Math.round(
+      proximateCityWidth / mountainTexture.width
+    )
 
-    for (let i = 0; i < HIGHWAY_COUNT; i++) {
+    for (let i = 0; i < MOUNTAIN_COUNT; i++) {
       const mountainSprite = new PIXI.Sprite(mountainTexture)
       mountainSprite.pivot.y = mountainSprite.height
       mountainSprite.x = this.container.width - Math.floor(Math.random() * 100)
       mountainSprite.y =
         gameStageDimention.height + Math.floor(Math.random() * 20)
       this.container.addChild(mountainSprite)
+    }
+  }
+
+  _createYilan() {
+    const mountainTexture = new PIXI.Texture(
+      Globals.resources['mountain'].texture
+    )
+    const MOUNTAIN_COUNT = Math.round(
+      proximateCityWidth / (mountainTexture.width + 200)
+    )
+
+    for (let i = 0; i < MOUNTAIN_COUNT; i++) {
+      const mountainSprite = new PIXI.Sprite(mountainTexture)
+      mountainSprite.pivot.y = mountainSprite.height
+      mountainSprite.x = this.container.width + Math.floor(Math.random() * 100)
+      mountainSprite.y =
+        gameStageDimention.height + Math.floor(Math.random() * 20) + 20
+      this.container.addChild(mountainSprite)
+    }
+
+    const TOTAL_HOTEL = 2 * MOUNTAIN_COUNT + 1
+
+    for (let j = 0; j < TOTAL_HOTEL; j++) {
+      const hotelTexture = new PIXI.Texture(
+        Globals.resources[`hotel${j % 4}`].texture
+      )
+      const hotelSprite = new PIXI.Sprite(hotelTexture)
+      hotelSprite.pivot.y = hotelSprite.height
+
+      hotelSprite.x =
+        (this.container.width / (TOTAL_HOTEL - 1)) * j +
+        (Math.random() * 70 - 35)
+      hotelSprite.y = gameStageDimention.height + Math.floor(Math.random() * 30)
+
+      this.container.addChild(hotelSprite)
     }
   }
 }

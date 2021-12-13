@@ -46,6 +46,10 @@ import building from '../assets/images/building.png'
 import eightyFive from '../assets/images/85.png'
 import cityBackground2 from '../assets/images/cityBackground2.png'
 import mountain from '../assets/images/mountain.png'
+import hotel0 from '../assets/images/hotel0.png'
+import hotel1 from '../assets/images/hotel1.png'
+import hotel2 from '../assets/images/hotel2.png'
+import hotel3 from '../assets/images/hotel3.png'
 
 export const LoaderConfig = {
   player,
@@ -96,4 +100,8 @@ export const LoaderConfig = {
   eightyFive,
   cityBackground2,
   mountain,
+  hotel0,
+  hotel1,
+  hotel2,
+  hotel3,
 }
