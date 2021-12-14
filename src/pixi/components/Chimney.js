@@ -1,26 +1,26 @@
 import * as PIXI from 'pixi.js'
 
 import { Globals } from '../script/Globals'
-const gameStageDimention = Globals.getRunGameStageDimention()
+// const gameStageDimention = Globals.getRunGameStageDimention()
 
 export class Chimney {
-  constructor(chimneyIndex = 0, collisionMonitor = () => {}) {
-    this.chimneyIndex = chimneyIndex
+  constructor(index = 0, collisionMonitor = () => {}) {
+    this.index = index
     this.collisionMonitor = collisionMonitor
     this.obstacleName = 'chimney'
 
     this.container = new PIXI.Container()
-    this.container.name = `chimneyIndex`
+    this.container.name = `index`
 
     this.createChimney()
     this.isInWindow = false
     this.isInOperate = true
-    this.vibrateDirection = this.chimneyIndex % 2 ? 'right' : 'left'
+    this.vibrateDirection = this.index % 2 ? 'right' : 'left'
   }
 
   createChimney() {
     const chimneyTexture = new PIXI.Texture(
-      Globals.resources[`chimney${Math.floor(this.chimneyIndex % 4)}`]?.texture
+      Globals.resources[`chimney${Math.floor(this.index % 4)}`]?.texture
     )
     this.chimneySprite = new PIXI.Sprite(chimneyTexture)
 
@@ -42,7 +42,18 @@ export class Chimney {
 
       if (this.isInWindow) {
         this.turnOnChimney()
-        this.collisionMonitor(this)
+
+        if (!this.isAddedToProcesser) {
+          // console.log('in window')
+          this.collisionMonitor(this)
+          this.isAddedToProcesser = true
+        }
+      } else {
+        if (this.isAddedToProcesser) {
+          // console.log('out of window')
+          this.collisionMonitor(this)
+          this.isAddedToProcesser = false
+        }
       }
     })
 
@@ -50,15 +61,16 @@ export class Chimney {
   }
 
   tempCollisionMonitor(obstacle) {
-    console.log(`moniter obstacle ${obstacle.chimneyIndex}`)
+    console.log(`moniter obstacle ${obstacle.index}`)
   }
 
   checkIfObstacleIsInWindow() {
     const { tx } = this.container.worldTransform
 
     this.isInWindow =
-      tx >= gameStageDimention.x &&
-      tx <= gameStageDimention.x + gameStageDimention.width
+      // tx >= gameStageDimention.x &&
+      // tx <= gameStageDimention.x + gameStageDimention.width
+      tx >= 0 && tx <= window.innerWidth
   }
 
   turnOnChimney() {

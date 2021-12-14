@@ -52,35 +52,21 @@ export class CityObstacle {
     }
   }
 
-  obstacleMonitor() {
-    // this.obstacleMonitorTicker = new PIXI.Ticker()
-    // this.obstacleMonitorTicker.add(() => {
-    //   console.log(this.obstacleArray)
-    //   if (!this.obstacleArray?.length) {
-    //     this.obstacleMonitorTicker.stop()
-    //     return
-    //   }
-    //   this.obstacleArray.forEach((obstacle) => {
-    //     const { x } = this.container.toGlobal(obstacle.container.position)
-    //     if (x >= 0 || x <= gameStageDimention.width) {
-    //       this.obstacleHandler(obstacle)
-    //     }
-    //   })
-    // })
-    // this.obstacleMonitorTicker.start()
-  }
-
   obstacleHandler() {}
 
   _createTaoyuan() {
     const CHIMNEY_COUNT = 6
-    const CHIMNEY_DISTANCE = gameStageDimention.width
+    const CHIMNEY_DISTANCE = gameStageDimention.width / 0.5
     // const CHIMNEY_DISTANCE = (gameStageDimention.width * 2) / 3
+
     for (let i = 0; i < CHIMNEY_COUNT; i++) {
       const chimney = new Chimney(i, this.collisionMonitor)
       chimney.container.y = gameStageDimention.height
       chimney.container.x =
-        CHIMNEY_DISTANCE * i + Math.floor(Math.random() * 140 - 100)
+        CHIMNEY_DISTANCE * i +
+        Math.floor(
+          (Math.random() * CHIMNEY_DISTANCE) / 2 - CHIMNEY_DISTANCE / 4
+        )
       this.container.addChild(chimney.container)
 
       this.obstacleArray.push(chimney)

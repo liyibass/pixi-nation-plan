@@ -50,9 +50,14 @@ export class Player {
     this.jumpTicker.add((deltaMs) => {
       const jumpHeight = v0 * time + (1 / 2) * -gravity * Math.pow(time, 2)
       const v = v0 - gravity * time
+      if (v < 0) {
+        this.isFalling = true
+      }
 
       if (v < 0 && this.sprite.y > this.standHeight) {
+        console.log('JUMP STOP')
         this.isJumping = false
+        this.isFalling = false
         this.jumpTicker.stop()
         this.sprite.y = this.standHeight
         return
@@ -69,7 +74,6 @@ export class Player {
     if (this.sprite.y === this.initStandHeight) return
     if (this.isJumping || this.isFalling) return
 
-    console.log('falling')
     this.isFalling = true
 
     let time = 0
