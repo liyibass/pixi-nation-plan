@@ -19,6 +19,7 @@ export class RunScene extends Scene {
     super()
     this.currentCityIndex = 0
     this.inWindowObstacles = []
+
     this.createScene()
     this.startGameFlow()
   }
@@ -104,6 +105,8 @@ export class RunScene extends Scene {
       y: this.gameStageHeight,
     })
     this.gameStage.addChild(this.player.sprite)
+    this.player.initStandHeight = this.player.sprite.y
+    this.player.standHeight = this.player.initStandHeight
   }
 
   _createCity() {
@@ -286,22 +289,41 @@ export class RunScene extends Scene {
   }
 
   collisionMonitor(obstacle) {
-    // console.log(`moniter obstacle ${obstacle.chimneyIndex}`)
     const { tx: playerX, ty: playerY } = this.player.sprite.worldTransform
     const { width: playerWidth } = this.player.sprite
     const { tx: obstacleX, ty: obstacleY } = obstacle.container.worldTransform
     const { width: obstacleWidth, height: obstacleHeight } = obstacle.container
-    // console.log(`${playerX},${playerY}`)
-    // console.log(`${obstacleX},${obstacleY}`)
 
     const rightBoundaryHit =
       playerX + playerWidth / 2 >= obstacleX - obstacleWidth / 2
     const leftBoundaryHit =
       playerX - playerWidth / 2 <= obstacleX + obstacleWidth / 2
     const bottomBoundaryHit = playerY >= obstacleY - obstacleHeight
+    const overObstacle = playerY <= obstacleY - obstacleHeight
 
-    if (rightBoundaryHit && leftBoundaryHit && bottomBoundaryHit) {
-      console.log('collosion')
+    if (rightBoundaryHit && leftBoundaryHit) {
+      if (overObstacle) {
+        console.log('over obstacle')
+        overObstacleHandler.bind(this)()
+      } else if (bottomBoundaryHit) {
+        console.log('collosion')
+        collosionObstacleHandler.bind(this)()
+      }
+    } else {
+      this.player.setStandHeight(this.player.initStandHeight)
+      this.player.fall()
+    }
+
+    function overObstacleHandler() {
+      this.player.setStandHeight(this.player.initStandHeight - obstacleHeight)
+    }
+
+    function collosionObstacleHandler() {
+      this.player.sprite.x -= playerX < obstacleX ? 1 : -1
+      this.player.sprite.vx = 0
+      this.cityBackgroundLayer.vx = 0
+      this.boardLayer.vx = 0
+      this.obstacleLayer.vx = 0
     }
   }
 
@@ -311,27 +333,23 @@ export class RunScene extends Scene {
     this.sceneTicker.add(async () => {
       if (
         // player stop when in gameStage center
-        this.player.sprite.x >= this.gameStageWidth / 2 &&
+        this.player.sprite.x >= this.gameStageWidth / 3 &&
         this.right.isDown
       ) {
         this.player.sprite.vx = 0
       } else if (
         // player stop when in gameStage's left corner
-        this.player.sprite.x <= this.player.sprite.width / 2 &&
+        this.player.sprite.x <= this.player.sprite.width / 3 &&
         this.left.isDown
       ) {
         this.player.sprite.vx = 0
       }
 
-      // landing after jumped
-      if (this.player.isJumping && this.player.sprite.y <= 0) {
-        this.player.isJumping = false
-        this.player.sprite.y = 0
-      }
-
       // player move depends on its velocity value
       this.player.sprite.x += this.player.sprite.vx
-      this.player.sprite.y += this.player.sprite.vy
+      // if (!this.player.isJumping) {
+      //   this.player.sprite.y += this.player.sprite.vy
+      // }
 
       // background move depends on their velocity value
       this.cityBackgroundLayer.x += this.cityBackgroundLayer.vx

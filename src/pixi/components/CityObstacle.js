@@ -74,7 +74,8 @@ export class CityObstacle {
 
   _createTaoyuan() {
     const CHIMNEY_COUNT = 6
-    const CHIMNEY_DISTANCE = (gameStageDimention.width * 2) / 3
+    const CHIMNEY_DISTANCE = gameStageDimention.width
+    // const CHIMNEY_DISTANCE = (gameStageDimention.width * 2) / 3
     for (let i = 0; i < CHIMNEY_COUNT; i++) {
       const chimney = new Chimney(i, this.collisionMonitor)
       chimney.container.y = gameStageDimention.height

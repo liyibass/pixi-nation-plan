@@ -11,6 +11,9 @@ export class Player {
     this.dragging = false
 
     this.isJumping = false
+    this.initStandHeight = 0
+    this.standHeight = 0
+    this.isFalling = false
   }
 
   createSprite() {
@@ -41,15 +44,17 @@ export class Player {
     const gravity = 0.8
     const direction = -1 //to Top
     const jumpAtY = this.sprite.y
+    // const jumpAtY = this.sprite.y
 
     this.jumpTicker = new PIXI.Ticker()
     this.jumpTicker.add((deltaMs) => {
       const jumpHeight = v0 * time + (1 / 2) * -gravity * Math.pow(time, 2)
+      const v = v0 - gravity * time
 
-      if (jumpHeight < 0) {
+      if (v < 0 && this.sprite.y > this.standHeight) {
         this.isJumping = false
         this.jumpTicker.stop()
-        this.sprite.y = jumpAtY
+        this.sprite.y = this.standHeight
         return
       }
 
@@ -58,6 +63,45 @@ export class Player {
     })
 
     this.jumpTicker.start()
+  }
+
+  fall() {
+    if (this.sprite.y === this.initStandHeight) return
+    if (this.isJumping || this.isFalling) return
+
+    console.log('falling')
+    this.isFalling = true
+
+    let time = 0
+    const v0 = 0
+    const gravity = 0.8
+    const direction = -1 //to Top
+    const fallAtY = this.sprite.y
+    // const jumpAtY = this.sprite.y
+
+    this.fallTicker = new PIXI.Ticker()
+    this.fallTicker.add((deltaMs) => {
+      const jumpHeight = v0 * time + (1 / 2) * -gravity * Math.pow(time, 2)
+
+      if (this.sprite.y > this.initStandHeight) {
+        this.fallTicker.stop()
+        this.isFalling = false
+
+        this.standHeight = this.initStandHeight
+        this.sprite.y = this.standHeight
+        return
+      }
+
+      this.sprite.y = fallAtY + jumpHeight * direction
+      time += deltaMs
+    })
+
+    this.fallTicker.start()
+  }
+
+  setStandHeight(newStandHeight) {
+    this.y = newStandHeight
+    this.standHeight = newStandHeight
   }
 }
 
