@@ -8,15 +8,17 @@ import { Scene } from './Scene'
 
 const BLOCK_WIDTH = 16
 
-const PLAYER_SPEED = 5
-const BOARD_SPEED = 4
+const PLAYER_SPEED = 4
+const BOARD_SPEED = 3
 const BACKGROUND_SPEED = 2
+const OBSTACLE_SPEED = 4
 // const gameStageDimention = Globals.getSeesawGameStageDimention()
 
 export class RunScene extends Scene {
   constructor() {
     super()
     this.currentCityIndex = 0
+    this.inWindowObstacles = []
     this.createScene()
     this.startGameFlow()
   }
@@ -105,28 +107,45 @@ export class RunScene extends Scene {
   }
 
   _createCity() {
-    this.cityLayer = new PIXI.Container()
+    this.bottomLayer = new PIXI.Container()
+    this.cityBackgroundLayer = new PIXI.Container()
     this.boardLayer = new PIXI.Container()
+    this.obstacleLayer = new PIXI.Container()
 
     for (let i = 0; i < 7; i++) {
-      const city = new City(i)
+      const city = new City(i, this.collisionMonitor.bind(this))
 
       let interval = (i === 0 ? 0 : 1 * (this.gameStageWidth * 1)) / 3
 
       const offset = this.gameStageWidth / 4
+
       city.cityBackground.container.x =
-        this.cityLayer.width + this.gameStageWidth + interval
+        this.cityBackgroundLayer.width + this.gameStageWidth + interval
+
       city.cityBoard.container.x =
-        ((this.cityLayer.width + this.gameStageWidth + interval) *
+        ((this.cityBackgroundLayer.width + this.gameStageWidth + interval) *
           BOARD_SPEED) /
           BACKGROUND_SPEED -
         offset
 
-      this.cityLayer.addChild(city.cityBackground.container)
+      city.cityObstacle.container.x =
+        ((this.cityBackgroundLayer.width + this.gameStageWidth + interval) *
+          OBSTACLE_SPEED) /
+          BACKGROUND_SPEED -
+        offset
+
+      // city.cityObstacle.container.y = 200
+
+      this.cityBackgroundLayer.addChild(city.cityBackground.container)
       this.boardLayer.addChild(city.cityBoard.container)
+      this.obstacleLayer.addChild(city.cityObstacle.container)
     }
 
-    this.gameStage.addChild(this.cityLayer, this.boardLayer)
+    this.gameStage.addChild(
+      this.cityBackgroundLayer,
+      this.boardLayer,
+      this.obstacleLayer
+    )
   }
 
   // ===== game flow =====
@@ -191,23 +210,32 @@ export class RunScene extends Scene {
     this.player.sprite.vx = 0
     this.player.sprite.vy = 0
 
-    this.cityLayer.vx = 0
+    this.cityBackgroundLayer.vx = 0
     this.boardLayer.vx = 0
+    this.obstacleLayer.vx = 0
+
+    // infinite run
+    // this.cityBackgroundLayer.vx = -BACKGROUND_SPEED
+    // this.boardLayer.vx = -BOARD_SPEED
+    // this.obstacleLayer.vx = -PLAYER_SPEED
+    // end infinite run
 
     this.right.press = () => {
       this.player.sprite.scale.x = 1
       this.player.sprite.vx = PLAYER_SPEED
       this.player.sprite.vy = 0
 
-      this.cityLayer.vx = -BACKGROUND_SPEED
+      this.cityBackgroundLayer.vx = -BACKGROUND_SPEED
       this.boardLayer.vx = -BOARD_SPEED
+      this.obstacleLayer.vx = -PLAYER_SPEED
     }
     this.right.release = () => {
       if (!this.left.isDown && this.player.sprite.vy === 0) {
         this.player.sprite.vx = 0
 
-        this.cityLayer.vx = 0
+        this.cityBackgroundLayer.vx = 0
         this.boardLayer.vx = 0
+        this.obstacleLayer.vx = 0
       }
     }
 
@@ -216,15 +244,17 @@ export class RunScene extends Scene {
       this.player.sprite.vx = -PLAYER_SPEED
       this.player.sprite.vy = 0
 
-      this.cityLayer.vx = BACKGROUND_SPEED
+      this.cityBackgroundLayer.vx = BACKGROUND_SPEED
       this.boardLayer.vx = BOARD_SPEED
+      this.obstacleLayer.vx = PLAYER_SPEED
     }
     this.left.release = () => {
       if (!this.right.isDown && this.player.sprite.vy === 0) {
         this.player.sprite.vx = 0
 
-        this.cityLayer.vx = 0
+        this.cityBackgroundLayer.vx = 0
         this.boardLayer.vx = 0
+        this.obstacleLayer.vx = 0
       }
     }
 
@@ -255,32 +285,60 @@ export class RunScene extends Scene {
     }
   }
 
+  collisionMonitor(obstacle) {
+    // console.log(`moniter obstacle ${obstacle.chimneyIndex}`)
+    const { tx: playerX, ty: playerY } = this.player.sprite.worldTransform
+    const { width: playerWidth } = this.player.sprite
+    const { tx: obstacleX, ty: obstacleY } = obstacle.container.worldTransform
+    const { width: obstacleWidth, height: obstacleHeight } = obstacle.container
+    // console.log(`${playerX},${playerY}`)
+    // console.log(`${obstacleX},${obstacleY}`)
+
+    const rightBoundaryHit =
+      playerX + playerWidth / 2 >= obstacleX - obstacleWidth / 2
+    const leftBoundaryHit =
+      playerX - playerWidth / 2 <= obstacleX + obstacleWidth / 2
+    const bottomBoundaryHit = playerY >= obstacleY - obstacleHeight
+
+    if (rightBoundaryHit && leftBoundaryHit && bottomBoundaryHit) {
+      console.log('collosion')
+    }
+  }
+
   _startSceneTicker() {
     this.sceneTicker = new PIXI.Ticker()
 
     this.sceneTicker.add(async () => {
       if (
+        // player stop when in gameStage center
         this.player.sprite.x >= this.gameStageWidth / 2 &&
         this.right.isDown
       ) {
         this.player.sprite.vx = 0
       } else if (
+        // player stop when in gameStage's left corner
         this.player.sprite.x <= this.player.sprite.width / 2 &&
         this.left.isDown
       ) {
         this.player.sprite.vx = 0
       }
-      this.player.sprite.x += this.player.sprite.vx
 
-      this.player.sprite.y += this.player.sprite.vy
-
+      // landing after jumped
       if (this.player.isJumping && this.player.sprite.y <= 0) {
         this.player.isJumping = false
         this.player.sprite.y = 0
       }
 
-      this.cityLayer.x += this.cityLayer.vx
+      // player move depends on its velocity value
+      this.player.sprite.x += this.player.sprite.vx
+      this.player.sprite.y += this.player.sprite.vy
+
+      // background move depends on their velocity value
+      this.cityBackgroundLayer.x += this.cityBackgroundLayer.vx
       this.boardLayer.x += this.boardLayer.vx
+      this.obstacleLayer.x += this.obstacleLayer.vx
+
+      // observe obstacle
     })
 
     this.sceneTicker.start()

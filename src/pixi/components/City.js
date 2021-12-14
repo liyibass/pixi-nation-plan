@@ -1,14 +1,17 @@
 import { CityBackground } from './CityBackground'
 import { CityBoard } from './CityBoard'
 import { Globals } from '../script/Globals'
+import { CityObstacle } from './CityObstacle'
 const gameStageDimention = Globals.getSeesawGameStageDimention()
 
 export class City {
-  constructor(currentCityIndex = 0) {
+  constructor(currentCityIndex = 0, collisionMonitor) {
     this.cityName = this._getCityName(currentCityIndex)
+    this.collisionMonitor = collisionMonitor
 
     this.cityBackground = this.createCityBackground()
     this.cityBoard = this.createBoard()
+    this.cityObstacle = this.createObstacle(collisionMonitor)
   }
 
   createBoard() {
@@ -28,6 +31,15 @@ export class City {
     const background = new CityBackground(this.cityName)
 
     return background
+  }
+
+  createObstacle() {
+    const obstacle = new CityObstacle(
+      this.cityName,
+      this.cityBackground.container.width,
+      this.collisionMonitor
+    )
+    return obstacle
   }
 
   _getCityName(currentCityIndex) {

@@ -96,8 +96,7 @@ export class CityBackground {
       Globals.resources['highway'].texture
     )
     const HIGHWAY_COUNT = Math.round(proximateCityWidth / highwayTexture.width)
-    console.log(proximateCityWidth)
-    console.log(highwayTexture.width)
+
     for (let i = 0; i < HIGHWAY_COUNT; i++) {
       const highwaySprite = new PIXI.Sprite(highwayTexture)
       highwaySprite.pivot.y = highwaySprite.height
@@ -213,7 +212,7 @@ export class CityBackground {
       hotelSprite.x =
         (this.container.width / (TOTAL_HOTEL - 1)) * j +
         (Math.random() * 70 - 35)
-      hotelSprite.y = gameStageDimention.height + Math.floor(Math.random() * 30)
+      hotelSprite.y = gameStageDimention.height
 
       this.container.addChild(hotelSprite)
     }

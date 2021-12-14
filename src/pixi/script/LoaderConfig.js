@@ -50,6 +50,10 @@ import hotel0 from '../assets/images/hotel0.png'
 import hotel1 from '../assets/images/hotel1.png'
 import hotel2 from '../assets/images/hotel2.png'
 import hotel3 from '../assets/images/hotel3.png'
+import chimney0 from '../assets/images/chimney0.png'
+import chimney1 from '../assets/images/chimney1.png'
+import chimney2 from '../assets/images/chimney2.png'
+import chimney3 from '../assets/images/chimney3.png'
 
 export const LoaderConfig = {
   player,
@@ -104,4 +108,8 @@ export const LoaderConfig = {
   hotel1,
   hotel2,
   hotel3,
+  chimney0,
+  chimney1,
+  chimney2,
+  chimney3,
 }
