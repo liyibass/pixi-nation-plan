@@ -1,16 +1,15 @@
 import * as PIXI from 'pixi.js'
 
 import { Globals } from '../script/Globals'
+import { Obstacle } from './Obstacle'
 // const gameStageDimention = Globals.getRunGameStageDimention()
 
-export class Chimney {
+export class Chimney extends Obstacle {
   constructor(index = 0, collisionMonitor = () => {}) {
+    super()
     this.index = index
     this.collisionMonitor = collisionMonitor
     this.obstacleName = 'chimney'
-
-    this.container = new PIXI.Container()
-    this.container.name = `index`
 
     this.createChimney()
     this.isInWindow = false
@@ -32,44 +31,7 @@ export class Chimney {
     )
   }
 
-  startChimneyTicker() {
-    this.defaultX = this.container.x
-
-    this.chimneyOperateTicker = new PIXI.Ticker()
-
-    this.chimneyOperateTicker.add(() => {
-      this.checkIfObstacleIsInWindow()
-
-      if (this.isInWindow) {
-        this.turnOnChimney()
-
-        if (!this.isAddedToProcesser) {
-          // console.log('in window')
-          this.collisionMonitor(this)
-          this.isAddedToProcesser = true
-        }
-      } else {
-        if (this.isAddedToProcesser) {
-          // console.log('out of window')
-          this.collisionMonitor(this)
-          this.isAddedToProcesser = false
-        }
-      }
-    })
-
-    this.chimneyOperateTicker.start()
-  }
-
-  checkIfObstacleIsInWindow() {
-    const { tx } = this.container.worldTransform
-
-    this.isInWindow =
-      // tx >= gameStageDimention.x &&
-      // tx <= gameStageDimention.x + gameStageDimention.width
-      tx >= 0 && tx <= window.innerWidth
-  }
-
-  turnOnChimney() {
+  _turnOnObstacle() {
     if (this.vibrateDirection === 'left') {
       this.container.x++
 
@@ -83,9 +45,5 @@ export class Chimney {
         this.vibrateDirection = 'left'
       }
     }
-  }
-
-  destoryChimney() {
-    this.chimneyOperateTicker.stop()
   }
 }

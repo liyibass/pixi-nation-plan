@@ -67,11 +67,11 @@ export class CityObstacle {
         Math.floor(
           (Math.random() * CHIMNEY_DISTANCE) / 2 - CHIMNEY_DISTANCE / 4
         )
-      this.container.addChild(chimney.container)
 
       this.obstacleArray.push(chimney)
 
-      chimney.startChimneyTicker()
+      this.container.addChild(chimney.container)
+      chimney.startObstacleTicker()
     }
   }
 
