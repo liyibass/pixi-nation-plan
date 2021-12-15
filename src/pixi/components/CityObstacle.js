@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 import { Chimney } from './Chimney'
 import { Globals } from '../script/Globals'
 import { Car } from './Car'
+import { SolarBoard } from './SolarBoard'
 const gameStageDimention = Globals.getRunGameStageDimention()
 
 export class CityObstacle {
@@ -20,16 +21,17 @@ export class CityObstacle {
   createCityObstacle() {
     switch (this.cityName) {
       case 'Taoyuan':
-        this._createTaoyuan()
+        this._createMiaoli()
+        // this._createTaoyuan()
         break
 
       case 'Hsinchu':
         this._createHsinchu()
         break
 
-      // case 'Miaoli':
-      //   this._createMiaoli()
-      //   break
+      case 'Miaoli':
+        this._createMiaoli()
+        break
 
       // case 'Yunlin':
       //   this._createYunlin()
@@ -96,7 +98,29 @@ export class CityObstacle {
     }
   }
 
-  _createMiaoli() {}
+  _createMiaoli() {
+    const SOLAR_BAORD_WIDTH = 74
+    const SOLAR_BAORD_DISTANCE = (gameStageDimention.width * 4) / 5
+    const SOLAR_BOARD_COUNT =
+      Math.floor(1000 / (SOLAR_BAORD_DISTANCE - SOLAR_BAORD_WIDTH)) + 2
+    console.log(SOLAR_BOARD_COUNT)
+    // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
+
+    for (let i = 0; i < SOLAR_BOARD_COUNT; i++) {
+      const solarBoard = new SolarBoard(i, this.collisionMonitor)
+      solarBoard.container.y = gameStageDimention.height
+      solarBoard.container.x =
+        SOLAR_BAORD_DISTANCE * i +
+        Math.floor(
+          (Math.random() * SOLAR_BAORD_DISTANCE) / 2 - SOLAR_BAORD_DISTANCE / 4
+        )
+
+      this.obstacleArray.push(solarBoard)
+
+      this.container.addChild(solarBoard.container)
+      solarBoard.startObstacleTicker()
+    }
+  }
 
   _createYunlin() {}
 
