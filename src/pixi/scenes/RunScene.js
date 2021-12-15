@@ -298,58 +298,6 @@ export class RunScene extends Scene {
         return item.index !== obstacle.index
       })
     }
-    // const { tx: playerX, ty: playerY } = this.player.sprite.worldTransform
-    // const { width: playerWidth } = this.player.sprite
-    // const { tx: obstacleX, ty: obstacleY } = obstacle.container.worldTransform
-    // const { width: obstacleWidth, height: obstacleHeight } = obstacle.container
-    // const rightBoundaryHit =
-    //   playerX + playerWidth / 2 >= obstacleX - obstacleWidth / 2
-    // const leftBoundaryHit =
-    //   playerX - playerWidth / 2 <= obstacleX + obstacleWidth / 2
-    // const bottomBoundaryHit = playerY >= obstacleY - obstacleHeight
-    // const isOverObstacle = playerY <= obstacleY - obstacleHeight
-    // const isInObstacleArea =
-    //   playerY <= obstacleY + 20 && rightBoundaryHit && leftBoundaryHit
-    // // console.log(
-    // //   `isInObstacleArea: ${isInObstacleArea} by obstacle ${obstacle.index}`
-    // // )
-    // if (isInObstacleArea) {
-    //   if (isOverObstacle) {
-    //     // console.log('over obstacle')
-    //     overObstacleHandler.bind(this)()
-    //   } else if (bottomBoundaryHit) {
-    //     // console.log('collosion')
-    //     collosionObstacleHandler.bind(this)()
-    //   }
-    // } else {
-    //   const needToFall = Math.abs(playerX - obstacleX) <= obstacleWidth
-    //   if (needToFall) {
-    //     this.player.setStandHeight(this.player.initStandHeight)
-    //     this.player.fall()
-    //   }
-    // }
-    // // if (rightBoundaryHit && leftBoundaryHit) {
-    // //   if (isOverObstacle) {
-    // //     // console.log('over obstacle')
-    // //     overObstacleHandler.bind(this)()
-    // //   } else if (bottomBoundaryHit) {
-    // //     // console.log('collosion')
-    // //     collosionObstacleHandler.bind(this)()
-    // //   }
-    // // } else {
-    // //   this.player.setStandHeight(this.player.initStandHeight)
-    // //   this.player.fall()
-    // // }
-    // function overObstacleHandler() {
-    //   this.player.setStandHeight(this.player.initStandHeight - obstacleHeight)
-    // }
-    // function collosionObstacleHandler() {
-    //   this.player.sprite.x -= playerX < obstacleX ? 1 : -1
-    //   this.player.sprite.vx = 0
-    //   this.cityBackgroundLayer.vx = 0
-    //   this.boardLayer.vx = 0
-    //   this.obstacleLayer.vx = 0
-    // }
   }
 
   _startSceneTicker() {
@@ -412,24 +360,27 @@ export class RunScene extends Scene {
         playerY <= obstacleY + 20 && rightBoundaryHit && leftBoundaryHit
 
       if (isInObstacleArea) {
-        console.log('isInObstacleArea')
-        this.player.setStandHeight(this.player.initStandHeight - obstacleHeight)
+        // console.log('isInObstacleArea')
+        this.player.touchedObstacleIndex = obstacle.index
 
         if (bottomBoundaryHit) {
-          console.log('just touch obstacle')
-
-          console.log(this.player.isFalling)
-          console.log(playerY)
-          console.log(obstacleY)
-          console.log(obstacleHeight)
+          // console.log('just touch obstacle')
+          // console.log(this.player.hasBeenTop)
+          // console.log(playerY)
+          // console.log(obstacleY)
+          // console.log(obstacleHeight)
           if (
-            this.player.isFalling ||
+            this.player.hasBeenTop ||
             (playerY >= obstacleY - obstacleHeight - 5 &&
               playerY <= obstacleY - obstacleHeight + 5)
           ) {
-            console.log('stand collision')
+            // console.log('stand collision')
+            // this.player.jumpTicker.stop()
+            this.player.setStandHeight(
+              this.player.initStandHeight - obstacleHeight
+            )
           } else {
-            console.log('side collision')
+            // console.log('side collision')
 
             this.player.sprite.x -= playerX < obstacleX ? 1 : -1
             this.player.sprite.vx = 0
@@ -439,10 +390,17 @@ export class RunScene extends Scene {
           }
         }
 
-        break
+        return
       } else {
-        this.player.setStandHeight(this.player.initStandHeight)
-        this.player.fall()
+        // console.log(' else from' + obstacle.index)
+
+        if (this.player.touchedObstacleIndex === obstacle.index) {
+          // console.log(' else fall from' + obstacle.index)
+          // console.log(this.player.touchedObstacleIndex)
+          this.player.setStandHeight(this.player.initStandHeight)
+          this.player.fall()
+          this.player.touchedObstacleIndex = null
+        }
       }
     }
   }

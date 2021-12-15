@@ -60,10 +60,6 @@ export class Chimney {
     this.chimneyOperateTicker.start()
   }
 
-  tempCollisionMonitor(obstacle) {
-    console.log(`moniter obstacle ${obstacle.index}`)
-  }
-
   checkIfObstacleIsInWindow() {
     const { tx } = this.container.worldTransform
 

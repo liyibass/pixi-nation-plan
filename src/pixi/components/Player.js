@@ -14,6 +14,8 @@ export class Player {
     this.initStandHeight = 0
     this.standHeight = 0
     this.isFalling = false
+    this.hasBeenTop = false
+    this.touchedObstacleIndex = null
   }
 
   createSprite() {
@@ -48,16 +50,17 @@ export class Player {
 
     this.jumpTicker = new PIXI.Ticker()
     this.jumpTicker.add((deltaMs) => {
+      // console.log('jumpTicker')
       const jumpHeight = v0 * time + (1 / 2) * -gravity * Math.pow(time, 2)
       const v = v0 - gravity * time
       if (v < 0) {
-        this.isFalling = true
+        this.hasBeenTop = true
       }
 
       if (v < 0 && this.sprite.y > this.standHeight) {
-        console.log('JUMP STOP')
+        // console.log('JUMP STOP')
         this.isJumping = false
-        this.isFalling = false
+        this.hasBeenTop = false
         this.jumpTicker.stop()
         this.sprite.y = this.standHeight
         return
