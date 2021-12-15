@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { Chimney } from './Chimney'
 import { Globals } from '../script/Globals'
+import { Car } from './Car'
 const gameStageDimention = Globals.getRunGameStageDimention()
 
 export class CityObstacle {
@@ -22,9 +23,9 @@ export class CityObstacle {
         this._createTaoyuan()
         break
 
-      // case 'Hsinchu':
-      //   this._createHsinchu()
-      //   break
+      case 'Hsinchu':
+        this._createHsinchu()
+        break
 
       // case 'Miaoli':
       //   this._createMiaoli()
@@ -75,7 +76,25 @@ export class CityObstacle {
     }
   }
 
-  _createHsinchu() {}
+  _createHsinchu() {
+    const CAR_WIDTH = 90
+    const CAR_COUNT = Math.floor(gameStageDimention.width / CAR_WIDTH) * 2
+    // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
+    const CAR_DISTANCE = 100 + Math.floor(Math.random() * 50)
+
+    for (let i = 0; i < CAR_COUNT; i++) {
+      const car = new Car(i, this.collisionMonitor)
+      car.container.y = gameStageDimention.height
+      car.container.x =
+        CAR_DISTANCE * i +
+        Math.floor((Math.random() * CAR_DISTANCE) / 2 - CAR_DISTANCE / 4)
+
+      this.obstacleArray.push(car)
+
+      this.container.addChild(car.container)
+      car.startObstacleTicker()
+    }
+  }
 
   _createMiaoli() {}
 

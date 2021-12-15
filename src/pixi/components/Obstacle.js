@@ -12,6 +12,7 @@ export class Obstacle {
 
   startObstacleTicker() {
     this.defaultX = this.container.x
+    this.defaultY = this.container.y
 
     this.ObstacleOperateTicker = new PIXI.Ticker()
 
