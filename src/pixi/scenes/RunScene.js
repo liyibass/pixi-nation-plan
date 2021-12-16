@@ -19,6 +19,7 @@ export class RunScene extends Scene {
     super()
     this.currentCityIndex = 0
     this.inWindowObstacles = []
+    this.container.name = 'RunScene'
 
     this.createScene()
     this.startGameFlow()
@@ -27,8 +28,8 @@ export class RunScene extends Scene {
   createScene() {
     this._createBackground(0x0e427f)
     this._createGameStage()
-    this._addMaskToGameStage()
     this._createGroundBackground()
+    this._addMaskToGameStage()
     this._createItems()
 
     this._createDoctorSay()
@@ -91,6 +92,17 @@ export class RunScene extends Scene {
     // set up gameStage's position
     backgroundColor.x = 0
     backgroundColor.y = this.gameStageY + this.gameStageHeight
+
+    // console.log(backgroundColor)
+    // console.log(this.gameStage)
+    this.container.setChildIndex(this.gameStage, 2)
+  }
+
+  _addMaskToGameStage() {
+    const mask = new PIXI.Graphics()
+    mask.drawRect(0, 0, this.gameStageWidth, this.gameStageHeight + 31)
+    this.gameStage.mask = mask
+    this.gameStage.addChild(mask)
   }
 
   // ===== init game =====
@@ -343,8 +355,7 @@ export class RunScene extends Scene {
       const { tx: playerX, ty: playerY } = this.player.sprite.worldTransform
       const { width: playerWidth } = this.player.sprite
       const { tx: obstacleX, ty: obstacleY } = obstacle.container.worldTransform
-      const { width: obstacleWidth, height: obstacleHeight } =
-        obstacle.container
+      const { obstacleWidth, obstacleHeight } = obstacle
 
       const rightBoundaryHit =
         playerX + playerWidth / 2 >= obstacleX - obstacleWidth / 2

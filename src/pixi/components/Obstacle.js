@@ -8,6 +8,8 @@ export class Obstacle {
 
     this.container = new PIXI.Container()
     this.isInWindow = false
+    this.obstacleWidth = 0
+    this.obstacleHeight = 0
   }
 
   startObstacleTicker() {
@@ -47,5 +49,10 @@ export class Obstacle {
 
   _turnOnObstacle() {
     // overwrite by extended
+  }
+
+  _setWidthAndHeight() {
+    this.obstacleWidth = this.container.width
+    this.obstacleHeight = this.container.height
   }
 }

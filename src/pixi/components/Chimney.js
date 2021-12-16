@@ -15,6 +15,8 @@ export class Chimney extends Obstacle {
     this.isInWindow = false
     this.isInOperate = true
     this.vibrateDirection = this.index % 2 ? 'right' : 'left'
+
+    this._setWidthAndHeight()
   }
 
   createChimney() {

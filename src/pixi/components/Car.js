@@ -15,6 +15,8 @@ export class Car extends Obstacle {
     this.isInWindow = false
     this.isInOperate = true
     this.vibrateDirection = this.index % 2 ? 'up' : 'down'
+
+    this._setWidthAndHeight()
   }
 
   createChimney() {

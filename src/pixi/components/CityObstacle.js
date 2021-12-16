@@ -3,6 +3,7 @@ import { Chimney } from './Chimney'
 import { Globals } from '../script/Globals'
 import { Car } from './Car'
 import { SolarBoard } from './SolarBoard'
+import { Water } from './Water'
 const gameStageDimention = Globals.getRunGameStageDimention()
 
 export class CityObstacle {
@@ -22,7 +23,7 @@ export class CityObstacle {
     switch (this.cityName) {
       case 'Taoyuan':
         // this._createTaoyuan()
-        this._createTaoyuan()
+        this._createYunlin()
         break
 
       case 'Hsinchu':
@@ -102,7 +103,7 @@ export class CityObstacle {
     const SOLAR_BAORD_DISTANCE = (gameStageDimention.width * 4) / 5
     const SOLAR_BOARD_COUNT =
       Math.floor(1000 / (SOLAR_BAORD_DISTANCE - SOLAR_BAORD_WIDTH)) + 2
-    console.log(SOLAR_BOARD_COUNT)
+
     // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
 
     for (let i = 0; i < SOLAR_BOARD_COUNT; i++) {
@@ -121,7 +122,32 @@ export class CityObstacle {
     }
   }
 
-  _createYunlin() {}
+  _createYunlin() {
+    const SOLAR_BAORD_WIDTH = 74
+    const SOLAR_BAORD_DISTANCE = (gameStageDimention.width * 4) / 5
+    const SOLAR_BOARD_COUNT =
+      Math.floor(1000 / (SOLAR_BAORD_DISTANCE - SOLAR_BAORD_WIDTH)) + 2
+
+    // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
+
+    for (let i = 0; i < SOLAR_BOARD_COUNT; i++) {
+      const solarBoard = new Water(i, this.collisionMonitor)
+      solarBoard.container.y =
+        gameStageDimention.height + solarBoard.container.height
+      // solarBoard.container.y =
+      //   gameStageDimention.height + solarBoard.container.height
+      solarBoard.container.x =
+        SOLAR_BAORD_DISTANCE * i +
+        Math.floor(
+          (Math.random() * SOLAR_BAORD_DISTANCE) / 2 - SOLAR_BAORD_DISTANCE / 4
+        )
+
+      this.obstacleArray.push(solarBoard)
+
+      this.container.addChild(solarBoard.container)
+      solarBoard.startObstacleTicker()
+    }
+  }
 
   _createKaohsiung() {}
 
