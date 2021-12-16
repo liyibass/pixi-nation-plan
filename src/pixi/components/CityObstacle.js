@@ -21,8 +21,8 @@ export class CityObstacle {
   createCityObstacle() {
     switch (this.cityName) {
       case 'Taoyuan':
-        this._createMiaoli()
         // this._createTaoyuan()
+        this._createTaoyuan()
         break
 
       case 'Hsinchu':
@@ -79,18 +79,17 @@ export class CityObstacle {
   }
 
   _createHsinchu() {
-    const CAR_WIDTH = 90
-    const CAR_COUNT = Math.floor(gameStageDimention.width / CAR_WIDTH) * 2
+    // const CAR_WIDTH = 90
     // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
-    const CAR_DISTANCE = 100 + Math.floor(Math.random() * 50)
+    const CAR_DISTANCE = (gameStageDimention.width * 3) / 5
+    const CAR_COUNT =
+      Math.floor((gameStageDimention.width * 2) / CAR_DISTANCE) * 2
 
     for (let i = 0; i < CAR_COUNT; i++) {
       const car = new Car(i, this.collisionMonitor)
       car.container.y = gameStageDimention.height
       car.container.x =
-        CAR_DISTANCE * i +
-        Math.floor((Math.random() * CAR_DISTANCE) / 2 - CAR_DISTANCE / 4)
-
+        CAR_DISTANCE * i - Math.floor((Math.random() * CAR_DISTANCE) / 2)
       this.obstacleArray.push(car)
 
       this.container.addChild(car.container)
