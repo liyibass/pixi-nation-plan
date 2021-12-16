@@ -351,10 +351,14 @@ export class RunScene extends Scene {
   _obstacleProcesser() {
     for (let i = 0; i < this.inWindowObstacles.length; i++) {
       const obstacle = this.inWindowObstacles[i]
+      obstacle._setGlobalXAndY()
 
       const { tx: playerX, ty: playerY } = this.player.sprite.worldTransform
       const { width: playerWidth } = this.player.sprite
-      const { tx: obstacleX, ty: obstacleY } = obstacle.container.worldTransform
+
+      const { obstacleGlobalX: obstacleX, obstacleGlobalY: obstacleY } =
+        obstacle
+
       const { obstacleWidth, obstacleHeight } = obstacle
 
       const rightBoundaryHit =
@@ -376,20 +380,23 @@ export class RunScene extends Scene {
 
         if (bottomBoundaryHit) {
           // console.log('just touch obstacle')
-          // console.log(this.player.hasBeenTop)
-          // console.log(playerY)
-          // console.log(obstacleY)
-          // console.log(obstacleHeight)
+          console.log('DEAD')
+
           if (
             this.player.hasBeenTop ||
             (playerY >= obstacleY - obstacleHeight - 5 &&
               playerY <= obstacleY - obstacleHeight + 5)
           ) {
             // console.log('stand collision')
-            // this.player.jumpTicker.stop()
-            this.player.setStandHeight(
-              this.player.initStandHeight - obstacleHeight
-            )
+
+            if (obstacle.obstacleName === 'water') {
+              console.log('DEAD')
+            } else {
+              this.player.jumpTicker.stop()
+              this.player.setStandHeight(
+                this.player.initStandHeight - obstacleHeight
+              )
+            }
           } else {
             // console.log('side collision')
 

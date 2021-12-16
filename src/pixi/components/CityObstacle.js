@@ -74,6 +74,7 @@ export class CityObstacle {
       this.obstacleArray.push(chimney)
 
       this.container.addChild(chimney.container)
+
       chimney.startObstacleTicker()
     }
   }
@@ -122,24 +123,21 @@ export class CityObstacle {
   }
 
   _createYunlin() {
-    const SOLAR_BAORD_WIDTH = 74
-    const SOLAR_BAORD_DISTANCE = (gameStageDimention.width * 4) / 5
-    const SOLAR_BOARD_COUNT =
-      Math.floor(1000 / (SOLAR_BAORD_DISTANCE - SOLAR_BAORD_WIDTH)) + 2
+    const WATER_WIDTH = 74
+    const WATER_DISTANCE = (gameStageDimention.width * 4) / 5
+    const WATER_COUNT = Math.floor(1000 / (WATER_DISTANCE - WATER_WIDTH)) + 2
 
     // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
 
-    for (let i = 0; i < SOLAR_BOARD_COUNT; i++) {
+    for (let i = 0; i < WATER_COUNT; i++) {
       const solarBoard = new Water(i, this.collisionMonitor)
       solarBoard.container.y =
         gameStageDimention.height + solarBoard.container.height
       // solarBoard.container.y =
       //   gameStageDimention.height + solarBoard.container.height
       solarBoard.container.x =
-        SOLAR_BAORD_DISTANCE * i +
-        Math.floor(
-          (Math.random() * SOLAR_BAORD_DISTANCE) / 2 - SOLAR_BAORD_DISTANCE / 4
-        )
+        WATER_DISTANCE * i +
+        Math.floor((Math.random() * WATER_DISTANCE) / 2 - WATER_DISTANCE / 4)
 
       this.obstacleArray.push(solarBoard)
 

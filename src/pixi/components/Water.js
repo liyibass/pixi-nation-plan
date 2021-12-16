@@ -9,7 +9,7 @@ export class Water extends Obstacle {
     super()
     this.index = index
     this.collisionMonitor = collisionMonitor
-    this.obstacleName = 'car'
+    this.obstacleName = 'water'
 
     this.createWater()
     this.isInWindow = false
@@ -20,9 +20,10 @@ export class Water extends Obstacle {
   }
 
   createWater() {
+    const waterWidth = this.index % 3 !== 0 ? 158 * 2 : 158
     this.waterGraphic = new PIXI.Graphics()
     this.waterGraphic.beginFill(0x3b6bd6)
-    this.waterGraphic.drawRect(0, 0, 158, 31)
+    this.waterGraphic.drawRect(0, 0, waterWidth, 31)
     this.waterGraphic.endFill()
 
     this.container.addChild(this.waterGraphic)
@@ -45,10 +46,17 @@ export class Water extends Obstacle {
     // )
   }
 
-  _setWidthAndHeight() {
-    this.obstacleWidth = this.container.width
-    this.obstacleHeight = this.container.height - this.waterGraphic.height
+  _setGlobalXAndY() {
+    const global = this.container.worldTransform
+
+    this.obstacleGlobalX = global.tx
+    this.obstacleGlobalY = global.ty
   }
+
+  // _setWidthAndHeight() {
+  //   this.obstacleWidth = this.container.width
+  //   this.obstacleHeight = this.container.height - this.waterGraphic.height + 10
+  // }
 
   // _turnOnObstacle() {
   //   if (this.vibrateDirection === 'up') {

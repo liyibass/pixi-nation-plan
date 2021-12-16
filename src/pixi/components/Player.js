@@ -42,8 +42,8 @@ export class Player {
     this.isJumping = true
 
     let time = 0
-    const v0 = 20
-    const gravity = 0.8
+    const v0 = 16
+    const gravity = 0.7
     const direction = -1 //to Top
     const jumpAtY = this.sprite.y
     // const jumpAtY = this.sprite.y

@@ -8,6 +8,9 @@ export class Obstacle {
 
     this.container = new PIXI.Container()
     this.isInWindow = false
+
+    this.obstacleGlobalX = 0
+    this.obstacleGlobalY = 0
     this.obstacleWidth = 0
     this.obstacleHeight = 0
   }
@@ -54,5 +57,14 @@ export class Obstacle {
   _setWidthAndHeight() {
     this.obstacleWidth = this.container.width
     this.obstacleHeight = this.container.height
+
+    // console.log(this)
+  }
+
+  _setGlobalXAndY() {
+    const global = this.container.worldTransform
+
+    this.obstacleGlobalX = global.tx
+    this.obstacleGlobalY = global.ty
   }
 }
