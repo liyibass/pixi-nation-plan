@@ -100,7 +100,7 @@ export class RunScene extends Scene {
 
   _addMaskToGameStage() {
     const mask = new PIXI.Graphics()
-    mask.drawRect(0, 0, this.gameStageWidth, this.gameStageHeight + 31)
+    mask.drawRect(0, 0, this.gameStageWidth, this.gameStageHeight + 30)
     this.gameStage.mask = mask
     this.gameStage.addChild(mask)
   }

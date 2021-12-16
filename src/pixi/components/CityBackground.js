@@ -117,9 +117,13 @@ export class CityBackground {
       bushSprite.x =
         (this.container.width / (TOTAL_BUSH - 1)) * j +
         (Math.random() * 70 - 35)
-      bushSprite.y = gameStageDimention.height + Math.floor(Math.random() * 30)
+
+      const bushYOffset = Math.floor(Math.random() * 30)
+      bushSprite.y = gameStageDimention.height + bushYOffset
 
       this.container.addChild(bushSprite)
+
+      this._addMaskToObstacle(bushSprite, bushYOffset)
     }
   }
 
@@ -137,10 +141,12 @@ export class CityBackground {
 
       buildingSprite.x =
         (proximateCityWidth / TOTAL_BUILDING) * j + (Math.random() * 100 - 50)
-      buildingSprite.y =
-        gameStageDimention.height + Math.floor(Math.random() * 40) + 10
+      const buildingYOffset = Math.floor(Math.random() * 40) + 10
+      buildingSprite.y = gameStageDimention.height + buildingYOffset
 
       this.container.addChild(buildingSprite)
+
+      this._addMaskToObstacle(buildingSprite, buildingYOffset)
     }
   }
 
@@ -177,9 +183,11 @@ export class CityBackground {
       const mountainSprite = new PIXI.Sprite(mountainTexture)
       mountainSprite.pivot.y = mountainSprite.height
       mountainSprite.x = this.container.width - Math.floor(Math.random() * 100)
-      mountainSprite.y =
-        gameStageDimention.height + Math.floor(Math.random() * 20)
+      const mountainYOffset = Math.floor(Math.random() * 20)
+      mountainSprite.y = gameStageDimention.height + mountainYOffset
       this.container.addChild(mountainSprite)
+
+      this._addMaskToObstacle(mountainSprite, mountainYOffset)
     }
   }
 
@@ -195,9 +203,12 @@ export class CityBackground {
       const mountainSprite = new PIXI.Sprite(mountainTexture)
       mountainSprite.pivot.y = mountainSprite.height
       mountainSprite.x = this.container.width + Math.floor(Math.random() * 100)
-      mountainSprite.y =
-        gameStageDimention.height + Math.floor(Math.random() * 20) + 20
+      const mountainYOffset = Math.floor(Math.random() * 20)
+      mountainSprite.y = gameStageDimention.height + mountainYOffset
+
       this.container.addChild(mountainSprite)
+
+      this._addMaskToObstacle(mountainSprite, mountainYOffset)
     }
 
     const TOTAL_HOTEL = 2 * MOUNTAIN_COUNT + 1
@@ -216,5 +227,22 @@ export class CityBackground {
 
       this.container.addChild(hotelSprite)
     }
+  }
+
+  _addMaskToObstacle(viewObject, offset) {
+    // if (this.cityName === 'Yunlin') return
+
+    const maskWidth = viewObject.width
+    const maskHeight = viewObject.height
+
+    const mask = new PIXI.Graphics()
+    mask.beginFill(0x333333)
+    mask.drawRect(0, 0, maskWidth, maskHeight - offset)
+    mask.endFill()
+    // mask.pivot.set(0, mask.height)
+    mask.x = 0
+    mask.y = 0
+    viewObject.mask = mask
+    viewObject.addChild(mask)
   }
 }

@@ -22,8 +22,7 @@ export class CityObstacle {
   createCityObstacle() {
     switch (this.cityName) {
       case 'Taoyuan':
-        // this._createTaoyuan()
-        this._createYunlin()
+        this._createTaoyuan()
         break
 
       case 'Hsinchu':
@@ -34,21 +33,21 @@ export class CityObstacle {
         this._createMiaoli()
         break
 
-      // case 'Yunlin':
-      //   this._createYunlin()
-      //   break
+      case 'Yunlin':
+        this._createYunlin()
+        break
 
-      // case 'Kaohsiung':
-      //   this._createKaohsiung()
-      //   break
+      case 'Kaohsiung':
+        this._createKaohsiung()
+        break
 
-      // case 'Mountain':
-      //   this._createMountain()
-      //   break
+      case 'Mountain':
+        this._createMountain()
+        break
 
-      // case 'Yilan':
-      //   this._createYilan()
-      //   break
+      case 'Yilan':
+        this._createYilan()
+        break
 
       default:
         this._createTaoyuan()

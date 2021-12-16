@@ -1,3 +1,4 @@
+// import * as PIXI from 'pixi.js'
 import { CityBackground } from './CityBackground'
 import { CityBoard } from './CityBoard'
 import { Globals } from '../script/Globals'
@@ -12,6 +13,8 @@ export class City {
     this.cityBackground = this.createCityBackground()
     this.cityBoard = this.createBoard()
     this.cityObstacle = this.createObstacle(collisionMonitor)
+
+    // this._addMaskToObstacle()
   }
 
   createBoard() {

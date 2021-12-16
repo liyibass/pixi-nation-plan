@@ -31,6 +31,7 @@ export class Water extends Obstacle {
       this.waterGraphic.width / 2,
       this.waterGraphic.height
     )
+
     // const chimneyTexture = new PIXI.Texture(
     //   Globals.resources[`car${Math.floor(this.index % 4)}`]?.texture
     // )
