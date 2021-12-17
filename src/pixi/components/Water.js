@@ -30,7 +30,10 @@ export class Water extends Obstacle {
 
     this.container.addChild(this.waterGraphic)
 
-    this.waterGraphic.pivot.set(0, this.waterGraphic.height)
+    this.waterGraphic.pivot.set(
+      this.waterGraphic.width / 2,
+      this.waterGraphic.height
+    )
   }
 
   _setGlobalXAndY() {

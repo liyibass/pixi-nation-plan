@@ -5,23 +5,23 @@ import { Obstacle } from './Obstacle'
 // const gameStageDimention = Globals.getRunGameStageDimention()
 
 export class Car extends Obstacle {
-  constructor(index = 0, collisionMonitor = () => {}) {
+  constructor(index = 0, collisionMonitor = () => {}, isCarInWater = false) {
     super()
     this.index = index
     this.collisionMonitor = collisionMonitor
     this.obstacleName = 'car'
 
-    this.createChimney()
+    this.createCar()
     this.isInWindow = false
     this.isInOperate = true
     this.vibrateDirection = this.index % 2 ? 'up' : 'down'
 
-    this.isCarInWater = false
+    this.isCarInWater = isCarInWater
 
     this._setWidthAndHeight()
   }
 
-  createChimney() {
+  createCar() {
     const chimneyTexture = new PIXI.Texture(
       Globals.resources[`car${Math.floor(this.index % 4)}`]?.texture
     )
@@ -68,6 +68,16 @@ export class Car extends Obstacle {
           this.vibrateDirection = 'up'
         }
       }
+    }
+  }
+
+  _setWidthAndHeight() {
+    if (this.isCarInWater) {
+      this.obstacleWidth = this.container.width
+      this.obstacleHeight = this.container.height - 15
+    } else {
+      this.obstacleWidth = this.container.width
+      this.obstacleHeight = this.container.height
     }
   }
 }

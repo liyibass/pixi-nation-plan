@@ -76,10 +76,10 @@ export class Player {
 
   fall() {
     console.log('fall')
-    console.log(this.sprite.y)
-    console.log(this.initStandHeight)
-    console.log(this.isJumping)
-    console.log(this.isFalling)
+    // console.log(this.sprite.y)
+    // console.log(this.initStandHeight)
+    // console.log(this.isJumping)
+    // console.log(this.isFalling)
     if (this.sprite.y === this.initStandHeight) return
     if (this.isJumping || this.isFalling) return
     this.isFalling = true

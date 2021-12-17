@@ -132,7 +132,7 @@ export class CityObstacle {
     // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
 
     for (let i = 1; i <= WATER_COUNT; i++) {
-      const water = new Water(i, this.collisionMonitor)
+      const water = new Water(i + 200, this.collisionMonitor)
       water.container.y = gameStageDimention.height + water.container.height
       // solarBoard.container.y =
       //   gameStageDimention.height + solarBoard.container.height
@@ -167,19 +167,16 @@ export class CityObstacle {
 
         const floatingObstacle =
           j % 2 === 0
-            ? new Car(i * 10 + j, this.collisionMonitor)
+            ? new Car(i * 10 + j, this.collisionMonitor, true)
             : new House(i * 10 + j, this.collisionMonitor)
-
-        if (floatingObstacle.obstacleName === 'car') {
-          floatingObstacle.isCarInWater = true
-        }
 
         floatingObstacle.container.y =
           floatingObstacle.obstacleName === 'house'
             ? gameStageDimention.height
             : gameStageDimention.height + 15
         floatingObstacle.container.x =
-          water.container.x +
+          water.container.x -
+          water.container.width / 2 +
           (water.container.width / (water.waterWidthLevel + 1)) * j
 
         this.obstacleArray.push(floatingObstacle)

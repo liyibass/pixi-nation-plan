@@ -354,18 +354,16 @@ export class RunScene extends Scene {
       obstacle._setGlobalXAndY()
 
       const { tx: playerX, ty: playerY } = this.player.sprite.worldTransform
-      const { width: playerWidth } = this.player.sprite
+      // const { width: playerWidth } = this.player.sprite
 
       const { obstacleGlobalX: obstacleX, obstacleGlobalY: obstacleY } =
         obstacle
 
       const { obstacleWidth, obstacleHeight } = obstacle
 
-      const rightBoundaryHit =
-        playerX + playerWidth / 2 >= obstacleX - obstacleWidth / 2
+      const rightBoundaryHit = playerX >= obstacleX - obstacleWidth / 2
 
-      const leftBoundaryHit =
-        playerX - playerWidth / 2 <= obstacleX + obstacleWidth / 2
+      const leftBoundaryHit = playerX <= obstacleX + obstacleWidth / 2
 
       const bottomBoundaryHit = playerY >= obstacleY - obstacleHeight
 
@@ -416,7 +414,7 @@ export class RunScene extends Scene {
         // console.log(' else from' + obstacle.index)
 
         if (this.player.touchedObstacleIndex === obstacle.index) {
-          console.log(' else fall from' + obstacle.index)
+          // console.log(' else fall from' + obstacle.index)
           // console.log(this.player.touchedObstacleIndex)
 
           this.player.setStandHeight(this.player.initStandHeight)
