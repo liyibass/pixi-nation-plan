@@ -125,19 +125,26 @@ export class CityObstacle {
   }
 
   _createYunlin() {
-    const WATER_WIDTH = 74
-    const WATER_DISTANCE = (gameStageDimention.width * 3) / 5
-    const WATER_COUNT = Math.floor(1000 / (WATER_DISTANCE - WATER_WIDTH)) + 2
+    const WATER_WIDTH = 300
+    const WATER_DISTANCE = 100
+    const WATER_UNIT = WATER_DISTANCE + WATER_WIDTH
+    const WATER_COUNT = Math.floor(this.obstacleWidth / WATER_UNIT)
 
     // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
+    console.log(WATER_COUNT)
 
+    let waterContainerWidth = 0
     for (let i = 1; i <= WATER_COUNT; i++) {
       const water = new Water(i + 200, this.collisionMonitor)
       water.container.y = gameStageDimention.height + water.container.height
       // solarBoard.container.y =
       //   gameStageDimention.height + solarBoard.container.height
-      water.container.x = WATER_DISTANCE * (i - 1) + WATER_DISTANCE / 5
-      Math.floor((Math.random() * WATER_DISTANCE) / 4)
+
+      water.container.x =
+        waterContainerWidth +
+        water.container.width / 2 +
+        (i === 1 ? 0 : WATER_DISTANCE)
+      waterContainerWidth += water.container.width + WATER_DISTANCE
 
       this.obstacleArray.push(water)
       this.container.addChild(water.container)
@@ -146,25 +153,6 @@ export class CityObstacle {
       // add obstacle floating on the water
 
       for (let j = 1; j <= water.waterWidthLevel; j++) {
-        // let floatingObstacle = {}
-        // switch (j % 2) {
-        //   case 0:
-        //     floatingObstacle = new House(j, this.collisionMonitor)
-        //     break
-
-        //   default:
-        //   case 1:
-        //     floatingObstacle = new Car(j, this.collisionMonitor)
-        //     break
-        // }
-
-        // floatingObstacle.container.y = gameStageDimention.height
-        // floatingObstacle.container.x = water.container.x
-
-        // this.obstacleArray.push(floatingObstacle)
-        // this.container.addChild(floatingObstacle.container)
-        // floatingObstacle.startObstacleTicker()
-
         const floatingObstacle =
           j % 2 === 0
             ? new Car(i * 10 + j, this.collisionMonitor, true)
@@ -177,7 +165,8 @@ export class CityObstacle {
         floatingObstacle.container.x =
           water.container.x -
           water.container.width / 2 +
-          (water.container.width / (water.waterWidthLevel + 1)) * j
+          (water.container.width / (water.waterWidthLevel + 1)) * j +
+          (Math.random() * 40 - 20)
 
         this.obstacleArray.push(floatingObstacle)
         this.container.addChild(floatingObstacle.container)
@@ -189,21 +178,6 @@ export class CityObstacle {
         this.container.children.length - 1
       )
     }
-
-    // const CAR_DISTANCE = (gameStageDimention.width * 3) / 5
-    // const CAR_COUNT =
-    //   Math.floor((gameStageDimention.width * 2) / CAR_DISTANCE) * 2
-
-    // for (let i = 0; i < CAR_COUNT; i++) {
-    //   const car = new Car(i, this.collisionMonitor)
-    //   car.container.y = gameStageDimention.height
-    //   car.container.x =
-    //     CAR_DISTANCE * i - Math.floor((Math.random() * CAR_DISTANCE) / 2)
-    //   this.obstacleArray.push(car)
-
-    //   this.container.addChild(car.container)
-    //   car.startObstacleTicker()
-    // }
   }
 
   _createYunlinX() {

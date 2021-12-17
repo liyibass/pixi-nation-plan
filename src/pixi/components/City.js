@@ -39,7 +39,7 @@ export class City {
   createObstacle() {
     const obstacle = new CityObstacle(
       this.cityName,
-      this.cityBackground.container.width,
+      this.cityBackground.container.width * 2,
       this.collisionMonitor
     )
     return obstacle
