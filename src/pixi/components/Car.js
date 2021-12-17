@@ -16,6 +16,8 @@ export class Car extends Obstacle {
     this.isInOperate = true
     this.vibrateDirection = this.index % 2 ? 'up' : 'down'
 
+    this.isCarInWater = false
+
     this._setWidthAndHeight()
   }
 
@@ -31,20 +33,40 @@ export class Car extends Obstacle {
       this.chimneySprite.width / 2,
       this.chimneySprite.height
     )
+
+    if (this.isCarInWater) {
+      this.container.y += this.container.y + (Math.random() * 5 - 2.5)
+    }
   }
 
   _turnOnObstacle() {
-    if (this.vibrateDirection === 'up') {
-      this.container.y++
+    if (this.isCarInWater) {
+      if (this.vibrateDirection === 'up') {
+        this.container.y += 0.2
 
-      if (this.container.y > this.defaultY + 0.5) {
-        this.vibrateDirection = 'down'
+        if (this.container.y > this.defaultY + 5) {
+          this.vibrateDirection = 'down'
+        }
+      } else {
+        this.container.y -= 0.2
+
+        if (this.container.y < this.defaultY - 5) {
+          this.vibrateDirection = 'up'
+        }
       }
     } else {
-      this.container.y--
+      if (this.vibrateDirection === 'up') {
+        this.container.y++
 
-      if (this.container.y < this.defaultY - 0.5) {
-        this.vibrateDirection = 'up'
+        if (this.container.y > this.defaultY + 0.5) {
+          this.vibrateDirection = 'down'
+        }
+      } else {
+        this.container.y--
+
+        if (this.container.y < this.defaultY - 0.5) {
+          this.vibrateDirection = 'up'
+        }
       }
     }
   }

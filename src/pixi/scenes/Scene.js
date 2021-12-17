@@ -104,7 +104,7 @@ export class Scene {
 
   async startGame() {
     console.log('game started')
-    await this._countDown(3)
+    // await this._countDown(3)
   }
 
   // ===== game pause =====

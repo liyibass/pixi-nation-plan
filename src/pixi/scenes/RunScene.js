@@ -375,30 +375,33 @@ export class RunScene extends Scene {
         playerY <= obstacleY + 20 && rightBoundaryHit && leftBoundaryHit
 
       if (isInObstacleArea) {
-        // console.log('isInObstacleArea')
+        console.log('isInObstacleArea')
         this.player.touchedObstacleIndex = obstacle.index
 
         if (bottomBoundaryHit) {
-          // console.log('just touch obstacle')
-          console.log('DEAD')
+          console.log('just touch obstacle')
+
+          // console.log('DEAD')
 
           if (
             this.player.hasBeenTop ||
             (playerY >= obstacleY - obstacleHeight - 5 &&
               playerY <= obstacleY - obstacleHeight + 5)
           ) {
-            // console.log('stand collision')
+            console.log('stand collision')
 
             if (obstacle.obstacleName === 'water') {
               console.log('DEAD')
             } else {
-              this.player.jumpTicker.stop()
+              // this.player.jumpTicker.stop()
+
               this.player.setStandHeight(
                 this.player.initStandHeight - obstacleHeight
               )
+              console.log(this.player.standHeight)
             }
           } else {
-            // console.log('side collision')
+            console.log('side collision')
 
             this.player.sprite.x -= playerX < obstacleX ? 1 : -1
             this.player.sprite.vx = 0
@@ -413,8 +416,9 @@ export class RunScene extends Scene {
         // console.log(' else from' + obstacle.index)
 
         if (this.player.touchedObstacleIndex === obstacle.index) {
-          // console.log(' else fall from' + obstacle.index)
+          console.log(' else fall from' + obstacle.index)
           // console.log(this.player.touchedObstacleIndex)
+
           this.player.setStandHeight(this.player.initStandHeight)
           this.player.fall()
           this.player.touchedObstacleIndex = null

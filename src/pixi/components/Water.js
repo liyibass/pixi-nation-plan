@@ -11,6 +11,7 @@ export class Water extends Obstacle {
     this.collisionMonitor = collisionMonitor
     this.obstacleName = 'water'
 
+    this.waterWidthLevel = (this.index % 3) + 1
     this.createWater()
     this.isInWindow = false
     this.isInOperate = true
@@ -20,7 +21,8 @@ export class Water extends Obstacle {
   }
 
   createWater() {
-    const waterWidth = this.index % 3 !== 0 ? 158 * 2 : 158
+    const waterWidth = this.waterWidthLevel * 170
+
     this.waterGraphic = new PIXI.Graphics()
     this.waterGraphic.beginFill(0x3b6bd6)
     this.waterGraphic.drawRect(0, 0, waterWidth, 31)
@@ -28,22 +30,7 @@ export class Water extends Obstacle {
 
     this.container.addChild(this.waterGraphic)
 
-    this.waterGraphic.pivot.set(
-      this.waterGraphic.width / 2,
-      this.waterGraphic.height
-    )
-
-    // const chimneyTexture = new PIXI.Texture(
-    //   Globals.resources[`car${Math.floor(this.index % 4)}`]?.texture
-    // )
-    // this.chimneySprite = new PIXI.Sprite(chimneyTexture)
-
-    // this.container.addChild(this.chimneySprite)
-
-    // this.chimneySprite.pivot.set(
-    //   this.chimneySprite.width / 2,
-    //   this.chimneySprite.height
-    // )
+    this.waterGraphic.pivot.set(0, this.waterGraphic.height)
   }
 
   _setGlobalXAndY() {
@@ -52,25 +39,4 @@ export class Water extends Obstacle {
     this.obstacleGlobalX = global.tx
     this.obstacleGlobalY = global.ty
   }
-
-  // _setWidthAndHeight() {
-  //   this.obstacleWidth = this.container.width
-  //   this.obstacleHeight = this.container.height - this.waterGraphic.height + 10
-  // }
-
-  // _turnOnObstacle() {
-  //   if (this.vibrateDirection === 'up') {
-  //     this.container.y++
-
-  //     if (this.container.y > this.defaultY + 0.5) {
-  //       this.vibrateDirection = 'down'
-  //     }
-  //   } else {
-  //     this.container.y--
-
-  //     if (this.container.y < this.defaultY - 0.5) {
-  //       this.vibrateDirection = 'up'
-  //     }
-  //   }
-  // }
 }

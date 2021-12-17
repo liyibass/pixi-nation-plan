@@ -58,8 +58,9 @@ export class Player {
       }
 
       if (v < 0 && this.sprite.y > this.standHeight) {
-        // console.log('JUMP STOP')
+        console.log('JUMP STOP')
         this.isJumping = false
+
         this.hasBeenTop = false
         this.jumpTicker.stop()
         this.sprite.y = this.standHeight
@@ -74,9 +75,13 @@ export class Player {
   }
 
   fall() {
+    console.log('fall')
+    console.log(this.sprite.y)
+    console.log(this.initStandHeight)
+    console.log(this.isJumping)
+    console.log(this.isFalling)
     if (this.sprite.y === this.initStandHeight) return
     if (this.isJumping || this.isFalling) return
-
     this.isFalling = true
 
     let time = 0

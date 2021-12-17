@@ -60,6 +60,7 @@ import car2 from '../assets/images/car2.png'
 import car3 from '../assets/images/car3.png'
 import car4 from '../assets/images/car4.png'
 import solarBoard from '../assets/images/solarBoard.png'
+import house from '../assets/images/house.png'
 
 export const LoaderConfig = {
   player,
@@ -124,4 +125,5 @@ export const LoaderConfig = {
   car3,
   car4,
   solarBoard,
+  house,
 }
