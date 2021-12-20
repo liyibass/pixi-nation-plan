@@ -10,6 +10,7 @@ export class House extends Obstacle {
     this.index = index
     this.collisionMonitor = collisionMonitor
     this.obstacleName = 'house'
+    this.canNotStanding = false
 
     this.createHouse()
     this.isInWindow = false

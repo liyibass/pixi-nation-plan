@@ -374,21 +374,30 @@ export class RunScene extends Scene {
       const { obstacleWidth, obstacleHeight } = obstacle
 
       const rightBoundaryHit = playerX >= obstacleX - obstacleWidth / 2
-
       const leftBoundaryHit = playerX <= obstacleX + obstacleWidth / 2
-
-      const bottomBoundaryHit = playerY >= obstacleY - obstacleHeight
-
+      let bottomBoundaryHit
+      let topBoundaryHit
       // const isOnObstacle = playerY <= obstacleY - obstacleHeight
 
-      const isInObstacleArea =
-        playerY <= obstacleY + 20 && rightBoundaryHit && leftBoundaryHit
+      const isInObstacleArea = rightBoundaryHit && leftBoundaryHit
+      // playerY <= obstacleY + 20 && rightBoundaryHit && leftBoundaryHit
 
       if (isInObstacleArea) {
         // console.log('isInObstacleArea')
         this.player.touchedObstacleIndex = obstacle.index
 
-        if (bottomBoundaryHit) {
+        if (obstacle.obstacleName === 'rock') {
+          bottomBoundaryHit = playerY >= obstacleY - obstacleHeight / 2
+          topBoundaryHit =
+            playerY - this.player.sprite.height <=
+            obstacleY + obstacleHeight / 2
+        } else {
+          bottomBoundaryHit = playerY >= obstacleY - obstacleHeight
+          topBoundaryHit = true
+        }
+        console.log(topBoundaryHit)
+
+        if (bottomBoundaryHit && topBoundaryHit) {
           // console.log('just touch obstacle')
 
           if (obstacle.canNotStanding) {
@@ -444,7 +453,10 @@ export class RunScene extends Scene {
   // ===== game pause =====
   _pauseAllGameActivity() {
     // super.removeKeyboardListener()
-    this.player.jumpTicker.stop()
+
+    if (this.player.jumpTicker?.started) {
+      this.player.jumpTicker.stop()
+    }
     this.sceneTicker.stop()
     this.inWindowObstacles.forEach((obstacle) => {
       obstacle.ObstacleOperateTicker.stop()

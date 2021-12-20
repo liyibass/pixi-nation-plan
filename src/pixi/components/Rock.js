@@ -9,7 +9,7 @@ export class Rock extends Obstacle {
     super()
     this.index = index
     this.collisionMonitor = collisionMonitor
-    this.obstacleName = 'roc'
+    this.obstacleName = 'rock'
     this.obstacleWidth = obstacleWidth
 
     this.createRock()

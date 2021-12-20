@@ -10,6 +10,7 @@ export class Car extends Obstacle {
     this.index = index
     this.collisionMonitor = collisionMonitor
     this.obstacleName = 'car'
+    this.canNotStanding = !isCarInWater
 
     this.createCar()
     this.isInWindow = false
