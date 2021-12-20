@@ -176,7 +176,7 @@ export class CityBackground {
       Globals.resources['mountain'].texture
     )
     const MOUNTAIN_COUNT = Math.round(
-      proximateCityWidth / mountainTexture.width
+      proximateCityWidth / mountainTexture.width / 2
     )
 
     for (let i = 0; i < MOUNTAIN_COUNT; i++) {

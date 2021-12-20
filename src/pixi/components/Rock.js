@@ -34,9 +34,10 @@ export class Rock extends Obstacle {
 
   _turnOnObstacle() {
     this.container.angle += 1 * this.rotateDirection
+    console.log(this.obstacleWidth)
 
     if (this.container.y < gameStageDimention.height) {
-      this.container.y += 1
+      this.container.y += 4
     } else {
       this.container.y = 0
       // this.container.x = Math.floor(Math.random() * this.obstacleWidth)

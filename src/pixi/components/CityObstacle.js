@@ -132,7 +132,6 @@ export class CityObstacle {
     const WATER_COUNT = Math.floor(this.obstacleWidth / WATER_UNIT)
 
     // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
-    console.log(WATER_COUNT)
 
     let waterContainerWidth = 0
     for (let i = 1; i <= WATER_COUNT; i++) {
@@ -202,11 +201,11 @@ export class CityObstacle {
   _createKaohsiung() {}
 
   _createMountain() {
-    const ROCK_COUNT = 15
+    const ROCK_COUNT = 10
+    console.log(this.obstacleWidth)
     for (let i = 0; i < ROCK_COUNT; i++) {
       const rock = new Rock(i, this.collisionMonitor, this.obstacleWidth)
-      rock.container.y = 0
-      // rock.container.y = gameStageDimention.height
+
       rock.container.x = Math.floor(Math.random() * this.obstacleWidth)
       rock.container.y = Math.floor(Math.random() * gameStageDimention.height)
 

@@ -134,7 +134,9 @@ export class RunScene extends Scene {
       const city = new City(i, this.collisionMonitor.bind(this))
 
       let interval = (i === 0 ? 0 : 1 * (this.gameStageWidth * 1)) / 3
-
+      if (city.cityName === 'Mountain') {
+        interval = 0
+      }
       const offset = this.gameStageWidth / 4
 
       city.cityBackground.container.x =
@@ -383,7 +385,7 @@ export class RunScene extends Scene {
       // playerY <= obstacleY + 20 && rightBoundaryHit && leftBoundaryHit
 
       if (isInObstacleArea) {
-        // console.log('isInObstacleArea')
+        console.log('isInObstacleArea ' + obstacle.obstacleName)
         this.player.touchedObstacleIndex = obstacle.index
 
         if (obstacle.obstacleName === 'rock') {
@@ -395,7 +397,6 @@ export class RunScene extends Scene {
           bottomBoundaryHit = playerY >= obstacleY - obstacleHeight
           topBoundaryHit = true
         }
-        console.log(topBoundaryHit)
 
         if (bottomBoundaryHit && topBoundaryHit) {
           // console.log('just touch obstacle')
@@ -421,7 +422,6 @@ export class RunScene extends Scene {
               this.player.setStandHeight(
                 this.player.initStandHeight - obstacleHeight
               )
-              console.log(this.player.standHeight)
             }
           } else {
             // console.log('side collision')
@@ -473,6 +473,19 @@ export class RunScene extends Scene {
   }
 
   // ===== game over =====
+  async gameOver() {
+    this.sceneTicker.stop()
+    if (this.menuButtons?.container) {
+      this.container.removeChild(this.menuButtons.container)
+    }
+
+    this._pauseAllGameActivity()
+    await this._wait(1000)
+    this.player.sprite.width *= 2
+    await this._wait(2000)
+    this.failGameHint()
+  }
+
   async failGameHint() {
     super.failGameHint()
 
