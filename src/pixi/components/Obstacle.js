@@ -8,6 +8,7 @@ export class Obstacle {
 
     this.container = new PIXI.Container()
     this.isInWindow = false
+    this.canNotStanding = true
 
     this.obstacleGlobalX = 0
     this.obstacleGlobalY = 0

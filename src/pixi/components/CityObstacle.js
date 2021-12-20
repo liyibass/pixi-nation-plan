@@ -5,6 +5,7 @@ import { Car } from './Car'
 import { House } from './House'
 import { SolarBoard } from './SolarBoard'
 import { Water } from './Water'
+import { Rock } from './Rock'
 
 const gameStageDimention = Globals.getRunGameStageDimention()
 
@@ -200,7 +201,21 @@ export class CityObstacle {
 
   _createKaohsiung() {}
 
-  _createMountain() {}
+  _createMountain() {
+    const ROCK_COUNT = 15
+    for (let i = 0; i < ROCK_COUNT; i++) {
+      const rock = new Rock(i, this.collisionMonitor, this.obstacleWidth)
+      rock.container.y = 0
+      // rock.container.y = gameStageDimention.height
+      rock.container.x = Math.floor(Math.random() * this.obstacleWidth)
+      rock.container.y = Math.floor(Math.random() * gameStageDimention.height)
+
+      this.obstacleArray.push(rock)
+
+      this.container.addChild(rock.container)
+      rock.startObstacleTicker()
+    }
+  }
 
   _createYilan() {}
 }

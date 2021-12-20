@@ -152,14 +152,18 @@ export class Scene {
   // ===== game over =====
   async gameOver() {
     this.sceneTicker.stop()
-    this.container.removeChild(this.menuButtons.container)
+    if (this.menuButtons?.container) {
+      this.container.removeChild(this.menuButtons.container)
+    }
 
     this._pauseAllGameActivity()
     this.failGameHint()
   }
 
   async failGameHint() {
-    this.container.removeChild(this.menuButtons.container)
+    if (this.menuButtons?.container) {
+      this.container.removeChild(this.menuButtons.container)
+    }
     const gameFail = new GameFail(
       failGameChooseHandler.bind(this),
       {
@@ -274,7 +278,9 @@ export class Scene {
     this.sceneTicker.destroy()
     this.sceneTicker = null
 
-    this.container.removeChild(this.menuButtons.container)
+    if (this.menuButtons?.container) {
+      this.container.removeChild(this.menuButtons.container)
+    }
   }
 
   goToMenu() {

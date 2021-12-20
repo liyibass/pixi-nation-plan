@@ -21,6 +21,11 @@ export class RunScene extends Scene {
     this.inWindowObstacles = []
     this.container.name = 'RunScene'
 
+    this.bottomLayer = new PIXI.Container()
+    this.cityBackgroundLayer = new PIXI.Container()
+    this.boardLayer = new PIXI.Container()
+    this.obstacleLayer = new PIXI.Container()
+
     this.createScene()
     this.startGameFlow()
   }
@@ -100,13 +105,16 @@ export class RunScene extends Scene {
 
   _addMaskToGameStage() {
     const mask = new PIXI.Graphics()
-    mask.drawRect(0, 0, this.gameStageWidth, this.gameStageHeight + 30)
+    // mask.drawRect(0, 0, this.gameStageWidth, this.gameStageHeight + 30)
+    mask.drawRect(0, 0, window.innerWidth, this.gameStageHeight + 30)
+
     this.gameStage.mask = mask
     this.gameStage.addChild(mask)
   }
 
   // ===== init game =====
   initGame() {
+    console.log('initGame')
     this._createCity(this.currentCityIndex)
     this._createPlayer()
   }
@@ -122,11 +130,6 @@ export class RunScene extends Scene {
   }
 
   _createCity() {
-    this.bottomLayer = new PIXI.Container()
-    this.cityBackgroundLayer = new PIXI.Container()
-    this.boardLayer = new PIXI.Container()
-    this.obstacleLayer = new PIXI.Container()
-
     for (let i = 0; i < 7; i++) {
       const city = new City(i, this.collisionMonitor.bind(this))
 
@@ -236,6 +239,9 @@ export class RunScene extends Scene {
     // end infinite run
 
     this.right.press = () => {
+      if (!this.sceneTicker?.started) {
+        return
+      }
       this.player.sprite.scale.x = 1
       this.player.sprite.vx = PLAYER_SPEED
       this.player.sprite.vy = 0
@@ -255,6 +261,9 @@ export class RunScene extends Scene {
     }
 
     this.left.press = () => {
+      if (!this.sceneTicker?.started) {
+        return
+      }
       this.player.sprite.scale.x = -1
       this.player.sprite.vx = -PLAYER_SPEED
       this.player.sprite.vy = 0
@@ -277,6 +286,9 @@ export class RunScene extends Scene {
     this.up.press = () => {
       // this.player.sprite.vy = -5
       // this.player.sprite.vx = 0
+      if (!this.sceneTicker?.started) {
+        return
+      }
 
       if (!this.player.isJumping) {
         this.player.jump()
@@ -373,20 +385,24 @@ export class RunScene extends Scene {
         playerY <= obstacleY + 20 && rightBoundaryHit && leftBoundaryHit
 
       if (isInObstacleArea) {
-        console.log('isInObstacleArea')
+        // console.log('isInObstacleArea')
         this.player.touchedObstacleIndex = obstacle.index
 
         if (bottomBoundaryHit) {
-          console.log('just touch obstacle')
+          // console.log('just touch obstacle')
 
-          // console.log('DEAD')
+          if (obstacle.canNotStanding) {
+            console.log('DEAD')
+            this.gameOver()
+            return
+          }
 
           if (
             this.player.hasBeenTop ||
             (playerY >= obstacleY - obstacleHeight - 5 &&
               playerY <= obstacleY - obstacleHeight + 5)
           ) {
-            console.log('stand collision')
+            // console.log('stand collision')
 
             if (obstacle.obstacleName === 'water') {
               console.log('DEAD')
@@ -399,7 +415,7 @@ export class RunScene extends Scene {
               console.log(this.player.standHeight)
             }
           } else {
-            console.log('side collision')
+            // console.log('side collision')
 
             this.player.sprite.x -= playerX < obstacleX ? 1 : -1
             this.player.sprite.vx = 0
@@ -428,10 +444,20 @@ export class RunScene extends Scene {
   // ===== game pause =====
   _pauseAllGameActivity() {
     // super.removeKeyboardListener()
+    this.player.jumpTicker.stop()
+    this.sceneTicker.stop()
+    this.inWindowObstacles.forEach((obstacle) => {
+      obstacle.ObstacleOperateTicker.stop()
+    })
   }
 
   _resumeAllGameActivity() {
     // super.createKeyboardListener()
+    this.player.jumpTicker.start()
+    this.sceneTicker.start()
+    this.inWindowObstacles.forEach((obstacle) => {
+      obstacle.ObstacleOperateTicker.start()
+    })
   }
 
   // ===== game over =====
@@ -439,7 +465,7 @@ export class RunScene extends Scene {
     super.failGameHint()
 
     switch (this.gameLevel) {
-      case 0:
+      case 1:
         await this.doctorSay.newSay(
           '雖然缺水的問題處理得不順利，但整體表現還算不錯！'
         )
@@ -473,14 +499,28 @@ export class RunScene extends Scene {
   }
 
   resetGameSetting() {
+    console.log('resetGameSetting')
     // super.removeKeyboardListener()
     super.resetGameSetting()
 
-    this.gameStage.removeChild(
-      this.seesawGroup.container,
-      this.timer.container,
-      this.conveyor.container
-    )
+    this.cityBackgroundLayer.removeChildren()
+    this.boardLayer.removeChildren()
+    this.obstacleLayer.removeChildren()
+    this.inWindowObstacles = []
+
+    this.bottomLayer = new PIXI.Container()
+    this.cityBackgroundLayer = new PIXI.Container()
+    this.boardLayer = new PIXI.Container()
+    this.obstacleLayer = new PIXI.Container()
+
+    // this.gameStage.removeChild(
+    //   this.cityBackgroundLayer,
+    //   this.boardLayer,
+    //   this.obstacleLayer,
+    //   this.player.sprite
+    // )
+    this.gameStage.removeChildren()
+    // console.log(this.cityBackgroundLayer)
   }
 
   keyboard(value) {
