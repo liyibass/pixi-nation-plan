@@ -90,18 +90,25 @@ export class CityObstacle {
     // const CAR_WIDTH = 90
     // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
     const CAR_WIDTH = 50
-    const CAR_DISTANCE = 200
+    const CAR_DISTANCE = 150
     const CAR_UNIT = CAR_DISTANCE + CAR_WIDTH
     const CAR_COUNT = Math.floor(this.obstacleWidth / CAR_UNIT) + 1
 
+    let totalWidth = 0
     for (let i = 0; i < CAR_COUNT; i++) {
       const car = new Car(i, this.collisionMonitor)
-      car.container.y = gameStageDimention.height
-      car.container.x =
-        CAR_DISTANCE * i - Math.floor((Math.random() * CAR_DISTANCE) / 3)
-      this.obstacleArray.push(car)
 
+      const interval = i % 2 === 1 ? CAR_DISTANCE + Math.random() * 50 : 0
+
+      car.container.x = totalWidth + interval
+      car.container.y = gameStageDimention.height
+
+      this.obstacleArray.push(car)
       this.container.addChild(car.container)
+      totalWidth +=
+        interval === 0
+          ? car.container.width * 2
+          : car.container.width + interval
       car.startObstacleTicker()
     }
   }
@@ -114,19 +121,22 @@ export class CityObstacle {
       Math.floor(this.obstacleWidth / SOLAR_BOARD_UNIT) + 1
 
     // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
-
+    let totalWidth = 0
     for (let i = 0; i < SOLAR_BOARD_COUNT; i++) {
       const solarBoard = new SolarBoard(i, this.collisionMonitor)
+
+      const interval =
+        i % 2 === 1 ? SOLAR_BOARD_DISTANCE + Math.random() * 50 : 0
+      solarBoard.container.x = totalWidth + interval
       solarBoard.container.y = gameStageDimention.height
-      solarBoard.container.x =
-        SOLAR_BOARD_DISTANCE * i +
-        Math.floor(
-          (Math.random() * SOLAR_BOARD_DISTANCE) / 2 - SOLAR_BOARD_DISTANCE / 4
-        )
 
       this.obstacleArray.push(solarBoard)
-
       this.container.addChild(solarBoard.container)
+      totalWidth +=
+        interval === 0
+          ? solarBoard.container.width * 2
+          : solarBoard.container.width + interval
+
       solarBoard.startObstacleTicker()
     }
   }
