@@ -124,6 +124,7 @@ export class RunScene extends Scene {
       this.player.sprite,
       this.gameStage.children.length - 1
     )
+
     await this._playerJumpAnimation()
   }
 
@@ -146,7 +147,7 @@ export class RunScene extends Scene {
   }
 
   _createCity() {
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 1; i++) {
       this._createNewCity(i)
     }
 
@@ -258,12 +259,6 @@ export class RunScene extends Scene {
     this.boardLayer.vx = 0
     this.obstacleLayer.vx = 0
 
-    // infinite run
-    // this.cityBackgroundLayer.vx = -BACKGROUND_SPEED
-    // this.boardLayer.vx = -BOARD_SPEED
-    // this.obstacleLayer.vx = -PLAYER_SPEED
-    // end infinite run
-
     this.right.press = () => {
       if (!this.sceneTicker?.started) {
         return
@@ -294,9 +289,9 @@ export class RunScene extends Scene {
       this.player.sprite.vx = -PLAYER_SPEED
       this.player.sprite.vy = 0
 
-      this.cityBackgroundLayer.vx = BACKGROUND_SPEED
-      this.boardLayer.vx = BOARD_SPEED
-      this.obstacleLayer.vx = PLAYER_SPEED
+      // this.cityBackgroundLayer.vx = BACKGROUND_SPEED
+      // this.boardLayer.vx = BOARD_SPEED
+      // this.obstacleLayer.vx = PLAYER_SPEED
     }
     this.left.release = () => {
       if (!this.right.isDown && this.player.sprite.vy === 0) {
@@ -310,8 +305,6 @@ export class RunScene extends Scene {
 
     //Up
     this.up.press = () => {
-      // this.player.sprite.vy = -5
-      // this.player.sprite.vx = 0
       if (!this.sceneTicker?.started) {
         return
       }
@@ -386,30 +379,6 @@ export class RunScene extends Scene {
       // observe obstacle
       this._obstacleProcesser()
 
-      // // add next city
-      // const needToGenerateNewCity =
-      //   this.cityBackgroundLayer.children[
-      //     this.cityBackgroundLayer.children.length - 1
-      //   ].worldTransform.tx <
-      //   (window.innerWidth * 2) / 3
-
-      // if (needToGenerateNewCity) {
-      //   console.log('generate new city')
-      //   this.currentCityIndex++
-      //   this._createNewCity(this.currentCityIndex)
-      // }
-
-      // const needToDeleteOldCity =
-      //   this.cityBackgroundLayer.children[0].worldTransform.tx +
-      //     this.cityBackgroundLayer.children[0].width <
-      //   0
-
-      // if (needToDeleteOldCity) {
-      //   this.cityBackgroundLayer.removeChild(
-      //     this.cityBackgroundLayer.children[0]
-      //   )
-      // }
-
       this.cityBackgroundLayer.children.forEach((obstacle) => {
         const needToDeleteOldCity =
           obstacle.worldTransform.tx + obstacle.width < 0
@@ -441,15 +410,16 @@ export class RunScene extends Scene {
       const leftBoundaryHit = playerX <= obstacleX + obstacleWidth / 2
       let bottomBoundaryHit
       let topBoundaryHit
-      // const isOnObstacle = playerY <= obstacleY - obstacleHeight
 
       const isInObstacleArea = rightBoundaryHit && leftBoundaryHit
-      // playerY <= obstacleY + 20 && rightBoundaryHit && leftBoundaryHit
-      // console.log('_obstacleProcesser ' + obstacle.obstacleName)
-      if (obstacle.obstacleName === 'car') {
-        // console.log(isInObstacleArea)
-      }
+
       if (isInObstacleArea) {
+        console.log('YOYO')
+        if (obstacle.obstacleName === 'finishLine') {
+          this.gamePassed()
+          return
+        }
+
         this.player.touchedObstacleIndex = obstacle.index
 
         if (obstacle.obstacleName === 'rock') {
@@ -518,9 +488,9 @@ export class RunScene extends Scene {
   _pauseAllGameActivity() {
     // super.removeKeyboardListener()
 
-    if (this.player.jumpTicker?.started) {
-      this.player.jumpTicker.stop()
-    }
+    // if (this.player.jumpTicker?.started) {
+    //   this.player.jumpTicker.stop()
+    // }
     this.sceneTicker.stop()
 
     this.cityBackgroundLayer.children.forEach((background) => {
@@ -613,6 +583,19 @@ export class RunScene extends Scene {
   }
 
   // ===== game pass =====
+  async gamePassed() {
+    this.sceneTicker.stop()
+    if (this.menuButtons?.container) {
+      this.container.removeChild(this.menuButtons.container)
+    }
+
+    this._pauseAllGameActivity()
+
+    await this.player.jumpOut(this.groundGroup.player)
+
+    this.successGameHint()
+  }
+
   async successGameHint() {
     super.successGameHint()
 
@@ -646,14 +629,7 @@ export class RunScene extends Scene {
     this.boardLayer = new PIXI.Container()
     this.obstacleLayer = new PIXI.Container()
 
-    // this.gameStage.removeChild(
-    //   this.cityBackgroundLayer,
-    //   this.boardLayer,
-    //   this.obstacleLayer,
-    //   this.player.sprite
-    // )
     this.gameStage.removeChildren()
-    // console.log(this.cityBackgroundLayer)
   }
 
   keyboard(value) {

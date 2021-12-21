@@ -47,7 +47,6 @@ export class CityBackground {
         break
 
       default:
-        this._createTaoyuan()
         break
     }
   }

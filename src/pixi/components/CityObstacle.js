@@ -6,6 +6,7 @@ import { House } from './House'
 import { SolarBoard } from './SolarBoard'
 import { Water } from './Water'
 import { Rock } from './Rock'
+import { FinishLine } from './FinishLine'
 
 const gameStageDimention = Globals.getRunGameStageDimention()
 
@@ -90,9 +91,9 @@ export class CityObstacle {
     // const CAR_WIDTH = 90
     // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
     const CAR_WIDTH = 50
-    const CAR_DISTANCE = 150
+    const CAR_DISTANCE = 100
     const CAR_UNIT = CAR_DISTANCE + CAR_WIDTH
-    const CAR_COUNT = Math.floor(this.obstacleWidth / CAR_UNIT) + 1
+    const CAR_COUNT = Math.floor(this.obstacleWidth / CAR_UNIT)
 
     let totalWidth = 0
     for (let i = 0; i < CAR_COUNT; i++) {
@@ -115,7 +116,7 @@ export class CityObstacle {
 
   _createMiaoli() {
     const SOLAR_BOARD_WIDTH = 50
-    const SOLAR_BOARD_DISTANCE = 200
+    const SOLAR_BOARD_DISTANCE = 150
     const SOLAR_BOARD_UNIT = SOLAR_BOARD_DISTANCE + SOLAR_BOARD_WIDTH
     const SOLAR_BOARD_COUNT =
       Math.floor(this.obstacleWidth / SOLAR_BOARD_UNIT) + 1
@@ -214,5 +215,23 @@ export class CityObstacle {
     }
   }
 
-  _createYilan() {}
+  _createYilan() {
+    const chimney = new Chimney(300)
+    chimney.container.y = gameStageDimention.height
+    chimney.container.width = this.obstacleWidth
+    chimney.container.alpha = 0
+    chimney.chimneySprite.pivot.x = 0
+
+    this.obstacleArray.push(chimney)
+    this.container.addChild(chimney.container)
+
+    const finishLine = new FinishLine(1000, this.collisionMonitor)
+
+    finishLine.container.x = this.container.width + gameStageDimention.width / 2
+    finishLine.container.y = gameStageDimention.height
+
+    this.container.addChild(finishLine.container)
+    this.obstacleArray.push(finishLine)
+    finishLine.startObstacleTicker()
+  }
 }

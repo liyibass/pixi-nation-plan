@@ -210,7 +210,9 @@ export class Scene {
   // ===== game pass =====
   async gamePassed() {
     this.sceneTicker.stop()
-    this.container.removeChild(this.menuButtons.container)
+    if (this.menuButtons?.container) {
+      this.container.removeChild(this.menuButtons.container)
+    }
 
     this._pauseAllGameActivity()
 
@@ -218,7 +220,9 @@ export class Scene {
   }
 
   async successGameHint() {
-    this.container.removeChild(this.menuButtons.container)
+    if (this.menuButtons?.container) {
+      this.container.removeChild(this.menuButtons.container)
+    }
 
     const gameSuccess = new GameSuccess(
       successGameChooseHandler.bind(this),
