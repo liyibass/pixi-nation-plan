@@ -9,8 +9,8 @@ export class FoodScore {
       incinerator: 0,
     }
     this.passScore = {
-      fauset: 1,
-      incinerator: 1,
+      fauset: 3,
+      incinerator: 3,
     }
     this.container = new PIXI.Container()
     this.initPosition()

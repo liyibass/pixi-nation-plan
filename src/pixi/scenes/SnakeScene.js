@@ -99,8 +99,8 @@ export class SnakeScene {
     // create a color region
     const gameStageFrame = new PIXI.Graphics()
     const frameLineWeight = 4
-    gameStageFrame.lineStyle(frameLineWeight, 0xdddddd, 0.6)
-    gameStageFrame.beginFill(0x92b79c)
+    gameStageFrame.lineStyle(frameLineWeight, 0xdddddd, 0)
+    gameStageFrame.beginFill(0xa5d8b3)
 
     /*
      * NOTE: We use gameStageFrame(which is a Graphics) to bump up outer container
