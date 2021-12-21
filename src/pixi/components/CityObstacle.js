@@ -62,9 +62,12 @@ export class CityObstacle {
   obstacleHandler() {}
 
   _createTaoyuan() {
-    const CHIMNEY_COUNT = 6
+    const CHIMNEY_WIDTH = 30
+    const CHIMNEY_DISTANCE = 250
+    const CHIMNEY_UNIT = CHIMNEY_DISTANCE + CHIMNEY_WIDTH
+    const CHIMNEY_COUNT = Math.floor(this.obstacleWidth / CHIMNEY_UNIT)
+
     // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
-    const CHIMNEY_DISTANCE = (gameStageDimention.width * 2) / 3
 
     for (let i = 0; i < CHIMNEY_COUNT; i++) {
       const chimney = new Chimney(i, this.collisionMonitor)
@@ -86,15 +89,16 @@ export class CityObstacle {
   _createHsinchu() {
     // const CAR_WIDTH = 90
     // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
-    const CAR_DISTANCE = (gameStageDimention.width * 3) / 5
-    const CAR_COUNT =
-      Math.floor((gameStageDimention.width * 2) / CAR_DISTANCE) * 2
+    const CAR_WIDTH = 50
+    const CAR_DISTANCE = 200
+    const CAR_UNIT = CAR_DISTANCE + CAR_WIDTH
+    const CAR_COUNT = Math.floor(this.obstacleWidth / CAR_UNIT) + 1
 
     for (let i = 0; i < CAR_COUNT; i++) {
       const car = new Car(i, this.collisionMonitor)
       car.container.y = gameStageDimention.height
       car.container.x =
-        CAR_DISTANCE * i - Math.floor((Math.random() * CAR_DISTANCE) / 2)
+        CAR_DISTANCE * i - Math.floor((Math.random() * CAR_DISTANCE) / 3)
       this.obstacleArray.push(car)
 
       this.container.addChild(car.container)
@@ -103,10 +107,11 @@ export class CityObstacle {
   }
 
   _createMiaoli() {
-    const SOLAR_BAORD_WIDTH = 74
-    const SOLAR_BAORD_DISTANCE = (gameStageDimention.width * 4) / 5
+    const SOLAR_BOARD_WIDTH = 50
+    const SOLAR_BOARD_DISTANCE = 200
+    const SOLAR_BOARD_UNIT = SOLAR_BOARD_DISTANCE + SOLAR_BOARD_WIDTH
     const SOLAR_BOARD_COUNT =
-      Math.floor(1000 / (SOLAR_BAORD_DISTANCE - SOLAR_BAORD_WIDTH)) + 2
+      Math.floor(this.obstacleWidth / SOLAR_BOARD_UNIT) + 1
 
     // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
 
@@ -114,9 +119,9 @@ export class CityObstacle {
       const solarBoard = new SolarBoard(i, this.collisionMonitor)
       solarBoard.container.y = gameStageDimention.height
       solarBoard.container.x =
-        SOLAR_BAORD_DISTANCE * i +
+        SOLAR_BOARD_DISTANCE * i +
         Math.floor(
-          (Math.random() * SOLAR_BAORD_DISTANCE) / 2 - SOLAR_BAORD_DISTANCE / 4
+          (Math.random() * SOLAR_BOARD_DISTANCE) / 2 - SOLAR_BOARD_DISTANCE / 4
         )
 
       this.obstacleArray.push(solarBoard)
@@ -178,24 +183,6 @@ export class CityObstacle {
         water.container,
         this.container.children.length - 1
       )
-    }
-  }
-
-  _createYunlinX() {
-    // const CAR_WIDTH = 90
-    // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
-    const CAR_DISTANCE = (gameStageDimention.width * 1) / 5
-    const CAR_COUNT =
-      Math.floor((gameStageDimention.width * 2) / CAR_DISTANCE) * 2
-
-    for (let i = 0; i < CAR_COUNT; i++) {
-      const car = new Car(i, this.collisionMonitor)
-      car.container.y = gameStageDimention.height
-      car.container.x = CAR_DISTANCE * i
-      this.obstacleArray.push(car)
-
-      this.container.addChild(car.container)
-      car.startObstacleTicker()
     }
   }
 
