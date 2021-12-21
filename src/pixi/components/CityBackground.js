@@ -65,7 +65,7 @@ export class CityBackground {
       factorySprite.pivot.set(0, factorySprite.height)
 
       factorySprite.x =
-        factorySprite.width / 2 + this.container.width + Math.random() * 40
+        factorySprite.width + this.container.width + Math.random() * 40 + 20
       factorySprite.y = gameStageDimention.height
 
       this.container.addChild(factorySprite)
@@ -250,28 +250,20 @@ export class CityBackground {
     this.optimizeTicker = new PIXI.Ticker()
 
     this.optimizeTicker.add(() => {
-      // console.log(this.cityName)
-      // if (
-      //   this.container.worldTransform.tx > 0 &&
-      //   this.container.worldTransform.tx < window.innerWidth
-      // ) {
-      //   this.container.renderable = true
-      // } else if (
-      //   this.container.worldTransform.tx + this.container.width < 0 &&
-      //   this.container.worldTransform.tx < 0
-      // ) {
-      //   this.container.visible = false
-      // }
-
-      if (
-        (this.container.worldTransform.tx < window.innerWidth &&
-          this.container.worldTransform.tx + this.container.width > 0) ||
-        (this.container.worldTransform.tx + this.container.width < 0 &&
-          this.container.worldTransform.tx < 0)
-      ) {
-        this.container.renderable = true
-      } else {
-        this.container.renderable = false
+      try {
+        if (
+          (this.container.worldTransform.tx < window.innerWidth &&
+            this.container.worldTransform.tx + this.container.width > 0) ||
+          (this.container.worldTransform.tx + this.container.width < 0 &&
+            this.container.worldTransform.tx < 0)
+        ) {
+          this.container.renderable = true
+        } else {
+          this.container.renderable = false
+        }
+      } catch (err) {
+        this.optimizeTicker.stop()
+        this.container.destroy()
       }
     })
 

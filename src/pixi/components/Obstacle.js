@@ -40,6 +40,9 @@ export class Obstacle {
           this.collisionMonitor(this)
           this.container.visible = false
           this.isAddedToProcesser = false
+          this.ObstacleOperateTicker.destroy()
+          this.container.destroy()
+          console.log('destroyed')
         }
       }
     })

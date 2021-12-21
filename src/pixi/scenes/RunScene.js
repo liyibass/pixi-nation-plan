@@ -37,7 +37,7 @@ export class RunScene extends Scene {
     this._createGroundBackground()
     this._createItems()
     this._createGameStage()
-    // this._addMaskToGameStage()
+    this._addMaskToGameStage()
 
     this._createDoctorSay()
   }
@@ -108,7 +108,7 @@ export class RunScene extends Scene {
 
   _addMaskToGameStage() {
     const mask = new PIXI.Graphics()
-    mask.drawRect(0, 0, this.gameStageWidth, this.gameStageHeight + 30)
+    mask.drawRect(0, 0, this.gameStageWidth, window.innerHeight)
     // mask.drawRect(0, 0, window.innerWidth, this.gameStageHeight + 30)
 
     this.gameStage.mask = mask
@@ -147,7 +147,7 @@ export class RunScene extends Scene {
   }
 
   _createCity() {
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 7; i++) {
       this._createNewCity(i)
     }
 
@@ -379,12 +379,15 @@ export class RunScene extends Scene {
       // observe obstacle
       this._obstacleProcesser()
 
-      this.cityBackgroundLayer.children.forEach((obstacle) => {
+      this.cityBackgroundLayer.children.forEach((cityBackground, index) => {
         const needToDeleteOldCity =
-          obstacle.worldTransform.tx + obstacle.width < 0
+          cityBackground.worldTransform.tx + cityBackground.width < 0
 
         if (needToDeleteOldCity) {
-          obstacle.visible = false
+          cityBackground.visible = false
+          // cityBackground.destroy()
+
+          this.boardLayer.children[index]?.destroy()
         }
       })
     })
@@ -414,7 +417,6 @@ export class RunScene extends Scene {
       const isInObstacleArea = rightBoundaryHit && leftBoundaryHit
 
       if (isInObstacleArea) {
-        console.log('YOYO')
         if (obstacle.obstacleName === 'finishLine') {
           this.gamePassed()
           return

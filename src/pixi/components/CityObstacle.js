@@ -226,6 +226,7 @@ export class CityObstacle {
     this.container.addChild(chimney.container)
 
     const finishLine = new FinishLine(1000, this.collisionMonitor)
+    finishLine.container.alpha = 0
 
     finishLine.container.x = this.container.width + gameStageDimention.width / 2
     finishLine.container.y = gameStageDimention.height
