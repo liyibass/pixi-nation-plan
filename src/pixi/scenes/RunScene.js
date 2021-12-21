@@ -26,6 +26,8 @@ export class RunScene extends Scene {
     this.boardLayer = new PIXI.Container()
     this.obstacleLayer = new PIXI.Container()
 
+    this.currentCityIndex = 0
+
     this.createScene()
     this.startGameFlow()
   }
@@ -105,8 +107,8 @@ export class RunScene extends Scene {
 
   _addMaskToGameStage() {
     const mask = new PIXI.Graphics()
-    // mask.drawRect(0, 0, this.gameStageWidth, this.gameStageHeight + 30)
-    mask.drawRect(0, 0, window.innerWidth, this.gameStageHeight + 30)
+    mask.drawRect(0, 0, this.gameStageWidth, this.gameStageHeight + 30)
+    // mask.drawRect(0, 0, window.innerWidth, this.gameStageHeight + 30)
 
     this.gameStage.mask = mask
     this.gameStage.addChild(mask)
@@ -135,34 +137,7 @@ export class RunScene extends Scene {
 
   _createCity() {
     for (let i = 0; i < 7; i++) {
-      const city = new City(i, this.collisionMonitor.bind(this), this.player)
-
-      let interval = (i === 0 ? 0 : 1 * (this.gameStageWidth * 1)) / 3
-      if (city.cityName === 'Mountain') {
-        interval = 0
-      }
-      const offset = this.gameStageWidth / 4
-
-      city.cityBackground.container.x =
-        this.cityBackgroundLayer.width + this.gameStageWidth + interval
-
-      city.cityBoard.container.x =
-        ((this.cityBackgroundLayer.width + this.gameStageWidth + interval) *
-          BOARD_SPEED) /
-          BACKGROUND_SPEED -
-        offset
-
-      city.cityObstacle.container.x =
-        ((this.cityBackgroundLayer.width + this.gameStageWidth + interval) *
-          OBSTACLE_SPEED) /
-          BACKGROUND_SPEED -
-        offset
-
-      // city.cityObstacle.container.y = 200
-
-      this.cityBackgroundLayer.addChild(city.cityBackground.container)
-      this.boardLayer.addChild(city.cityBoard.container)
-      this.obstacleLayer.addChild(city.cityObstacle.container)
+      this._createNewCity(i)
     }
 
     this.gameStage.addChild(
@@ -170,6 +145,41 @@ export class RunScene extends Scene {
       this.boardLayer,
       this.obstacleLayer
     )
+  }
+
+  _createNewCity(cityIndex) {
+    const city = new City(
+      cityIndex,
+      this.collisionMonitor.bind(this),
+      this.player
+    )
+
+    let interval = (cityIndex === 0 ? 0 : 1 * (this.gameStageWidth * 1)) / 3
+    if (city.cityName === 'Mountain') {
+      interval = 0
+    }
+    const offset = this.gameStageWidth / 4
+
+    city.cityBackground.container.x =
+      this.cityBackgroundLayer.width + this.gameStageWidth + interval
+
+    city.cityBoard.container.x =
+      ((this.cityBackgroundLayer.width + this.gameStageWidth + interval) *
+        BOARD_SPEED) /
+        BACKGROUND_SPEED -
+      offset
+
+    city.cityObstacle.container.x =
+      ((this.cityBackgroundLayer.width + this.gameStageWidth + interval) *
+        OBSTACLE_SPEED) /
+        BACKGROUND_SPEED -
+      offset
+
+    // city.cityObstacle.container.y = 200
+
+    this.cityBackgroundLayer.addChild(city.cityBackground.container)
+    this.boardLayer.addChild(city.cityBoard.container)
+    this.obstacleLayer.addChild(city.cityObstacle.container)
   }
 
   // ===== game flow =====
@@ -365,6 +375,39 @@ export class RunScene extends Scene {
 
       // observe obstacle
       this._obstacleProcesser()
+
+      // // add next city
+      // const needToGenerateNewCity =
+      //   this.cityBackgroundLayer.children[
+      //     this.cityBackgroundLayer.children.length - 1
+      //   ].worldTransform.tx <
+      //   (window.innerWidth * 2) / 3
+
+      // if (needToGenerateNewCity) {
+      //   console.log('generate new city')
+      //   this.currentCityIndex++
+      //   this._createNewCity(this.currentCityIndex)
+      // }
+
+      // const needToDeleteOldCity =
+      //   this.cityBackgroundLayer.children[0].worldTransform.tx +
+      //     this.cityBackgroundLayer.children[0].width <
+      //   0
+
+      // if (needToDeleteOldCity) {
+      //   this.cityBackgroundLayer.removeChild(
+      //     this.cityBackgroundLayer.children[0]
+      //   )
+      // }
+
+      this.cityBackgroundLayer.children.forEach((obstacle) => {
+        const needToDeleteOldCity =
+          obstacle.worldTransform.tx + obstacle.width < 0
+
+        if (needToDeleteOldCity) {
+          obstacle.visible = false
+        }
+      })
     })
 
     this.sceneTicker.start()
@@ -469,6 +512,10 @@ export class RunScene extends Scene {
       this.player.jumpTicker.stop()
     }
     this.sceneTicker.stop()
+
+    this.cityBackgroundLayer.children.forEach((background) => {
+      background.optimizeTicker?.stop()
+    })
     this.inWindowObstacles.forEach((obstacle) => {
       obstacle.ObstacleOperateTicker.stop()
     })
@@ -478,6 +525,9 @@ export class RunScene extends Scene {
     // super.createKeyboardListener()
     this.player.jumpTicker.start()
     this.sceneTicker.start()
+    this.cityBackgroundLayer.children.forEach((background) => {
+      background.optimizeTicker?.start()
+    })
     this.inWindowObstacles.forEach((obstacle) => {
       obstacle.ObstacleOperateTicker.start()
     })

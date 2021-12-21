@@ -115,8 +115,8 @@ export const Globals = {
       this.width - 2 * gameStagePadding < 600
         ? this.width - 2 * gameStagePadding
         : this.width - 2 * gameStagePadding < 1280
-        ? (this.width * 2) / 3
-        : this.width / 2
+        ? 800
+        : 1000
 
     return {
       x: (this.width - width) / 2,

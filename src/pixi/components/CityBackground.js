@@ -12,6 +12,7 @@ export class CityBackground {
     this.bottomLayerContainer = new PIXI.Container()
 
     this.createCityBackground()
+    this.optimize()
   }
 
   createCityBackground() {
@@ -244,5 +245,37 @@ export class CityBackground {
     mask.y = 0
     viewObject.mask = mask
     viewObject.addChild(mask)
+  }
+
+  optimize() {
+    this.optimizeTicker = new PIXI.Ticker()
+
+    this.optimizeTicker.add(() => {
+      // console.log(this.cityName)
+      // if (
+      //   this.container.worldTransform.tx > 0 &&
+      //   this.container.worldTransform.tx < window.innerWidth
+      // ) {
+      //   this.container.renderable = true
+      // } else if (
+      //   this.container.worldTransform.tx + this.container.width < 0 &&
+      //   this.container.worldTransform.tx < 0
+      // ) {
+      //   this.container.visible = false
+      // }
+
+      if (
+        (this.container.worldTransform.tx < window.innerWidth &&
+          this.container.worldTransform.tx + this.container.width > 0) ||
+        (this.container.worldTransform.tx + this.container.width < 0 &&
+          this.container.worldTransform.tx < 0)
+      ) {
+        this.container.renderable = true
+      } else {
+        this.container.renderable = false
+      }
+    })
+
+    this.optimizeTicker.start()
   }
 }
