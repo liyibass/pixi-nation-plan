@@ -38,4 +38,8 @@ export class GroundGroup {
       this.player.sprite
     )
   }
+
+  hidePlayer() {
+    this.player.sprite.alpha = 0
+  }
 }

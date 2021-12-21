@@ -34,10 +34,10 @@ export class RunScene extends Scene {
   // ===== init system =====
   createScene() {
     this._createBackground(0x0e427f)
-    this._createGameStage()
     this._createGroundBackground()
-    this._addMaskToGameStage()
     this._createItems()
+    this._createGameStage()
+    // this._addMaskToGameStage()
 
     this._createDoctorSay()
   }
@@ -82,27 +82,28 @@ export class RunScene extends Scene {
 
   _createGroundBackground() {
     // create a color region
-    const backgroundColor = new PIXI.Graphics()
-    backgroundColor.beginFill(0x92b79c)
-    backgroundColor.drawRect(
+    this.backgroundColor = new PIXI.Graphics()
+    this.backgroundColor.name = 'groundBackground'
+    this.backgroundColor.beginFill(0x92b79c)
+    this.backgroundColor.drawRect(
       0,
       0,
       window.innerWidth,
-      window.innerHeight - this.gameStageY - this.gameStageHeight
+      window.innerHeight - gameStageDimention.y - gameStageDimention.height
     )
-    backgroundColor.endFill()
+    this.backgroundColor.endFill()
 
     // add to container
 
-    this.container.addChild(backgroundColor)
+    this.container.addChild(this.backgroundColor)
 
     // set up gameStage's position
-    backgroundColor.x = 0
-    backgroundColor.y = this.gameStageY + this.gameStageHeight
+    this.backgroundColor.x = 0
+    this.backgroundColor.y = gameStageDimention.y + gameStageDimention.height
 
     // console.log(backgroundColor)
     // console.log(this.gameStage)
-    this.container.setChildIndex(this.gameStage, 2)
+    // this.container.setChildIndex(this.gameStage, 2)
   }
 
   _addMaskToGameStage() {
@@ -115,7 +116,7 @@ export class RunScene extends Scene {
   }
 
   // ===== init game =====
-  initGame() {
+  async initGame() {
     console.log('initGame')
     this._createPlayer()
     this._createCity(this.currentCityIndex)
@@ -123,6 +124,15 @@ export class RunScene extends Scene {
       this.player.sprite,
       this.gameStage.children.length - 1
     )
+    await this._playerJumpAnimation()
+  }
+
+  async _playerJumpAnimation() {
+    // let greenGroundIndex = this.backgroundColor.index
+    // this.backgroundColor.zIndex = 0
+    this.groundGroup.hidePlayer()
+    await this.player.jumpIn(this.groundGroup.player)
+    // this.backgroundColor.zIndex = greenGroundIndex
   }
 
   _createPlayer() {
@@ -541,16 +551,19 @@ export class RunScene extends Scene {
     }
 
     this._pauseAllGameActivity()
-    await this._deatAnimation(obstacle)
+    await this._deadAnimation(obstacle)
 
     await this._wait(2000)
     this.failGameHint()
   }
 
-  async _deatAnimation(obstacle) {
-    this.gameStage.setChildIndex(this.player.sprite, 4)
+  async _deadAnimation(obstacle) {
+    this.gameStage.setChildIndex(
+      this.player.sprite,
+      this.gameStage.children.length - 1
+    )
 
-    this.player.sprite.angle += 10
+    this.player.sprite.angle -= 10
 
     if (obstacle.obstacleName === 'water') {
       console.log('water')
@@ -559,7 +572,7 @@ export class RunScene extends Scene {
       await this._wait(1000)
     }
     this.player.sprite.width *= 2
-    await this._wait(2000)
+    await this._wait(1000)
   }
 
   async _drawningAnitation() {

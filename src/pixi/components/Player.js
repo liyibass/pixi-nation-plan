@@ -42,7 +42,7 @@ export class Player {
     this.isJumping = true
 
     let time = 0
-    const v0 = 16
+    const v0 = 17
     const gravity = 0.7
     const direction = -1 //to Top
     const jumpAtY = this.sprite.y
@@ -114,6 +114,101 @@ export class Player {
   setStandHeight(newStandHeight) {
     this.y = newStandHeight
     this.standHeight = newStandHeight
+  }
+
+  jumpIn(groundPlayer) {
+    const { x: groundX, y: groundY } = groundPlayer.sprite.getGlobalPosition()
+    const { x: playerX, y: playerY } = this.sprite.getGlobalPosition()
+    const { x: destX, y: destY } = this.sprite
+    const fromX = destX + (groundX - playerX)
+    const fromY = destY + (groundY - playerY)
+
+    this.sprite.x = fromX
+    this.sprite.y = fromY
+
+    if (this.isJumping) return
+    this.isJumping = true
+
+    let time = 0
+    const v0 = 24
+    const gravity = 0.7
+    const direction = -1 //to Top
+    const jumpAtY = groundY
+    // const jumpAtY = this.sprite.y
+
+    this.jumpTicker = new PIXI.Ticker()
+    this.jumpTicker.add((deltaMs) => {
+      if (this.sprite.x > destX) {
+        this.sprite.x--
+      }
+      // console.log('jumpTicker')
+      const jumpHeight = v0 * time + (1 / 2) * -gravity * Math.pow(time, 2)
+      const v = v0 - gravity * time
+      if (v < 0) {
+        this.hasBeenTop = true
+      }
+
+      if (v < 0 && this.sprite.y > playerY) {
+        console.log('JUMP STOP')
+        this.isJumping = false
+
+        this.hasBeenTop = false
+        this.jumpTicker.stop()
+        this.sprite.y = playerY
+        return
+      }
+
+      this.sprite.y = jumpAtY + jumpHeight * direction
+      time += deltaMs
+    })
+
+    this.jumpTicker.start()
+  }
+
+  jumpOut(groundPlayer) {
+    const { x: groundX, y: groundY } = groundPlayer.sprite.getGlobalPosition()
+    const { x: playerX, y: playerY } = this.sprite.getGlobalPosition()
+
+    const destX = this.sprite.x + (groundX - playerX)
+    const destY = this.sprite.y + (groundY - playerY)
+
+    if (this.isJumping) return
+    this.isJumping = true
+
+    let time = 0
+    const v0 = 24
+    const gravity = 0.7
+    const direction = -1 //to Top
+    const jumpAtY = this.sprite.y
+    // const jumpAtY = this.sprite.y
+
+    this.jumpTicker = new PIXI.Ticker()
+    this.jumpTicker.add((deltaMs) => {
+      if (this.sprite.x < destX) {
+        this.sprite.x += 5
+      }
+      // console.log('jumpTicker')
+      const jumpHeight = v0 * time + (1 / 2) * -gravity * Math.pow(time, 2)
+      const v = v0 - gravity * time
+      if (v < 0) {
+        this.hasBeenTop = true
+      }
+
+      if (v < 0 && this.sprite.y > destY) {
+        console.log('JUMP STOP')
+        this.isJumping = false
+
+        this.hasBeenTop = false
+        this.jumpTicker.stop()
+        this.sprite.y = destY
+        return
+      }
+
+      this.sprite.y = jumpAtY + jumpHeight * direction
+      time += deltaMs
+    })
+
+    this.jumpTicker.start()
   }
 }
 
