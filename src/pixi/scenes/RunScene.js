@@ -12,7 +12,7 @@ const PLAYER_SPEED = 4
 const BOARD_SPEED = 3
 const BACKGROUND_SPEED = 2
 const OBSTACLE_SPEED = 4
-// const gameStageDimention = Globals.getSeesawGameStageDimention()
+const gameStageDimention = Globals.getSeesawGameStageDimention()
 
 export class RunScene extends Scene {
   constructor() {
@@ -115,8 +115,12 @@ export class RunScene extends Scene {
   // ===== init game =====
   initGame() {
     console.log('initGame')
-    this._createCity(this.currentCityIndex)
     this._createPlayer()
+    this._createCity(this.currentCityIndex)
+    this.gameStage.setChildIndex(
+      this.player.sprite,
+      this.gameStage.children.length - 1
+    )
   }
 
   _createPlayer() {
@@ -131,7 +135,7 @@ export class RunScene extends Scene {
 
   _createCity() {
     for (let i = 0; i < 7; i++) {
-      const city = new City(i, this.collisionMonitor.bind(this))
+      const city = new City(i, this.collisionMonitor.bind(this), this.player)
 
       let interval = (i === 0 ? 0 : 1 * (this.gameStageWidth * 1)) / 3
       if (city.cityName === 'Mountain') {
@@ -315,6 +319,10 @@ export class RunScene extends Scene {
   }
 
   collisionMonitor(obstacle) {
+    if (obstacle.obstacleName === 'water') {
+      this.gameOver(obstacle)
+      return
+    }
     // add in-window obstacle to array
     if (!obstacle.isAddedToProcesser) {
       this.inWindowObstacles.push(obstacle)
@@ -363,6 +371,7 @@ export class RunScene extends Scene {
   }
 
   _obstacleProcesser() {
+    // console.log(this.inWindowObstacles)
     for (let i = 0; i < this.inWindowObstacles.length; i++) {
       const obstacle = this.inWindowObstacles[i]
       obstacle._setGlobalXAndY()
@@ -383,9 +392,11 @@ export class RunScene extends Scene {
 
       const isInObstacleArea = rightBoundaryHit && leftBoundaryHit
       // playerY <= obstacleY + 20 && rightBoundaryHit && leftBoundaryHit
-
+      // console.log('_obstacleProcesser ' + obstacle.obstacleName)
+      if (obstacle.obstacleName === 'car') {
+        // console.log(isInObstacleArea)
+      }
       if (isInObstacleArea) {
-        console.log('isInObstacleArea ' + obstacle.obstacleName)
         this.player.touchedObstacleIndex = obstacle.index
 
         if (obstacle.obstacleName === 'rock') {
@@ -403,7 +414,7 @@ export class RunScene extends Scene {
 
           if (obstacle.canNotStanding) {
             console.log('DEAD')
-            this.gameOver()
+            this.gameOver(obstacle)
             return
           }
 
@@ -473,17 +484,51 @@ export class RunScene extends Scene {
   }
 
   // ===== game over =====
-  async gameOver() {
+  async gameOver(obstacle) {
     this.sceneTicker.stop()
     if (this.menuButtons?.container) {
       this.container.removeChild(this.menuButtons.container)
     }
 
     this._pauseAllGameActivity()
-    await this._wait(1000)
-    this.player.sprite.width *= 2
+    await this._deatAnimation(obstacle)
+
     await this._wait(2000)
     this.failGameHint()
+  }
+
+  async _deatAnimation(obstacle) {
+    this.gameStage.setChildIndex(this.player.sprite, 4)
+
+    this.player.sprite.angle += 10
+
+    if (obstacle.obstacleName === 'water') {
+      console.log('water')
+      await this._drawningAnitation()
+    } else {
+      await this._wait(1000)
+    }
+    this.player.sprite.width *= 2
+    await this._wait(2000)
+  }
+
+  async _drawningAnitation() {
+    const drawningTicker = new PIXI.Ticker()
+    return new Promise((resolve) => {
+      drawningTicker.add(() => {
+        if (
+          this.player.sprite.y <
+          gameStageDimention.height + this.player.sprite.height / 2
+        ) {
+          this.player.sprite.y += 0.3
+        } else {
+          drawningTicker.stop()
+          resolve()
+        }
+      })
+
+      drawningTicker.start()
+    })
   }
 
   async failGameHint() {

@@ -26,8 +26,8 @@ export class Obstacle {
       this._checkIfObstacleIsInWindow()
 
       if (this.isInWindow) {
-        this.container.visible = true
         this._turnOnObstacle()
+        // this.container.visible = true
 
         if (!this.isAddedToProcesser) {
           // console.log('in window')
@@ -36,10 +36,10 @@ export class Obstacle {
         }
       } else {
         if (this.isAddedToProcesser) {
+          // this.container.visible = false
           // console.log('out of window')
           this.collisionMonitor(this)
           this.isAddedToProcesser = false
-          this.container.visible = false
         }
       }
     })

@@ -10,10 +10,11 @@ import { Rock } from './Rock'
 const gameStageDimention = Globals.getRunGameStageDimention()
 
 export class CityObstacle {
-  constructor(cityName, obstacleWidth, collisionMonitor) {
+  constructor(cityName, obstacleWidth, collisionMonitor, player) {
     this.cityName = cityName
     this.obstacleWidth = obstacleWidth
     this.collisionMonitor = collisionMonitor
+    this.player = player
 
     this.container = new PIXI.Container()
     this.container.name = `cityObstacle-${this.cityName}`
@@ -135,7 +136,7 @@ export class CityObstacle {
 
     let waterContainerWidth = 0
     for (let i = 1; i <= WATER_COUNT; i++) {
-      const water = new Water(i + 200, this.collisionMonitor)
+      const water = new Water(i + 200, this.collisionMonitor, this.player)
       water.container.y = gameStageDimention.height + water.container.height
       // solarBoard.container.y =
       //   gameStageDimention.height + solarBoard.container.height
@@ -148,7 +149,7 @@ export class CityObstacle {
 
       this.obstacleArray.push(water)
       this.container.addChild(water.container)
-      // water.startObstacleTicker()
+      water.startObstacleTicker()
 
       // add obstacle floating on the water
 
@@ -202,7 +203,7 @@ export class CityObstacle {
 
   _createMountain() {
     const ROCK_COUNT = 10
-    console.log(this.obstacleWidth)
+
     for (let i = 0; i < ROCK_COUNT; i++) {
       const rock = new Rock(i, this.collisionMonitor, this.obstacleWidth)
 

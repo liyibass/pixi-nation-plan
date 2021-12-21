@@ -5,11 +5,12 @@ import { Obstacle } from './Obstacle'
 // const gameStageDimention = Globals.getRunGameStageDimention()
 
 export class Water extends Obstacle {
-  constructor(index = 0, collisionMonitor = () => {}) {
+  constructor(index = 0, collisionMonitor = () => {}, player) {
     super()
     this.index = index
     this.collisionMonitor = collisionMonitor
     this.obstacleName = 'water'
+    this.player = player
 
     this.waterWidthLevel = (this.index % 3) + 1
     this.createWater()
@@ -41,5 +42,40 @@ export class Water extends Obstacle {
 
     this.obstacleGlobalX = global.tx
     this.obstacleGlobalY = global.ty
+  }
+
+  startObstacleTicker() {
+    this.defaultX = this.container.x
+    this.defaultY = this.container.y
+
+    this.ObstacleOperateTicker = new PIXI.Ticker()
+
+    this.ObstacleOperateTicker.add(() => {
+      this._checkIfObstacleIsInWindow()
+
+      if (this.isInWindow) {
+        // get water and player's global position
+        const { tx: playerX, ty: playerY } = this.player.sprite.worldTransform
+        this._setGlobalXAndY()
+
+        const rightBoundaryHit =
+          playerX >= this.obstacleGlobalX - this.obstacleWidth / 2
+        const leftBoundaryHit =
+          playerX <= this.obstacleGlobalX + this.obstacleWidth / 2
+        const isInObstacleArea = rightBoundaryHit && leftBoundaryHit
+        const standOnWater =
+          playerY === this.obstacleGlobalY - this.obstacleHeight
+
+        if (isInObstacleArea && standOnWater) {
+          console.log('DEAD')
+          this.ObstacleOperateTicker.stop()
+          this.collisionMonitor(this)
+        }
+
+        // this.isAddedToProcesser = true
+      }
+    })
+
+    this.ObstacleOperateTicker.start()
   }
 }
