@@ -13,6 +13,9 @@ export class CandyScene extends Scene {
 
     this.container.name = 'CandyScene'
 
+    this.grid = []
+    this.isSwaping = false
+
     this.createScene()
     this.startGameFlow()
   }
@@ -76,19 +79,116 @@ export class CandyScene extends Scene {
 
   async createCandys() {
     for (let j = this.colCount - 1; j >= 0; j--) {
+      const rowArray = []
+      this.grid.unshift(rowArray)
       for (let i = 0; i < this.colCount; i++) {
-        await this.createCandy(i, j)
+        const candy = await this.createCandy(i, j)
+        rowArray.push(candy)
       }
     }
   }
 
   async createCandy(i, j) {
-    const candy = new Candy(i, j)
+    const candy = new Candy(i, j, this.swapHandler.bind(this))
     this.gameStage.addChild(candy.container)
     candy.startCandyTicker()
 
     await this._wait(40)
     candy.startDragMonitor()
+
+    return candy
+  }
+
+  async swapHandler(candy, direction) {
+    if (this.isSwaping) return
+
+    this.isSwaping = true
+
+    // find opponent candy
+    let opponentCandy = null
+    switch (direction) {
+      case 'right':
+        if (candy.i === this.colCount - 1) {
+          this.isSwaping = false
+          return
+        }
+
+        opponentCandy = this.grid[candy.j][candy.i + 1]
+
+        // swap array position in grid
+        this.grid[candy.j].splice(candy.i, 2, opponentCandy, candy)
+        break
+
+      case 'left':
+        if (candy.i === 0) {
+          this.isSwaping = false
+          return
+        }
+        opponentCandy = this.grid[candy.j][candy.i - 1]
+        // swap array position in grid
+        this.grid[candy.j].splice(candy.i - 1, 2, candy, opponentCandy)
+        break
+
+      case 'down':
+        if (candy.j === this.rowCount - 1) {
+          this.isSwaping = false
+          return
+        }
+        opponentCandy = this.grid[candy.j + 1][candy.i]
+        break
+
+      case 'up':
+        if (candy.j === 0) {
+          this.isSwaping = false
+          return
+        }
+        opponentCandy = this.grid[candy.j - 1][candy.i]
+
+        break
+
+      default:
+        break
+    }
+
+    // swap array position in grid
+    switch (direction) {
+      case 'right':
+        this.grid[candy.j].splice(candy.i, 2, opponentCandy, candy)
+        candy.moveRightTicker()
+        opponentCandy.moveLeftTicker()
+        break
+
+      case 'left':
+        this.grid[candy.j].splice(candy.i - 1, 2, candy, opponentCandy)
+        candy.moveLeftTicker()
+        opponentCandy.moveRightTicker()
+        break
+
+      case 'down':
+        this.grid[candy.j].splice(candy.i, 1, opponentCandy)
+        this.grid[candy.j + 1].splice(candy.i, 1, candy)
+        candy.moveDownTicker()
+        opponentCandy.moveUpTicker()
+        break
+
+      case 'up':
+        this.grid[candy.j - 1].splice(candy.i, 1, candy)
+        this.grid[candy.j].splice(candy.i, 1, opponentCandy)
+        candy.moveUpTicker()
+        opponentCandy.moveDownTicker()
+        break
+    }
+
+    // swap i and j
+    const { i: opI, j: opJ } = opponentCandy
+    opponentCandy.i = candy.i
+    opponentCandy.j = candy.j
+    candy.i = opI
+    candy.j = opJ
+
+    // execute swap animation
+    console.log('swap')
+    this.isSwaping = false
   }
 
   // ===== game flow =====
@@ -138,7 +238,6 @@ export class CandyScene extends Scene {
   async startGame() {
     await super.startGame()
 
-    // this._dragMonitor()
     this._startSceneTicker()
   }
 
@@ -149,18 +248,6 @@ export class CandyScene extends Scene {
 
     this.sceneTicker.start()
   }
-
-  // _dragMonitor() {
-  //   console.log('_dragMonitor')
-  //   this.gameStage.interactive = true
-  //   this.gameStage.buttonMode = true
-
-  //   this.gameStage.addListener('pointerdown', (event) => {
-  //     console.log(event)
-  //     // dragFlag = true
-  //     // startPoint = { x: event.data.global.x, y: event.data.global.y }
-  //   })
-  // }
 
   // ===== game pause =====
   _pauseAllGameActivity() {}

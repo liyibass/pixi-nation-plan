@@ -143,4 +143,57 @@ export class Candy {
       return deltaY > 0 ? 'down' : 'up'
     }
   }
+
+  moveRightTicker() {
+    this.swapTicker = new PIXI.Ticker()
+
+    this.swapTicker.add(() => {
+      if (this.container.x < this.i * CANDY_WIDTH) {
+        this.container.x += 3
+      } else {
+        this.container.x = this.i * CANDY_WIDTH
+        this.swapTicker.stop()
+      }
+    })
+    this.swapTicker.start()
+  }
+  moveLeftTicker() {
+    this.swapTicker = new PIXI.Ticker()
+
+    this.swapTicker.add(() => {
+      if (this.container.x > this.i * CANDY_WIDTH) {
+        this.container.x -= 3
+      } else {
+        this.container.x = this.i * CANDY_WIDTH
+        this.swapTicker.stop()
+      }
+    })
+    this.swapTicker.start()
+  }
+  moveDownTicker() {
+    this.swapTicker = new PIXI.Ticker()
+
+    this.swapTicker.add(() => {
+      if (this.container.y < this.j * CANDY_WIDTH) {
+        this.container.y += 3
+      } else {
+        this.container.y = this.j * CANDY_WIDTH
+        this.swapTicker.stop()
+      }
+    })
+    this.swapTicker.start()
+  }
+  moveUpTicker() {
+    this.swapTicker = new PIXI.Ticker()
+
+    this.swapTicker.add(() => {
+      if (this.container.y > this.j * CANDY_WIDTH) {
+        this.container.y -= 3
+      } else {
+        this.container.y = this.j * CANDY_WIDTH
+        this.swapTicker.stop()
+      }
+    })
+    this.swapTicker.start()
+  }
 }
