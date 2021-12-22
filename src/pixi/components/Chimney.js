@@ -31,6 +31,30 @@ export class Chimney extends Obstacle {
       this.chimneySprite.width / 2,
       this.chimneySprite.height
     )
+
+    this.fireSprite = this._createFireSprite()
+    this.container.addChild(this.fireSprite)
+
+    if (this.index % 4 === 0) {
+      this.fireSprite2 = this._createFireSprite()
+      this.container.addChild(this.fireSprite2)
+
+      this.fireSprite.x -= 14
+      this.fireSprite2.x += 14
+    }
+    // for (let i = 0; i < this.index===0?2:1; i++) {
+
+    // }
+  }
+
+  _createFireSprite() {
+    const fireTexture = new PIXI.Texture(Globals.resources[`fire`]?.texture)
+    const fireSprite = new PIXI.Sprite(fireTexture)
+
+    fireSprite.pivot.set(fireSprite.width / 2, fireSprite.height)
+    fireSprite.y = -this.chimneySprite.height
+
+    return fireSprite
   }
 
   _turnOnObstacle() {
@@ -39,12 +63,22 @@ export class Chimney extends Obstacle {
 
       if (this.container.x > this.defaultX + 1) {
         this.vibrateDirection = 'right'
+        this.fireSprite.scale.x = -1
+
+        if (this.fireSprite2) {
+          this.fireSprite2.scale.x = 1
+        }
       }
     } else {
       this.container.x--
 
       if (this.container.x < this.defaultX - 1) {
         this.vibrateDirection = 'left'
+        this.fireSprite.scale.x = 1
+
+        if (this.fireSprite2) {
+          this.fireSprite2.scale.x = -1
+        }
       }
     }
   }
