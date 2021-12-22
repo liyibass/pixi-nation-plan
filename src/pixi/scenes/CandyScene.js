@@ -82,20 +82,38 @@ export class CandyScene extends Scene {
       const rowArray = []
       this.grid.unshift(rowArray)
       for (let i = 0; i < this.colCount; i++) {
-        const candy = await this.createCandy(i, j)
+        const candy = this.createCandy(i, j)
         rowArray.push(candy)
+
+        // start drop animation
+        candy.dropCandyTicker()
+        await this._wait(20)
+      }
+    }
+
+    for (let j = this.colCount - 1; j >= 0; j--) {
+      for (let i = 0; i < this.colCount; i++) {
+        const candy = this.grid[j][i]
+        candy.startDragMonitor()
+
+        // // setup linkList
+        // const leftCandy = i === 0 ? null : this.grid[j][i - 1]
+        // const rightCandy = i === this.colCount - 1 ? null : this.grid[j][i + 1]
+        // const topCandy = j === 0 ? null : this.grid[j - 1][i]
+        // const bottomCandy = j === this.rowCount - 1 ? null : this.grid[j + 1][i]
+
+        // candy.leftCandy = leftCandy
+        // candy.rightCandy = rightCandy
+        // candy.topCandy = topCandy
+        // candy.bottomCandy = bottomCandy
       }
     }
   }
 
-  async createCandy(i, j) {
+  createCandy(i, j) {
     const typeIndex = Math.floor(Math.random() * 4)
     const candy = new Candy(typeIndex, i, j, this.swapHandler.bind(this))
     this.gameStage.addChild(candy.container)
-    candy.startCandyTicker()
-
-    await this._wait(40)
-    candy.startDragMonitor()
 
     return candy
   }
@@ -150,6 +168,9 @@ export class CandyScene extends Scene {
       default:
         break
     }
+
+    console.log(candy)
+    console.log(opponentCandy)
 
     // swap array position in grid
     switch (direction) {

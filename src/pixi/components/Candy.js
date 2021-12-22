@@ -7,8 +7,8 @@ const SWAP_SPEED = 4
 export class Candy {
   constructor(typeIndex = 0, i = 0, j = 0, swapHandler = () => {}) {
     this.typeIndex = typeIndex
-    this.i = i
     this.j = j
+    this.i = i
     this.swapHandler = swapHandler
 
     this.container = new PIXI.Container()
@@ -21,7 +21,12 @@ export class Candy {
 
     this.createCandy()
     this.candyInitPosition()
-    // this.startCandyTicker()
+    // this.dropCandyTicker()
+
+    // this.topCandy = null
+    // this.bottomCandy = null
+    // this.leftCandy = null
+    // this.rightCandy = null
   }
 
   createCandy() {
@@ -49,7 +54,7 @@ export class Candy {
     this.container.y = -CANDY_WIDTH
   }
 
-  startCandyTicker() {
+  dropCandyTicker() {
     this.candyDropTicker = new PIXI.Ticker()
     const v0 = 0
     const g = 0.5
@@ -57,32 +62,35 @@ export class Candy {
     let dropDistance = 0
     this.container.alpha = 0
 
-    this.candyDropTicker.add((delta) => {
-      if (this.container.alpha < 1) {
-        this.container.alpha += 0.1
-      } else {
-        this.container.alpha = 1
-      }
-
-      if (this.container.y < this.j * CANDY_WIDTH) {
-        dropDistance = -CANDY_WIDTH + v0 * time + 0.5 * g * Math.pow(time, 2)
-
-        // prevent over droping
-        if (dropDistance > this.j * CANDY_WIDTH) {
-          this.container.y = this.j * CANDY_WIDTH
+    return new Promise((resolve) => {
+      this.candyDropTicker.add((delta) => {
+        if (this.container.alpha < 1) {
+          this.container.alpha += 0.1
         } else {
-          this.container.y = dropDistance
+          this.container.alpha = 1
         }
-        time += delta
-      } else {
-        // const v = Math.floor(Math.sqrt(v0 + 2 * g * dropDistance))
-        // console.log(v)
-        this.candyDropTicker.stop()
-        this.container.y = this.j * CANDY_WIDTH
-      }
-    })
 
-    this.candyDropTicker.start()
+        if (this.container.y < this.j * CANDY_WIDTH) {
+          dropDistance = -CANDY_WIDTH + v0 * time + 0.5 * g * Math.pow(time, 2)
+
+          // prevent over droping
+          if (dropDistance > this.j * CANDY_WIDTH) {
+            this.container.y = this.j * CANDY_WIDTH
+          } else {
+            this.container.y = dropDistance
+          }
+          time += delta
+        } else {
+          // const v = Math.floor(Math.sqrt(v0 + 2 * g * dropDistance))
+          // console.log(v)
+          this.candyDropTicker.stop()
+          this.container.y = this.j * CANDY_WIDTH
+          resolve()
+        }
+      })
+
+      this.candyDropTicker.start()
+    })
   }
 
   startDragMonitor() {
