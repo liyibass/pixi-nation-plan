@@ -58,7 +58,7 @@ export class CandyScene extends Scene {
       0,
       this.gameStageWidth,
       this.gameStageHeight,
-      15
+      20
     )
     gameStageFrame.endFill()
 

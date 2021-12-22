@@ -26,6 +26,12 @@ export class Candy {
 
   createCandy() {
     // console.log(this.index)
+
+    const candyBackground = new PIXI.Graphics()
+    candyBackground.beginFill(0x232c5b)
+    candyBackground.drawRoundedRect(0, 0, CANDY_WIDTH, CANDY_WIDTH, 20)
+    this.container.addChild(candyBackground)
+
     const candyTexture = new PIXI.Texture(
       Globals.resources[`b${Math.floor(Math.random() * 5)}`]?.texture
     )
