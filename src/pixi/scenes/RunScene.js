@@ -37,7 +37,7 @@ export class RunScene extends Scene {
     this._createGroundBackground()
     this._createItems()
     this._createGameStage()
-    this._addMaskToGameStage()
+    // this._addMaskToGameStage()
 
     this._createDoctorSay()
   }
@@ -379,7 +379,7 @@ export class RunScene extends Scene {
       // observe obstacle
       this._obstacleProcesser()
 
-      this.cityBackgroundLayer.children.forEach((cityBackground, index) => {
+      this.cityBackgroundLayer.children.forEach((cityBackground) => {
         const needToDeleteOldCity =
           cityBackground.worldTransform.tx + cityBackground.width < 0
 
@@ -387,7 +387,7 @@ export class RunScene extends Scene {
           cityBackground.visible = false
           // cityBackground.destroy()
 
-          this.boardLayer.children[index]?.destroy()
+          // this.boardLayer.children[index]?.destroy()
         }
       })
     })

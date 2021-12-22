@@ -145,6 +145,7 @@ export const Globals = {
       height,
       colCount,
       rowCount,
+      candyWidth,
     }
   },
 }

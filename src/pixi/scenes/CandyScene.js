@@ -1,7 +1,11 @@
 import * as PIXI from 'pixi.js'
+import { Candy } from '../components/Candy'
 
 import { Globals } from '../script/Globals'
 import { Scene } from './Scene'
+
+// const gameStageDimention = Globals.getCandyGameStageDimention()
+// const CANDY_WIDTH = gameStageDimention
 
 export class CandyScene extends Scene {
   constructor() {
@@ -46,7 +50,13 @@ export class CandyScene extends Scene {
      * the drawing process down below MUST start at 0,0
      * (Graphics and drawRect is NOT in same level)
      */
-    gameStageFrame.drawRect(0, 0, this.gameStageWidth, this.gameStageHeight)
+    gameStageFrame.drawRoundedRect(
+      0,
+      0,
+      this.gameStageWidth,
+      this.gameStageHeight,
+      15
+    )
     gameStageFrame.endFill()
 
     // add to container
@@ -61,6 +71,22 @@ export class CandyScene extends Scene {
   // ===== init game =====
   async initGame() {
     console.log('initGame')
+    await this.createCandys()
+  }
+
+  async createCandys() {
+    for (let j = this.colCount - 1; j >= 0; j--) {
+      for (let i = 0; i < this.colCount; i++) {
+        this.createCandy(i, j)
+        await this._wait(40)
+      }
+    }
+  }
+
+  createCandy(i, j) {
+    const candy = new Candy(i, j)
+    this.gameStage.addChild(candy.container)
+    candy.startCandyTicker()
   }
 
   // ===== game flow =====
