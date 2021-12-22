@@ -77,16 +77,18 @@ export class CandyScene extends Scene {
   async createCandys() {
     for (let j = this.colCount - 1; j >= 0; j--) {
       for (let i = 0; i < this.colCount; i++) {
-        this.createCandy(i, j)
-        await this._wait(40)
+        await this.createCandy(i, j)
       }
     }
   }
 
-  createCandy(i, j) {
+  async createCandy(i, j) {
     const candy = new Candy(i, j)
     this.gameStage.addChild(candy.container)
     candy.startCandyTicker()
+
+    await this._wait(40)
+    candy.startDragMonitor()
   }
 
   // ===== game flow =====
@@ -136,6 +138,7 @@ export class CandyScene extends Scene {
   async startGame() {
     await super.startGame()
 
+    // this._dragMonitor()
     this._startSceneTicker()
   }
 
@@ -146,6 +149,18 @@ export class CandyScene extends Scene {
 
     this.sceneTicker.start()
   }
+
+  // _dragMonitor() {
+  //   console.log('_dragMonitor')
+  //   this.gameStage.interactive = true
+  //   this.gameStage.buttonMode = true
+
+  //   this.gameStage.addListener('pointerdown', (event) => {
+  //     console.log(event)
+  //     // dragFlag = true
+  //     // startPoint = { x: event.data.global.x, y: event.data.global.y }
+  //   })
+  // }
 
   // ===== game pause =====
   _pauseAllGameActivity() {}
