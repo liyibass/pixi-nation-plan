@@ -6,6 +6,7 @@ import { IntroScene } from './IntroScene'
 import { SnakeScene } from './SnakeScene'
 import { BalanceScene } from './BalanceScene'
 import { RunScene } from './RunScene'
+import { CandyScene } from './CandyScene'
 
 export class MainScene {
   constructor() {
@@ -53,6 +54,16 @@ export class MainScene {
     this.container.addChild(runScene.container)
   }
 
+  createCandyScene() {
+    // remove unuse scene
+    this.container.removeChildren()
+    this.container.removeAllListeners()
+
+    // create snake scene
+    const candyScene = new CandyScene()
+    this.container.addChild(candyScene.container)
+  }
+
   selectStage(stageName) {
     console.log('clicked ' + stageName)
     switch (stageName) {
@@ -64,6 +75,9 @@ export class MainScene {
         break
       case 'run':
         this.createRunScene()
+        break
+      case 'candy':
+        this.createCandyScene()
         break
 
       default:

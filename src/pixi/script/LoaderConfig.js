@@ -63,6 +63,11 @@ import solarBoard from '../assets/images/solarBoard.png'
 import house from '../assets/images/house.png'
 import rock from '../assets/images/rock.png'
 import fire from '../assets/images/fire.png'
+import b0 from '../assets/images/b0.png'
+import b1 from '../assets/images/b1.png'
+import b2 from '../assets/images/b2.png'
+import b3 from '../assets/images/b3.png'
+import b4 from '../assets/images/b4.png'
 
 export const LoaderConfig = {
   player,
@@ -130,4 +135,9 @@ export const LoaderConfig = {
   house,
   rock,
   fire,
+  b0,
+  b1,
+  b2,
+  b3,
+  b4,
 }
