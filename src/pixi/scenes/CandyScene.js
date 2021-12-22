@@ -89,7 +89,8 @@ export class CandyScene extends Scene {
   }
 
   async createCandy(i, j) {
-    const candy = new Candy(i, j, this.swapHandler.bind(this))
+    const typeIndex = Math.floor(Math.random() * 4)
+    const candy = new Candy(typeIndex, i, j, this.swapHandler.bind(this))
     this.gameStage.addChild(candy.container)
     candy.startCandyTicker()
 

@@ -3,10 +3,10 @@ import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 const gameStageDimention = Globals.getCandyGameStageDimention()
 const CANDY_WIDTH = gameStageDimention.candyWidth
-
+const SWAP_SPEED = 4
 export class Candy {
-  constructor(i = 0, j = 0, swapHandler = () => {}) {
-    this.index = j * 10 + i
+  constructor(typeIndex = 0, i = 0, j = 0, swapHandler = () => {}) {
+    this.typeIndex = typeIndex
     this.i = i
     this.j = j
     this.swapHandler = swapHandler
@@ -33,7 +33,7 @@ export class Candy {
     this.container.addChild(candyBackground)
 
     const candyTexture = new PIXI.Texture(
-      Globals.resources[`b${Math.floor(Math.random() * 5)}`]?.texture
+      Globals.resources[`b${this.typeIndex}`]?.texture
     )
     const candySprite = new PIXI.Sprite(candyTexture)
 
@@ -155,7 +155,7 @@ export class Candy {
 
     this.swapTicker.add(() => {
       if (this.container.x < this.i * CANDY_WIDTH) {
-        this.container.x += 3
+        this.container.x += SWAP_SPEED
       } else {
         this.container.x = this.i * CANDY_WIDTH
         this.swapTicker.stop()
@@ -168,7 +168,7 @@ export class Candy {
 
     this.swapTicker.add(() => {
       if (this.container.x > this.i * CANDY_WIDTH) {
-        this.container.x -= 3
+        this.container.x -= SWAP_SPEED
       } else {
         this.container.x = this.i * CANDY_WIDTH
         this.swapTicker.stop()
@@ -181,7 +181,7 @@ export class Candy {
 
     this.swapTicker.add(() => {
       if (this.container.y < this.j * CANDY_WIDTH) {
-        this.container.y += 3
+        this.container.y += SWAP_SPEED
       } else {
         this.container.y = this.j * CANDY_WIDTH
         this.swapTicker.stop()
@@ -194,7 +194,7 @@ export class Candy {
 
     this.swapTicker.add(() => {
       if (this.container.y > this.j * CANDY_WIDTH) {
-        this.container.y -= 3
+        this.container.y -= SWAP_SPEED
       } else {
         this.container.y = this.j * CANDY_WIDTH
         this.swapTicker.stop()
