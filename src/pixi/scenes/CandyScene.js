@@ -169,9 +169,6 @@ export class CandyScene extends Scene {
         break
     }
 
-    console.log(candy)
-    console.log(opponentCandy)
-
     // swap array position in grid
     switch (direction) {
       case 'right':
@@ -211,6 +208,74 @@ export class CandyScene extends Scene {
     // execute swap animation
     console.log('swap')
     this.isSwaping = false
+
+    this.examineIfHasLine()
+  }
+
+  examineIfHasLine() {
+    let lineCount = 1
+    const needToDelete = []
+
+    for (let j = 0; j < this.colCount; j++) {
+      for (let i = 0; i < this.rowCount; i++) {
+        if (i >= this.colCount - 2) continue
+
+        const candy = this.grid[j][i]
+
+        // check right
+        const hasRightLine = rightLineCheck.bind(this)(candy)
+
+        if (hasRightLine >= 3) {
+          for (let k = 0; k < hasRightLine; k++) {
+            needToDelete.push(this.grid[j][i + k])
+          }
+
+          // skip examining lined candy
+          i += hasRightLine - 1
+        }
+        lineCount = 1
+
+        // const hasBottomLIne =bottomLineCheck.bind(this)(candy)
+        // if (hasRightLine >= 3) {
+        //   for (let k = 0; k < hasRightLine; k++) {
+        //     needToDelete.push(this.grid[j][i + k])
+        //   }
+
+        //   // skip examining lined candy
+        //   i += hasRightLine - 1
+        // }
+        // lineCount = 1
+      }
+    }
+    function rightLineCheck(candy) {
+      const { i, j } = candy
+
+      const rightCandy = this.grid[j][i + 1]
+
+      if (candy.typeIndex === rightCandy?.typeIndex) {
+        lineCount++
+        return rightLineCheck.bind(this)(rightCandy)
+      } else {
+        return lineCount
+      }
+    }
+
+    // function bottomLineCheck(candy) {
+    //   const { i, j } = candy
+    //   if (j >= this.rowCount - 2) return lineCount
+
+    //   const bottomCandy = this.grid[j + 1][i]
+
+    //   if (candy.typeIndex === bottomCandy?.typeIndex) {
+    //     lineCount++
+    //     return bottomLineCheck.bind(this)(bottomCandy)
+    //   } else {
+    //     return lineCount
+    //   }
+    // }
+    needToDelete.forEach((candy) => {
+      candy.container.alpha = 0.2
+    })
   }
 
   // ===== game flow =====
