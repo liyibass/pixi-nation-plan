@@ -153,6 +153,7 @@ export class CandyScene extends Scene {
 
   async swapHandler(candy, direction) {
     if (this.isSwaping) return
+    console.log('swapHandler')
 
     this.isSwaping = true
 
@@ -164,28 +165,24 @@ export class CandyScene extends Scene {
     switch (direction) {
       case 'right':
         this.grid[candy.j].splice(candy.i, 2, opponentCandy, candy)
-        candy.moveRightTicker()
-        opponentCandy.moveLeftTicker()
+
         break
 
       case 'left':
         this.grid[candy.j].splice(candy.i - 1, 2, candy, opponentCandy)
-        candy.moveLeftTicker()
-        opponentCandy.moveRightTicker()
+
         break
 
       case 'down':
         this.grid[candy.j].splice(candy.i, 1, opponentCandy)
         this.grid[candy.j + 1].splice(candy.i, 1, candy)
-        candy.moveDownTicker()
-        opponentCandy.moveUpTicker()
+
         break
 
       case 'up':
         this.grid[candy.j - 1].splice(candy.i, 1, candy)
         this.grid[candy.j].splice(candy.i, 1, opponentCandy)
-        candy.moveUpTicker()
-        opponentCandy.moveDownTicker()
+
         break
     }
 
@@ -196,68 +193,96 @@ export class CandyScene extends Scene {
     candy.i = opI
     candy.j = opJ
 
+    // trigger their swap animation
+    switch (direction) {
+      case 'right':
+        await Promise.all([
+          candy.moveRightTicker(),
+          opponentCandy.moveLeftTicker(),
+        ])
+        break
+
+      case 'left':
+        await Promise.all([
+          candy.moveLeftTicker(),
+          opponentCandy.moveRightTicker(),
+        ])
+        break
+
+      case 'down':
+        await Promise.all([
+          candy.moveDownTicker(),
+          opponentCandy.moveUpTicker(),
+        ])
+        break
+
+      case 'up':
+        await Promise.all([
+          candy.moveUpTicker(),
+          opponentCandy.moveDownTicker(),
+        ])
+        break
+    }
+
     // execute swap animation
     console.log('swap')
     this.isSwaping = false
 
-    // get lined candy
-    let needToDeleteArray = this.examineIfHasLine()
+    // // get lined candy
+    // let needToDeleteArray = this.examineIfHasLine()
     // let needToFallingHeap = []
-    console.log(needToDeleteArray)
+    // // console.log(needToDeleteArray)
 
-    for (let k = 0; k < needToDeleteArray.length; k++) {
-      // remove candy from grid
-      const candy = needToDeleteArray[k]
-      const { i, j } = candy
-      this.grid[i][j].isDelete = true
+    // for (let k = 0; k < needToDeleteArray.length; k++) {
+    //   // remove candy from grid
+    //   const candy = needToDeleteArray[k]
+    //   const { i, j } = candy
+    //   this.grid[j][i].isDelete = true
 
-      candy.container.alpha = 0.2
+    //   candy.container.alpha = 0.2
 
-      // get all candies above candy
-      // feedAboveCandyToFallingHeap.bind(this)(candy)
-      // console.log(needToFallingHeap)
-    }
-    // console.log(needToFallingHeap)
+    //   // get all candies above candy
+    //   feedAboveCandyToFallingHeap.bind(this)(candy)
+    // }
 
     // // falling all pending candy
-    //   for (let k = needToFallingHeap.length - 1; k >= 0; k--) {
-    //     const candy = needToFallingHeap.pop()
+    // console.log(needToFallingHeap)
+    // for (let k = needToFallingHeap.length - 1; k >= 0; k--) {
+    //   const candy = needToFallingHeap.pop()
 
-    //     let fallingDistance = 0
-    //     getFallingDistance.bind(this)(candy, fallingDistance)
+    //   let fallingDistance = 0
+    //   getFallingDistance.bind(this)(candy, fallingDistance)
 
-    //     this.grid[candy.j + fallingDistance][candy.i] = candy
-    //     this.grid[candy.j][candy.i].isDelete = true
-    //     // console.log(this.grid[candy.j + 1][candy.i])
-    //     candy.j++
-    //     candy.dropCandyTicker()
-    //   }
+    //   this.grid[candy.j + fallingDistance][candy.i] = candy
+    //   this.grid[candy.j][candy.i].isDelete = true
+    //   // console.log(this.grid[candy.j + 1][candy.i])
+    //   candy.j++
+    //   candy.dropCandyTicker()
+    // }
 
-    //   needToDeleteArray = []
-    //   needToFallingHeap = []
+    // needToDeleteArray = []
+    // needToFallingHeap = []
 
-    //   function feedAboveCandyToFallingHeap(candy) {
-    //     console.log(needToFallingHeap)
-    //     const { i, j } = candy
+    // function feedAboveCandyToFallingHeap(candy) {
+    //   const { i, j } = candy
 
-    //     if (j > 0) {
-    //       const topCandy = this.grid[j - 1][i]
-    //       if (needToFallingHeap.indexOf(topCandy) === -1) {
-    //         needToFallingHeap.push(topCandy)
-    //       }
-
-    //       feedAboveCandyToFallingHeap.bind(this)(topCandy)
+    //   if (j > 0) {
+    //     const topCandy = this.grid[j - 1][i]
+    //     if (needToFallingHeap.indexOf(topCandy) === -1) {
+    //       needToFallingHeap.push(topCandy)
     //     }
+
+    //     feedAboveCandyToFallingHeap.bind(this)(topCandy)
     //   }
+    // }
 
-    //   function getFallingDistance(candy, fallingDistance) {
-    //     const { i, j } = candy
-    //     const bottomCandy = this.grid[j + 1][i]
+    // function getFallingDistance(candy, fallingDistance) {
+    //   const { i, j } = candy
+    //   const bottomCandy = this.grid[j + 1][i]
 
-    //     if (bottomCandy.isDelete) {
-    //       fallingDistance++
-    //       getFallingDistance.bind(this)(bottomCandy, fallingDistance)
-    //     }
+    //   if (bottomCandy.isDelete) {
+    //     fallingDistance++
+    //     getFallingDistance.bind(this)(bottomCandy, fallingDistance)
     //   }
     // }
   }
@@ -266,8 +291,8 @@ export class CandyScene extends Scene {
     let lineCount = 1
     const needToDelete = []
 
-    // for (let j = 0; j < this.colCount; j++) {
-    for (let j = 0; j < 3; j++) {
+    for (let j = 0; j < this.colCount; j++) {
+      // for (let j = 0; j < 3; j++) {
       for (let i = 0; i < this.rowCount; i++) {
         if (i >= this.colCount - 2) continue
 
@@ -279,6 +304,7 @@ export class CandyScene extends Scene {
 
         if (hasRightLine >= 3) {
           for (let k = 0; k < hasRightLine; k++) {
+            this.grid[j][i + k].isDelete = true
             needToDelete.push(this.grid[j][i + k])
           }
 

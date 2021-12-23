@@ -164,53 +164,69 @@ export class Candy {
   moveRightTicker() {
     this.swapTicker = new PIXI.Ticker()
 
-    this.swapTicker.add(() => {
-      if (this.container.x < this.i * CANDY_WIDTH) {
-        this.container.x += SWAP_SPEED
-      } else {
-        this.container.x = this.i * CANDY_WIDTH
-        this.swapTicker.stop()
-      }
+    return new Promise((resolve) => {
+      this.swapTicker.add(() => {
+        if (this.container.x < this.i * CANDY_WIDTH) {
+          this.container.x += SWAP_SPEED
+        } else {
+          this.container.x = this.i * CANDY_WIDTH
+          this.swapTicker.stop()
+
+          resolve()
+        }
+      })
+      this.swapTicker.start()
     })
-    this.swapTicker.start()
   }
   moveLeftTicker() {
     this.swapTicker = new PIXI.Ticker()
 
-    this.swapTicker.add(() => {
-      if (this.container.x > this.i * CANDY_WIDTH) {
-        this.container.x -= SWAP_SPEED
-      } else {
-        this.container.x = this.i * CANDY_WIDTH
-        this.swapTicker.stop()
-      }
+    return new Promise((resolve) => {
+      this.swapTicker.add(() => {
+        if (this.container.x > this.i * CANDY_WIDTH) {
+          this.container.x -= SWAP_SPEED
+        } else {
+          this.container.x = this.i * CANDY_WIDTH
+          this.swapTicker.stop()
+
+          resolve()
+        }
+      })
+      this.swapTicker.start()
     })
-    this.swapTicker.start()
   }
   moveDownTicker() {
     this.swapTicker = new PIXI.Ticker()
 
-    this.swapTicker.add(() => {
-      if (this.container.y < this.j * CANDY_WIDTH) {
-        this.container.y += SWAP_SPEED
-      } else {
-        this.container.y = this.j * CANDY_WIDTH
-        this.swapTicker.stop()
-      }
+    return new Promise((resolve) => {
+      this.swapTicker.add(() => {
+        if (this.container.y < this.j * CANDY_WIDTH) {
+          this.container.y += SWAP_SPEED
+        } else {
+          this.container.y = this.j * CANDY_WIDTH
+          this.swapTicker.stop()
+
+          resolve()
+        }
+      })
+      this.swapTicker.start()
     })
-    this.swapTicker.start()
   }
   moveUpTicker() {
     this.swapTicker = new PIXI.Ticker()
 
-    this.swapTicker.add(() => {
-      if (this.container.y > this.j * CANDY_WIDTH) {
-        this.container.y -= SWAP_SPEED
-      } else {
-        this.container.y = this.j * CANDY_WIDTH
-        this.swapTicker.stop()
-      }
+    return new Promise((resolve) => {
+      this.swapTicker.add(() => {
+        if (this.container.y > this.j * CANDY_WIDTH) {
+          this.container.y -= SWAP_SPEED
+        } else {
+          this.container.y = this.j * CANDY_WIDTH
+          this.swapTicker.stop()
+
+          resolve()
+        }
+      })
+      this.swapTicker.start()
     })
-    this.swapTicker.start()
   }
 }
