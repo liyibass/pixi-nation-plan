@@ -82,7 +82,9 @@ export class CandyScene extends Scene {
       const rowArray = []
       this.grid.unshift(rowArray)
       for (let i = 0; i < this.colCount; i++) {
-        const candy = this.createCandy(i, j)
+        const typeIndex = generateTypeIndex.bind(this)(i, j, rowArray)
+
+        const candy = this.createCandy(typeIndex, i, j)
         rowArray.push(candy)
 
         // start drop animation
@@ -108,10 +110,41 @@ export class CandyScene extends Scene {
         // candy.bottomCandy = bottomCandy
       }
     }
+
+    // generate typeIndex which different with near 2 candy's typeIndex
+    function generateTypeIndex(i, j, rowArray) {
+      const leftCandyTypeIndex =
+        i - 2 >= 0 ? rowArray?.[i - 2]?.typeIndex : null
+      const rightCandyTypeIndex =
+        i + 2 <= this.colCount - 1 ? rowArray?.[i + 2]?.typeIndex : null
+      const bottomCandyTypeIndex =
+        j + 2 <= this.rowCount - 1 ? this.grid[j + 2]?.[i]?.typeIndex : null
+      const topCandyTypeIndex =
+        j - 2 >= 0 ? this.grid[j + 2]?.[i]?.typeIndex : null
+
+      const excludeTypeIndex = [
+        leftCandyTypeIndex,
+        rightCandyTypeIndex,
+        bottomCandyTypeIndex,
+        topCandyTypeIndex,
+      ]
+
+      let genCount = 0
+      while (excludeTypeIndex.length < 5) {
+        const index = Math.floor(Math.random() * 4)
+
+        if (excludeTypeIndex.indexOf(index) === -1 || genCount > 20) {
+          excludeTypeIndex.push(index)
+        } else {
+          genCount++
+        }
+      }
+
+      return excludeTypeIndex[excludeTypeIndex.length - 1]
+    }
   }
 
-  createCandy(i, j) {
-    const typeIndex = Math.floor(Math.random() * 4)
+  createCandy(typeIndex, i, j) {
     const candy = new Candy(typeIndex, i, j, this.swapHandler.bind(this))
     this.gameStage.addChild(candy.container)
 
@@ -172,18 +205,18 @@ export class CandyScene extends Scene {
     // let needToFallingHeap = []
     console.log(needToDeleteArray)
 
-    // for (let k = 0; k < needToDeleteArray.length; k++) {
-    //   // remove candy from grid
-    //   const candy = needToDeleteArray[k]
-    //   const { i, j } = candy
-    //   this.grid[i][j].isDelete = true
+    for (let k = 0; k < needToDeleteArray.length; k++) {
+      // remove candy from grid
+      const candy = needToDeleteArray[k]
+      const { i, j } = candy
+      this.grid[i][j].isDelete = true
 
-    //   candy.container.alpha = 0.2
+      candy.container.alpha = 0.2
 
-    //   // get all candies above candy
-    //   feedAboveCandyToFallingHeap.bind(this)(candy)
-    //   // console.log(needToFallingHeap)
-    // }
+      // get all candies above candy
+      // feedAboveCandyToFallingHeap.bind(this)(candy)
+      // console.log(needToFallingHeap)
+    }
     // console.log(needToFallingHeap)
 
     // // falling all pending candy
