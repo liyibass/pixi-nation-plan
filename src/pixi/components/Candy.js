@@ -27,6 +27,7 @@ export class Candy {
     // this.bottomCandy = null
     // this.leftCandy = null
     // this.rightCandy = null
+    this.isDelete = false
   }
 
   createCandy() {
@@ -62,6 +63,8 @@ export class Candy {
     let dropDistance = 0
     this.container.alpha = 0
 
+    const initY = this.container.y
+
     return new Promise((resolve) => {
       this.candyDropTicker.add((delta) => {
         if (this.container.alpha < 1) {
@@ -71,7 +74,7 @@ export class Candy {
         }
 
         if (this.container.y < this.j * CANDY_WIDTH) {
-          dropDistance = -CANDY_WIDTH + v0 * time + 0.5 * g * Math.pow(time, 2)
+          dropDistance = initY + v0 * time + 0.5 * g * Math.pow(time, 2)
 
           // prevent over droping
           if (dropDistance > this.j * CANDY_WIDTH) {

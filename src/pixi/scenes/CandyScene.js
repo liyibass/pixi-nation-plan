@@ -124,52 +124,10 @@ export class CandyScene extends Scene {
     this.isSwaping = true
 
     // find opponent candy
-    let opponentCandy = null
-    switch (direction) {
-      case 'right':
-        if (candy.i === this.colCount - 1) {
-          this.isSwaping = false
-          return
-        }
+    let opponentCandy = this._getOpponentCandy(candy, direction)
+    if (!opponentCandy) return
 
-        opponentCandy = this.grid[candy.j][candy.i + 1]
-
-        // swap array position in grid
-        this.grid[candy.j].splice(candy.i, 2, opponentCandy, candy)
-        break
-
-      case 'left':
-        if (candy.i === 0) {
-          this.isSwaping = false
-          return
-        }
-        opponentCandy = this.grid[candy.j][candy.i - 1]
-        // swap array position in grid
-        this.grid[candy.j].splice(candy.i - 1, 2, candy, opponentCandy)
-        break
-
-      case 'down':
-        if (candy.j === this.rowCount - 1) {
-          this.isSwaping = false
-          return
-        }
-        opponentCandy = this.grid[candy.j + 1][candy.i]
-        break
-
-      case 'up':
-        if (candy.j === 0) {
-          this.isSwaping = false
-          return
-        }
-        opponentCandy = this.grid[candy.j - 1][candy.i]
-
-        break
-
-      default:
-        break
-    }
-
-    // swap array position in grid
+    // swap candy's array location in grid, also trigger their swap animation
     switch (direction) {
       case 'right':
         this.grid[candy.j].splice(candy.i, 2, opponentCandy, candy)
@@ -198,7 +156,7 @@ export class CandyScene extends Scene {
         break
     }
 
-    // swap i and j
+    // swap candy's i and j
     const { i: opI, j: opJ } = opponentCandy
     opponentCandy.i = candy.i
     opponentCandy.j = candy.j
@@ -209,18 +167,79 @@ export class CandyScene extends Scene {
     console.log('swap')
     this.isSwaping = false
 
-    this.examineIfHasLine()
+    // get lined candy
+    let needToDeleteArray = this.examineIfHasLine()
+    // let needToFallingHeap = []
+    console.log(needToDeleteArray)
+
+    // for (let k = 0; k < needToDeleteArray.length; k++) {
+    //   // remove candy from grid
+    //   const candy = needToDeleteArray[k]
+    //   const { i, j } = candy
+    //   this.grid[i][j].isDelete = true
+
+    //   candy.container.alpha = 0.2
+
+    //   // get all candies above candy
+    //   feedAboveCandyToFallingHeap.bind(this)(candy)
+    //   // console.log(needToFallingHeap)
+    // }
+    // console.log(needToFallingHeap)
+
+    // // falling all pending candy
+    //   for (let k = needToFallingHeap.length - 1; k >= 0; k--) {
+    //     const candy = needToFallingHeap.pop()
+
+    //     let fallingDistance = 0
+    //     getFallingDistance.bind(this)(candy, fallingDistance)
+
+    //     this.grid[candy.j + fallingDistance][candy.i] = candy
+    //     this.grid[candy.j][candy.i].isDelete = true
+    //     // console.log(this.grid[candy.j + 1][candy.i])
+    //     candy.j++
+    //     candy.dropCandyTicker()
+    //   }
+
+    //   needToDeleteArray = []
+    //   needToFallingHeap = []
+
+    //   function feedAboveCandyToFallingHeap(candy) {
+    //     console.log(needToFallingHeap)
+    //     const { i, j } = candy
+
+    //     if (j > 0) {
+    //       const topCandy = this.grid[j - 1][i]
+    //       if (needToFallingHeap.indexOf(topCandy) === -1) {
+    //         needToFallingHeap.push(topCandy)
+    //       }
+
+    //       feedAboveCandyToFallingHeap.bind(this)(topCandy)
+    //     }
+    //   }
+
+    //   function getFallingDistance(candy, fallingDistance) {
+    //     const { i, j } = candy
+    //     const bottomCandy = this.grid[j + 1][i]
+
+    //     if (bottomCandy.isDelete) {
+    //       fallingDistance++
+    //       getFallingDistance.bind(this)(bottomCandy, fallingDistance)
+    //     }
+    //   }
+    // }
   }
 
   examineIfHasLine() {
     let lineCount = 1
     const needToDelete = []
 
-    for (let j = 0; j < this.colCount; j++) {
+    // for (let j = 0; j < this.colCount; j++) {
+    for (let j = 0; j < 3; j++) {
       for (let i = 0; i < this.rowCount; i++) {
         if (i >= this.colCount - 2) continue
 
         const candy = this.grid[j][i]
+        if (candy.isDelete) continue
 
         // check right
         const hasRightLine = rightLineCheck.bind(this)(candy)
@@ -234,19 +253,9 @@ export class CandyScene extends Scene {
           i += hasRightLine - 1
         }
         lineCount = 1
-
-        // const hasBottomLIne =bottomLineCheck.bind(this)(candy)
-        // if (hasRightLine >= 3) {
-        //   for (let k = 0; k < hasRightLine; k++) {
-        //     needToDelete.push(this.grid[j][i + k])
-        //   }
-
-        //   // skip examining lined candy
-        //   i += hasRightLine - 1
-        // }
-        // lineCount = 1
       }
     }
+
     function rightLineCheck(candy) {
       const { i, j } = candy
 
@@ -273,9 +282,49 @@ export class CandyScene extends Scene {
     //     return lineCount
     //   }
     // }
-    needToDelete.forEach((candy) => {
-      candy.container.alpha = 0.2
-    })
+
+    return needToDelete
+  }
+
+  _getOpponentCandy(candy, direction) {
+    let opponentCandy
+
+    switch (direction) {
+      case 'right':
+        if (candy.i === this.colCount - 1) {
+          this.isSwaping = false
+          return null
+        }
+
+        opponentCandy = this.grid[candy.j][candy.i + 1]
+        break
+
+      case 'left':
+        if (candy.i === 0) {
+          this.isSwaping = false
+          return null
+        }
+        opponentCandy = this.grid[candy.j][candy.i - 1]
+        break
+
+      case 'down':
+        if (candy.j === this.rowCount - 1) {
+          this.isSwaping = false
+          return null
+        }
+        opponentCandy = this.grid[candy.j + 1][candy.i]
+        break
+
+      case 'up':
+        if (candy.j === 0) {
+          this.isSwaping = false
+          return null
+        }
+        opponentCandy = this.grid[candy.j - 1][candy.i]
+        break
+    }
+
+    return opponentCandy
   }
 
   // ===== game flow =====
