@@ -229,4 +229,26 @@ export class Candy {
       this.swapTicker.start()
     })
   }
+
+  vanish(gameStage) {
+    this.vanishTicker = new PIXI.Ticker()
+    let scale = 1
+
+    return new Promise((resolve) => {
+      this.vanishTicker.add(() => {
+        if (this.container.alpha >= 0) {
+          this.container.alpha -= 0.08
+          scale += 0.02
+          this.container.scale.set(scale)
+        } else {
+          this.vanishTicker.stop()
+          gameStage.removeChild(this.container)
+
+          resolve()
+        }
+      })
+
+      this.vanishTicker.start()
+    })
+  }
 }

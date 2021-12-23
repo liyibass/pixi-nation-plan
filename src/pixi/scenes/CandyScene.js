@@ -248,7 +248,8 @@ export class CandyScene extends Scene {
       const candy = needToDeleteArray[k]
       const { i, j } = candy
       this.grid[j][i] = null
-      this.gameStage.removeChild(candy.container)
+      candy.vanish(this.gameStage)
+      // this.gameStage.removeChild(candy.container)
 
       // get all candies above candy, move them into queue
       const aboveArray = feedAboveCandyToFallingQueue.bind(this)(candy)
