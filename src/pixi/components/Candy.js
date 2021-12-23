@@ -3,7 +3,7 @@ import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 const gameStageDimention = Globals.getCandyGameStageDimention()
 const CANDY_WIDTH = gameStageDimention.candyWidth
-const SWAP_SPEED = 3
+const SWAP_SPEED = 4
 export class Candy {
   constructor(typeIndex = 0, i = 0, j = 0, swapHandler = () => {}) {
     this.typeIndex = typeIndex
@@ -88,6 +88,7 @@ export class Candy {
           // console.log(v)
           this.candyDropTicker.stop()
           this.container.y = this.j * CANDY_WIDTH
+
           resolve()
         }
       })
@@ -230,7 +231,7 @@ export class Candy {
     })
   }
 
-  vanish(gameStage) {
+  vanish(candyBox) {
     this.vanishTicker = new PIXI.Ticker()
     let scale = 1
 
@@ -241,8 +242,9 @@ export class Candy {
           scale += 0.02
           this.container.scale.set(scale)
         } else {
+          this.container.alpha = 0
           this.vanishTicker.stop()
-          gameStage.removeChild(this.container)
+          candyBox.removeChild(this.container)
 
           resolve()
         }
