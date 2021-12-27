@@ -68,6 +68,33 @@ import b1 from '../assets/images/b1.png'
 import b2 from '../assets/images/b2.png'
 import b3 from '../assets/images/b3.png'
 import b4 from '../assets/images/b4.png'
+import farm from '../assets/images/farm.png'
+import fire_0 from '../assets/images/fire_0.png'
+import fire_1 from '../assets/images/fire_1.png'
+import fire_2 from '../assets/images/fire_2.png'
+import fire_3 from '../assets/images/fire_3.png'
+import noise_0 from '../assets/images/noise_0.png'
+import noise_1 from '../assets/images/noise_1.png'
+import noise_2 from '../assets/images/noise_2.png'
+import noise_3 from '../assets/images/noise_3.png'
+import noise_4 from '../assets/images/noise_4.png'
+import noise_5 from '../assets/images/noise_5.png'
+import player_0 from '../assets/images/player_0.png'
+import player_1 from '../assets/images/player_1.png'
+import player_2 from '../assets/images/player_2.png'
+import player_3 from '../assets/images/player_3.png'
+import player_4 from '../assets/images/player_4.png'
+import player_5 from '../assets/images/player_5.png'
+import rock_0 from '../assets/images/rock_0.png'
+import rock_1 from '../assets/images/rock_1.png'
+import rock_2 from '../assets/images/rock_2.png'
+import rock_3 from '../assets/images/rock_3.png'
+import rock_4 from '../assets/images/rock_4.png'
+import rock_5 from '../assets/images/rock_5.png'
+import tiger_0 from '../assets/images/tiger_0.png'
+import tiger_1 from '../assets/images/tiger_1.png'
+import tiger_2 from '../assets/images/tiger_2.png'
+import tiger_3 from '../assets/images/tiger_3.png'
 
 export const LoaderConfig = {
   player,
@@ -140,4 +167,31 @@ export const LoaderConfig = {
   b2,
   b3,
   b4,
+  farm,
+  fire_0,
+  fire_1,
+  fire_2,
+  fire_3,
+  noise_0,
+  noise_1,
+  noise_2,
+  noise_3,
+  noise_4,
+  noise_5,
+  player_0,
+  player_1,
+  player_2,
+  player_3,
+  player_4,
+  player_5,
+  rock_0,
+  rock_1,
+  rock_2,
+  rock_3,
+  rock_4,
+  rock_5,
+  tiger_0,
+  tiger_1,
+  tiger_2,
+  tiger_3,
 }
