@@ -83,7 +83,7 @@ export class CandyScene extends Scene {
   }
 
   createCandyHeader() {
-    this.candyHeader = new CandyHeader()
+    this.candyHeader = new CandyHeader(this.reCreateCandys.bind(this))
     this.container.addChild(this.candyHeader.container)
     console.log(this.candyHeader)
 
@@ -163,6 +163,19 @@ export class CandyScene extends Scene {
     this.candyBox.addChild(candy.container)
 
     return candy
+  }
+
+  async reCreateCandys() {
+    for (let j = this.rowCount - 1; j >= 0; j--) {
+      for (let i = 0; i < this.colCount; i++) {
+        const candy = this.grid[j][i]
+
+        candy.container.destroy()
+      }
+    }
+    this.candyBox.removeChildren()
+
+    await this.createCandys()
   }
 
   async swapHandler(candy, direction) {

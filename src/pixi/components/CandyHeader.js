@@ -18,10 +18,10 @@ const RESET_X = BAR_X + BAR_WIDTH + PADDING_WIDTH
 console.log(gameStageDimention.width)
 
 export class CandyHeader {
-  constructor(resetCandy = () => {}) {
+  constructor(reCreateCandys = () => {}) {
     this.container = new PIXI.Container()
     this.container.name = 'candyHeader'
-    this.collisionMonresetCandyitor = resetCandy
+    this.reCreateCandys = reCreateCandys
 
     this.currentPoint = 0
     this.maxPoint = 2000
@@ -143,5 +143,9 @@ export class CandyHeader {
 
     resetSprite.buttonMode = true
     resetSprite.interactive = true
+
+    resetSprite.addListener('pointerdown', () => {
+      this.reCreateCandys()
+    })
   }
 }
