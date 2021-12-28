@@ -1,10 +1,21 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 
-// const gameStageDimention = Globals.getRunGameStageDimention()
+const gameStageDimention = Globals.getCandyGameStageDimention()
+
 const HEADER_HEIGHT = 28
 const BAR_HEIGHT = 11
-const BAR_WIDTH = 200
+
+const ICON_WIDTH = 34
+const STEP_WIDTH = 30
+const RESET_WIDTH = 28
+const PADDING_WIDTH = 5
+const STEP_X = ICON_WIDTH + PADDING_WIDTH
+const BAR_X = STEP_X + STEP_WIDTH + PADDING_WIDTH
+const BAR_WIDTH =
+  gameStageDimention.width - BAR_X - PADDING_WIDTH * 2 - RESET_WIDTH
+const RESET_X = BAR_X + BAR_WIDTH + PADDING_WIDTH
+console.log(gameStageDimention.width)
 
 export class CandyHeader {
   constructor(resetCandy = () => {}) {
@@ -19,10 +30,19 @@ export class CandyHeader {
   }
 
   createCandyHeader() {
+    this.createBackground()
     this._createLogo()
     this._createRestStepCount()
     this._createScoreBar()
     this._createResetButton()
+  }
+
+  createBackground() {
+    const background = new PIXI.Graphics()
+    background.beginFill(0x6f90ba)
+    background.drawRect(0, 0, gameStageDimention.width, BAR_HEIGHT)
+    background.endFill()
+    this.container.addChild(background)
   }
 
   _createLogo() {
@@ -57,7 +77,7 @@ export class CandyHeader {
 
     this.container.addChild(this.restStepCount)
 
-    this.restStepCount.x = 40
+    this.restStepCount.x = STEP_X
     this.restStepCount.y = (HEADER_HEIGHT - this.restStepCount.height) / 2
   }
 
@@ -101,7 +121,7 @@ export class CandyHeader {
 
     this.container.addChild(this.scoreBar)
 
-    this.scoreBar.x = 80
+    this.scoreBar.x = BAR_X
     this.scoreBar.y = (HEADER_HEIGHT - this.scoreWhiteBar.height) / 2
   }
 
@@ -119,7 +139,7 @@ export class CandyHeader {
     this.container.addChild(resetSprite)
 
     resetSprite.y = (HEADER_HEIGHT - resetSprite.height) / 2
-    resetSprite.x = 300
+    resetSprite.x = RESET_X
 
     resetSprite.buttonMode = true
     resetSprite.interactive = true

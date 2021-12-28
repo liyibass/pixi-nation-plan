@@ -92,7 +92,7 @@ export class CandyScene extends Scene {
   }
 
   async createCandys() {
-    for (let j = this.colCount - 1; j >= 0; j--) {
+    for (let j = this.rowCount - 1; j >= 0; j--) {
       const rowArray = []
       this.grid.unshift(rowArray)
       for (let i = 0; i < this.colCount; i++) {
@@ -107,7 +107,7 @@ export class CandyScene extends Scene {
       }
     }
 
-    for (let j = this.colCount - 1; j >= 0; j--) {
+    for (let j = this.rowCount - 1; j >= 0; j--) {
       for (let i = 0; i < this.colCount; i++) {
         const candy = this.grid[j][i]
         candy.startDragMonitor()
