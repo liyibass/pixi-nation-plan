@@ -540,7 +540,7 @@ export class CandyScene extends Scene {
     for (let j = this.rowCount - 1; j >= 0; j--) {
       for (let i = 0; i < this.colCount; i++) {
         const candy = this.grid[j][i]
-        this.candyBox.addChild(candy)
+        this.candyBox.addChild(candy.container)
       }
     }
   }

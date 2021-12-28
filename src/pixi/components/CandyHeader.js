@@ -168,21 +168,34 @@ export class CandyHeader {
   }
 
   setWhiteBarWidth() {
-    this.scoreWhiteBar.width = (this.currentPoint / this.maxPoint) * BAR_WIDTH
+    this.barTicker = new PIXI.Ticker()
 
-    if (this.currentPointText?.x) {
-      if (this.scoreWhiteBar.width < BAR_WIDTH / 8) {
-        this.currentPointText.x =
-          this.scoreWhiteBar.width - this.currentPointText?.width
-      } else {
-        this.currentPointText.x =
-          this.scoreWhiteBar.width - this.currentPointText?.width - 3
+    return new Promise((resolve) => {
+      this.barTicker.add(() => {
+        // text position setting
+        if (!this.currentPointText) return
 
-        this.currentPointText.y =
-          (BAR_HEIGHT - this.currentPointText.height) / 2
+        const targetWidth = (this.currentPoint / this.maxPoint) * BAR_WIDTH
 
-        this.currentPointText.style.fill = 0x888888
-      }
-    }
+        if (this.scoreWhiteBar.width < targetWidth) {
+          this.scoreWhiteBar.width++
+          this.currentPointText.x =
+            this.scoreWhiteBar.width - this.currentPointText?.width - 3
+        } else {
+          this.scoreWhiteBar.width = targetWidth
+          this.barTicker.stop()
+          resolve()
+        }
+
+        if (this.scoreWhiteBar.width > (BAR_WIDTH * 7) / 8) {
+          this.currentPointText.y =
+            (BAR_HEIGHT - this.currentPointText.height) / 2
+
+          this.currentPointText.style.fill = 0x888888
+        }
+      })
+
+      this.barTicker.start()
+    })
   }
 }
