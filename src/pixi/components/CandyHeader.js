@@ -4,7 +4,7 @@ import { Globals } from '../script/Globals'
 const gameStageDimention = Globals.getCandyGameStageDimention()
 
 const HEADER_HEIGHT = 28
-const BAR_HEIGHT = 11
+const BAR_HEIGHT = 15
 
 const ICON_WIDTH = 34
 const STEP_WIDTH = 30
@@ -159,7 +159,6 @@ export class CandyHeader {
   }
 
   increaseScore(needToDeleteArray) {
-    console.log(needToDeleteArray)
     const lineCount = Math.floor(needToDeleteArray.length / 3)
     const bonusCount = needToDeleteArray.length % 3
 
@@ -172,8 +171,18 @@ export class CandyHeader {
     this.scoreWhiteBar.width = (this.currentPoint / this.maxPoint) * BAR_WIDTH
 
     if (this.currentPointText?.x) {
-      this.currentPointText.x =
-        this.scoreWhiteBar.width - this.currentPointText?.width
+      if (this.scoreWhiteBar.width < BAR_WIDTH / 8) {
+        this.currentPointText.x =
+          this.scoreWhiteBar.width - this.currentPointText?.width
+      } else {
+        this.currentPointText.x =
+          this.scoreWhiteBar.width - this.currentPointText?.width - 3
+
+        this.currentPointText.y =
+          (BAR_HEIGHT - this.currentPointText.height) / 2
+
+        this.currentPointText.style.fill = 0x888888
+      }
     }
   }
 }

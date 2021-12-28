@@ -310,7 +310,9 @@ export class CandyScene extends Scene {
     )
 
     // =====================FIX ERROR======================
-    // await this.fixError()
+    if (this.candyBox.children.length !== this.rowCount * this.colCount) {
+      await this.fixError()
+    }
 
     // this._logGrid()
 
@@ -533,7 +535,14 @@ export class CandyScene extends Scene {
   }
 
   fixError() {
-    console.log(this.candyBox.children.length)
+    console.error('fixError')
+    this.candyBox.removeChildren()
+    for (let j = this.rowCount - 1; j >= 0; j--) {
+      for (let i = 0; i < this.colCount; i++) {
+        const candy = this.grid[j][i]
+        this.candyBox.addChild(candy)
+      }
+    }
   }
 
   // ===== game flow =====
