@@ -5,7 +5,7 @@ import { CandyHeader } from '../components/CandyHeader'
 import { Globals } from '../script/Globals'
 import { Scene } from './Scene'
 
-// const gameStageDimention = Globals.getCandyGameStageDimention()
+const gameStageDimention = Globals.getCandyGameStageDimention()
 // const CANDY_WIDTH = gameStageDimention
 
 export class CandyScene extends Scene {
@@ -86,6 +86,9 @@ export class CandyScene extends Scene {
     this.candyHeader = new CandyHeader()
     this.container.addChild(this.candyHeader.container)
     console.log(this.candyHeader)
+
+    this.candyHeader.container.x = gameStageDimention.x
+    this.candyHeader.container.y = 16
   }
 
   async createCandys() {

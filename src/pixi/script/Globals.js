@@ -140,7 +140,8 @@ export const Globals = {
 
     return {
       x: (this.width - width) / 2,
-      y: 0 + gameStagePadding,
+      y: 0 + gameStagePadding * 2 + 28,
+      // y: this.height / 5,
       width,
       height,
       colCount,

@@ -96,6 +96,7 @@ import tiger_1 from '../assets/images/tiger_1.png'
 import tiger_2 from '../assets/images/tiger_2.png'
 import tiger_3 from '../assets/images/tiger_3.png'
 import excavator from '../assets/images/excavator.png'
+import reset from '../assets/images/reset.png'
 
 export const LoaderConfig = {
   player,
@@ -196,4 +197,5 @@ export const LoaderConfig = {
   tiger_2,
   tiger_3,
   excavator,
+  reset,
 }
