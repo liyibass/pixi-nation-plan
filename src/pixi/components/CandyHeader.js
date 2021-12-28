@@ -98,8 +98,9 @@ export class CandyHeader {
     // scoreBar whiteBar
     this.scoreWhiteBar = new PIXI.Graphics()
     this.scoreWhiteBar.beginFill(0xffffff)
-    this.scoreWhiteBar.drawRect(0, 0, BAR_WIDTH / 2, BAR_HEIGHT)
+    this.scoreWhiteBar.drawRect(0, 0, BAR_WIDTH, BAR_HEIGHT)
     this.scoreBar.addChild(this.scoreWhiteBar)
+    this.setWhiteBarWidth()
 
     // scoreBar max point
     const maxPointText = new PIXI.Text(`${this.maxPoint}`, {
@@ -155,5 +156,24 @@ export class CandyHeader {
   decreaseStepCount() {
     this.remainStepCount--
     this.reststepCountText.text = this.remainStepCount
+  }
+
+  increaseScore(needToDeleteArray) {
+    console.log(needToDeleteArray)
+    const lineCount = Math.floor(needToDeleteArray.length / 3)
+    const bonusCount = needToDeleteArray.length % 3
+
+    this.currentPoint += lineCount * 50 + bonusCount * 10
+    this.currentPointText.text = this.currentPoint
+    this.setWhiteBarWidth()
+  }
+
+  setWhiteBarWidth() {
+    this.scoreWhiteBar.width = (this.currentPoint / this.maxPoint) * BAR_WIDTH
+
+    if (this.currentPointText?.x) {
+      this.currentPointText.x =
+        this.scoreWhiteBar.width - this.currentPointText?.width
+    }
   }
 }

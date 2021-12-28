@@ -260,6 +260,11 @@ export class CandyScene extends Scene {
     while (this.needToDeleteArray.length > 0) {
       this.isHandlingLine = true
       await this.lineHandler()
+      await this.candyHeader.increaseScore(this.needToDeleteArray)
+
+      // clear
+      this.needToDeleteArray = []
+      this.needToFallingQueue = []
 
       this.needToDeleteArray = this.examineIfHasLine()
       await this._wait(200)
@@ -308,9 +313,6 @@ export class CandyScene extends Scene {
     // await this.fixError()
 
     // this._logGrid()
-
-    this.needToDeleteArray = []
-    this.needToFallingQueue = []
 
     function feedAboveCandyToFallingQueue(candy) {
       const aboveCandyArray = []
