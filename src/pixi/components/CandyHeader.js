@@ -23,6 +23,8 @@ export class CandyHeader {
     this.container.name = 'candyHeader'
     this.reCreateCandys = reCreateCandys
 
+    this.remainStepCount = 50
+
     this.currentPoint = 0
     this.maxPoint = 2000
 
@@ -32,7 +34,7 @@ export class CandyHeader {
   createCandyHeader() {
     this.createBackground()
     this._createLogo()
-    this._createRestStepCount()
+    this._createRemainStepCount()
     this._createScoreBar()
     this._createResetButton()
   }
@@ -54,31 +56,32 @@ export class CandyHeader {
     this.logo.y = (HEADER_HEIGHT - this.logo.height) / 2
   }
 
-  _createRestStepCount() {
-    this.restStepCount = new PIXI.Container()
+  _createRemainStepCount() {
+    this.remainStepCountIcon = new PIXI.Container()
 
     const stepBackground = new PIXI.Graphics()
     stepBackground.beginFill(0x232c5b)
     stepBackground.drawRoundedRect(0, 0, 30, 20, 5)
     stepBackground.endFill()
 
-    this.restStepCount.addChild(stepBackground)
+    this.remainStepCountIcon.addChild(stepBackground)
 
-    this.reststepCountText = new PIXI.Text('30', {
+    this.reststepCountText = new PIXI.Text(this.remainStepCount, {
       align: 'center',
       fontSize: 14,
       fill: ['0xffffff'],
     })
 
-    this.restStepCount.addChild(this.reststepCountText)
+    this.remainStepCountIcon.addChild(this.reststepCountText)
 
     // position text
     this._repositionText()
 
-    this.container.addChild(this.restStepCount)
+    this.container.addChild(this.remainStepCountIcon)
 
-    this.restStepCount.x = STEP_X
-    this.restStepCount.y = (HEADER_HEIGHT - this.restStepCount.height) / 2
+    this.remainStepCountIcon.x = STEP_X
+    this.remainStepCountIcon.y =
+      (HEADER_HEIGHT - this.remainStepCountIcon.height) / 2
   }
 
   _createScoreBar() {
@@ -127,9 +130,9 @@ export class CandyHeader {
 
   _repositionText() {
     this.reststepCountText.x =
-      (this.restStepCount.width - this.reststepCountText.width) / 2
+      (this.remainStepCountIcon.width - this.reststepCountText.width) / 2
     this.reststepCountText.y =
-      (this.restStepCount.height - this.reststepCountText.height) / 2
+      (this.remainStepCountIcon.height - this.reststepCountText.height) / 2
   }
 
   _createResetButton() {
@@ -147,5 +150,10 @@ export class CandyHeader {
     resetSprite.addListener('pointerdown', () => {
       this.reCreateCandys()
     })
+  }
+
+  decreaseStepCount() {
+    this.remainStepCount--
+    this.reststepCountText.text = this.remainStepCount
   }
 }

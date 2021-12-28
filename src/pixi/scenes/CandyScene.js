@@ -252,6 +252,7 @@ export class CandyScene extends Scene {
     console.log('swap')
     console.log('swap done :' + this.candyBox.children.length)
     this.isSwaping = false
+    this.candyHeader.decreaseStepCount()
 
     // =====================CHECK LINE LOOP======================
     this.needToDeleteArray = this.examineIfHasLine()
