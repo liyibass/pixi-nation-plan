@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Candy } from '../components/Candy'
+import { CandyHeader } from '../components/CandyHeader'
 
 import { Globals } from '../script/Globals'
 import { Scene } from './Scene'
@@ -27,6 +28,7 @@ export class CandyScene extends Scene {
     this._createBackground(0x6f90ba)
     this._createItems()
     this._createGameStage()
+    this.createCandyHeader()
     this._createDoctorSay()
   }
 
@@ -78,6 +80,12 @@ export class CandyScene extends Scene {
   async initGame() {
     console.log('initGame')
     await this.createCandys()
+  }
+
+  createCandyHeader() {
+    this.candyHeader = new CandyHeader()
+    this.container.addChild(this.candyHeader.container)
+    console.log(this.candyHeader)
   }
 
   async createCandys() {
