@@ -15,9 +15,11 @@ export class CandyScene extends Scene {
     this.container.name = 'CandyScene'
 
     this.grid = []
+
     this.isSwaping = false
     this.isHandlingLine = false
     this.isVanishing = false
+    this.isFalling = false
     this.needToDeleteArray = []
     this.needToFallingQueue = []
     this.isGameStop = false
@@ -99,6 +101,8 @@ export class CandyScene extends Scene {
   }
 
   async createCandys() {
+    this.isFalling = true
+    const fallingCandysPromise = []
     for (let j = this.rowCount - 1; j >= 0; j--) {
       const rowArray = []
       this.grid.unshift(rowArray)
@@ -109,10 +113,13 @@ export class CandyScene extends Scene {
         rowArray.push(candy)
 
         // start drop animation
-        candy.startFallingCandy()
+        fallingCandysPromise.push(candy.startFallingCandy())
         await this._wait(20)
       }
     }
+
+    await Promise.all(fallingCandysPromise)
+    this.isFalling = false
 
     for (let j = this.rowCount - 1; j >= 0; j--) {
       for (let i = 0; i < this.colCount; i++) {
@@ -151,11 +158,12 @@ export class CandyScene extends Scene {
       ]
 
       let genCount = 0
-      while (excludeTypeIndex.length < 5) {
+      while (excludeTypeIndex.length < 10) {
         const index = Math.floor(Math.random() * 4)
 
         if (excludeTypeIndex.indexOf(index) === -1 || genCount > 20) {
           excludeTypeIndex.push(index)
+          break
         } else {
           genCount++
         }
@@ -173,13 +181,21 @@ export class CandyScene extends Scene {
   }
 
   async reCreateCandys() {
+    if (
+      this.isFalling ||
+      this.isSwaping ||
+      this.isHandlingLine ||
+      this.isVanishing
+    )
+      return
+
     this.removeAllCandys()
     await this.createCandys()
     await this.checkLineLoop()
   }
 
   removeAllCandys() {
-    for (let j = this.rowCount - 1; j >= 0; j--) {
+    for (let j = 0; j < this.rowCount; j++) {
       for (let i = 0; i < this.colCount; i++) {
         const candy = this.grid[j][i]
 
@@ -187,6 +203,7 @@ export class CandyScene extends Scene {
       }
     }
     this.candyBox.removeChildren()
+    this.grid = []
   }
 
   async swapHandler(candy, direction) {
@@ -269,7 +286,10 @@ export class CandyScene extends Scene {
     await this.checkLineLoop()
   }
 
+  // ================checkLineLoop===================
+
   async checkLineLoop() {
+    if (this.isGameStop) return
     // =====================CHECK LINE LOOP======================
     this.needToDeleteArray = this.examineIfHasLine()
 
@@ -285,14 +305,12 @@ export class CandyScene extends Scene {
       this.needToFallingQueue = []
 
       this.needToDeleteArray = this.examineIfHasLine()
-      await this._wait(200)
+      await this._wait(1000)
       this.isHandlingLine = false
     }
   }
 
   async lineHandler() {
-    // console.log(this.needToDeleteArray)
-
     // =====================DELETE CANDY======================
     // remove candy from grid and candyBox
     this.needToFallingQueue = []
@@ -301,8 +319,8 @@ export class CandyScene extends Scene {
     for (let k = 0; k < this.needToDeleteArray.length; k++) {
       const candy = this.needToDeleteArray[k]
       const { i, j } = candy
-      this.grid[j][i] = null
       vanishPromise.push(candy.vanish(this.candyBox))
+      this.grid[j][i] = null
 
       // get all candies above candy, move them into queue
       const aboveArray = feedAboveCandyToFallingQueue.bind(this)(candy)
