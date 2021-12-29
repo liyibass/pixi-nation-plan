@@ -3,6 +3,9 @@ import { Globals } from '../script/Globals'
 
 const gameStageDimention = Globals.getCandyGameStageDimention()
 
+const INIT_STEP_COUNT = 50
+const MAX_POINT = 2000
+
 const HEADER_HEIGHT = 28
 const BAR_HEIGHT = 15
 
@@ -15,18 +18,23 @@ const BAR_X = STEP_X + STEP_WIDTH + PADDING_WIDTH
 const BAR_WIDTH =
   gameStageDimention.width - BAR_X - PADDING_WIDTH * 2 - RESET_WIDTH
 const RESET_X = BAR_X + BAR_WIDTH + PADDING_WIDTH
-console.log(gameStageDimention.width)
 
 export class CandyHeader {
-  constructor(reCreateCandys = () => {}) {
+  constructor(
+    reCreateCandys = () => {},
+    gameFail = () => {},
+    gamePassed = () => {}
+  ) {
     this.container = new PIXI.Container()
     this.container.name = 'candyHeader'
     this.reCreateCandys = reCreateCandys
+    this.gameFail = gameFail
+    this.gamePassed = gamePassed
 
-    this.remainStepCount = 50
+    this.remainStepCount = INIT_STEP_COUNT
 
     this.currentPoint = 0
-    this.maxPoint = 2000
+    this.maxPoint = MAX_POINT
 
     this.createCandyHeader()
   }
@@ -100,7 +108,7 @@ export class CandyHeader {
     this.scoreWhiteBar.beginFill(0xffffff)
     this.scoreWhiteBar.drawRect(0, 0, BAR_WIDTH, BAR_HEIGHT)
     this.scoreBar.addChild(this.scoreWhiteBar)
-    this.setWhiteBarWidth()
+    this._setWhiteBarWidth()
 
     // scoreBar max point
     const maxPointText = new PIXI.Text(`${this.maxPoint}`, {
@@ -156,6 +164,10 @@ export class CandyHeader {
   decreaseStepCount() {
     this.remainStepCount--
     this.reststepCountText.text = this.remainStepCount
+
+    if (this.remainStepCount <= 0) {
+      this.gameFail()
+    }
   }
 
   increaseScore(needToDeleteArray) {
@@ -164,10 +176,14 @@ export class CandyHeader {
 
     this.currentPoint += lineCount * 50 + bonusCount * 10
     this.currentPointText.text = this.currentPoint
-    this.setWhiteBarWidth()
+    this._setWhiteBarWidth()
+
+    if (this.currentPoint >= this.maxPoint) {
+      this.gamePassed()
+    }
   }
 
-  setWhiteBarWidth() {
+  _setWhiteBarWidth() {
     this.barTicker = new PIXI.Ticker()
 
     return new Promise((resolve) => {
@@ -187,15 +203,29 @@ export class CandyHeader {
           resolve()
         }
 
+        // current point's position will cheange depends on white bar's width
         if (this.scoreWhiteBar.width > (BAR_WIDTH * 7) / 8) {
           this.currentPointText.y =
             (BAR_HEIGHT - this.currentPointText.height) / 2
 
           this.currentPointText.style.fill = 0x888888
+        } else {
+          this.currentPointText.y = -17
+          this.currentPointText.style.fill = 0xffffff
         }
       })
 
       this.barTicker.start()
     })
+  }
+
+  resetCandyHeader() {
+    this.remainStepCount = INIT_STEP_COUNT
+
+    this._setWhiteBarWidth()
+    this.currentPoint = 0
+    this.currentPointText.text = this.currentPoint
+    this.currentPointText.y = -17
+    this.currentPointText.x = 0
   }
 }

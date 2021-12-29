@@ -20,6 +20,7 @@ export class CandyScene extends Scene {
     this.isVanishing = false
     this.needToDeleteArray = []
     this.needToFallingQueue = []
+    this.isGameStop = false
 
     this.createScene()
     this.startGameFlow()
@@ -85,7 +86,11 @@ export class CandyScene extends Scene {
   }
 
   createCandyHeader() {
-    this.candyHeader = new CandyHeader(this.reCreateCandys.bind(this))
+    this.candyHeader = new CandyHeader(
+      this.reCreateCandys.bind(this),
+      this.gameOver.bind(this),
+      this.gamePassed.bind(this)
+    )
     this.container.addChild(this.candyHeader.container)
     console.log(this.candyHeader)
 
@@ -168,6 +173,12 @@ export class CandyScene extends Scene {
   }
 
   async reCreateCandys() {
+    this.removeAllCandys()
+    await this.createCandys()
+    await this.checkLineLoop()
+  }
+
+  removeAllCandys() {
     for (let j = this.rowCount - 1; j >= 0; j--) {
       for (let i = 0; i < this.colCount; i++) {
         const candy = this.grid[j][i]
@@ -176,13 +187,10 @@ export class CandyScene extends Scene {
       }
     }
     this.candyBox.removeChildren()
-
-    await this.createCandys()
-    await this.checkLineLoop()
   }
 
   async swapHandler(candy, direction) {
-    if (this.isSwaping || this.isHandlingLine) return
+    if (this.isSwaping || this.isHandlingLine || this.isGameStop) return
 
     this.isSwaping = true
 
@@ -266,6 +274,8 @@ export class CandyScene extends Scene {
     this.needToDeleteArray = this.examineIfHasLine()
 
     while (this.needToDeleteArray.length > 0) {
+      if (this.isGameStop) return
+
       this.isHandlingLine = true
       await this.lineHandler()
       await this.candyHeader.increaseScore(this.needToDeleteArray)
@@ -598,6 +608,7 @@ export class CandyScene extends Scene {
   // ===== start game =====
   async startGame() {
     await super.startGame()
+    this.isGameStop = false
 
     this._startSceneTicker()
   }
@@ -611,9 +622,13 @@ export class CandyScene extends Scene {
   }
 
   // ===== game pause =====
-  _pauseAllGameActivity() {}
+  _pauseAllGameActivity() {
+    this.isGameStop = true
+  }
 
-  _resumeAllGameActivity() {}
+  _resumeAllGameActivity() {
+    this.isGameStop = false
+  }
 
   // ===== game over =====
 
@@ -659,6 +674,9 @@ export class CandyScene extends Scene {
     console.log('resetGameSetting')
     // super.removeKeyboardListener()
     super.resetGameSetting()
+    this.removeAllCandys()
+    this.candyHeader.resetCandyHeader()
+    this.grid = []
   }
 
   _logGrid() {
