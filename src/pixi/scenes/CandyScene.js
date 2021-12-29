@@ -17,6 +17,7 @@ export class CandyScene extends Scene {
     this.grid = []
     this.isSwaping = false
     this.isHandlingLine = false
+    this.isVanishing = false
     this.needToDeleteArray = []
     this.needToFallingQueue = []
 
@@ -80,6 +81,7 @@ export class CandyScene extends Scene {
   async initGame() {
     console.log('initGame')
     await this.createCandys()
+    await this.checkLineLoop()
   }
 
   createCandyHeader() {
@@ -176,6 +178,7 @@ export class CandyScene extends Scene {
     this.candyBox.removeChildren()
 
     await this.createCandys()
+    await this.checkLineLoop()
   }
 
   async swapHandler(candy, direction) {
@@ -254,6 +257,11 @@ export class CandyScene extends Scene {
     this.isSwaping = false
     this.candyHeader.decreaseStepCount()
 
+    // this._logGrid()
+    await this.checkLineLoop()
+  }
+
+  async checkLineLoop() {
     // =====================CHECK LINE LOOP======================
     this.needToDeleteArray = this.examineIfHasLine()
 
@@ -270,17 +278,16 @@ export class CandyScene extends Scene {
       await this._wait(200)
       this.isHandlingLine = false
     }
-    // this._logGrid()
   }
 
   async lineHandler() {
-    console.log('lineHandler :' + this.candyBox.children.length)
     // console.log(this.needToDeleteArray)
 
     // =====================DELETE CANDY======================
     // remove candy from grid and candyBox
     this.needToFallingQueue = []
     const vanishPromise = []
+
     for (let k = 0; k < this.needToDeleteArray.length; k++) {
       const candy = this.needToDeleteArray[k]
       const { i, j } = candy
@@ -293,21 +300,14 @@ export class CandyScene extends Scene {
     }
 
     await Promise.all(vanishPromise)
-    console.log(
-      `delete ${vanishPromise.length} candy, rest : ${this.candyBox.children.length}`
-    )
 
+    // await this._wait(100)
     // =====================FALLING CANDY======================
     await this.fallingCandy(this.needToFallingQueue)
-    console.log(
-      `falling candy count : ${this.needToFallingQueue.length}, rest : ${this.candyBox.children.length}`
-    )
 
+    // await this._wait(100)
     // =====================ADD CANDY======================
-    const addedCandyCount = await this.addNewCandyIntoGrid()
-    console.log(
-      `add ${addedCandyCount} candy, total : ${this.candyBox.children.length}`
-    )
+    await this.addNewCandyIntoGrid()
 
     // =====================FIX ERROR======================
     if (this.candyBox.children.length !== this.rowCount * this.colCount) {
@@ -381,6 +381,7 @@ export class CandyScene extends Scene {
 
   async addNewCandyIntoGrid() {
     let nullCount = 0
+    const addCandyPromise = []
     for (let j = this.rowCount - 1; j >= 0; j--) {
       const rowArray = []
       for (let i = 0; i < this.colCount; i++) {
@@ -392,19 +393,13 @@ export class CandyScene extends Scene {
           this.grid[j][i] = candy
           rowArray.push(candy)
           nullCount++
-          candy.startFallingCandy()
+          addCandyPromise.push(candy.startFallingCandy())
           candy.startDragMonitor()
         }
       }
-
-      // await this._wait(20 * j)
-
-      // for (let k = 0; k < addedCandyArray.length; k++) {
-      //   const candy = addedCandyArray[k]
-      //   candy.startFallingCandy()
-      //   candy.startDragMonitor()
-      // }
     }
+
+    await Promise.all(addCandyPromise)
     return nullCount
   }
 
@@ -422,35 +417,44 @@ export class CandyScene extends Scene {
 
         // check right
         const rightLineLength = rightLineCheck.bind(this)(candy)
-        // console.log(rightLineLength)
+        const bottomLineLength = bottomLineCheck.bind(this)(candy)
 
         if (rightLineLength >= 3) {
           // console.log(candy)
           for (let k = 0; k < rightLineLength; k++) {
-            this.grid[j][i + k].isDelete = true
+            // this.grid[j][i + k].isDelete = true
             if (needToDelete.indexOf(this.grid[j][i + k]) === -1) {
               needToDelete.push(this.grid[j][i + k])
             }
           }
 
-          const lineEndTop = this.grid[j + 1]?.[i + rightLineLength]
-          const lineEndBottom = this.grid[j - 1]?.[i + rightLineLength]
-          if (
-            lineEndTop &&
-            lineEndTop.typeIndex === this.grid[j]?.[i]?.typeIndex
-          ) {
-            console.log('has more candy need for deleting(top)')
-          }
+          // const lineEndTop = this.grid[j + 1]?.[i + rightLineLength]
+          // const lineEndBottom = this.grid[j - 1]?.[i + rightLineLength]
+          // if (
+          //   lineEndTop &&
+          //   lineEndTop.typeIndex === this.grid[j]?.[i]?.typeIndex
+          // ) {
+          //   console.log('has more candy need for deleting(top)')
+          // }
 
-          if (
-            lineEndBottom &&
-            lineEndBottom.typeIndex === this.grid[j]?.[i]?.typeIndex
-          ) {
-            console.log('has more candy need for deleting(bottom)')
-          }
+          // if (
+          //   lineEndBottom &&
+          //   lineEndBottom.typeIndex === this.grid[j]?.[i]?.typeIndex
+          // ) {
+          //   console.log('has more candy need for deleting(bottom)')
+          // }
 
-          // skip examining lined candy
-          i += rightLineLength - 1
+          // // skip examining lined candy
+          // i += rightLineLength - 1
+        }
+        if (bottomLineLength >= 3) {
+          // console.log(candy)
+          for (let k = 0; k < bottomLineLength; k++) {
+            // this.grid[j][i + k].isDelete = true
+            if (needToDelete.indexOf(this.grid[j + k][i]) === -1) {
+              needToDelete.push(this.grid[j + k][i])
+            }
+          }
         }
       }
     }
@@ -471,19 +475,21 @@ export class CandyScene extends Scene {
       return rightLineLength
     }
 
-    // function bottomLineCheck(candy) {
-    //   const { i, j } = candy
-    //   if (j >= this.rowCount - 2) return lineCandyCount
+    function bottomLineCheck(candy) {
+      const { i, j } = candy
+      let bottomLineLength = 1
+      let bottomIndexOffset = 1
 
-    //   const bottomCandy = this.grid[j + 1][i]
+      while (
+        typeof candy?.typeIndex === 'number' &&
+        this.grid[j + bottomIndexOffset]?.[i]?.typeIndex === candy.typeIndex
+      ) {
+        bottomLineLength++
+        bottomIndexOffset++
+      }
 
-    //   if (candy.typeIndex === bottomCandy?.typeIndex) {
-    //     lineCandyCount++
-    //     return bottomLineCheck.bind(this)(bottomCandy)
-    //   } else {
-    //     return lineCandyCount
-    //   }
-    // }
+      return bottomLineLength
+    }
 
     return needToDelete
   }

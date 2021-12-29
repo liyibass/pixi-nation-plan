@@ -27,7 +27,7 @@ export class Candy {
     // this.bottomCandy = null
     // this.leftCandy = null
     // this.rightCandy = null
-    this.isDelete = false
+    // this.isDelete = false
   }
 
   createCandy() {
@@ -242,13 +242,13 @@ export class Candy {
 
     return new Promise((resolve) => {
       this.vanishTicker.add(() => {
-        if (this.container.alpha >= 0) {
+        if (this.container.alpha > 0) {
           this.container.alpha -= 0.08
           scale += 0.02
           this.container.scale.set(scale)
         } else {
-          this.container.alpha = 0
           this.vanishTicker.stop()
+          this.container.alpha = 0
           candyBox.removeChild(this.container)
 
           resolve()
