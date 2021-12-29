@@ -359,6 +359,7 @@ export class CandyScene extends Scene {
     }
 
     await Promise.all(fallingPromise)
+    await this._wait(100)
 
     this.isFalling = false
 

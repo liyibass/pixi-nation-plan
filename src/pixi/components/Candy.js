@@ -53,6 +53,8 @@ export class Candy {
     // console.log(`${this.i * CANDY_WIDTH}, ${this.j * CANDY_WIDTH}`)
     this.container.x = this.i * CANDY_WIDTH
     this.container.y = -CANDY_WIDTH
+    // this.container.y =
+    //   -(gameStageDimention.rowCount - (this.i + 1)) * CANDY_WIDTH
   }
 
   startFallingCandy() {
@@ -61,14 +63,17 @@ export class Candy {
     const g = 0.5
     let time = 0
     let dropDistance = 0
-    this.container.alpha = 1
+
+    if (this.container.y < 0) {
+      this.container.alpha = 0
+    }
 
     const initY = this.container.y
 
     return new Promise((resolve) => {
       this.candyDropTicker.add((delta) => {
         if (this.container.alpha < 1) {
-          this.container.alpha += 0.1
+          this.container.alpha += 0.08
         } else {
           this.container.alpha = 1
         }
