@@ -121,7 +121,7 @@ export class RunScene extends Scene {
     this._createPlayer()
     this._createCity(this.currentCityIndex)
     this.gameStage.setChildIndex(
-      this.player.sprite,
+      this.player.container,
       this.gameStage.children.length - 1
     )
 
@@ -141,8 +141,8 @@ export class RunScene extends Scene {
       x: 40,
       y: this.gameStageHeight,
     })
-    this.gameStage.addChild(this.player.sprite)
-    this.player.initStandHeight = this.player.sprite.y
+    this.gameStage.addChild(this.player.container)
+    this.player.initStandHeight = this.player.container.y
     this.player.standHeight = this.player.initStandHeight
   }
 
@@ -252,8 +252,8 @@ export class RunScene extends Scene {
     this.right = this.keyboard('ArrowRight')
     this.down = this.keyboard('ArrowDown')
 
-    this.player.sprite.vx = 0
-    this.player.sprite.vy = 0
+    this.player.container.vx = 0
+    this.player.container.vy = 0
 
     this.cityBackgroundLayer.vx = 0
     this.boardLayer.vx = 0
@@ -263,17 +263,17 @@ export class RunScene extends Scene {
       if (!this.sceneTicker?.started) {
         return
       }
-      this.player.sprite.scale.x = 1
-      this.player.sprite.vx = PLAYER_SPEED
-      this.player.sprite.vy = 0
+      this.player.container.scale.x = 1
+      this.player.container.vx = PLAYER_SPEED
+      this.player.container.vy = 0
 
       this.cityBackgroundLayer.vx = -BACKGROUND_SPEED
       this.boardLayer.vx = -BOARD_SPEED
       this.obstacleLayer.vx = -PLAYER_SPEED
     }
     this.right.release = () => {
-      if (!this.left.isDown && this.player.sprite.vy === 0) {
-        this.player.sprite.vx = 0
+      if (!this.left.isDown && this.player.container.vy === 0) {
+        this.player.container.vx = 0
 
         this.cityBackgroundLayer.vx = 0
         this.boardLayer.vx = 0
@@ -285,17 +285,17 @@ export class RunScene extends Scene {
       if (!this.sceneTicker?.started) {
         return
       }
-      this.player.sprite.scale.x = -1
-      this.player.sprite.vx = -PLAYER_SPEED
-      this.player.sprite.vy = 0
+      this.player.container.scale.x = -1
+      this.player.container.vx = -PLAYER_SPEED
+      this.player.container.vy = 0
 
       // this.cityBackgroundLayer.vx = BACKGROUND_SPEED
       // this.boardLayer.vx = BOARD_SPEED
       // this.obstacleLayer.vx = PLAYER_SPEED
     }
     this.left.release = () => {
-      if (!this.right.isDown && this.player.sprite.vy === 0) {
-        this.player.sprite.vx = 0
+      if (!this.right.isDown && this.player.container.vy === 0) {
+        this.player.container.vx = 0
 
         this.cityBackgroundLayer.vx = 0
         this.boardLayer.vx = 0
@@ -314,19 +314,19 @@ export class RunScene extends Scene {
       }
     }
     this.up.release = () => {
-      // if (!this.down.isDown && this.player.sprite.vx === 0) {
-      //   this.player.sprite.vy = 0
+      // if (!this.down.isDown && this.player.container.vx === 0) {
+      //   this.player.container.vy = 0
       // }
     }
 
     //Down
     this.down.press = () => {
-      // this.player.sprite.vy = 5
-      // this.player.sprite.vx = 0
+      // this.player.container.vy = 5
+      // this.player.container.vx = 0
     }
     this.down.release = () => {
-      // if (!this.up.isDown && this.player.sprite.vx === 0) {
-      //   this.player.sprite.vy = 0
+      // if (!this.up.isDown && this.player.container.vx === 0) {
+      //   this.player.container.vy = 0
       // }
     }
   }
@@ -353,22 +353,22 @@ export class RunScene extends Scene {
     this.sceneTicker.add(async () => {
       if (
         // player stop when in gameStage center
-        this.player.sprite.x >= this.gameStageWidth / 3 &&
+        this.player.container.x >= this.gameStageWidth / 3 &&
         this.right.isDown
       ) {
-        this.player.sprite.vx = 0
+        this.player.container.vx = 0
       } else if (
         // player stop when in gameStage's left corner
-        this.player.sprite.x <= this.player.sprite.width / 3 &&
+        this.player.container.x <= this.player.container.width / 3 &&
         this.left.isDown
       ) {
-        this.player.sprite.vx = 0
+        this.player.container.vx = 0
       }
 
       // player move depends on its velocity value
-      this.player.sprite.x += this.player.sprite.vx
+      this.player.container.x += this.player.container.vx
       // if (!this.player.isJumping) {
-      //   this.player.sprite.y += this.player.sprite.vy
+      //   this.player.container.y += this.player.container.vy
       // }
 
       // background move depends on their velocity value
@@ -401,8 +401,8 @@ export class RunScene extends Scene {
       const obstacle = this.inWindowObstacles[i]
       obstacle._setGlobalXAndY()
 
-      const { tx: playerX, ty: playerY } = this.player.sprite.worldTransform
-      // const { width: playerWidth } = this.player.sprite
+      const { tx: playerX, ty: playerY } = this.player.container.worldTransform
+      // const { width: playerWidth } = this.player.container
 
       const { obstacleGlobalX: obstacleX, obstacleGlobalY: obstacleY } =
         obstacle
@@ -427,7 +427,7 @@ export class RunScene extends Scene {
         if (obstacle.obstacleName === 'rock') {
           bottomBoundaryHit = playerY >= obstacleY - obstacleHeight / 2
           topBoundaryHit =
-            playerY - this.player.sprite.height <=
+            playerY - this.player.container.height <=
             obstacleY + obstacleHeight / 2
         } else {
           bottomBoundaryHit = playerY >= obstacleY - obstacleHeight
@@ -462,8 +462,8 @@ export class RunScene extends Scene {
           } else {
             // console.log('side collision')
 
-            this.player.sprite.x -= playerX < obstacleX ? 1 : -1
-            this.player.sprite.vx = 0
+            this.player.container.x -= playerX < obstacleX ? 1 : -1
+            this.player.container.vx = 0
             this.cityBackgroundLayer.vx = 0
             this.boardLayer.vx = 0
             this.obstacleLayer.vx = 0
@@ -531,11 +531,11 @@ export class RunScene extends Scene {
 
   async _deadAnimation(obstacle) {
     this.gameStage.setChildIndex(
-      this.player.sprite,
+      this.player.container,
       this.gameStage.children.length - 1
     )
 
-    this.player.sprite.angle -= 10
+    this.player.container.angle -= 10
 
     if (obstacle.obstacleName === 'water') {
       console.log('water')
@@ -543,7 +543,7 @@ export class RunScene extends Scene {
     } else {
       await this._wait(1000)
     }
-    this.player.sprite.width *= 2
+    this.player.container.width *= 2
     await this._wait(1000)
   }
 
@@ -552,10 +552,10 @@ export class RunScene extends Scene {
     return new Promise((resolve) => {
       drawningTicker.add(() => {
         if (
-          this.player.sprite.y <
-          gameStageDimention.height + this.player.sprite.height / 2
+          this.player.container.y <
+          gameStageDimention.height + this.player.container.height / 2
         ) {
-          this.player.sprite.y += 0.3
+          this.player.container.y += 0.3
         } else {
           drawningTicker.stop()
           resolve()

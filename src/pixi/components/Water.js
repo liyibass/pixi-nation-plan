@@ -55,7 +55,8 @@ export class Water extends Obstacle {
 
       if (this.isInWindow) {
         // get water and player's global position
-        const { tx: playerX, ty: playerY } = this.player.sprite.worldTransform
+        const { tx: playerX, ty: playerY } =
+          this.player.container.worldTransform
         this._setGlobalXAndY()
 
         const rightBoundaryHit =

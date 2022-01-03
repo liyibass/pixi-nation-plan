@@ -3,7 +3,8 @@ import { Globals } from '../script/Globals'
 
 export class Player {
   constructor(position = { x: 0, y: 0 }) {
-    this.createSprite()
+    this.container = new PIXI.Container()
+    this.createPlayer()
     this.x = position.x
     this.y = position.y
     this.setupPosition()
@@ -18,21 +19,22 @@ export class Player {
     this.touchedObstacleIndex = null
   }
 
-  createSprite() {
+  createPlayer() {
     const texture = Globals.resources['player']?.texture
 
-    this.sprite = new PIXI.Sprite(texture)
-    this.sprite.anchor.set(0.5, 1)
+    this.playerSprite = new PIXI.Sprite(texture)
+    this.container.addChild(this.playerSprite)
+    this.playerSprite.anchor.set(0.5, 1)
   }
 
   setupPosition() {
-    this.sprite.x = this.x
-    this.sprite.y = this.y
+    this.container.x = this.x
+    this.container.y = this.y
   }
 
   async lookAround(time = 2) {
     for (let i = 0; i < time; i++) {
-      this.sprite.scale.x *= -1
+      this.container.scale.x *= -1
       await wait(600)
     }
   }
@@ -45,8 +47,8 @@ export class Player {
     const v0 = 15
     const gravity = 0.5
     const direction = -1 //to Top
-    const jumpAtY = this.sprite.y
-    // const jumpAtY = this.sprite.y
+    const jumpAtY = this.container.y
+    // const jumpAtY = this.container.y
 
     this.jumpTicker = new PIXI.Ticker()
     this.jumpTicker.add((deltaMs) => {
@@ -57,17 +59,17 @@ export class Player {
         this.hasBeenTop = true
       }
 
-      if (v < 0 && this.sprite.y > this.standHeight) {
+      if (v < 0 && this.container.y > this.standHeight) {
         // console.log('JUMP STOP')
         this.isJumping = false
 
         this.hasBeenTop = false
         this.jumpTicker.stop()
-        this.sprite.y = this.standHeight
+        this.container.y = this.standHeight
         return
       }
 
-      this.sprite.y = jumpAtY + jumpHeight * direction
+      this.container.y = jumpAtY + jumpHeight * direction
       time += deltaMs
     })
 
@@ -76,11 +78,11 @@ export class Player {
 
   fall() {
     // console.log('fall')
-    // console.log(this.sprite.y)
+    // console.log(this.container.y)
     // console.log(this.initStandHeight)
     // console.log(this.isJumping)
     // console.log(this.isFalling)
-    if (this.sprite.y === this.initStandHeight) return
+    if (this.container.y === this.initStandHeight) return
     if (this.isJumping || this.isFalling) return
     this.isFalling = true
 
@@ -88,23 +90,23 @@ export class Player {
     const v0 = 0
     const gravity = 0.5
     const direction = -1 //to Top
-    const fallAtY = this.sprite.y
-    // const jumpAtY = this.sprite.y
+    const fallAtY = this.container.y
+    // const jumpAtY = this.container.y
 
     this.fallTicker = new PIXI.Ticker()
     this.fallTicker.add((deltaMs) => {
       const jumpHeight = v0 * time + (1 / 2) * -gravity * Math.pow(time, 2)
 
-      if (this.sprite.y > this.initStandHeight) {
+      if (this.container.y > this.initStandHeight) {
         this.fallTicker.stop()
         this.isFalling = false
 
         this.standHeight = this.initStandHeight
-        this.sprite.y = this.standHeight
+        this.container.y = this.standHeight
         return
       }
 
-      this.sprite.y = fallAtY + jumpHeight * direction
+      this.container.y = fallAtY + jumpHeight * direction
       time += deltaMs
     })
 
@@ -117,14 +119,15 @@ export class Player {
   }
 
   jumpIn(groundPlayer) {
-    const { x: groundX, y: groundY } = groundPlayer.sprite.getGlobalPosition()
-    const { x: playerX, y: playerY } = this.sprite.getGlobalPosition()
+    const { x: groundX, y: groundY } =
+      groundPlayer.container.getGlobalPosition()
+    const { x: playerX, y: playerY } = this.container.getGlobalPosition()
     const { x: destX, y: destY } = this
     const fromX = destX + (groundX - playerX)
     const fromY = destY + (groundY - playerY)
 
-    this.sprite.x = fromX
-    this.sprite.y = fromY
+    this.container.x = fromX
+    this.container.y = fromY
 
     if (this.isJumping) return
     this.isJumping = true
@@ -134,14 +137,14 @@ export class Player {
     const gravity = 0.5
     const direction = -1 //to Top
     const jumpAtY = groundY
-    // const jumpAtY = this.sprite.y
+    // const jumpAtY = this.container.y
 
     this.jumpTicker = new PIXI.Ticker()
 
     return new Promise((resolve) => {
       this.jumpTicker.add((deltaMs) => {
-        if (this.sprite.x > destX) {
-          this.sprite.x--
+        if (this.container.x > destX) {
+          this.container.x--
         }
         // console.log('jumpTicker')
         const jumpHeight = v0 * time + (1 / 2) * -gravity * Math.pow(time, 2)
@@ -149,19 +152,20 @@ export class Player {
         if (v < 0) {
           this.hasBeenTop = true
         }
-        if (v < 0 && this.sprite.y >= destY - this.sprite.height / 2) {
+        if (v < 0 && this.container.y >= destY - this.container.height / 2) {
           this.jumpTicker.stop()
           // console.log('JUMP STOP')
 
           this.isJumping = false
 
           this.hasBeenTop = false
-          this.sprite.y = 0
+          this.container.y = 0
 
+          this._changePlayerTexture('run')
           resolve()
         }
 
-        this.sprite.y = jumpAtY + jumpHeight * direction
+        this.container.y = jumpAtY + jumpHeight * direction
         time += deltaMs
       })
 
@@ -172,11 +176,13 @@ export class Player {
   jumpOut(groundPlayer) {
     if (this.jumpTicker.started) this.jumpTicker.stop()
 
-    const { x: groundX, y: groundY } = groundPlayer.sprite.getGlobalPosition()
-    const { x: playerX, y: playerY } = this.sprite.getGlobalPosition()
+    const { x: groundX, y: groundY } =
+      groundPlayer.container.getGlobalPosition()
+    const { x: playerX, y: playerY } = this.container.getGlobalPosition()
 
-    const destX = this.sprite.x + (groundX - playerX)
-    const destY = this.sprite.y + (groundY - playerY) - this.sprite.height / 2
+    const destX = this.container.x + (groundX - playerX)
+    const destY =
+      this.container.y + (groundY - playerY) - this.container.height / 2
 
     this.isJumping = true
 
@@ -184,15 +190,15 @@ export class Player {
     const v0 = 10
     const gravity = 0.5
     const direction = -1 //to Top
-    const jumpAtY = this.sprite.y
-    // const jumpAtY = this.sprite.y
+    const jumpAtY = this.container.y
+    // const jumpAtY = this.container.y
 
     this.jumpTicker = new PIXI.Ticker()
 
     return new Promise((resolve) => {
       this.jumpTicker.add((deltaMs) => {
-        if (this.sprite.x < destX) {
-          this.sprite.x += 5
+        if (this.container.x < destX) {
+          this.container.x += 5
         }
         // console.log('jumpTicker')
         const jumpHeight = v0 * time + (1 / 2) * -gravity * Math.pow(time, 2)
@@ -201,22 +207,39 @@ export class Player {
           this.hasBeenTop = true
         }
 
-        if (v < 0 && this.sprite.y > destY) {
+        if (v < 0 && this.container.y > destY) {
           // console.log('JUMP STOP')
           this.jumpTicker.stop()
           this.isJumping = false
 
           this.hasBeenTop = false
-          this.sprite.y = destY
+          this.container.y = destY
           resolve()
         }
 
-        this.sprite.y = jumpAtY + jumpHeight * direction
+        this.container.y = jumpAtY + jumpHeight * direction
         time += deltaMs
       })
 
       this.jumpTicker.start()
     })
+  }
+
+  _changePlayerTexture(type) {
+    if (type === 'run') {
+      // const textureArray = []
+      // for (let i = 0; i < 6; i++) {
+      //   const texture = Globals.resources[`player_${i}`]?.texture
+      //   textureArray.push(texture)
+      // }
+      // this.container = new PIXI.AnimatedSprite(textureArray)
+      // this.container.anchor.set(0.5, 1)
+      // console.log(this.initStandHeight)
+      // this.y = this.initStandHeight
+      // this.standHeight = this.initStandHeight
+      // this.container.y = 300
+      // // this.container.play()
+    }
   }
 }
 

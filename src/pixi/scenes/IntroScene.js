@@ -138,10 +138,10 @@ export class IntroScene {
       this.spotlight.sprite,
       this.ground.sprite,
       this.doctor.sprite,
-      this.player.sprite
+      this.player.container
     )
     this.taiwan.container.alpha = 0
-    this.player.sprite.alpha = 0
+    this.player.container.alpha = 0
     this.ground.sprite.alpha = 0
     this.spotlight.sprite.alpha = 0
     this.doctor.sprite.alpha = 0
@@ -153,8 +153,8 @@ export class IntroScene {
 
       initShowUpTicker.add(async () => {
         console.log('initShowUpTicker')
-        if (this.player.sprite.alpha <= 0.5) {
-          this.player.sprite.alpha += 0.01
+        if (this.player.container.alpha <= 0.5) {
+          this.player.container.alpha += 0.01
           this.ground.sprite.alpha += 0.01
         } else {
           initShowUpTicker.destroy()
@@ -168,7 +168,7 @@ export class IntroScene {
   }
 
   async firstLightUp() {
-    this.player.sprite.alpha = 1
+    this.player.container.alpha = 1
     this.ground.sprite.alpha = 1
     this.taiwan.container.alpha = 0.1
 
@@ -197,7 +197,7 @@ export class IntroScene {
 
       movePlayerToGroundTicker.add(async () => {
         if (this.ground.sprite.y <= this.getGroundPosition()) {
-          moveDown(this.player.sprite)
+          moveDown(this.player.container)
           moveDown(this.ground.sprite)
         }
 
@@ -268,8 +268,8 @@ export class IntroScene {
           moveDown(this.doctor.sprite)
           this.doctor.sprite.angle += 4
         }
-        if (this.player.sprite.x >= Globals.width / 2 - 50) {
-          moveLeft(this.player.sprite)
+        if (this.player.container.x >= Globals.width / 2 - 50) {
+          moveLeft(this.player.container)
         }
 
         if (this.doctor.sprite.y >= this.getGroundPosition() - 55) {
@@ -300,9 +300,9 @@ export class IntroScene {
       positionCharactersTicker.add(async () => {
         console.log('positionCharactersTicker')
 
-        if (this.player.sprite.y <= Globals.height - 110) {
-          this.player.sprite.x -= 0.8
-          this.player.sprite.y += 2
+        if (this.player.container.y <= Globals.height - 110) {
+          this.player.container.x -= 0.8
+          this.player.container.y += 2
         }
         if (this.doctor.sprite.y <= Globals.height - 138) {
           this.doctor.sprite.y += 0.5
@@ -317,7 +317,7 @@ export class IntroScene {
         }
 
         if (
-          this.player.sprite.y >= Globals.height - 110 &&
+          this.player.container.y >= Globals.height - 110 &&
           this.doctor.sprite.y >= Globals.height - 138 &&
           this.doctor.sprite.x <= Globals.width / 2 - 111
         ) {

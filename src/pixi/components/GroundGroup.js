@@ -35,11 +35,11 @@ export class GroundGroup {
     this.container.addChild(
       this.ground.sprite,
       this.doctor.sprite,
-      this.player.sprite
+      this.player.container
     )
   }
 
   hidePlayer() {
-    this.player.sprite.alpha = 0
+    this.player.container.alpha = 0
   }
 }
