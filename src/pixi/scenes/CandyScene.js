@@ -305,29 +305,37 @@ export class CandyScene extends Scene {
       this.needToFallingQueue = []
 
       this.needToDeleteArray = this.examineIfHasLine()
-      await this._wait(1000)
+      // await this._wait(1000)
       this.isHandlingLine = false
     }
   }
 
   async lineHandler() {
     // =====================DELETE CANDY======================
-    // remove candy from grid and candyBox
-    this.needToFallingQueue = []
-    const vanishPromise = []
+    console.log(this.needToDeleteArray)
 
+    this.needToFallingQueue = []
+
+    // start candy's vanish animation
+    const vanishPromise = []
+    for (let k = 0; k < this.needToDeleteArray.length; k++) {
+      const candy = this.needToDeleteArray[k]
+      vanishPromise.push(candy.vanish())
+    }
+    await Promise.all(vanishPromise)
+
+    // remove candy from grid and candyBox
     for (let k = 0; k < this.needToDeleteArray.length; k++) {
       const candy = this.needToDeleteArray[k]
       const { i, j } = candy
-      vanishPromise.push(candy.vanish(this.candyBox))
+
       this.grid[j][i] = null
+      this.candyBox.removeChild(candy)
 
       // get all candies above candy, move them into queue
       const aboveArray = feedAboveCandyToFallingQueue.bind(this)(candy)
       this.needToFallingQueue = this.needToFallingQueue.concat(aboveArray)
     }
-
-    await Promise.all(vanishPromise)
 
     // await this._wait(100)
     // =====================FALLING CANDY======================
@@ -387,7 +395,7 @@ export class CandyScene extends Scene {
     }
 
     await Promise.all(fallingPromise)
-    await this._wait(100)
+    // await this._wait(100)
 
     this.isFalling = false
 

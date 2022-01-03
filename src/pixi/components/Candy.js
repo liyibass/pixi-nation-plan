@@ -236,7 +236,7 @@ export class Candy {
     })
   }
 
-  vanish(candyBox) {
+  vanish() {
     this.vanishTicker = new PIXI.Ticker()
     let scale = 1
 
@@ -249,7 +249,6 @@ export class Candy {
         } else {
           this.vanishTicker.stop()
           this.container.alpha = 0
-          candyBox.removeChild(this.container)
 
           resolve()
         }
