@@ -149,7 +149,7 @@ export class Player {
         if (v < 0) {
           this.hasBeenTop = true
         }
-        if (v < 0 && this.sprite.y >= destY - 20) {
+        if (v < 0 && this.sprite.y >= destY - this.sprite.height / 2) {
           this.jumpTicker.stop()
           // console.log('JUMP STOP')
 
