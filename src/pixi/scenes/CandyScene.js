@@ -16,6 +16,8 @@ export class CandyScene extends Scene {
 
     this.grid = []
 
+    this.currentCityName = 'Taoyuan'
+
     this.isSwaping = false
     this.isHandlingLine = false
     this.isVanishing = false
@@ -94,7 +96,6 @@ export class CandyScene extends Scene {
       this.gamePassed.bind(this)
     )
     this.container.addChild(this.candyHeader.container)
-    console.log(this.candyHeader)
 
     this.candyHeader.container.x = gameStageDimention.x
     this.candyHeader.container.y = 16

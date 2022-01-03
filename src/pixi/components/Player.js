@@ -232,8 +232,6 @@ export class Player {
   }
 
   _changePlayerTexture(type) {
-    console.log(type)
-
     switch (type) {
       case 'running':
         this.container.removeChild(this.playerSprite)

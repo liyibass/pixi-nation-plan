@@ -5,6 +5,7 @@ import { City } from '../components/City'
 
 import { Globals } from '../script/Globals'
 import { Scene } from './Scene'
+import { Tiger } from '../components/Tiger'
 
 const BLOCK_WIDTH = 16
 
@@ -163,7 +164,8 @@ export class RunScene extends Scene {
     const city = new City(
       cityIndex,
       this.collisionMonitor.bind(this),
-      this.player
+      this.player,
+      this.currentCityNameMonitor.bind(this)
     )
 
     let interval = (cityIndex === 0 ? 0 : 1 * (this.gameStageWidth * 1)) / 3
@@ -192,6 +194,21 @@ export class RunScene extends Scene {
     this.cityBackgroundLayer.addChild(city.cityBackground.container)
     this.boardLayer.addChild(city.cityBoard.container)
     this.obstacleLayer.addChild(city.cityObstacle.container)
+  }
+
+  currentCityNameMonitor(cityName) {
+    if (this.cityName !== cityName) {
+      this.cityName = cityName
+
+      if (this.cityName === 'Miaoli') {
+        console.log('GENERATE TIGER')
+
+        this.tiger = new Tiger()
+        this.gameStage.addChild(this.tiger.container)
+        this.tiger.container.x = -window.innerWidth / 2
+        this.tiger.container.y = gameStageDimention.height + 20
+      }
+    }
   }
 
   // ===== game flow =====
@@ -395,6 +412,21 @@ export class RunScene extends Scene {
           // this.boardLayer.children[index]?.destroy()
         }
       })
+
+      // tiger handler
+      if (
+        this.tiger &&
+        this.tiger?.container?.x < 80 &&
+        this.cityName === 'Miaoli'
+      ) {
+        this.tiger.container.x += 2
+      } else if (this.tiger && this.cityName !== 'Miaoli') {
+        if (this.tiger.container.x > -window.innerWidth / 2) {
+          this.tiger.container.x--
+        } else {
+          this.gameStage.removeChild(this.tiger.container)
+        }
+      }
     })
 
     this.sceneTicker.start()

@@ -3,14 +3,16 @@ import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 
 export class CityBoard {
-  constructor(cityName) {
+  constructor(cityName, currentCityNameMonitor) {
     this.cityName = cityName
+    this.currentCityNameMonitor = currentCityNameMonitor
     this.container = new PIXI.Container()
     this.container.name = `cityBoard-${this.cityName}`
 
     this.createCityBoard()
     this.createBar()
     this.position()
+    this.cityMonitor()
   }
 
   createCityBoard() {
@@ -46,5 +48,25 @@ export class CityBoard {
   position() {
     // this.container.pivot
     this.boardSprite.y = -this.bar.height
+  }
+
+  cityMonitor() {
+    this.cityMonitorTicker = new PIXI.Ticker()
+
+    this.cityMonitorTicker.add(() => {
+      this._checkIfObstacleIsInWindow()
+
+      if (this.isInWindow) {
+        this.currentCityNameMonitor(this.cityName)
+      }
+    })
+
+    this.cityMonitorTicker.start()
+  }
+
+  _checkIfObstacleIsInWindow() {
+    const { tx } = this.container.worldTransform
+
+    this.isInWindow = tx >= 0 && tx <= window.innerWidth
   }
 }

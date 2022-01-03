@@ -93,7 +93,7 @@ export class CityObstacle {
     const CAR_WIDTH = 50
     const CAR_DISTANCE = 100
     const CAR_UNIT = CAR_DISTANCE + CAR_WIDTH
-    const CAR_COUNT = Math.floor(this.obstacleWidth / CAR_UNIT) - 1
+    const CAR_COUNT = Math.floor(this.obstacleWidth / CAR_UNIT) - 2
 
     let totalWidth = 0
     for (let i = 0; i < CAR_COUNT; i++) {

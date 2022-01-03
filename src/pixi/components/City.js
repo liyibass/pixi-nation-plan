@@ -6,10 +6,16 @@ import { CityObstacle } from './CityObstacle'
 const gameStageDimention = Globals.getSeesawGameStageDimention()
 
 export class City {
-  constructor(currentCityIndex = 0, collisionMonitor, player) {
+  constructor(
+    currentCityIndex = 0,
+    collisionMonitor,
+    player,
+    currentCityNameMonitor
+  ) {
     this.cityName = this._getCityName(currentCityIndex)
     this.collisionMonitor = collisionMonitor
     this.player = player
+    this.currentCityNameMonitor = currentCityNameMonitor
 
     this.cityBackground = this.createCityBackground()
     this.cityBoard = this.createBoard()
@@ -19,7 +25,7 @@ export class City {
   }
 
   createBoard() {
-    const board = new CityBoard(this.cityName)
+    const board = new CityBoard(this.cityName, this.currentCityNameMonitor)
 
     board.container.x = 0 + board.container.width / 2
     board.container.y = gameStageDimention.height
@@ -50,7 +56,7 @@ export class City {
   _getCityName(currentCityIndex) {
     switch (currentCityIndex) {
       case 0:
-        return 'Taoyuan'
+        return 'Miaoli'
       case 1:
         return 'Hsinchu'
       case 2:
