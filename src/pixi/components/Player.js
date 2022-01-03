@@ -42,6 +42,7 @@ export class Player {
   jump() {
     if (this.isJumping) return
     this.isJumping = true
+    this.runningPlayerSprite.stop()
 
     let time = 0
     const v0 = 15
@@ -66,6 +67,7 @@ export class Player {
         this.hasBeenTop = false
         this.jumpTicker.stop()
         this.container.y = this.standHeight
+        this.runningPlayerSprite.play()
         return
       }
 
@@ -85,6 +87,7 @@ export class Player {
     if (this.container.y === this.initStandHeight) return
     if (this.isJumping || this.isFalling) return
     this.isFalling = true
+    this.runningPlayerSprite.stop()
 
     let time = 0
     const v0 = 0
@@ -103,6 +106,7 @@ export class Player {
 
         this.standHeight = this.initStandHeight
         this.container.y = this.standHeight
+        this.runningPlayerSprite.start()
         return
       }
 
@@ -131,6 +135,7 @@ export class Player {
 
     if (this.isJumping) return
     this.isJumping = true
+    this.runningPlayerSprite.stop()
 
     let time = 0
     const v0 = 24
@@ -160,8 +165,8 @@ export class Player {
 
           this.hasBeenTop = false
           this.container.y = 0
-
           this._changePlayerTexture('run')
+          this.runningPlayerSprite.play()
           resolve()
         }
 
@@ -185,6 +190,7 @@ export class Player {
       this.container.y + (groundY - playerY) - this.container.height / 2
 
     this.isJumping = true
+    this.runningPlayerSprite.stop()
 
     let time = 0
     const v0 = 10
@@ -226,20 +232,35 @@ export class Player {
   }
 
   _changePlayerTexture(type) {
-    if (type === 'run') {
-      // const textureArray = []
-      // for (let i = 0; i < 6; i++) {
-      //   const texture = Globals.resources[`player_${i}`]?.texture
-      //   textureArray.push(texture)
-      // }
-      // this.container = new PIXI.AnimatedSprite(textureArray)
-      // this.container.anchor.set(0.5, 1)
-      // console.log(this.initStandHeight)
-      // this.y = this.initStandHeight
-      // this.standHeight = this.initStandHeight
-      // this.container.y = 300
-      // // this.container.play()
+    console.log(type)
+
+    switch (type) {
+      case 'running':
+        this.container.removeChild(this.playerSprite)
+        this.container.addChild(this.runningPlayerSprite)
+        this.runningPlayerSprite.play()
+        break
+
+      default:
+      case 'stand':
+        this.container.removeChild(this.runningPlayerSprite)
+        this.container.addChild(this.playerSprite)
+        this.runningPlayerSprite.stop()
+        break
     }
+  }
+
+  createRunningPlayerTexture() {
+    const textureArray = []
+    for (let i = 0; i < 6; i++) {
+      const texture = Globals.resources[`player_${i}`]?.texture
+      textureArray.push(texture)
+    }
+    this.runningPlayerSprite = new PIXI.AnimatedSprite(textureArray)
+    this.runningPlayerSprite.anchor.set(0.5, 1)
+    this.runningPlayerSprite.animationSpeed = 0.2
+
+    // this.container.play()
   }
 }
 
