@@ -150,4 +150,22 @@ export const Globals = {
       candyWidth,
     }
   },
+
+  getCardDimention: function () {
+    const TOP_PADDING = 48
+    const SIDE_PADDING = 25
+    const width =
+      this.width - 2 * SIDE_PADDING < Math.floor((this.height * 5) / 8)
+        ? this.width - 2 * SIDE_PADDING
+        : Math.floor((this.height * 5) / 8)
+
+    const height = this.height - 2 * TOP_PADDING
+
+    return {
+      x: (this.width - width) / 2,
+      y: 0 + TOP_PADDING,
+      width,
+      height,
+    }
+  },
 }

@@ -7,6 +7,7 @@ import { Spotlight } from '../components/Spotlight'
 import { Doctor } from '../components/Doctor'
 import { Taiwan } from '../components/Taiwan'
 import { DoctorDialogBox } from '../components/DoctorDialogBox'
+import { Card } from '../components/Card'
 
 export class IntroScene {
   constructor(selectStage) {
@@ -80,6 +81,11 @@ export class IntroScene {
     })
   }
 
+  createCard() {
+    const card = new Card(0)
+    this.container.addChild(card.container)
+  }
+
   async createIntro() {
     this._createBackground()
     this.createStartButton()
@@ -87,6 +93,7 @@ export class IntroScene {
     this.createSelectStageButton('balance', 2)
     this.createSelectStageButton('run', 3)
     this.createSelectStageButton('candy', 4)
+    this.createCard()
 
     const startFilmScript = async () => {
       if (this.filmScriptStep === 0) {

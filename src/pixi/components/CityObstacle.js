@@ -106,6 +106,7 @@ export class CityObstacle {
 
       this.obstacleArray.push(car)
       this.container.addChild(car.container)
+
       totalWidth +=
         interval === 0
           ? car.container.width * 2
@@ -200,12 +201,13 @@ export class CityObstacle {
   _createKaohsiung() {}
 
   _createMountain() {
-    const ROCK_COUNT = 10
+    const ROCK_COUNT = 8
+    const ROCK_INTERVAL = Math.floor(this.obstacleWidth / ROCK_COUNT)
 
     for (let i = 0; i < ROCK_COUNT; i++) {
       const rock = new Rock(i, this.collisionMonitor, this.obstacleWidth)
 
-      rock.container.x = Math.floor(Math.random() * this.obstacleWidth)
+      rock.container.x = ROCK_INTERVAL * i + Math.floor(Math.random() * 40 - 20)
       rock.container.y = Math.floor(Math.random() * gameStageDimention.height)
 
       this.obstacleArray.push(rock)

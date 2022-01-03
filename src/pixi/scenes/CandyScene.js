@@ -16,8 +16,6 @@ export class CandyScene extends Scene {
 
     this.grid = []
 
-    this.currentCityName = 'Taoyuan'
-
     this.isSwaping = false
     this.isHandlingLine = false
     this.isVanishing = false
@@ -96,6 +94,7 @@ export class CandyScene extends Scene {
       this.gamePassed.bind(this)
     )
     this.container.addChild(this.candyHeader.container)
+    console.log(this.candyHeader)
 
     this.candyHeader.container.x = gameStageDimention.x
     this.candyHeader.container.y = 16
@@ -329,9 +328,10 @@ export class CandyScene extends Scene {
     for (let k = 0; k < this.needToDeleteArray.length; k++) {
       const candy = this.needToDeleteArray[k]
       const { i, j } = candy
+      console.log(candy)
+      this.candyBox.removeChild(candy.container)
 
       this.grid[j][i] = null
-      this.candyBox.removeChild(candy)
 
       // get all candies above candy, move them into queue
       const aboveArray = feedAboveCandyToFallingQueue.bind(this)(candy)
@@ -344,6 +344,7 @@ export class CandyScene extends Scene {
 
     // await this._wait(100)
     // =====================ADD CANDY======================
+
     await this.addNewCandyIntoGrid()
 
     // =====================FIX ERROR======================
