@@ -56,7 +56,7 @@ export class City {
   _getCityName(currentCityIndex) {
     switch (currentCityIndex) {
       case 0:
-        return 'Miaoli'
+        return 'Taoyuan'
       case 1:
         return 'Hsinchu'
       case 2:

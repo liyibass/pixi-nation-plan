@@ -145,7 +145,7 @@ export class RunScene extends Scene {
     this.gameStage.addChild(this.player.container)
     this.player.initStandHeight = this.player.container.y
     this.player.standHeight = this.player.initStandHeight
-    this.player.createRunningPlayerTexture()
+    this.player.createRunningPlayerSprite()
   }
 
   _createCity() {
@@ -284,7 +284,7 @@ export class RunScene extends Scene {
       this.player.container.scale.x = 1
       this.player.container.vx = PLAYER_SPEED
       this.player.container.vy = 0
-      this.player._changePlayerTexture('running')
+      this.player.changePlayerTexture('running')
 
       this.cityBackgroundLayer.vx = -BACKGROUND_SPEED
       this.boardLayer.vx = -BOARD_SPEED
@@ -293,7 +293,7 @@ export class RunScene extends Scene {
     this.right.release = () => {
       if (!this.left.isDown && this.player.container.vy === 0) {
         this.player.container.vx = 0
-        this.player._changePlayerTexture('stand')
+        this.player.changePlayerTexture('stand')
 
         this.cityBackgroundLayer.vx = 0
         this.boardLayer.vx = 0
@@ -308,7 +308,7 @@ export class RunScene extends Scene {
       this.player.container.scale.x = -1
       this.player.container.vx = -PLAYER_SPEED
       this.player.container.vy = 0
-      this.player._changePlayerTexture('running')
+      this.player.changePlayerTexture('running')
 
       // this.cityBackgroundLayer.vx = BACKGROUND_SPEED
       // this.boardLayer.vx = BOARD_SPEED
@@ -317,7 +317,7 @@ export class RunScene extends Scene {
     this.left.release = () => {
       if (!this.right.isDown && this.player.container.vy === 0) {
         this.player.container.vx = 0
-        this.player._changePlayerTexture('stand')
+        this.player.changePlayerTexture('stand')
 
         this.cityBackgroundLayer.vx = 0
         this.boardLayer.vx = 0

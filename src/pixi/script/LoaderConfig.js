@@ -91,6 +91,7 @@ import rock_2 from '../assets/images/rock_2.png'
 import rock_3 from '../assets/images/rock_3.png'
 import rock_4 from '../assets/images/rock_4.png'
 import rock_5 from '../assets/images/rock_5.png'
+import tiger from '../assets/images/tiger.png'
 import tiger_0 from '../assets/images/tiger_0.png'
 import tiger_1 from '../assets/images/tiger_1.png'
 import tiger_2 from '../assets/images/tiger_2.png'
@@ -192,6 +193,7 @@ export const LoaderConfig = {
   rock_3,
   rock_4,
   rock_5,
+  tiger,
   tiger_0,
   tiger_1,
   tiger_2,

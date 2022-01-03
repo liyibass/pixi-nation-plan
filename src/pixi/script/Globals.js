@@ -2,6 +2,7 @@ const gameStagePadding = 10
 
 export const Globals = {
   resources: {},
+  playerType: 'player',
   width: window.innerWidth,
   height: window.innerHeight,
   maxContentWidth:

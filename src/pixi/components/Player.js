@@ -1,8 +1,21 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 
+function getRunningLoopCount(playerType) {
+  switch (playerType) {
+    case 'tiger':
+      return 4
+
+    default:
+    case 'player':
+      return 6
+  }
+}
+
 export class Player {
   constructor(position = { x: 0, y: 0 }) {
+    this.playerType = Globals.playerType || 'player'
+    this.runningLoopCount = getRunningLoopCount(this.playerType)
     this.container = new PIXI.Container()
     this.createPlayer()
     this.x = position.x
@@ -19,12 +32,46 @@ export class Player {
     this.touchedObstacleIndex = null
   }
 
+  setupPlayerType(newPlayerType) {
+    this.playerType = newPlayerType
+  }
+
   createPlayer() {
-    const texture = Globals.resources['player']?.texture
+    const texture = Globals.resources[`${this.playerType}`]?.texture
 
     this.playerSprite = new PIXI.Sprite(texture)
     this.container.addChild(this.playerSprite)
     this.playerSprite.anchor.set(0.5, 1)
+  }
+
+  createRunningPlayerSprite() {
+    const textureArray = []
+    for (let i = 0; i < this.runningLoopCount; i++) {
+      const texture = Globals.resources[`${this.playerType}_${i}`]?.texture
+      textureArray.push(texture)
+    }
+    this.runningPlayerSprite = new PIXI.AnimatedSprite(textureArray)
+    this.runningPlayerSprite.anchor.set(0.5, 1)
+    this.runningPlayerSprite.animationSpeed = 0.2
+
+    // this.container.play()
+  }
+
+  changePlayerTexture(type) {
+    switch (type) {
+      case 'running':
+        this.container.removeChild(this.playerSprite)
+        this.container.addChild(this.runningPlayerSprite)
+        this.runningPlayerSprite.play()
+        break
+
+      default:
+      case 'stand':
+        this.container.removeChild(this.runningPlayerSprite)
+        this.container.addChild(this.playerSprite)
+        this.runningPlayerSprite.stop()
+        break
+    }
   }
 
   setupPosition() {
@@ -68,6 +115,7 @@ export class Player {
         this.jumpTicker.stop()
         this.container.y = this.standHeight
         this.runningPlayerSprite.play()
+
         return
       }
 
@@ -158,14 +206,11 @@ export class Player {
           this.hasBeenTop = true
         }
         if (v < 0 && this.container.y >= destY - this.container.height / 2) {
-          this.jumpTicker.stop()
-          // console.log('JUMP STOP')
-
           this.isJumping = false
 
           this.hasBeenTop = false
-          this.container.y = 0
-          this._changePlayerTexture('run')
+          this.jumpTicker.stop()
+          this.container.y = this.standHeight
           this.runningPlayerSprite.play()
           resolve()
         }
@@ -229,36 +274,6 @@ export class Player {
 
       this.jumpTicker.start()
     })
-  }
-
-  _changePlayerTexture(type) {
-    switch (type) {
-      case 'running':
-        this.container.removeChild(this.playerSprite)
-        this.container.addChild(this.runningPlayerSprite)
-        this.runningPlayerSprite.play()
-        break
-
-      default:
-      case 'stand':
-        this.container.removeChild(this.runningPlayerSprite)
-        this.container.addChild(this.playerSprite)
-        this.runningPlayerSprite.stop()
-        break
-    }
-  }
-
-  createRunningPlayerTexture() {
-    const textureArray = []
-    for (let i = 0; i < 6; i++) {
-      const texture = Globals.resources[`player_${i}`]?.texture
-      textureArray.push(texture)
-    }
-    this.runningPlayerSprite = new PIXI.AnimatedSprite(textureArray)
-    this.runningPlayerSprite.anchor.set(0.5, 1)
-    this.runningPlayerSprite.animationSpeed = 0.2
-
-    // this.container.play()
   }
 }
 

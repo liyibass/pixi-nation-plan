@@ -48,11 +48,19 @@ export class Chimney extends Obstacle {
   }
 
   _createFireSprite() {
-    const fireTexture = new PIXI.Texture(Globals.resources[`fire`]?.texture)
-    const fireSprite = new PIXI.Sprite(fireTexture)
+    const textureArray = []
+
+    for (let i = 0; i < 4; i++) {
+      const texture = new PIXI.Texture(Globals.resources[`fire_${i}`]?.texture)
+      textureArray.push(texture)
+    }
+
+    const fireSprite = new PIXI.AnimatedSprite(textureArray)
 
     fireSprite.pivot.set(fireSprite.width / 2, fireSprite.height)
     fireSprite.y = -this.chimneySprite.height
+    fireSprite.animationSpeed = 0.2
+    fireSprite.play()
 
     return fireSprite
   }
