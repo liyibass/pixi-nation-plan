@@ -99,6 +99,7 @@ import tiger_3 from '../assets/images/tiger_3.png'
 import excavator from '../assets/images/excavator.png'
 import reset from '../assets/images/reset.png'
 import exit from '../assets/images/exit.png'
+import arrow from '../assets/images/arrow.png'
 import land_city_0 from '../assets/images/land_city_0.png'
 
 export const LoaderConfig = {
@@ -204,4 +205,5 @@ export const LoaderConfig = {
   reset,
   exit,
   land_city_0,
+  arrow,
 }
