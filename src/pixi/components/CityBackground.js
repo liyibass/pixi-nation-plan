@@ -214,18 +214,72 @@ export class CityBackground {
     const TOTAL_HOTEL = 2 * MOUNTAIN_COUNT + 1
 
     for (let j = 0; j < TOTAL_HOTEL; j++) {
+      const hotelContainer = new PIXI.Container()
+
+      // farm
+      const farmTexture = new PIXI.Texture(Globals.resources['farm']?.texture)
+      const farmSprite = new PIXI.Sprite(farmTexture)
+      farmSprite.pivot.y = farmSprite.height - 23
+
+      // hotel
       const hotelTexture = new PIXI.Texture(
         Globals.resources[`hotel${j % 4}`].texture
       )
       const hotelSprite = new PIXI.Sprite(hotelTexture)
       hotelSprite.pivot.y = hotelSprite.height
+      hotelSprite.y = hotelSprite.height
 
-      hotelSprite.x =
+      // mask
+      const hotelMask = new PIXI.Graphics()
+      hotelMask.beginFill(0x000000, 0)
+      hotelMask.drawRect(0, 0, hotelSprite.width, hotelSprite.height)
+      hotelMask.endFill()
+      hotelMask.pivot.y = hotelMask.height
+      hotelContainer.mask = hotelMask
+
+      hotelContainer.addChild(farmSprite, hotelSprite, hotelMask)
+
+      this.container.addChild(hotelContainer)
+
+      hotelContainer.x =
         (this.container.width / (TOTAL_HOTEL - 1)) * j +
         (Math.random() * 70 - 35)
-      hotelSprite.y = gameStageDimention.height
+      hotelContainer.y = gameStageDimention.height
 
-      this.container.addChild(hotelSprite)
+      let vibrateDirection = 'left'
+      const hotelShownTicker = new PIXI.Ticker()
+      hotelShownTicker.add(() => {
+        if (
+          hotelContainer.worldTransform.tx > (window.innerWidth * 3) / 4 ||
+          hotelContainer.worldTransform.tx < 0
+        )
+          return
+
+        if (hotelSprite.y > 0) {
+          hotelSprite.y--
+          farmSprite.height--
+          farmSprite.alpha -= 0.01
+
+          if (vibrateDirection === 'left') {
+            // left
+            hotelSprite.x--
+
+            if (hotelSprite.x < -2) {
+              vibrateDirection = 'right'
+            }
+          } else {
+            // right
+            hotelSprite.x++
+
+            if (hotelSprite.x > 2) {
+              vibrateDirection = 'left'
+            }
+          }
+        } else {
+          hotelShownTicker.destroy()
+        }
+      })
+      hotelShownTicker.start()
     }
   }
 

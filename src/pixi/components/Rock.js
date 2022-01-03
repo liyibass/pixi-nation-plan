@@ -21,7 +21,9 @@ export class Rock extends Obstacle {
   }
 
   createRock() {
-    const rockTexture = new PIXI.Texture(Globals.resources['rock']?.texture)
+    const rockTexture = new PIXI.Texture(
+      Globals.resources[`rock_${this.index % 6}`]?.texture
+    )
     this.rockSprite = new PIXI.Sprite(rockTexture)
 
     this.container.addChild(this.rockSprite)
