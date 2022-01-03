@@ -77,9 +77,34 @@ export class Card {
 
     landCityIconContainer.addChild(landCitySprite)
 
+    // landCity position
     landCityIconContainer.x =
       (cardDimention.width - 2 * CARD_MARGIN - landCityIconContainer.width) / 2
     landCityIconContainer.y = 20
+
+    // title
+    const titleText = new PIXI.Text(`新北市`, {
+      fill: ['0xffffff'],
+      fontSize: 36,
+    })
+    titleContainer.addChild(titleText)
+
+    // titleBar
+    const titleBar1 = new Bar()
+    const titleBar2 = new Bar()
+    titleContainer.addChild(titleBar1.graphics, titleBar2.graphics)
+    titleBar1.graphics.width = titleText.width
+    titleBar2.graphics.width = titleText.width
+
+    // title's inner position
+    titleText.y = titleBar1.graphics.height
+    titleBar2.graphics.y = titleText.y + titleText.height
+
+    // whole title position
+    titleContainer.x =
+      (cardDimention.width - 2 * CARD_MARGIN - titleContainer.width) / 2
+    titleContainer.y =
+      landCityIconContainer.y + landCityIconContainer.height + 23
   }
 
   createTab() {}
@@ -117,5 +142,17 @@ export class Card {
       case 15:
         return 'Nantou'
     }
+  }
+}
+
+class Bar {
+  constructor() {
+    this.graphics = new PIXI.Graphics()
+    this.createBar()
+  }
+  createBar() {
+    this.graphics.beginFill(0xffffff)
+    this.graphics.drawRect(0, 0, 110, 6)
+    this.graphics.endFill()
   }
 }
