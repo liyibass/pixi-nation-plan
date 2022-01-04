@@ -10,8 +10,8 @@ const CARD_HEADER_LAND_CITY_HEIGHT = CARD_HEADER_HEIGHT * 0.5
 // const CARD_HEADER_TITLE_HEIGHT = CARD_HEADER_HEIGHT * 0.5
 
 export class CardHeader {
-  constructor(cityName = '新北市', changeCityHandler) {
-    this.cityName = cityName
+  constructor(cityIndex = 0, changeCityHandler) {
+    this.cityIndex = cityIndex
     this.changeCityHandler = changeCityHandler
 
     this.container = new PIXI.Container()
@@ -76,7 +76,7 @@ export class CardHeader {
   createTitle() {
     const titleContainer = new PIXI.Container()
     // title
-    this.titleText = new PIXI.Text(`新北市`, {
+    this.titleText = new PIXI.Text(this._getCityName(this.cityIndex), {
       fill: ['0xffffff'],
       fontSize: 36,
     })
@@ -98,6 +98,12 @@ export class CardHeader {
 
     titleContainer.x = (CARD_CONTENT_WIDTH - titleContainer.width) / 2
   }
+
+  updateCity(newCityIndex) {
+    this.titleText.text = this._getCityName(newCityIndex)
+  }
+
+  _updateTitlePosition() {}
 
   createArrow() {
     // arrows
@@ -122,35 +128,39 @@ export class CardHeader {
   _getCityName(currentCityIndex) {
     switch (currentCityIndex) {
       case 0:
-        return 'Taipei'
+        return '新北市'
       case 1:
-        return 'Taoyuan'
+        return '臺北市'
+      case 2:
+        return '桃園市'
       case 3:
-        return 'Hsinchu'
+        return '新竹縣'
       case 4:
-        return 'Miaoli'
+        return '苗栗縣'
       case 5:
-        return 'Taizhong'
+        return '台中市'
       case 6:
-        return 'Zhanghua'
+        return '彰化市'
       case 7:
-        return 'Yunlin'
+        return '雲林縣'
       case 8:
-        return 'Jiayi'
+        return '嘉義縣'
       case 9:
-        return 'Tainan'
+        return '臺南市'
       case 10:
-        return 'Kaohsiung'
+        return '高雄市'
       case 11:
-        return 'Pingdong'
+        return '屏東縣'
       case 12:
-        return 'Taidong'
+        return '臺東縣'
       case 13:
-        return 'Hualian'
+        return '花蓮縣'
       case 14:
-        return 'Yilan'
+        return '宜蘭縣'
       case 15:
-        return 'Nantou'
+        return '南投縣'
+      case 16:
+        return '澎湖縣'
     }
   }
 }

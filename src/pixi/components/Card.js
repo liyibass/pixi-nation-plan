@@ -11,8 +11,8 @@ const CARD_MARGIN = 12
 
 export class Card {
   constructor(index = 0) {
-    this.index = index
-    this.cityName = this._getCityName(this.index)
+    this.cityIndex = index
+
     this.container = new PIXI.Container()
     this.container.name = 'card'
     this.container.x = cardDimention.x
@@ -55,19 +55,25 @@ export class Card {
   }
 
   createHeader() {
-    this.header = new CardHeader('新北市', this._changeCityHandler.bind(this))
+    this.header = new CardHeader(0, this._changeCityHandler.bind(this))
     this.container.addChild(this.header.container)
   }
 
   _changeCityHandler(choose) {
-    console.log(choose)
+    if (choose === 'prev') {
+      this.cityIndex = this.cityIndex !== 0 ? this.cityIndex - 1 : 16
+    } else {
+      this.cityIndex = this.cityIndex !== 16 ? this.cityIndex + 1 : 0
+    }
+    this.header.updateCity(this.cityIndex)
   }
 
   createTab() {
     const headerHeight = this.header.container.y + this.header.container.height
     const margin = 15
     const folderHeight = cardDimention.height - headerHeight - margin
-    const cardFolder = new CardFolder(folderHeight)
+
+    const cardFolder = new CardFolder(0, folderHeight)
     this.container.addChild(cardFolder.container)
     cardFolder.container.y = headerHeight + margin
   }
