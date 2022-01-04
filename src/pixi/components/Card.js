@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
+import { CardFolder } from './CardFolder'
 import { CardHeader } from './CardHeader'
 
 const cardDimention = Globals.getCardDimention()
@@ -54,15 +55,22 @@ export class Card {
   }
 
   createHeader() {
-    const header = new CardHeader('新北市', this._changeCityHandler.bind(this))
-    this.container.addChild(header.container)
+    this.header = new CardHeader('新北市', this._changeCityHandler.bind(this))
+    this.container.addChild(this.header.container)
   }
 
   _changeCityHandler(choose) {
     console.log(choose)
   }
 
-  createTab() {}
+  createTab() {
+    const headerHeight = this.header.container.y + this.header.container.height
+    const margin = 15
+    const folderHeight = cardDimention.height - headerHeight - margin
+    const cardFolder = new CardFolder(folderHeight)
+    this.container.addChild(cardFolder.container)
+    cardFolder.container.y = headerHeight + margin
+  }
 
   _getCityName(currentCityIndex) {
     switch (currentCityIndex) {

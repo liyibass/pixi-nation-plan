@@ -5,7 +5,7 @@ const cardDimention = Globals.getCardDimention()
 
 const CARD_MARGIN = 12
 const CARD_CONTENT_WIDTH = cardDimention.width - 2 * CARD_MARGIN
-const CARD_HEADER_HEIGHT = Math.floor(cardDimention.height * 0.32)
+const CARD_HEADER_HEIGHT = Math.floor(cardDimention.height * 0.3)
 const CARD_HEADER_LAND_CITY_HEIGHT = CARD_HEADER_HEIGHT * 0.5
 // const CARD_HEADER_TITLE_HEIGHT = CARD_HEADER_HEIGHT * 0.5
 
@@ -31,7 +31,7 @@ export class CardHeader {
       this.titleSectionContainer
     )
     this.container.x = CARD_MARGIN
-    this.container.y = CARD_MARGIN
+    this.container.y = CARD_MARGIN + 20
 
     this.createLandCity()
     this.createTitleSection()
@@ -62,7 +62,7 @@ export class CardHeader {
     // landCity position
     this.landCityIconContainer.x =
       (CARD_CONTENT_WIDTH - this.landCityIconContainer.width) / 2
-    this.landCityIconContainer.y = 20
+    // this.landCityIconContainer.y = 20
   }
 
   createTitleSection() {
