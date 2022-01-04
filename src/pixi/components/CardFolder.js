@@ -9,19 +9,23 @@ const TAB_HEIGHT = 34
 // const CARD_FOLDER_HEIGHT = Math.floor(cardDimention.height * 0.7)
 
 export class CardFolder {
-  constructor(cityIndex, folderHeight) {
+  constructor(cityIndex, cityData, folderHeight) {
     this.container = new PIXI.Container()
     this.container.name = 'cardFolder'
     this.cityIndex = cityIndex
+    this.cityData = cityData
     this.folderHeight = folderHeight
 
-    this.createCardFolder()
+    this.tabArray = []
+
+    this.createCardTabs()
     // this.createFolderMask()
   }
 
-  createCardFolder() {
-    for (let i = 3; i >= 0; i--) {
-      const tab = new CardTab(i, this.folderHeight)
+  createCardTabs() {
+    for (let i = this.cityData.tabs.length - 1; i >= 0; i--) {
+      const tab = new CardTab(i, this.cityData.tabs[i], this.folderHeight)
+      this.tabArray.push(tab)
       this.container.addChild(tab.container)
     }
     // folder container init setting
@@ -46,10 +50,11 @@ export class CardFolder {
     mask.zIndex = 0
   }
 
-  updateCity(newCityIndex) {
-    console.log(newCityIndex)
-
+  updateCity(newCityData) {
+    this.cityIndex = newCityData.cityIndex
+    this.cityData = newCityData
+    this.tabArray = []
     this.container.removeChildren()
-    this.createCardFolder()
+    this.createCardTabs()
   }
 }

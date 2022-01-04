@@ -3,6 +3,7 @@ import { Globals } from '../script/Globals'
 
 const TAB_HEIGHT = 34
 const TAB_WIDTH = 80
+const CONTENT_PADDING = 12
 
 const cardDimention = Globals.getCardDimention()
 
@@ -11,12 +12,15 @@ const cardDimention = Globals.getCardDimention()
 // const CARD_FOLDER_HEIGHT = Math.floor(cardDimention.height * 0.68)
 
 export class CardTab {
-  constructor(tabIndex, folderHeight) {
+  constructor(tabIndex, tabData, folderHeight) {
     this.container = new PIXI.Container()
     this.container.name = 'cardTab'
     this.tabIndex = tabIndex
+    this.tabData = tabData
     this.container.tabIndex = this.tabIndex
     this.folderHeight = folderHeight
+
+    this.isScrolling = false
 
     this.createCardTab()
   }
@@ -27,6 +31,57 @@ export class CardTab {
     // this.container.x = CARD_MARGIN
     this.createPage()
     this.createTab()
+    this.insertTabData()
+  }
+
+  createPage() {
+    this.page = new PIXI.Graphics()
+    this.page.name = 'page'
+
+    this.page.beginFill(getTabColor(this.tabIndex))
+    this.page.drawRoundedRect(0, 0, cardDimention.width, this.folderHeight, 10)
+    this.page.endFill()
+
+    this.page.y = TAB_HEIGHT
+
+    const shadow = new PIXI.Graphics()
+    shadow.beginFill(0x000000, 0.1)
+    shadow.drawRoundedRect(
+      0,
+      0,
+      cardDimention.width + 10,
+      this.folderHeight - TAB_HEIGHT + 2,
+      20
+    )
+    shadow.endFill()
+    shadow.filters = [new PIXI.filters.BlurFilter(7)]
+    shadow.y = TAB_HEIGHT - 6
+
+    this.container.addChild(shadow, this.page)
+
+    // scrollable content part
+    this.scrollPart = new PIXI.Container()
+    this.scrollPart.name = 'scrollPart'
+    this.scrollPart.buttonMode = true
+    this.scrollPart.interactive = true
+
+    // assing position and record its inner width/height
+    this.scrollPart.x = CONTENT_PADDING
+    this.scrollPart.y = CONTENT_PADDING
+    this.scrollPartWidth = cardDimention.width - CONTENT_PADDING * 2
+    this.scrollPartHeight = this.folderHeight - CONTENT_PADDING * 2
+
+    // mask for scroll function
+    const mask = new PIXI.Graphics()
+    mask.name = 'mask'
+    mask.beginFill(0x000000)
+    mask.drawRect(0, 0, this.scrollPartWidth, this.scrollPartHeight)
+    mask.endFill()
+
+    this.scrollPart.mask = mask
+    this.scrollPart.addChild(mask)
+
+    this.page.addChild(this.scrollPart)
   }
 
   createTab() {
@@ -54,7 +109,7 @@ export class CardTab {
       fill: ['0xffffff'],
       fontSize: 20,
     })
-    this.tabWording = new PIXI.Text(`基本資料`, {
+    this.tabWording = new PIXI.Text(`${this.tabData.tabTitle}`, {
       fill: ['0xffffff'],
       fontSize: 14,
       wordWrap: true,
@@ -91,36 +146,76 @@ export class CardTab {
     this.tab.interactive = true
 
     this.tab.addListener('pointerdown', () => {
-      this.updateTopTab()
+      this.updateTabOrder()
     })
   }
 
-  createPage() {
-    const page = new PIXI.Graphics()
+  insertTabData() {
+    const content = new PIXI.Container()
+    content.name = 'content'
 
-    page.beginFill(getTabColor(this.tabIndex))
-    page.drawRoundedRect(0, 0, cardDimention.width, this.folderHeight, 10)
-    page.endFill()
+    this.scrollPart.addChild(content)
 
-    page.y = TAB_HEIGHT
+    let contentHeight = 0
+    const style = new PIXI.TextStyle({
+      fill: ['0xffffff'],
+      fontSize: 18,
+      wordWrap: true,
+      breakWords: true,
+      wordWrapWidth: cardDimention.width - CONTENT_PADDING * 2,
+    })
 
-    const shadow = new PIXI.Graphics()
-    shadow.beginFill(0x000000, 0.1)
-    shadow.drawRoundedRect(
-      0,
-      0,
-      cardDimention.width + 10,
-      this.folderHeight - TAB_HEIGHT + 2,
-      20
-    )
-    shadow.endFill()
-    shadow.filters = [new PIXI.filters.BlurFilter(7)]
-    shadow.y = TAB_HEIGHT - 6
+    // feed paragraph
+    for (let i = 0; i < this.tabData.tabContent.length; i++) {
+      const paragraph = this.tabData.tabContent[i]
 
-    this.container.addChild(shadow, page)
+      const paragraphText = new PIXI.Text(paragraph, style)
+      paragraphText.y = contentHeight
+      contentHeight += paragraphText.height + CONTENT_PADDING
+
+      content.addChild(paragraphText)
+
+      // if paragraph is not last one, add white division line
+      if (i < this.tabData.tabContent.length - 1) {
+        const line = new PIXI.Graphics()
+        line.beginFill(0xffffff)
+        line.drawRect(0, 0, this.scrollPartWidth, 2)
+        line.endFill()
+
+        line.y = contentHeight
+        content.addChild(line)
+
+        contentHeight += line.height + CONTENT_PADDING
+      }
+    }
+
+    // handle scroll function
+
+    this.scrollPart.addListener('pointerdown', (e) => {
+      this.isScrolling = true
+      this.initPositionY = e.data.global.y
+    })
+    this.scrollPart.addListener('pointerup', () => {
+      this.isScrolling = false
+      this.initPositionY = null
+    })
+    this.scrollPart.addListener('pointermove', (e) => {
+      if (this.isScrolling) {
+        const currentPositionY = e.data.global.y
+
+        // console.log(currentPosition)
+        // console.log(this.initPositionY)
+        if (currentPositionY > this.initPositionY) {
+          this.scrollDirection = 'up'
+        } else {
+          this.scrollDirection = 'down'
+        }
+        console.log(this.scrollDirection)
+      }
+    })
   }
 
-  updateTopTab() {
+  updateTabOrder() {
     const folder = this.container.parent
     folder.setChildIndex(this.container, folder.children.length - 1)
     const exclusiveTabs = []
