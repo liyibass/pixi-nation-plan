@@ -24,10 +24,15 @@ export class CardFolder {
 
   createCardTabs() {
     for (let i = this.cityData.tabs.length - 1; i >= 0; i--) {
-      const tab = new CardTab(i, this.cityData.tabs[i], this.folderHeight)
+      const tab = new CardTab(i, this.cityData.tabs[i], this.folderHeight, this)
       this.tabArray.push(tab)
       this.container.addChild(tab.container)
+
+      if (i === 0) {
+        tab.scrollTicker?.start?.()
+      }
     }
+
     // folder container init setting
     // this.container.x = CARD_MARGIN
   }
@@ -51,6 +56,11 @@ export class CardFolder {
   }
 
   updateCity(newCityData) {
+    // remove prev tabs ticker
+    this.tabArray.forEach((tab) => {
+      tab.scrollTicker?.stop?.()
+    })
+
     this.cityIndex = newCityData.cityIndex
     this.cityData = newCityData
     this.tabArray = []

@@ -12,17 +12,19 @@ const cardDimention = Globals.getCardDimention()
 // const CARD_FOLDER_HEIGHT = Math.floor(cardDimention.height * 0.68)
 
 export class CardTab {
-  constructor(tabIndex, tabData, folderHeight) {
+  constructor(tabIndex, tabData, folderHeight, cardFolder) {
     this.container = new PIXI.Container()
     this.container.name = 'cardTab'
     this.tabIndex = tabIndex
     this.tabData = tabData
     this.container.tabIndex = this.tabIndex
     this.folderHeight = folderHeight
+    this.cardFolder = cardFolder
 
     this.isScrolling = false
 
     this.createCardTab()
+    this.startScrollTicker()
   }
 
   createCardTab() {
@@ -59,7 +61,7 @@ export class CardTab {
 
     this.container.addChild(shadow, this.page)
 
-    // scrollable content part
+    // scrollable this.content part
     this.scrollPart = new PIXI.Container()
     this.scrollPart.name = 'scrollPart'
     this.scrollPart.buttonMode = true
@@ -151,10 +153,10 @@ export class CardTab {
   }
 
   insertTabData() {
-    const content = new PIXI.Container()
-    content.name = 'content'
+    this.content = new PIXI.Container()
+    this.content.name = 'content'
 
-    this.scrollPart.addChild(content)
+    this.scrollPart.addChild(this.content)
 
     let contentHeight = 0
     const style = new PIXI.TextStyle({
@@ -173,7 +175,7 @@ export class CardTab {
       paragraphText.y = contentHeight
       contentHeight += paragraphText.height + CONTENT_PADDING
 
-      content.addChild(paragraphText)
+      this.content.addChild(paragraphText)
 
       // if paragraph is not last one, add white division line
       if (i < this.tabData.tabContent.length - 1) {
@@ -183,7 +185,7 @@ export class CardTab {
         line.endFill()
 
         line.y = contentHeight
-        content.addChild(line)
+        this.content.addChild(line)
 
         contentHeight += line.height + CONTENT_PADDING
       }
@@ -194,40 +196,80 @@ export class CardTab {
     this.scrollPart.addListener('pointerdown', (e) => {
       this.isScrolling = true
       this.initPositionY = e.data.global.y
+      this.content.vy = 0
     })
     this.scrollPart.addListener('pointerup', () => {
       this.isScrolling = false
       this.initPositionY = null
+      this.content.vy = 0
     })
     this.scrollPart.addListener('pointermove', (e) => {
       if (this.isScrolling) {
         const currentPositionY = e.data.global.y
 
+        const scrollSpeed = Math.floor(
+          Math.abs(currentPositionY - this.initPositionY) / 25
+        )
+
         // console.log(currentPosition)
         // console.log(this.initPositionY)
         if (currentPositionY > this.initPositionY) {
           this.scrollDirection = 'up'
+          this.content.vy = scrollSpeed
         } else {
           this.scrollDirection = 'down'
+          this.content.vy = -scrollSpeed
         }
-        console.log(this.scrollDirection)
       }
     })
   }
 
+  startScrollTicker() {
+    const maxScrollDistance = this.content.height - this.scrollPartHeight
+    if (maxScrollDistance < 0) return
+
+    this.scrollTicker = new PIXI.Ticker()
+    this.scrollTicker.add(() => {
+      if (!this.isScrolling) return
+
+      if (this.content.y > 0) {
+        this.content.y = 0
+        this.isScrolling = false
+        this.initPositionY = null
+        this.content.vy = 0
+      } else if (this.content.y < -maxScrollDistance) {
+        this.content.y = -maxScrollDistance
+        this.isScrolling = false
+        this.initPositionY = null
+        this.content.vy = 0
+      }
+
+      this.content.y += this.content.vy
+    })
+  }
+
   updateTabOrder() {
-    const folder = this.container.parent
-    folder.setChildIndex(this.container, folder.children.length - 1)
+    // set selected tab to top
+    this.cardFolder.container.setChildIndex(
+      this.container,
+      this.cardFolder.tabArray.length - 1
+    )
+
+    // set rest tabs in order
     const exclusiveTabs = []
-    folder.children.forEach((tab) => {
+    this.cardFolder.tabArray.forEach((tab) => {
       if (tab.tabIndex !== this.tabIndex) {
         exclusiveTabs.push(tab)
       }
     })
 
-    folder.children.forEach((tab, index) => {
-      folder.setChildIndex(this.container, index)
+    this.cardFolder.tabArray.forEach((tab, index) => {
+      this.cardFolder.container.setChildIndex(this.container, index)
+      tab.scrollTicker?.stop?.()
     })
+
+    this.scrollTicker?.start?.()
+    this.content.y = 0
   }
 }
 

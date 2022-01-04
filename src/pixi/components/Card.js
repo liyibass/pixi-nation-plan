@@ -68,7 +68,9 @@ export class Card {
       this.cityIndex = this.cityIndex !== 16 ? this.cityIndex + 1 : 0
     }
     this.header.updateCity(this.cityIndex)
-    this.cardFolder.updateCity(cityDataArray[this.cityIndex])
+    this.cardFolder.updateCity(
+      cityDataArray[this.cityIndex] || cityDataArray[0]
+    )
   }
 
   createTab() {
