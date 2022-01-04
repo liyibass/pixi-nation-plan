@@ -8,8 +8,6 @@ const cardDimention = Globals.getCardDimention()
 
 const CARD_MARGIN = 12
 
-// const CARD_HEADER_TITLE_HEIGHT = CARD_HEADER_HEIGHT * 0.5
-
 export class Card {
   constructor(index = 0) {
     this.cityIndex = index
@@ -54,6 +52,17 @@ export class Card {
     buttonSprite.y = CARD_MARGIN
     buttonSprite.buttonMode = true
     buttonSprite.interactive = true
+
+    buttonSprite.addListener('pointerdown', () => {
+      this.stopAllProcess()
+
+      this.container.parent.removeChild(this.container)
+    })
+  }
+
+  stopAllProcess() {
+    this.header.stopAllProcess()
+    this.cardFolder.stopAllProcess()
   }
 
   createHeader() {

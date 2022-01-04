@@ -4,9 +4,6 @@ import { Globals } from '../script/Globals'
 
 const cardDimention = Globals.getCardDimention()
 const TAB_HEIGHT = 34
-// const CARD_MARGIN = 12
-// const CARD_HEADER_HEIGHT = Math.floor(cardDimention.height * 0.32)
-// const CARD_FOLDER_HEIGHT = Math.floor(cardDimention.height * 0.7)
 
 export class CardFolder {
   constructor(cityIndex, cityData, folderHeight) {
@@ -19,7 +16,6 @@ export class CardFolder {
     this.tabArray = []
 
     this.createCardTabs()
-    // this.createFolderMask()
   }
 
   createCardTabs() {
@@ -32,9 +28,6 @@ export class CardFolder {
         tab.scrollTicker?.start?.()
       }
     }
-
-    // folder container init setting
-    // this.container.x = CARD_MARGIN
   }
 
   createFolderMask() {
@@ -66,5 +59,15 @@ export class CardFolder {
     this.tabArray = []
     this.container.removeChildren()
     this.createCardTabs()
+  }
+
+  stopAllProcess() {
+    this.tabArray.forEach((tab) => {
+      // stop scroll ticker
+      tab.scrollTicker?.stop?.()
+
+      // stop tab click listener
+      tab.stopAllProcess()
+    })
   }
 }

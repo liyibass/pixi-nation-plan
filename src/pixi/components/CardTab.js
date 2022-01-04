@@ -7,10 +7,6 @@ const CONTENT_PADDING = 12
 
 const cardDimention = Globals.getCardDimention()
 
-// const CARD_MARGIN = 12
-// const CARD_HEADER_HEIGHT = Math.floor(cardDimention.height * 0.32)
-// const CARD_FOLDER_HEIGHT = Math.floor(cardDimention.height * 0.68)
-
 export class CardTab {
   constructor(tabIndex, tabData, folderHeight, cardFolder) {
     this.container = new PIXI.Container()
@@ -225,6 +221,7 @@ export class CardTab {
   }
 
   startScrollTicker() {
+    // if content is shorter than page, then no need to prepare scrollTicker
     const maxScrollDistance = this.content.height - this.scrollPartHeight
     if (maxScrollDistance < 0) return
 
@@ -270,6 +267,10 @@ export class CardTab {
 
     this.scrollTicker?.start?.()
     this.content.y = 0
+  }
+
+  stopAllProcess() {
+    this.tab.removeAllListeners()
   }
 }
 

@@ -35,16 +35,6 @@ export class CardHeader {
 
     this.createLandCity()
     this.createTitleSection()
-
-    // // whole title position
-    // titleContainer.x = 0
-    // // (cardDimention.width - 2 * CARD_MARGIN - titleContainer.width) / 2
-    // titleContainer.y =
-    //   landCityIconContainer.y + landCityIconContainer.height + 23
-
-    // titleText.x = (CARD_CONTENT_WIDTH - titleText.width) / 2
-    // titleBar1.graphics.x = (CARD_CONTENT_WIDTH - titleText.width) / 2
-    // titleBar2.graphics.x = (CARD_CONTENT_WIDTH - titleText.width) / 2
   }
 
   createLandCity() {
@@ -103,12 +93,11 @@ export class CardHeader {
     this.titleText.text = this._getCityName(newCityIndex)
   }
 
-  _updateTitlePosition() {}
-
   createArrow() {
     // arrows
     const arrow1 = new Arrow(0)
     const arrow2 = new Arrow(1)
+    this.arrowArray = [arrow1, arrow2]
     this.titleSectionContainer.addChild(arrow1.container, arrow2.container)
 
     arrow1.container.y =
@@ -122,6 +111,12 @@ export class CardHeader {
     })
     arrow2.container.addListener('pointerdown', () => {
       this.changeCityHandler('next')
+    })
+  }
+
+  stopAllProcess() {
+    this.arrowArray.forEach((arrow) => {
+      arrow.container.removeAllListeners()
     })
   }
 
