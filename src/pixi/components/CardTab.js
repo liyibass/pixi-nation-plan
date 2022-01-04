@@ -15,6 +15,7 @@ export class CardTab {
     this.container = new PIXI.Container()
     this.container.name = 'cardTab'
     this.tabIndex = tabIndex
+    this.container.tabIndex = this.tabIndex
     this.folderHeight = folderHeight
 
     this.createCardTab()
@@ -34,7 +35,7 @@ export class CardTab {
     const sideShadow = new PIXI.Graphics()
     sideShadow.beginFill(0x000000, 0.2)
     // +10 is for hiding bottom rounded rect curve
-    sideShadow.drawRoundedRect(0, 0, TAB_WIDTH + 10, TAB_HEIGHT + 10, 10)
+    sideShadow.drawRoundedRect(0, 0, TAB_WIDTH + 12, TAB_HEIGHT + 10, 10)
     sideShadow.endFill()
     sideShadow.filters = [new PIXI.filters.BlurFilter(5)]
 
@@ -81,8 +82,8 @@ export class CardTab {
     // tab position
     this.tab.y = 1
     sideShadow.y = 1
-    sideShadow.x = -6
-    sideShadow.x = this.tabIndex * (TAB_WIDTH - 20)
+    // sideShadow.x = -6
+    sideShadow.x = this.tabIndex * (TAB_WIDTH - 20) - 6
     this.tab.x = this.tabIndex * (TAB_WIDTH - 20)
     tabShadow.x = this.tabIndex * (TAB_WIDTH - 20)
 
@@ -90,10 +91,7 @@ export class CardTab {
     this.tab.interactive = true
 
     this.tab.addListener('pointerdown', () => {
-      console.log('tab choosed')
-      const folder = this.container.parent
-
-      folder.setChildIndex(this.container, folder.children.length - 1)
+      this.updateTopTab()
     })
   }
 
@@ -122,7 +120,20 @@ export class CardTab {
     this.container.addChild(shadow, page)
   }
 
-  createFolderShadow() {}
+  updateTopTab() {
+    const folder = this.container.parent
+    folder.setChildIndex(this.container, folder.children.length - 1)
+    const exclusiveTabs = []
+    folder.children.forEach((tab) => {
+      if (tab.tabIndex !== this.tabIndex) {
+        exclusiveTabs.push(tab)
+      }
+    })
+
+    folder.children.forEach((tab, index) => {
+      folder.setChildIndex(this.container, index)
+    })
+  }
 }
 
 function getTabColor(tabIndex) {

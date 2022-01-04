@@ -66,6 +66,7 @@ export class Card {
       this.cityIndex = this.cityIndex !== 16 ? this.cityIndex + 1 : 0
     }
     this.header.updateCity(this.cityIndex)
+    this.cardFolder.updateCity(this.cityIndex)
   }
 
   createTab() {
@@ -73,9 +74,9 @@ export class Card {
     const margin = 15
     const folderHeight = cardDimention.height - headerHeight - margin
 
-    const cardFolder = new CardFolder(0, folderHeight)
-    this.container.addChild(cardFolder.container)
-    cardFolder.container.y = headerHeight + margin
+    this.cardFolder = new CardFolder(0, folderHeight)
+    this.container.addChild(this.cardFolder.container)
+    this.cardFolder.container.y = headerHeight + margin
   }
 
   _getCityName(currentCityIndex) {

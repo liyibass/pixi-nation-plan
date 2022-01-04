@@ -6,12 +6,13 @@ const cardDimention = Globals.getCardDimention()
 const TAB_HEIGHT = 34
 // const CARD_MARGIN = 12
 // const CARD_HEADER_HEIGHT = Math.floor(cardDimention.height * 0.32)
-// const CARD_FOLDER_HEIGHT = Math.floor(cardDimention.height * 0.68)
+// const CARD_FOLDER_HEIGHT = Math.floor(cardDimention.height * 0.7)
 
 export class CardFolder {
-  constructor(folderHeight) {
+  constructor(cityIndex, folderHeight) {
     this.container = new PIXI.Container()
     this.container.name = 'cardFolder'
+    this.cityIndex = cityIndex
     this.folderHeight = folderHeight
 
     this.createCardFolder()
@@ -43,5 +44,12 @@ export class CardFolder {
     this.container.mask = mask
     this.container.addChild(mask)
     mask.zIndex = 0
+  }
+
+  updateCity(newCityIndex) {
+    console.log(newCityIndex)
+
+    this.container.removeChildren()
+    this.createCardFolder()
   }
 }
