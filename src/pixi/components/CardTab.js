@@ -30,6 +30,7 @@ export class CardTab {
     this.createPage()
     this.createTab()
     this.insertTabData()
+    this.lockHandler()
   }
 
   createPage() {
@@ -42,6 +43,7 @@ export class CardTab {
 
     this.page.y = TAB_HEIGHT
 
+    // page shadow
     const shadow = new PIXI.Graphics()
     shadow.beginFill(0x000000, 0.1)
     shadow.drawRoundedRect(
@@ -60,6 +62,7 @@ export class CardTab {
     // scrollable this.content part
     this.scrollPart = new PIXI.Container()
     this.scrollPart.name = 'scrollPart'
+
     this.scrollPart.buttonMode = true
     this.scrollPart.interactive = true
 
@@ -243,6 +246,13 @@ export class CardTab {
 
       this.content.y += this.content.vy
     })
+  }
+
+  lockHandler() {
+    if (this.tabData.isLocked) {
+      // lock graphics
+      this.content.filters = [new PIXI.filters.BlurFilter(5)]
+    }
   }
 
   updateTabOrder() {

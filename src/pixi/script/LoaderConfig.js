@@ -101,6 +101,7 @@ import reset from '../assets/images/reset.png'
 import exit from '../assets/images/exit.png'
 import arrow from '../assets/images/arrow.png'
 import land_city_0 from '../assets/images/land_city_0.png'
+import lock from '../assets/images/lock.png'
 
 export const LoaderConfig = {
   player,
@@ -206,4 +207,5 @@ export const LoaderConfig = {
   exit,
   land_city_0,
   arrow,
+  lock,
 }
