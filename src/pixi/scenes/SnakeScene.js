@@ -78,8 +78,10 @@ export class SnakeScene {
 
   _createItems() {
     const groundGroupDimention = Globals.getGroundDimention()
-
     this.groundGroup = new GroundGroup(groundGroupDimention)
+    this.groundGroup.container.x = groundGroupDimention.x
+    this.groundGroup.container.y = groundGroupDimention.y
+
     this.container.addChild(this.groundGroup.container)
   }
 

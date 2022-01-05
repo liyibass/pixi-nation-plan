@@ -1,0 +1,93 @@
+import * as PIXI from 'pixi.js'
+import { Globals } from '../script/Globals'
+
+// const groundDimention = Globals.getGroundDimention()
+
+export class GroundGroupIcon {
+  constructor(iconIndex) {
+    this.container = new PIXI.Container()
+    this.container.name = 'icon'
+    this.iconIndex = iconIndex
+    this.currentCount = 0
+    this.totalCount = getTotalCount(iconIndex)
+
+    this.createGroundGroupIcon()
+    this.createText()
+    this.startClickHandler()
+    this.startAnimationTicker()
+  }
+
+  createGroundGroupIcon() {
+    // icon
+    const texture = new PIXI.Texture(
+      Globals.resources[`icon_${this.iconIndex}`].texture
+    )
+    this.iconSprite = new PIXI.Sprite(texture)
+    this.iconSprite.pivot.set(this.iconSprite.width / 2, this.iconSprite.height)
+    this.container.addChild(this.iconSprite)
+  }
+
+  createText() {
+    // text
+    const textContainer = new PIXI.Container()
+
+    if (this.iconIndex !== 2) {
+      this.currentCountText = new PIXI.Text(`${this.currentCount}`, {
+        fill: ['0xffffff'],
+        fontSize: 16,
+      })
+
+      this.totalCountText = new PIXI.Text(`/${this.totalCount}`, {
+        fill: ['0xffffff'],
+        fontSize: 16,
+      })
+      this.totalCountText.alpha = 0.5
+      this.totalCountText.x = this.currentCountText.width
+
+      textContainer.addChild(this.currentCountText, this.totalCountText)
+    } else {
+      const title = new PIXI.Text(`國土計畫`, {
+        fill: ['0xffffff'],
+        fontSize: 16,
+      })
+
+      textContainer.addChild(title)
+    }
+
+    textContainer.x = -textContainer.width / 2
+    textContainer.y = 5
+    this.container.addChild(textContainer)
+
+    // position
+  }
+
+  startAnimationTicker() {
+    if (this.iconIndex !== 2) return
+
+    this.container.interactive = true
+    this.container.buttonMode = true
+
+    this.animationTicker = new PIXI.Ticker()
+    this.animationTicker.add(() => {})
+  }
+
+  startClickHandler() {
+    this.container.addListener('pointerdown', () => {
+      console.log('show info')
+    })
+  }
+}
+
+function getTotalCount(index) {
+  switch (index) {
+    case 0:
+      return 4
+
+    case 1:
+      return 21
+
+    default:
+    case 2:
+      return null
+  }
+}
