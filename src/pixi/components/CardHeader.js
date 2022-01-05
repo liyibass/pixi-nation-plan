@@ -10,9 +10,10 @@ const CARD_HEADER_LAND_CITY_HEIGHT = CARD_HEADER_HEIGHT * 0.5
 // const CARD_HEADER_TITLE_HEIGHT = CARD_HEADER_HEIGHT * 0.5
 
 export class CardHeader {
-  constructor(cityIndex = 0, changeCityHandler) {
+  constructor(cityIndex = 0, changeCityHandler, isInfoCard = false) {
     this.cityIndex = cityIndex
     this.changeCityHandler = changeCityHandler
+    this.isInfoCard = isInfoCard
 
     this.container = new PIXI.Container()
     this.container.name = 'cardHeader'
@@ -69,6 +70,10 @@ export class CardHeader {
     this.titleText = new PIXI.Text(this._getCityName(this.cityIndex), {
       fill: ['0xffffff'],
       fontSize: 36,
+      wordWrap: true,
+      breakWords: true,
+      wordWrapWidth: 183,
+      align: 'center',
     })
     titleContainer.addChild(this.titleText)
 
@@ -94,6 +99,7 @@ export class CardHeader {
   }
 
   createArrow() {
+    if (this.isInfoCard) return
     // arrows
     const arrow1 = new Arrow(0)
     const arrow2 = new Arrow(1)
@@ -115,12 +121,17 @@ export class CardHeader {
   }
 
   stopAllProcess() {
+    if (this.isInfoCard) return
+
     this.arrowArray.forEach((arrow) => {
       arrow.container.removeAllListeners()
     })
   }
 
   _getCityName(currentCityIndex) {
+    if (this.isInfoCard) {
+      return '什麼是 國土計畫'
+    }
     switch (currentCityIndex) {
       case 0:
         return '新北市'

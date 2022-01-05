@@ -6,12 +6,13 @@ const cardDimention = Globals.getCardDimention()
 const TAB_HEIGHT = 34
 
 export class CardFolder {
-  constructor(cityIndex, cityData, folderHeight) {
+  constructor(cityIndex, cityData, folderHeight, isInfoCard = false) {
     this.container = new PIXI.Container()
     this.container.name = 'cardFolder'
     this.cityIndex = cityIndex
     this.cityData = cityData
     this.folderHeight = folderHeight
+    this.isInfoCard = isInfoCard
 
     this.tabArray = []
 
@@ -20,7 +21,13 @@ export class CardFolder {
 
   createCardTabs() {
     for (let i = this.cityData.tabs.length - 1; i >= 0; i--) {
-      const tab = new CardTab(i, this.cityData.tabs[i], this.folderHeight, this)
+      const tab = new CardTab(
+        i,
+        this.cityData.tabs[i],
+        this.folderHeight,
+        this,
+        this.isInfoCard
+      )
       this.tabArray.push(tab)
       this.container.addChild(tab.container)
 

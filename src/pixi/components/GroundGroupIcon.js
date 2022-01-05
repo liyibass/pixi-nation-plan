@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
+import { InfoCard } from './InfoCard'
 
 // const groundDimention = Globals.getGroundDimention()
 
@@ -34,12 +35,12 @@ export class GroundGroupIcon {
     if (this.iconIndex !== 2) {
       this.currentCountText = new PIXI.Text(`${this.currentCount}`, {
         fill: ['0xffffff'],
-        fontSize: 16,
+        fontSize: 15,
       })
 
       this.totalCountText = new PIXI.Text(`/${this.totalCount}`, {
         fill: ['0xffffff'],
-        fontSize: 16,
+        fontSize: 15,
       })
       this.totalCountText.alpha = 0.5
       this.totalCountText.x = this.currentCountText.width
@@ -48,7 +49,7 @@ export class GroundGroupIcon {
     } else {
       const title = new PIXI.Text(`國土計畫`, {
         fill: ['0xffffff'],
-        fontSize: 16,
+        fontSize: 15,
       })
 
       textContainer.addChild(title)
@@ -74,6 +75,10 @@ export class GroundGroupIcon {
   startClickHandler() {
     this.container.addListener('pointerdown', () => {
       console.log('show info')
+      const infoCard = new InfoCard()
+      const topParent = this.container.parent.parent.parent
+
+      topParent.addChild(infoCard.container)
     })
   }
 }

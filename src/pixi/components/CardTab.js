@@ -8,7 +8,7 @@ const CONTENT_PADDING = 12
 const cardDimention = Globals.getCardDimention()
 
 export class CardTab {
-  constructor(tabIndex, tabData, folderHeight, cardFolder) {
+  constructor(tabIndex, tabData, folderHeight, cardFolder, isInfoCard = false) {
     this.container = new PIXI.Container()
     this.container.name = 'cardTab'
     this.tabIndex = tabIndex
@@ -16,6 +16,7 @@ export class CardTab {
     this.container.tabIndex = this.tabIndex
     this.folderHeight = folderHeight
     this.cardFolder = cardFolder
+    this.isInfoCard = isInfoCard
 
     this.isScrolling = false
 
@@ -37,7 +38,7 @@ export class CardTab {
     this.page = new PIXI.Graphics()
     this.page.name = 'page'
 
-    this.page.beginFill(getTabColor(this.tabIndex))
+    this.page.beginFill(getTabColor.bind(this)(this.tabIndex))
     this.page.drawRoundedRect(0, 0, cardDimention.width, this.folderHeight, 10)
     this.page.endFill()
 
@@ -86,6 +87,8 @@ export class CardTab {
   }
 
   createTab() {
+    if (this.isInfoCard) return
+
     this.tabContainer = new PIXI.Container()
 
     const sideShadow = new PIXI.Graphics()
@@ -280,11 +283,15 @@ export class CardTab {
   }
 
   stopAllProcess() {
+    if (this.isInfoCard) return
+
     this.tab.removeAllListeners()
   }
 }
 
 function getTabColor(tabIndex) {
+  if (this?.isInfoCard) return 0x000000
+
   if (tabIndex === 0) {
     return 0xcc8053
   } else {
