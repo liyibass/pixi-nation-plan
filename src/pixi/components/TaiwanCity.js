@@ -6,15 +6,15 @@ const taiwanDimention = Globals.getTaiwanDimention()
 const ratio = taiwanDimention.width / (375 * 3)
 
 export class TaiwanCity {
-  constructor(index = 0, position = { x: 0, y: 0 }) {
+  constructor(index = 0) {
     this.index = index
     this.container = new PIXI.Container()
     this.container.buttonMode = true
     this.container.interactive = true
 
     this.createTaiwanCity()
-    this.x = position.x
-    this.y = position.y
+    this.x = 0
+    this.y = 0
 
     this.assignPosition()
     this.setupPosition()
@@ -123,7 +123,6 @@ export class TaiwanCity {
         this.y = 14
         break
       case 20:
-        console.log(this)
         this.x = 48
         this.y = 10
         break

@@ -147,6 +147,7 @@ import land_17_1 from '../assets/images/17_1.png'
 import land_18_1 from '../assets/images/18_1.png'
 import land_19_1 from '../assets/images/19_1.png'
 import land_20_1 from '../assets/images/20_1.png'
+import gameIcon from '../assets/images/gameIcon.png'
 
 export const LoaderConfig = {
   player,
@@ -298,4 +299,5 @@ export const LoaderConfig = {
   land_18_1,
   land_19_1,
   land_20_1,
+  gameIcon,
 }
