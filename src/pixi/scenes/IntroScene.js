@@ -68,15 +68,17 @@ export class IntroScene {
   }
 
   createTaiwan() {
-    const taiwan = new Taiwan(this.startGame.bind(this))
-    this.container.addChild(taiwan.container)
+    this.taiwan = new Taiwan(this.startGame.bind(this))
+    // this.taiwan.container.interactiveChildren = false
+    this.taiwan.container.alpha = 0
+    this.container.addChild(this.taiwan.container)
   }
 
   async createIntro() {
     this._createBackground()
     this.createStartButton()
 
-    this.createTaiwan()
+    // this.createTaiwan()
     // this.createCard()
 
     const startFilmScript = async () => {
@@ -103,7 +105,7 @@ export class IntroScene {
     console.log('startStory')
     this.player = new Player({
       x: Globals.width / 2,
-      y: Globals.height / 2,
+      y: Globals.height / 2 + 50,
     })
     this.ground = new Ground({
       x: Globals.width / 2,
@@ -114,10 +116,7 @@ export class IntroScene {
       x: Globals.width / 2,
       y: Globals.height - 110,
     })
-    this.taiwan = new Taiwan({
-      x: Globals.width / 2,
-      y: Globals.height / 2,
-    })
+    this.createTaiwan()
     this.doctor = new Doctor({
       x: Globals.width / 2,
       y: 0,

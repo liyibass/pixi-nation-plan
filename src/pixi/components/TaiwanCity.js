@@ -21,7 +21,7 @@ export class TaiwanCity {
 
     this.assignPosition()
     this.setupPosition()
-    this.activeListener()
+    // this.activeListener()
   }
 
   createTaiwanCity() {

@@ -21,7 +21,7 @@ export class TaiwanGameIcon {
 
     this.assignPosition()
     this.setupPosition()
-    this.activeListener()
+    // this.activeListener()
   }
 
   createTaiwanGameIcon() {

@@ -15,8 +15,12 @@ export class Taiwan {
 
     this.x = taiwanDimention.x
     this.y = taiwanDimention.y
+
+    this.taiwanCityArray = []
+    this.gameIconArray = []
     this.createTaiwan()
     this.createCard()
+    this.container.interactiveChildren = false
   }
 
   createTaiwan() {
@@ -32,7 +36,7 @@ export class Taiwan {
 
   createFrame() {
     const frame = new PIXI.Graphics()
-    frame.beginFill(0x92b79c)
+    frame.beginFill(0x92b79c, 0)
     frame.drawRect(0, 0, taiwanDimention.width, taiwanDimention.height)
     frame.endFill()
     this.taiwanContainer.addChild(frame)
@@ -41,6 +45,7 @@ export class Taiwan {
   createTaiwanCity() {
     for (let i = 0; i < 21; i++) {
       const taiwanCity = new TaiwanCity(i, this._chooseCityHandler.bind(this))
+      this.taiwanCityArray.push(taiwanCity)
       this.taiwanContainer.addChild(taiwanCity.container)
     }
   }
@@ -52,6 +57,7 @@ export class Taiwan {
   createGameIcon() {
     for (let i = 0; i < 4; i++) {
       const gameIcon = new TaiwanGameIcon(i, this._chooseGameHandler.bind(this))
+      this.gameIconArray.push(gameIcon)
       this.taiwanContainer.addChild(gameIcon.container)
     }
   }
@@ -69,5 +75,17 @@ export class Taiwan {
   createCard() {
     this.card = new Card(0)
     this.container.addChild(this.card.container)
+  }
+
+  activeListener() {
+    this.container.interactiveChildren = true
+
+    this.taiwanCityArray.forEach((city) => {
+      city.activeListener()
+    })
+
+    this.gameIconArray.forEach((gameIcon) => {
+      gameIcon.activeListener()
+    })
   }
 }
