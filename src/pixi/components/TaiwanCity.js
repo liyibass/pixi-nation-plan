@@ -12,9 +12,10 @@ export class TaiwanCity {
     this.container.buttonMode = true
     this.container.interactive = true
 
-    this.createTaiwanCity()
     this.x = 0
     this.y = 0
+    this.createTaiwanCity()
+    this.createText()
 
     this.assignPosition()
     this.setupPosition()
@@ -38,6 +39,26 @@ export class TaiwanCity {
     this.sprite1.alpha = 0
 
     this.container.addChild(this.sprite0, this.sprite1)
+  }
+
+  createText() {
+    this.textArea = new PIXI.Graphics()
+    this.textArea.beginFill(0xffffff)
+    this.textArea.drawRoundedRect(0, 0, 48, 21, 5)
+    this.textArea.endFill()
+
+    const nameText = new PIXI.Text(`${this._getCityName(this.index)}`, {
+      fontSize: 14,
+      fill: ['0x000000'],
+    })
+
+    nameText.x = (this.textArea.width - nameText.width) / 2
+    nameText.y = (this.textArea.height - nameText.height) / 2
+    this.textArea.addChild(nameText)
+
+    this.textArea.pivot.set(this.textArea.width / 2, this.textArea.height)
+    this.container.addChild(this.textArea)
+    this.textArea.alpha = 0
   }
 
   assignPosition() {
@@ -138,8 +159,15 @@ export class TaiwanCity {
   }
 
   activeListener() {
+    this.container.addListener('pointerover', async () => {
+      // await this.unlockCity()
+      this.textArea.alpha = 1
+    })
+    this.container.addListener('pointerout', async () => {
+      // await this.unlockCity()
+      this.textArea.alpha = 0
+    })
     this.container.addListener('pointerdown', async () => {
-      console.log(`city ${this.index} is clicked`)
       await this.unlockCity()
     })
   }
@@ -159,5 +187,52 @@ export class TaiwanCity {
 
       this.unlockTicker.start()
     })
+  }
+
+  _getCityName(currentCityIndex) {
+    switch (currentCityIndex) {
+      case 0:
+        return '新北市'
+      case 1:
+        return '臺北市'
+      case 2:
+        return '桃園市'
+      case 3:
+        return '新竹縣'
+      case 4:
+        return '新竹市'
+      case 5:
+        return '苗栗縣'
+      case 6:
+        return '台中市'
+      case 7:
+        return '彰化市'
+      case 8:
+        return '雲林縣'
+      case 9:
+        return '嘉義縣'
+      case 10:
+        return '臺南市'
+      case 11:
+        return '高雄市'
+      case 12:
+        return '屏東縣'
+      case 13:
+        return '臺東縣'
+      case 14:
+        return '花蓮縣'
+      case 15:
+        return '宜蘭縣'
+      case 16:
+        return '基隆市'
+      case 17:
+        return '南投縣'
+      case 18:
+        return '澎湖縣'
+      case 19:
+        return '連江縣'
+      case 20:
+        return '金門縣'
+    }
   }
 }

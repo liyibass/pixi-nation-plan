@@ -29,9 +29,12 @@ export class App {
       height: HEIGHT,
       backgroundColor: '0xeeeeee',
       antialias: true,
+      resolution: 2,
     })
     // add app to global object
     Globals.app = this.app
+    this.app.renderer.autoDensity = true
+    this.app.renderer.resize(window.innerWidth, window.innerHeight)
 
     // add a canvas into DOM with pixi app
     document.querySelector('.pixi').appendChild(this.app.view)

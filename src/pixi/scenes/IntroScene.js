@@ -97,8 +97,9 @@ export class IntroScene {
     this.createSelectStageButton('balance', 2)
     this.createSelectStageButton('run', 3)
     this.createSelectStageButton('candy', 4)
-    // this.createCard()
+
     this.createTaiwan()
+    this.createCard()
 
     const startFilmScript = async () => {
       if (this.filmScriptStep === 0) {
