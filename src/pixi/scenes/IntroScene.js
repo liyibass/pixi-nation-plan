@@ -397,6 +397,13 @@ export class IntroScene {
 
     this.container.addChild(this.groundGroup.container)
     this.groundGroup.activeListener()
+
+    // fix taiwan's zIndex
+
+    this.container.setChildIndex(
+      this.taiwan.container,
+      this.container.children.length - 1
+    )
   }
 
   async chosenHandler(chosen) {

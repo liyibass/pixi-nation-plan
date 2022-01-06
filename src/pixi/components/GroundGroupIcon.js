@@ -70,6 +70,8 @@ export class GroundGroupIcon {
   }
 
   activeListener() {
+    if (this.iconIndex !== 2) return
+
     this.container.interactive = true
     this.container.buttonMode = true
 
