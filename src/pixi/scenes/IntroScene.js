@@ -85,6 +85,10 @@ export class IntroScene {
     const card = new Card(0)
     this.container.addChild(card.container)
   }
+  createTaiwan() {
+    const taiwan = new Taiwan({ x: Globals.width / 2, y: Globals.height / 2 })
+    this.container.addChild(taiwan.container)
+  }
 
   async createIntro() {
     this._createBackground()
@@ -93,7 +97,8 @@ export class IntroScene {
     this.createSelectStageButton('balance', 2)
     this.createSelectStageButton('run', 3)
     this.createSelectStageButton('candy', 4)
-    this.createCard()
+    // this.createCard()
+    this.createTaiwan()
 
     const startFilmScript = async () => {
       if (this.filmScriptStep === 0) {

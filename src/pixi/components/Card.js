@@ -95,35 +95,47 @@ export class Card {
   _getCityName(currentCityIndex) {
     switch (currentCityIndex) {
       case 0:
-        return 'Taipei'
+        return '新北市'
       case 1:
-        return 'Taoyuan'
+        return '臺北市'
+      case 2:
+        return '桃園市'
       case 3:
-        return 'Hsinchu'
+        return '新竹縣'
       case 4:
-        return 'Miaoli'
+        return '新竹市'
       case 5:
-        return 'Taizhong'
+        return '苗栗縣'
       case 6:
-        return 'Zhanghua'
+        return '台中市'
       case 7:
-        return 'Yunlin'
+        return '彰化市'
       case 8:
-        return 'Jiayi'
+        return '雲林縣'
       case 9:
-        return 'Tainan'
+        return '嘉義縣'
       case 10:
-        return 'Kaohsiung'
+        return '臺南市'
       case 11:
-        return 'Pingdong'
+        return '高雄市'
       case 12:
-        return 'Taidong'
+        return '屏東縣'
       case 13:
-        return 'Hualian'
+        return '臺東縣'
       case 14:
-        return 'Yilan'
+        return '花蓮縣'
       case 15:
-        return 'Nantou'
+        return '宜蘭縣'
+      case 16:
+        return '基隆市'
+      case 17:
+        return '南投縣'
+      case 18:
+        return '澎湖縣'
+      case 19:
+        return '連江縣'
+      case 20:
+        return '金門縣'
     }
   }
 }

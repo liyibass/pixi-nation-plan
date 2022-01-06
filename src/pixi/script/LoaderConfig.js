@@ -105,6 +105,48 @@ import lock from '../assets/images/lock.png'
 import icon_0 from '../assets/images/icon_0.png'
 import icon_1 from '../assets/images/icon_1.png'
 import icon_2 from '../assets/images/icon_2.png'
+import land_0_0 from '../assets/images/0_0.png'
+import land_1_0 from '../assets/images/1_0.png'
+import land_2_0 from '../assets/images/2_0.png'
+import land_3_0 from '../assets/images/3_0.png'
+import land_4_0 from '../assets/images/4_0.png'
+import land_5_0 from '../assets/images/5_0.png'
+import land_6_0 from '../assets/images/6_0.png'
+import land_7_0 from '../assets/images/7_0.png'
+import land_8_0 from '../assets/images/8_0.png'
+import land_9_0 from '../assets/images/9_0.png'
+import land_10_0 from '../assets/images/10_0.png'
+import land_11_0 from '../assets/images/11_0.png'
+import land_12_0 from '../assets/images/12_0.png'
+import land_13_0 from '../assets/images/13_0.png'
+import land_14_0 from '../assets/images/14_0.png'
+import land_15_0 from '../assets/images/15_0.png'
+import land_16_0 from '../assets/images/16_0.png'
+import land_17_0 from '../assets/images/17_0.png'
+import land_18_0 from '../assets/images/18_0.png'
+import land_19_0 from '../assets/images/19_0.png'
+import land_20_0 from '../assets/images/20_0.png'
+import land_0_1 from '../assets/images/0_1.png'
+import land_1_1 from '../assets/images/1_1.png'
+import land_2_1 from '../assets/images/2_1.png'
+import land_3_1 from '../assets/images/3_1.png'
+import land_4_1 from '../assets/images/4_1.png'
+import land_5_1 from '../assets/images/5_1.png'
+import land_6_1 from '../assets/images/6_1.png'
+import land_7_1 from '../assets/images/7_1.png'
+import land_8_1 from '../assets/images/8_1.png'
+import land_9_1 from '../assets/images/9_1.png'
+import land_10_1 from '../assets/images/10_1.png'
+import land_11_1 from '../assets/images/11_1.png'
+import land_12_1 from '../assets/images/12_1.png'
+import land_13_1 from '../assets/images/13_1.png'
+import land_14_1 from '../assets/images/14_1.png'
+import land_15_1 from '../assets/images/15_1.png'
+import land_16_1 from '../assets/images/16_1.png'
+import land_17_1 from '../assets/images/17_1.png'
+import land_18_1 from '../assets/images/18_1.png'
+import land_19_1 from '../assets/images/19_1.png'
+import land_20_1 from '../assets/images/20_1.png'
 
 export const LoaderConfig = {
   player,
@@ -214,4 +256,46 @@ export const LoaderConfig = {
   icon_0,
   icon_1,
   icon_2,
+  land_0_0,
+  land_1_0,
+  land_2_0,
+  land_3_0,
+  land_4_0,
+  land_5_0,
+  land_6_0,
+  land_7_0,
+  land_8_0,
+  land_9_0,
+  land_10_0,
+  land_11_0,
+  land_12_0,
+  land_13_0,
+  land_14_0,
+  land_15_0,
+  land_16_0,
+  land_17_0,
+  land_18_0,
+  land_19_0,
+  land_20_0,
+  land_0_1,
+  land_1_1,
+  land_2_1,
+  land_3_1,
+  land_4_1,
+  land_5_1,
+  land_6_1,
+  land_7_1,
+  land_8_1,
+  land_9_1,
+  land_10_1,
+  land_11_1,
+  land_12_1,
+  land_13_1,
+  land_14_1,
+  land_15_1,
+  land_16_1,
+  land_17_1,
+  land_18_1,
+  land_19_1,
+  land_20_1,
 }

@@ -163,7 +163,7 @@ export class CardTab {
     let contentHeight = 0
     const style = new PIXI.TextStyle({
       fill: ['0xffffff'],
-      fontSize: 18,
+      fontSize: 14,
       wordWrap: true,
       breakWords: true,
       wordWrapWidth: cardDimention.width - CONTENT_PADDING * 2,

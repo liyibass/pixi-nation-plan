@@ -1,22 +1,39 @@
 import * as PIXI from 'pixi.js'
+
+import { TaiwanCity } from './TaiwanCity'
 import { Globals } from '../script/Globals'
-// import { Globals } from '../script/Globals'
+const taiwanDimention = Globals.getTaiwanDimention()
 
 export class Taiwan {
-  constructor(position = { x: 0, y: 0 }) {
+  constructor() {
     this.container = new PIXI.Container()
     this.createTaiwan()
-    this.x = position.x
-    this.y = position.y
+    this.x = taiwanDimention.x
+    this.y = taiwanDimention.y
     this.setupPosition()
   }
 
   createTaiwan() {
-    const texture = Globals.resources['taiwan']?.texture
-    const sprite = new PIXI.Sprite(texture)
-    sprite.anchor.set(0.5, 0.5)
+    this.createFrame()
+    this.createTaiwanCity()
+  }
 
-    this.container.addChild(sprite)
+  createFrame() {
+    const frame = new PIXI.Graphics()
+    frame.beginFill(0x92b79c)
+    frame.drawRect(0, 0, taiwanDimention.width, taiwanDimention.height)
+    frame.endFill()
+    this.container.addChild(frame)
+  }
+
+  createTaiwanCity() {
+    this.taiwanContainer = new PIXI.Container()
+    this.taiwanContainer.name = 'taiwanContainer'
+
+    for (let i = 0; i < 21; i++) {
+      const taiwanCity = new TaiwanCity(i)
+      this.container.addChild(taiwanCity.container)
+    }
   }
 
   setupPosition() {
