@@ -141,8 +141,8 @@ export class Card {
   }
 
   showCityInfo(selectedCity) {
-    console.log(selectedCity)
     this.container.visible = true
+    this.container.interactive = true
     this.header.updateCity(selectedCity.index)
     this.cardFolder.updateCity(
       cityDataArray[selectedCity.index] || cityDataArray[0]
