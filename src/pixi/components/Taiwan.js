@@ -7,7 +7,9 @@ import { Card } from './Card'
 const taiwanDimention = Globals.getTaiwanDimention()
 
 export class Taiwan {
-  constructor() {
+  constructor(startGame = () => {}) {
+    this.startGame = startGame
+
     this.container = new PIXI.Container()
     this.container.name = 'taiwan'
 
@@ -28,11 +30,6 @@ export class Taiwan {
     this.container.addChild(this.taiwanContainer)
   }
 
-  createCard() {
-    this.card = new Card(0)
-    this.container.addChild(this.card.container)
-  }
-
   createFrame() {
     const frame = new PIXI.Graphics()
     frame.beginFill(0x92b79c)
@@ -43,24 +40,34 @@ export class Taiwan {
 
   createTaiwanCity() {
     for (let i = 0; i < 21; i++) {
-      const taiwanCity = new TaiwanCity(i, this.chooseCityHandler.bind(this))
+      const taiwanCity = new TaiwanCity(i, this._chooseCityHandler.bind(this))
       this.taiwanContainer.addChild(taiwanCity.container)
     }
   }
 
-  chooseCityHandler(selectedCity) {
+  _chooseCityHandler(selectedCity) {
     this.card.showCityInfo(selectedCity)
   }
 
   createGameIcon() {
     for (let i = 0; i < 4; i++) {
-      const gameIcon = new TaiwanGameIcon(i)
+      const gameIcon = new TaiwanGameIcon(i, this._chooseGameHandler.bind(this))
       this.taiwanContainer.addChild(gameIcon.container)
     }
+  }
+
+  _chooseGameHandler(choosedGame) {
+    // pass choosedGameIndex to parent
+    this.startGame(choosedGame)
   }
 
   setupPosition() {
     this.taiwanContainer.x = this.x
     this.taiwanContainer.y = this.y
+  }
+
+  createCard() {
+    this.card = new Card(0)
+    this.container.addChild(this.card.container)
   }
 }

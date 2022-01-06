@@ -6,8 +6,11 @@ const taiwanDimention = Globals.getTaiwanDimention()
 const ratio = taiwanDimention.width / (375 * 3)
 
 export class TaiwanGameIcon {
-  constructor(index = 0) {
+  constructor(index = 0, chooseGameHandler = () => {}) {
     this.index = index
+    this.gameName = getGameName(this.index)
+    this.chooseGameHandler = chooseGameHandler
+
     this.container = new PIXI.Container()
     this.container.buttonMode = true
     this.container.interactive = true
@@ -63,7 +66,21 @@ export class TaiwanGameIcon {
 
   activeListener() {
     this.container.addListener('pointerdown', async () => {
-      console.log(`gameIcon ${this.index} is clicked`)
+      this.chooseGameHandler(this)
     })
+  }
+}
+
+function getGameName(index) {
+  switch (index) {
+    default:
+    case 0:
+      return 'snake'
+    case 1:
+      return 'balance'
+    case 2:
+      return 'candy'
+    case 3:
+      return 'run'
   }
 }

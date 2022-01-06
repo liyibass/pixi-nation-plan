@@ -7,7 +7,6 @@ import { Spotlight } from '../components/Spotlight'
 import { Doctor } from '../components/Doctor'
 import { Taiwan } from '../components/Taiwan'
 import { DoctorDialogBox } from '../components/DoctorDialogBox'
-import { Card } from '../components/Card'
 
 export class IntroScene {
   constructor(selectStage) {
@@ -64,39 +63,18 @@ export class IntroScene {
     this.container.addChild(this.startButton)
   }
 
-  createSelectStageButton(stageName, position) {
-    this.stageButton = new PIXI.Text(stageName, {
-      fill: '0xeeeeee',
-      fontSize: '24px',
-    })
-    this.stageButton.position.x = 0
-    this.stageButton.position.y = position * 30
-
-    this.stageButton.interactive = true
-    this.stageButton.buttonMode = true
-    this.container.addChild(this.stageButton)
-
-    this.stageButton.on('pointerdown', () => {
-      this.selectStage(stageName)
-    })
+  startGame(choosedGame) {
+    this.selectStage(choosedGame.gameName)
   }
 
-  createCard() {
-    const card = new Card(0)
-    this.container.addChild(card.container)
-  }
   createTaiwan() {
-    const taiwan = new Taiwan({ x: Globals.width / 2, y: Globals.height / 2 })
+    const taiwan = new Taiwan(this.startGame.bind(this))
     this.container.addChild(taiwan.container)
   }
 
   async createIntro() {
     this._createBackground()
     this.createStartButton()
-    this.createSelectStageButton('snake', 1)
-    this.createSelectStageButton('balance', 2)
-    this.createSelectStageButton('run', 3)
-    this.createSelectStageButton('candy', 4)
 
     this.createTaiwan()
     // this.createCard()
