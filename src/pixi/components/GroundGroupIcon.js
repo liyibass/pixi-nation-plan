@@ -14,7 +14,7 @@ export class GroundGroupIcon {
 
     this.createGroundGroupIcon()
     this.createText()
-    this.startClickHandler()
+    this.activeListener()
     this.startAnimationTicker()
   }
 
@@ -65,14 +65,14 @@ export class GroundGroupIcon {
   startAnimationTicker() {
     if (this.iconIndex !== 2) return
 
-    this.container.interactive = true
-    this.container.buttonMode = true
-
     this.animationTicker = new PIXI.Ticker()
     this.animationTicker.add(() => {})
   }
 
-  startClickHandler() {
+  activeListener() {
+    this.container.interactive = true
+    this.container.buttonMode = true
+
     this.container.addListener('pointerdown', () => {
       console.log('show info')
       const infoCard = new InfoCard()

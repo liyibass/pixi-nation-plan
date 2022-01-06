@@ -64,4 +64,10 @@ export class GroundGroup {
   hidePlayer() {
     this.player.container.alpha = 0
   }
+
+  activeListener() {
+    this.iconArray.forEach((icon) => {
+      icon.activeListener?.()
+    })
+  }
 }

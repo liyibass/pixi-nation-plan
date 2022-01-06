@@ -47,6 +47,7 @@ export class Scene {
     this.groundGroup.container.x = groundGroupDimention.x
     this.groundGroup.container.y = groundGroupDimention.y
     this.container.addChild(this.groundGroup.container)
+    this.groundGroup.activeListener()
   }
 
   _createGameStage() {
