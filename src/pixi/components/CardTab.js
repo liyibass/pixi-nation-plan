@@ -15,6 +15,7 @@ export class CardTab {
     this.tabData = tabData
     this.container.tabIndex = this.tabIndex
     this.folderHeight = folderHeight
+    this.contentHeight = this.folderHeight - TAB_HEIGHT
     this.cardFolder = cardFolder
     this.isInfoCard = isInfoCard
 
@@ -39,7 +40,7 @@ export class CardTab {
     this.page.name = 'page'
 
     this.page.beginFill(getTabColor.bind(this)(this.tabIndex))
-    this.page.drawRoundedRect(0, 0, cardDimention.width, this.folderHeight, 10)
+    this.page.drawRoundedRect(0, 0, cardDimention.width, this.contentHeight, 10)
     this.page.endFill()
 
     this.page.y = TAB_HEIGHT
@@ -51,7 +52,7 @@ export class CardTab {
       0,
       0,
       cardDimention.width + 10,
-      this.folderHeight - TAB_HEIGHT + 2,
+      this.contentHeight + 2,
       20
     )
     shadow.endFill()
@@ -71,7 +72,7 @@ export class CardTab {
     this.scrollPart.x = CONTENT_PADDING
     this.scrollPart.y = CONTENT_PADDING
     this.scrollPartWidth = cardDimention.width - CONTENT_PADDING * 2
-    this.scrollPartHeight = this.folderHeight - CONTENT_PADDING * 2
+    this.scrollPartHeight = this.contentHeight - CONTENT_PADDING * 2
 
     // mask for scroll function
     const mask = new PIXI.Graphics()

@@ -6,8 +6,10 @@ const taiwanDimention = Globals.getTaiwanDimention()
 const ratio = taiwanDimention.width / (375 * 3)
 
 export class TaiwanCity {
-  constructor(index = 0) {
+  constructor(index = 0, chooseCityHandler = () => {}) {
     this.index = index
+    this.chooseCityHandler = chooseCityHandler
+
     this.container = new PIXI.Container()
     this.container.buttonMode = true
     this.container.interactive = true
@@ -168,7 +170,8 @@ export class TaiwanCity {
       this.textArea.alpha = 0
     })
     this.container.addListener('pointerdown', async () => {
-      await this.unlockCity()
+      // await this.unlockCity()
+      this.chooseCityHandler(this)
     })
   }
 

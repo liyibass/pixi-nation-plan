@@ -21,6 +21,7 @@ export class Card {
     this.landCityIcon = new PIXI.Container()
 
     this.createCard()
+    this.container.visible = false
   }
 
   createCard() {
@@ -54,9 +55,9 @@ export class Card {
     buttonSprite.interactive = true
 
     buttonSprite.addListener('pointerdown', () => {
-      this.stopAllProcess()
-
-      this.container.parent.removeChild(this.container)
+      // this.stopAllProcess()
+      this.container.visible = false
+      // this.container.parent.removeChild(this.container)
     })
   }
 
@@ -137,5 +138,14 @@ export class Card {
       case 20:
         return '金門縣'
     }
+  }
+
+  showCityInfo(selectedCity) {
+    console.log(selectedCity)
+    this.container.visible = true
+    this.header.updateCity(selectedCity.index)
+    this.cardFolder.updateCity(
+      cityDataArray[selectedCity.index] || cityDataArray[0]
+    )
   }
 }

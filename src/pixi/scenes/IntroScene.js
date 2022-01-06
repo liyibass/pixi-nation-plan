@@ -99,7 +99,7 @@ export class IntroScene {
     this.createSelectStageButton('candy', 4)
 
     this.createTaiwan()
-    this.createCard()
+    // this.createCard()
 
     const startFilmScript = async () => {
       if (this.filmScriptStep === 0) {
