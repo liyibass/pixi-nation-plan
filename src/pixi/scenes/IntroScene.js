@@ -7,6 +7,8 @@ import { Spotlight } from '../components/Spotlight'
 import { Doctor } from '../components/Doctor'
 import { Taiwan } from '../components/Taiwan'
 import { DoctorDialogBox } from '../components/DoctorDialogBox'
+import { DoctorSay } from '../components/DoctorSay'
+import { GroundGroup } from '../components/GroundGroup'
 
 export class IntroScene {
   constructor(selectStage) {
@@ -26,6 +28,8 @@ export class IntroScene {
       this.doctorDrop.bind(this),
       this.positionCharacters.bind(this),
       this.taiwanShowUp.bind(this),
+      this.updateGroundGroup.bind(this),
+      this._createDoctorSay.bind(this),
       this.doctorExplain.bind(this),
     ]
     this.filmScriptStep = 0
@@ -124,11 +128,11 @@ export class IntroScene {
 
     await wait(1000)
     this.container.addChild(
-      this.taiwan.container,
       this.spotlight.sprite,
       this.ground.sprite,
       this.doctor.sprite,
-      this.player.container
+      this.player.container,
+      this.taiwan.container
     )
     this.taiwan.container.alpha = 0
     this.player.container.alpha = 0
@@ -330,6 +334,7 @@ export class IntroScene {
           this.taiwan.container.alpha += 0.05
         } else {
           taiwanShowUpTicker.destroy()
+          this.taiwan.container.filters = []
 
           await wait(400)
           resolve()
@@ -343,16 +348,53 @@ export class IntroScene {
   async doctorExplain() {
     console.log('doctorExplain')
 
-    await this.doctorSay({
-      fontSize: 16,
-      text: '經營村莊的不二法門，就是別讓村民不開心，但村子久了總是會出現一些狀況，像是垃圾變多、公共設備損壞，你的任務就是要幫我解決問題。',
-      x: Globals.width / 2 - 327 / 2,
-      y: Globals.height - 130 - 182 - 80,
-      talkerX: Globals.width / 2 - 80,
-      talkerY: Globals.height - 130,
-      width: 327,
-      height: 182,
+    await this.doctorSay.newSay(
+      '經營村莊的不二法門，就是別讓村民不開心，但村子久了總是會出現一些狀況，像是垃圾變多、公共設備損壞，你的任務就是要幫我解決問題。'
+    )
+
+    await this.lightUpBackground()
+    await this.doctorSay.newSay('111')
+    await this.doctorSay.newSay('222')
+    await this.doctorSay.newSay('333')
+
+    this.taiwan.activeListener()
+  }
+
+  async lightUpBackground() {
+    const lightUpBackgroundTicker = new PIXI.Ticker()
+    return new Promise((resolve) => {
+      lightUpBackgroundTicker.add(() => {
+        if (this.darkBg.alpha >= 0) {
+          this.darkBg.alpha -= 0.01
+        } else {
+          lightUpBackgroundTicker.destroy()
+          resolve()
+        }
+      })
+      lightUpBackgroundTicker.start()
     })
+  }
+
+  updateGroundGroup() {
+    this.container.removeChild(
+      this.spotlight.sprite,
+      this.ground.sprite,
+      this.doctor.sprite,
+      this.player.container
+    )
+
+    delete this.spotlight
+    delete this.ground
+    delete this.doctor
+    delete this.player
+
+    const groundGroupDimention = Globals.getGroundDimention()
+
+    this.groundGroup = new GroundGroup(groundGroupDimention)
+
+    this.groundGroup.container.x = groundGroupDimention.x
+    this.groundGroup.container.y = groundGroupDimention.y
+    this.container.addChild(this.groundGroup.container)
   }
 
   async chosenHandler(chosen) {
@@ -480,6 +522,11 @@ export class IntroScene {
         }, time)
       })
     }
+  }
+
+  _createDoctorSay() {
+    this.doctorSay = new DoctorSay()
+    this.container.addChild(this.doctorSay.container)
   }
 
   getGroundPosition() {
