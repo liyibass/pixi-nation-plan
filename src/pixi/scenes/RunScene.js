@@ -16,8 +16,8 @@ const OBSTACLE_SPEED = 4
 const gameStageDimention = Globals.getSeesawGameStageDimention()
 
 export class RunScene extends Scene {
-  constructor() {
-    super()
+  constructor(...args) {
+    super(...args)
     this.currentCityIndex = 0
     this.inWindowObstacles = []
     this.container.name = 'RunScene'

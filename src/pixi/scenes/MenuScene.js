@@ -6,12 +6,13 @@
 import { Taiwan } from '../components/Taiwan'
 import { Scene } from './Scene'
 
-export class StageScene extends Scene {
-  constructor() {
+export class MenuScene extends Scene {
+  constructor(selectStage = () => {}) {
     super()
+    this.selectStage = selectStage
 
     this.inWindowObstacles = []
-    this.container.name = 'StageScene'
+    this.container.name = 'MenuScene'
 
     this.currentCityIndex = 0
 
@@ -36,8 +37,11 @@ export class StageScene extends Scene {
     this.taiwan.container.alpha = 1
     this.container.addChild(this.taiwan.container)
   }
-
   startStage() {
     this.taiwan.activeListener()
+  }
+
+  startGame(choosedGame) {
+    this.selectStage(choosedGame.gameName)
   }
 }

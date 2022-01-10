@@ -10,8 +10,9 @@ import { Timer } from '../components/Timer'
 const BLOCK_WIDTH = 16
 
 export class BalanceScene extends Scene {
-  constructor() {
-    super()
+  constructor(...args) {
+    super(...args)
+
     this.createScene()
     this.startGameFlow()
   }

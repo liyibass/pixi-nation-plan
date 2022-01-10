@@ -7,7 +7,7 @@ import { SnakeScene } from './SnakeScene'
 import { BalanceScene } from './BalanceScene'
 import { RunScene } from './RunScene'
 import { CandyScene } from './CandyScene'
-import { StageScene } from './StageScene'
+import { MenuScene } from './MenuScene'
 
 export class MainScene {
   constructor() {
@@ -32,7 +32,7 @@ export class MainScene {
     this.container.removeAllListeners()
 
     // create snake scene
-    const snakeScene = new SnakeScene()
+    const snakeScene = new SnakeScene(this.selectStage.bind(this))
     this.container.addChild(snakeScene.container)
   }
 
@@ -42,7 +42,7 @@ export class MainScene {
     this.container.removeAllListeners()
 
     // create snake scene
-    const balanceScene = new BalanceScene()
+    const balanceScene = new BalanceScene(this.selectStage.bind(this))
     this.container.addChild(balanceScene.container)
   }
 
@@ -52,7 +52,7 @@ export class MainScene {
     this.container.removeAllListeners()
 
     // create snake scene
-    const runScene = new RunScene()
+    const runScene = new RunScene(this.selectStage.bind(this))
     this.container.addChild(runScene.container)
   }
 
@@ -62,16 +62,17 @@ export class MainScene {
     this.container.removeAllListeners()
 
     // create snake scene
-    const candyScene = new CandyScene()
+    const candyScene = new CandyScene(this.selectStage.bind(this))
     this.container.addChild(candyScene.container)
   }
 
-  createStageScene() {
+  createMenuScene() {
     this.container.removeChildren()
     this.container.removeAllListeners()
 
-    const stageScene = new StageScene()
-    this.container.addChild(stageScene.container)
+    const menuScene = new MenuScene(this.selectStage.bind(this))
+
+    this.container.addChild(menuScene.container)
   }
 
   selectStage(stageName) {
@@ -90,8 +91,8 @@ export class MainScene {
         this.createCandyScene()
         break
 
-      case 'stage':
-        this.createStageScene()
+      case 'menu':
+        this.createMenuScene()
         break
 
       default:

@@ -9,8 +9,8 @@ const gameStageDimention = Globals.getCandyGameStageDimention()
 // const CANDY_WIDTH = gameStageDimention
 
 export class CandyScene extends Scene {
-  constructor() {
-    super()
+  constructor(...args) {
+    super(...args)
 
     this.container.name = 'CandyScene'
 

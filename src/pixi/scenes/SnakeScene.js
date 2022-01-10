@@ -24,8 +24,9 @@ const POISON_RESPAWN_INTERVAL = 10000
 let easterEggString = ''
 
 export class SnakeScene {
-  constructor() {
+  constructor(selectStage = () => {}) {
     this.container = new PIXI.Container()
+    this.selectStage = selectStage
     this.createSnakeScene()
 
     this.totalI = Math.floor(this.gameStageWidth / BLOCK_WIDTH)
@@ -901,7 +902,7 @@ export class SnakeScene {
           break
 
         case 'menu':
-          console.log('back to menu')
+          this.backToMenu()
           break
 
         default:
@@ -927,6 +928,10 @@ export class SnakeScene {
         case 'resume':
           this.container.removeChild(pauseGame.container)
           this.resumeGame()
+          break
+
+        case 'menu':
+          this.backToMenu()
           break
 
         default:
@@ -1015,7 +1020,7 @@ export class SnakeScene {
             '什麼！這麼快就要放棄啦？那只好請你幫我找下一個替死鬼，我才能放你回家。'
           )
 
-          this.goToMenu()
+          this.backToMenu()
           break
       }
     }
@@ -1081,7 +1086,7 @@ export class SnakeScene {
           break
 
         case 'menu':
-          this.goToMenu()
+          this.backToMenu()
           break
 
         default:
@@ -1277,8 +1282,12 @@ export class SnakeScene {
     })
   }
 
-  goToMenu() {
+  backToMenu() {
     console.log('go to menu')
+    console.log(this.selectStage)
+    this.snakeMoveTicker.stop()
+    this.resetGameSetting()
+    this.selectStage('menu')
   }
 }
 

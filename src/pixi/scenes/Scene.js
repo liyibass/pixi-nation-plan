@@ -14,9 +14,10 @@ import { GameSuccess } from '../components/GameSuccess'
 const BLOCK_WIDTH = 16
 
 export class Scene {
-  constructor() {
+  constructor(selectStage = () => {}) {
     this.container = new PIXI.Container()
     this.gameLevel = 0
+    this.selectStage = selectStage
   }
   // ===== init system =====
   createScene() {
@@ -108,7 +109,7 @@ export class Scene {
 
   async startGame() {
     console.log('game started')
-    // await this._countDown(3)
+    await this._countDown(3)
   }
 
   // ===== game pause =====
@@ -130,6 +131,10 @@ export class Scene {
         case 'resume':
           this.container.removeChild(pauseGame.container)
           this.resumeGame()
+          break
+
+        case 'menu':
+          this.backToMenu()
           break
 
         default:
@@ -200,12 +205,16 @@ export class Scene {
           this.startGame()
           break
 
+        case 'menu':
+          this.backToMenu()
+          break
+
         // case 'menu':
         //   await this.doctorSay.newSay(
         //     '什麼！這麼快就要放棄啦？那只好請你幫我找下一個替死鬼，我才能放你回家。'
         //   )
 
-        //   this.goToMenu()
+        //   this.backToMenu()
         //   break
       }
     }
@@ -273,7 +282,7 @@ export class Scene {
           break
 
         case 'menu':
-          this.goToMenu()
+          this.backToMenu()
           break
 
         default:
@@ -291,8 +300,10 @@ export class Scene {
     }
   }
 
-  goToMenu() {
+  backToMenu() {
     console.log('go to menu')
+    console.log(this.selectStage)
+    this.selectStage('menu')
   }
 
   // ===== game utils =====
@@ -316,7 +327,7 @@ export class Scene {
           break
 
         case 'menu':
-          console.log('back to menu')
+          this.backToMenu()
           break
 
         default:
