@@ -100,9 +100,12 @@ export class IntroScene {
         this.startButton.removeAllListeners()
       }
     }
-
     // start film script
-    this.startButton.on('pointerdown', startFilmScript)
+    // this.startButton.on('pointerdown', startFilmScript)
+    this.startButton.on('pointerdown', () => {
+      console.log(startFilmScript)
+      this.selectStage('stage')
+    })
   }
 
   async startStory() {
@@ -352,12 +355,13 @@ export class IntroScene {
       '經營村莊的不二法門，就是別讓村民不開心，但村子久了總是會出現一些狀況，像是垃圾變多、公共設備損壞，你的任務就是要幫我解決問題。'
     )
 
-    await this.lightUpBackground()
-    await this.doctorSay.newSay('111')
-    await this.doctorSay.newSay('222')
-    await this.doctorSay.newSay('333')
+    this.selectStage('stage')
+    // await this.lightUpBackground()
+    // await this.doctorSay.newSay('111')
+    // await this.doctorSay.newSay('222')
+    // await this.doctorSay.newSay('333')
 
-    this.taiwan.activeListener()
+    // this.taiwan.activeListener()
   }
 
   async lightUpBackground() {
