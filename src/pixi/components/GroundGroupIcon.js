@@ -14,7 +14,6 @@ export class GroundGroupIcon {
 
     this.createGroundGroupIcon()
     this.createText()
-    this.activeListener()
     this.startAnimationTicker()
   }
 
