@@ -23,6 +23,12 @@ export const Globals = {
       y: this.height / 2 + gameStagePadding + (this.contentHeight / 6) * 5,
     }
   },
+  getSkipButtonDimention: function () {
+    return {
+      x: this.width - 20,
+      y: this.height - 20,
+    }
+  },
   getDoctorDimention: function () {
     const groundGroupDimention = this.getGroundDimention()
     return {

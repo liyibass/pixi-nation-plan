@@ -10,6 +10,8 @@ import { DoctorDialogBox } from '../components/DoctorDialogBox'
 import { DoctorSay } from '../components/DoctorSay'
 import { GroundGroup } from '../components/GroundGroup'
 
+const skipButtonDimention = Globals.getSkipButtonDimention()
+
 export class IntroScene {
   constructor(selectStage) {
     this.selectStage = selectStage
@@ -18,6 +20,8 @@ export class IntroScene {
     this.container.visible = true
 
     this.skipCount = 0
+
+    this.isAnimationSkipped = false
 
     this.filmScript = [
       this.startStory.bind(this),
@@ -67,6 +71,27 @@ export class IntroScene {
     this.container.addChild(this.startButton)
   }
 
+  createSkipButton() {
+    this.skipButton = new PIXI.Text('跳過動畫', {
+      fill: '0xeeeeee',
+      fontSize: '24px',
+    })
+    this.skipButton.position.x = skipButtonDimention.x
+    this.skipButton.position.y = skipButtonDimention.y
+    this.skipButton.anchor.set(1, 1)
+
+    this.skipButton.interactive = true
+    this.skipButton.buttonMode = true
+    this.container.addChild(this.skipButton)
+
+    this.skipButton.on('pointerdown', () => {
+      this.isAnimationSkipped = true
+      this.container.removeAllListeners()
+      this.container.destroy()
+      this.selectStage('stage')
+    })
+  }
+
   startGame(choosedGame) {
     this.selectStage(choosedGame.gameName)
   }
@@ -91,6 +116,7 @@ export class IntroScene {
         this.startButton.buttonMode = false
 
         for (let i = 0; i < this.filmScript.length; i++) {
+          if (this.isAnimationSkipped) return
           this.filmScriptStep++
 
           const filmScript = this.filmScript[i]
@@ -101,15 +127,12 @@ export class IntroScene {
       }
     }
     // start film script
-    // this.startButton.on('pointerdown', startFilmScript)
-    this.startButton.on('pointerdown', () => {
-      console.log(startFilmScript)
-      this.selectStage('stage')
-    })
+    this.startButton.on('pointerdown', startFilmScript)
   }
 
   async startStory() {
     console.log('startStory')
+
     this.player = new Player({
       x: Globals.width / 2,
       y: Globals.height / 2 + 50,
@@ -143,6 +166,8 @@ export class IntroScene {
     this.spotlight.sprite.alpha = 0
     this.doctor.sprite.alpha = 0
     this.doctor.fall()
+
+    this.createSkipButton()
 
     // first fade in
     return new Promise((resolve) => {
