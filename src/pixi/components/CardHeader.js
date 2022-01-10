@@ -41,13 +41,14 @@ export class CardHeader {
   createLandCity() {
     // landCity
     const landCityTexture = new PIXI.Texture(
-      Globals.resources[`land_city_0`]?.texture
+      Globals.resources[`land_${this.cityIndex}_1`]?.texture
     )
     const landCitySprite = new PIXI.Sprite(landCityTexture)
     const ratio = CARD_HEADER_LAND_CITY_HEIGHT / landCitySprite.height
     landCitySprite.width *= ratio
     landCitySprite.height *= ratio
 
+    this.landCityIconContainer.removeChildren()
     this.landCityIconContainer.addChild(landCitySprite)
 
     // landCity position
@@ -95,7 +96,10 @@ export class CardHeader {
   }
 
   updateCity(newCityIndex) {
+    this.cityIndex = newCityIndex
     this.titleText.text = this._getCityName(newCityIndex)
+
+    this.createLandCity()
   }
 
   createArrow() {
