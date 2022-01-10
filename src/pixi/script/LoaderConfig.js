@@ -148,6 +148,11 @@ import land_18_1 from '../assets/images/18_1.png'
 import land_19_1 from '../assets/images/19_1.png'
 import land_20_1 from '../assets/images/20_1.png'
 import gameIcon from '../assets/images/gameIcon.png'
+import doctorSay_0 from '../assets/images/doctorSay_0.png'
+import doctorSay_1 from '../assets/images/doctorSay_1.png'
+import doctorSay_2 from '../assets/images/doctorSay_2.png'
+import doctorSay_3 from '../assets/images/doctorSay_3.png'
+import doctorSay_4 from '../assets/images/doctorSay_4.png'
 
 export const LoaderConfig = {
   player,
@@ -300,4 +305,9 @@ export const LoaderConfig = {
   land_19_1,
   land_20_1,
   gameIcon,
+  doctorSay_0,
+  doctorSay_1,
+  doctorSay_2,
+  doctorSay_3,
+  doctorSay_4,
 }

@@ -43,18 +43,20 @@ export class SpeakDialog {
     this.container.addChild(this.speakDialogGroup)
 
     // create doctor
-    const doctorTexture = Globals.resources['doctorBig']?.texture
+    const sayId = Math.floor(Math.random() * 4)
+    const doctorTexture = Globals.resources[`doctorSay_${sayId}`]?.texture
     this.doctor = new PIXI.Sprite(doctorTexture)
-    // this.doctor.anchor.set(0.5, 0.5)
+    this.doctor.anchor.set(0.5, 1)
 
-    const ratio = this.doctor.height / this.doctor.width
-    this.doctor.width = Globals.maxContentWidth / 2
-    this.doctor.height = this.doctor.width * ratio
+    // const ratio = this.doctor.height / this.doctor.width
+    // this.doctor.width = Globals.maxContentWidth / 2
+    // this.doctor.height = this.doctor.width * ratio
 
     this.doctorOriginX = (Globals.width - Globals.maxContentWidth) / 2
 
-    this.doctor.x = this.doctorOriginX - 50
-    this.doctor.y = -this.doctor.height / 2
+    this.doctor.x = 0 + this.doctor.width / 4
+    this.doctor.y = 0 + 2
+    // this.doctor.y = -this.doctor.height / 2
     this.doctor.alpha = 0
 
     this.speakDialogGroup.addChild(this.doctor)
