@@ -8,9 +8,10 @@ const TIMER_WIDTH = 69
 const LIMIT = 17
 
 export class SeesawGroup {
-  constructor() {
+  constructor(gameLevel = 0) {
     this.container = new PIXI.Container()
     this.container.name = 'seesawGroup'
+    this.gameLevel = gameLevel
     this.createSeesaw()
     this.createSeesawButton()
     this.setPosition()
@@ -35,7 +36,7 @@ export class SeesawGroup {
 
   createSeesaw() {
     this.board = new SeesawBoard()
-    this.pivot = new SeesawPivot()
+    this.pivot = new SeesawPivot(this.gameLevel)
     this.container.addChild(this.board.container, this.pivot.container)
 
     this.board.container.x = this.container.width / 2

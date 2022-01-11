@@ -11,7 +11,7 @@ export class SeesawPivot {
   }
 
   createPivot() {
-    this.levelText = new PIXI.Text(`Level ${this.level}`, {
+    this.levelText = new PIXI.Text(`Level ${this.level + 1}`, {
       fontSize: 14,
       fill: ['0xffffff'],
     })

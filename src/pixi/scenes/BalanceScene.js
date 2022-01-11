@@ -70,7 +70,7 @@ export class BalanceScene extends Scene {
   }
 
   createSeesaw() {
-    this.seesawGroup = new SeesawGroup()
+    this.seesawGroup = new SeesawGroup(this.gameLevel)
 
     this.seesawGroup.container.x = this.seesawGroup.container.width / 2
     this.seesawGroup.container.y = this.gameStage.height
@@ -161,8 +161,10 @@ export class BalanceScene extends Scene {
   _gameStateMonitor() {
     if (
       this.seesawGroup.isDead ||
-      (this.timer.time === 0 &&
-        this.seesawGroup.leftTotalWeight !== this.seesawGroup.rightTotalWeight)
+      (this.timer.time <= 0 &&
+        (this.seesawGroup.leftTotalWeight === 0 ||
+          this.seesawGroup.leftTotalWeight !==
+            this.seesawGroup.rightTotalWeight))
     ) {
       this.gameOver()
     }
