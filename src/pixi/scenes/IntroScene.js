@@ -129,7 +129,7 @@ export class IntroScene {
     // start film script
     console.log(startFilmScript)
     this.startButton.on('pointerdown', () => {
-      this.selectStage('snake')
+      this.selectStage('balance')
     })
     // this.startButton.on('pointerdown', startFilmScript)
   }

@@ -134,7 +134,8 @@ export class Scene {
           break
 
         case 'menu':
-          this.backToMenu()
+          this.container.removeChild(pauseGame.container)
+          this.backToMenu(false)
           break
 
         default:
@@ -206,7 +207,8 @@ export class Scene {
           break
 
         case 'menu':
-          this.backToMenu()
+          this.container.removeChild(gameFail.container)
+          this.backToMenu(true)
           break
 
         // case 'menu':
@@ -278,11 +280,8 @@ export class Scene {
           await this.doctorSay.newSay(
             '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
           )
-
-          break
-
-        case 'menu':
-          this.backToMenu()
+          this.container.removeChild(gameSuccess.container)
+          this.backToMenu(true)
           break
 
         default:
@@ -300,10 +299,41 @@ export class Scene {
     }
   }
 
-  backToMenu() {
+  async backToMenu(isGameOver) {
     console.log('go to menu')
-    console.log(this.selectStage)
-    this.selectStage('menu')
+
+    this.sceneTicker?.stop?.()
+
+    const chosen = await this.doctorSay.chooseSay(
+      '離開遊戲將會中斷遊戲進程，確定要離開？',
+      {
+        text: '繼續玩好了',
+        color: '0x000000',
+        bgColor: '0xc4c4c4',
+        value: 'cancel',
+      },
+      {
+        text: '確定離開',
+        color: '0x000000',
+        bgColor: '0xFF8B29',
+        value: 'return',
+      }
+    )
+
+    switch (chosen) {
+      case 'return':
+        this.selectStage('menu')
+        break
+
+      default:
+      case 'cancel':
+        if (isGameOver) {
+          this.restartGame()
+        } else {
+          this.resumeGame()
+        }
+        break
+    }
   }
 
   // ===== game utils =====
@@ -327,7 +357,8 @@ export class Scene {
           break
 
         case 'menu':
-          this.backToMenu()
+          this._pauseAllGameActivity()
+          this.backToMenu(false)
           break
 
         default:
