@@ -139,7 +139,7 @@ export class RunScene extends Scene {
 
   _createPlayer() {
     this.player = new Player({
-      x: 40,
+      x: 0,
       y: this.gameStageHeight,
     })
     this.gameStage.addChild(this.player.container)
@@ -258,9 +258,10 @@ export class RunScene extends Scene {
   async startGame() {
     await super.startGame()
     // super.createKeyboardListener(this.moveHandler.bind(this))
-    this.moveHandler()
+    // this.moveHandler()
 
     this._startSceneTicker()
+    this.newMoveHandler()
   }
 
   moveHandler() {
@@ -353,6 +354,39 @@ export class RunScene extends Scene {
     }
   }
 
+  newMoveHandler() {
+    //Capture the keyboard arrow keys
+    this.left = this.keyboard('ArrowLeft')
+    this.up = this.keyboard('ArrowUp')
+    this.right = this.keyboard('ArrowRight')
+    this.down = this.keyboard('ArrowDown')
+
+    this.player.container.scale.x = 1
+    this.player.container.vx = PLAYER_SPEED
+    this.player.container.vy = 0
+    this.player.changePlayerTexture('running')
+
+    this.cityBackgroundLayer.vx = -BACKGROUND_SPEED
+    this.boardLayer.vx = -BOARD_SPEED
+    this.obstacleLayer.vx = -PLAYER_SPEED
+
+    //Up
+    this.up.press = () => {
+      if (!this.sceneTicker?.started) {
+        return
+      }
+
+      if (!this.player.isJumping) {
+        this.player.jump()
+      }
+    }
+    this.up.release = () => {
+      // if (!this.down.isDown && this.player.container.vx === 0) {
+      //   this.player.container.vy = 0
+      // }
+    }
+  }
+
   collisionMonitor(obstacle) {
     if (obstacle.obstacleName === 'water') {
       this.gameOver(obstacle)
@@ -376,13 +410,15 @@ export class RunScene extends Scene {
       if (
         // player stop when in gameStage center
         this.player.container.x >= this.gameStageWidth / 3 &&
-        this.right.isDown
+        true
+        // this.right.isDown
       ) {
         this.player.container.vx = 0
       } else if (
         // player stop when in gameStage's left corner
         this.player.container.x <= this.player.container.width / 3 &&
-        this.left.isDown
+        true
+        // this.left.isDown
       ) {
         this.player.container.vx = 0
       }
