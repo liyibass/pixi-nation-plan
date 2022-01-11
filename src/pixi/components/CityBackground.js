@@ -237,7 +237,7 @@ export class CityBackground {
       hotelMask.pivot.y = hotelMask.height
       hotelContainer.mask = hotelMask
 
-      hotelContainer.addChild(farmSprite, hotelSprite, hotelMask)
+      hotelContainer.addChild(hotelSprite, farmSprite, hotelMask)
 
       this.container.addChild(hotelContainer)
 

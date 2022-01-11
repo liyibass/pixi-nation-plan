@@ -385,6 +385,23 @@ export class RunScene extends Scene {
       //   this.player.container.vy = 0
       // }
     }
+
+    // jump player while tab screen
+    this.gameStage.interactive = true
+    this.gameStage.buttonMode = true
+    this.activateClickToJump()
+  }
+
+  activateClickToJump() {
+    this.gameStage.addListener('pointerdown', () => {
+      if (!this.player.isJumping) {
+        this.player.jump()
+      }
+    })
+  }
+
+  deactivateClickToJump() {
+    this.gameStage.removeAllListeners()
   }
 
   collisionMonitor(obstacle) {
@@ -578,6 +595,7 @@ export class RunScene extends Scene {
     this.player.changePlayerTexture('stand')
     this.player.jumpTicker.stop()
     this.player.runningPlayerSprite.stop()
+    this.deactivateClickToJump()
   }
 
   _resumeAllGameActivity() {
@@ -592,11 +610,13 @@ export class RunScene extends Scene {
     })
 
     this.player.runningPlayerSprite.play()
+    this.activateClickToJump()
   }
 
   // ===== game over =====
   async gameOver(obstacle) {
     this.sceneTicker.stop()
+
     if (this.menuButtons?.container) {
       this.container.removeChild(this.menuButtons.container)
     }

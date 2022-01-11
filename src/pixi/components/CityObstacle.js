@@ -64,7 +64,7 @@ export class CityObstacle {
 
   _createTaoyuan() {
     const CHIMNEY_WIDTH = 30
-    const CHIMNEY_DISTANCE = 250
+    const CHIMNEY_DISTANCE = 700
     const CHIMNEY_UNIT = CHIMNEY_DISTANCE + CHIMNEY_WIDTH
     const CHIMNEY_COUNT = Math.floor(this.obstacleWidth / CHIMNEY_UNIT)
 
@@ -91,9 +91,9 @@ export class CityObstacle {
     // const CAR_WIDTH = 90
     // const CHIMNEY_DISTANCE = gameStageDimention.width / 3
     const CAR_WIDTH = 50
-    const CAR_DISTANCE = 100
+    const CAR_DISTANCE = 200
     const CAR_UNIT = CAR_DISTANCE + CAR_WIDTH
-    const CAR_COUNT = Math.floor(this.obstacleWidth / CAR_UNIT) - 2
+    const CAR_COUNT = Math.floor(this.obstacleWidth / CAR_UNIT)
 
     let totalWidth = 0
     for (let i = 0; i < CAR_COUNT; i++) {
@@ -117,7 +117,7 @@ export class CityObstacle {
 
   _createMiaoli() {
     const SOLAR_BOARD_WIDTH = 50
-    const SOLAR_BOARD_DISTANCE = 150
+    const SOLAR_BOARD_DISTANCE = 250
     const SOLAR_BOARD_UNIT = SOLAR_BOARD_DISTANCE + SOLAR_BOARD_WIDTH
     const SOLAR_BOARD_COUNT =
       Math.floor(this.obstacleWidth / SOLAR_BOARD_UNIT) + 1
@@ -145,7 +145,7 @@ export class CityObstacle {
 
   _createYunlin() {
     const WATER_WIDTH = 300
-    const WATER_DISTANCE = 100
+    const WATER_DISTANCE = 200
     const WATER_UNIT = WATER_DISTANCE + WATER_WIDTH
     const WATER_COUNT = Math.floor(this.obstacleWidth / WATER_UNIT)
 
@@ -201,7 +201,7 @@ export class CityObstacle {
   _createKaohsiung() {}
 
   _createMountain() {
-    const ROCK_COUNT = 8
+    const ROCK_COUNT = 6
     const ROCK_INTERVAL = Math.floor(this.obstacleWidth / ROCK_COUNT)
 
     for (let i = 0; i < ROCK_COUNT; i++) {
@@ -230,7 +230,7 @@ export class CityObstacle {
     const finishLine = new FinishLine(1000, this.collisionMonitor)
     finishLine.container.alpha = 0
 
-    finishLine.container.x = this.container.width + gameStageDimention.width / 2
+    finishLine.container.x = this.container.width + gameStageDimention.width / 4
     finishLine.container.y = gameStageDimention.height
 
     this.container.addChild(finishLine.container)

@@ -39,7 +39,7 @@ export class Rock extends Obstacle {
     // console.log(this.obstacleWidth)
 
     if (this.container.y < gameStageDimention.height) {
-      this.container.y += 4
+      this.container.y += 2
     } else {
       this.container.y = 0
       // this.container.x = Math.floor(Math.random() * this.obstacleWidth)
