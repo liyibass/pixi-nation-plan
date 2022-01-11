@@ -236,6 +236,103 @@ export class Candy {
     })
   }
 
+  moveRightFailTicker() {
+    this.swapTicker = new PIXI.Ticker()
+
+    return new Promise((resolve) => {
+      let isBlocked = false
+      this.swapTicker.add(() => {
+        if (!isBlocked && this.container.x < (this.i + 0.2) * CANDY_WIDTH) {
+          this.container.x += SWAP_SPEED
+
+          if (this.container.x >= (this.i + 0.2) * CANDY_WIDTH) {
+            isBlocked = true
+          }
+        } else if (isBlocked && this.container.x > this.i * CANDY_WIDTH) {
+          this.container.x -= SWAP_SPEED
+        } else {
+          this.container.x = this.i * CANDY_WIDTH
+          this.swapTicker.stop()
+
+          resolve()
+        }
+      })
+      this.swapTicker.start()
+    })
+  }
+  moveLeftFailTicker() {
+    this.swapTicker = new PIXI.Ticker()
+
+    return new Promise((resolve) => {
+      let isBlocked = false
+      this.swapTicker.add(() => {
+        if (!isBlocked && this.container.x > (this.i - 0.2) * CANDY_WIDTH) {
+          this.container.x -= SWAP_SPEED
+
+          if (this.container.x <= (this.i - 0.2) * CANDY_WIDTH) {
+            isBlocked = true
+          }
+        } else if (isBlocked && this.container.x > this.i * CANDY_WIDTH) {
+          this.container.x += SWAP_SPEED
+        } else {
+          this.container.x = this.i * CANDY_WIDTH
+          this.swapTicker.stop()
+
+          resolve()
+        }
+      })
+      this.swapTicker.start()
+    })
+  }
+  moveDownFailTicker() {
+    this.swapTicker = new PIXI.Ticker()
+
+    return new Promise((resolve) => {
+      let isBlocked = false
+      this.swapTicker.add(() => {
+        if (!isBlocked && this.container.y < (this.j + 0.2) * CANDY_WIDTH) {
+          this.container.y += SWAP_SPEED
+
+          if (this.container.y >= this.j * CANDY_WIDTH) {
+            isBlocked = true
+          }
+        } else if (isBlocked && this.container.y < this.j * CANDY_WIDTH) {
+          this.container.y -= SWAP_SPEED
+        } else {
+          this.container.y = this.j * CANDY_WIDTH
+          this.swapTicker.stop()
+
+          resolve()
+        }
+      })
+      this.swapTicker.start()
+    })
+  }
+  moveUpFailTicker() {
+    this.swapTicker = new PIXI.Ticker()
+
+    return new Promise((resolve) => {
+      let isBlocked = false
+      this.swapTicker.add(() => {
+        if (!isBlocked && this.container.y > (this.j - 0.2) * CANDY_WIDTH) {
+          this.container.y -= SWAP_SPEED
+
+          if (this.container.y <= (this.j - 0.2) * CANDY_WIDTH) {
+            isBlocked = true
+          }
+        } else if (isBlocked && this.container.y > this.j * CANDY_WIDTH) {
+          this.container.y += SWAP_SPEED
+        } else {
+          this.container.y = this.j * CANDY_WIDTH
+          this.swapTicker.stop()
+
+          resolve()
+        }
+      })
+      this.swapTicker.start()
+    })
+  }
+
   vanish() {
     this.vanishTicker = new PIXI.Ticker()
     let scale = 1

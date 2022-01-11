@@ -207,6 +207,10 @@ export class CandyScene extends Scene {
   }
 
   async swapHandler(candy, direction) {
+    console.log('swapHandler')
+    console.log(this.isSwaping)
+    console.log(this.isHandlingLine)
+
     if (this.isSwaping || this.isHandlingLine || this.isGameStop) return
 
     this.isSwaping = true
@@ -247,43 +251,131 @@ export class CandyScene extends Scene {
     candy.i = opI
     candy.j = opJ
 
-    // trigger their swap animation
-    switch (direction) {
-      case 'right':
-        await Promise.all([
-          candy.moveRightTicker(),
-          opponentCandy.moveLeftTicker(),
-        ])
-        break
+    // check if this swap move has line
+    // if so, complete swaping
+    // if not, then redo swaping
+    this.needToDeleteArray = this.examineIfHasLine()
 
-      case 'left':
-        await Promise.all([
-          candy.moveLeftTicker(),
-          opponentCandy.moveRightTicker(),
-        ])
-        break
+    if (this.needToDeleteArray.length) {
+      // trigger their swap animation
+      switch (direction) {
+        case 'right':
+          await Promise.all([
+            candy.moveRightTicker(),
+            opponentCandy.moveLeftTicker(),
+          ])
+          break
 
-      case 'down':
-        await Promise.all([
-          candy.moveDownTicker(),
-          opponentCandy.moveUpTicker(),
-        ])
-        break
+        case 'left':
+          await Promise.all([
+            candy.moveLeftTicker(),
+            opponentCandy.moveRightTicker(),
+          ])
+          break
 
-      case 'up':
-        await Promise.all([
-          candy.moveUpTicker(),
-          opponentCandy.moveDownTicker(),
-        ])
-        break
+        case 'down':
+          await Promise.all([
+            candy.moveDownTicker(),
+            opponentCandy.moveUpTicker(),
+          ])
+          break
+
+        case 'up':
+          await Promise.all([
+            candy.moveUpTicker(),
+            opponentCandy.moveDownTicker(),
+          ])
+          break
+      }
+      console.log('swap')
+      console.log('swap done :' + this.candyBox.children.length)
+
+      this.candyHeader.decreaseStepCount()
+
+      // this._logGrid()
+
+      // await this.checkLineLoop()
+    } else {
+      console.log('CANT SWAP')
+      // redo swap candy's array location in grid
+      switch (direction) {
+        case 'right':
+          this.grid[candy.j].splice(opponentCandy.i, 2, candy, opponentCandy)
+
+          break
+
+        case 'left':
+          this.grid[candy.j].splice(
+            opponentCandy.i - 1,
+            2,
+            opponentCandy,
+            candy
+          )
+
+          break
+
+        case 'down':
+          this.grid[opponentCandy.j].splice(opponentCandy.i, 1, candy)
+          this.grid[opponentCandy.j + 1].splice(
+            opponentCandy.i,
+            1,
+            opponentCandy
+          )
+
+          break
+
+        case 'up':
+          this.grid[opponentCandy.j - 1].splice(
+            opponentCandy.i,
+            1,
+            opponentCandy
+          )
+          this.grid[opponentCandy.j].splice(opponentCandy.i, 1, candy)
+
+          break
+      }
+
+      // redo swap candy's i and j
+      const { i: opI, j: opJ } = opponentCandy
+      opponentCandy.i = candy.i
+      opponentCandy.j = candy.j
+      candy.i = opI
+      candy.j = opJ
+
+      // trigger their fail swap animation
+      switch (direction) {
+        case 'right':
+          await Promise.all([
+            candy.moveRightFailTicker(),
+            opponentCandy.moveLeftFailTicker(),
+          ])
+          break
+
+        case 'left':
+          await Promise.all([
+            candy.moveLeftFailTicker(),
+            opponentCandy.moveRightFailTicker(),
+          ])
+          break
+
+        case 'down':
+          await Promise.all([
+            candy.moveDownFailTicker(),
+            opponentCandy.moveUpFailTicker(),
+          ])
+          break
+
+        case 'up':
+          await Promise.all([
+            candy.moveUpFailTicker(),
+            opponentCandy.moveDownFailTicker(),
+          ])
+          break
+      }
     }
-    console.log('swap')
-    console.log('swap done :' + this.candyBox.children.length)
-    this.isSwaping = false
-    this.candyHeader.decreaseStepCount()
 
-    // this._logGrid()
-    await this.checkLineLoop()
+    console.log('DONE')
+    this.isSwaping = false
   }
 
   // ================checkLineLoop===================
@@ -328,7 +420,7 @@ export class CandyScene extends Scene {
     for (let k = 0; k < this.needToDeleteArray.length; k++) {
       const candy = this.needToDeleteArray[k]
       const { i, j } = candy
-      console.log(candy)
+
       this.candyBox.removeChild(candy.container)
 
       this.grid[j][i] = null
@@ -615,19 +707,19 @@ export class CandyScene extends Scene {
   }
 
   async gameLevel0() {
-    this.startGame()
+    await this.startGame()
     await this.initGame()
   }
 
   async gameLevel1() {
     await this.doctorSay.newSay('level 2!')
-    this.startGame()
+    await this.startGame()
     await this.initGame()
   }
 
   async gameLevel2() {
     await this.doctorSay.newSay('final level!')
-    this.startGame()
+    await this.startGame()
     await this.initGame()
   }
 
