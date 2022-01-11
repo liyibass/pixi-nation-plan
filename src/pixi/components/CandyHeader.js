@@ -174,7 +174,8 @@ export class CandyHeader {
     const lineCount = Math.floor(needToDeleteArray.length / 3)
     const bonusCount = needToDeleteArray.length % 3
 
-    this.currentPoint += lineCount * 50 + bonusCount * 10
+    const point = this.currentPoint + lineCount * 50 + bonusCount * 5
+    this.currentPoint = point <= MAX_POINT ? point : MAX_POINT
     this.currentPointText.text = this.currentPoint
     this._setWhiteBarWidth()
 
