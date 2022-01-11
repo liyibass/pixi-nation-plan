@@ -13,7 +13,7 @@ export class Conveyor {
     this.container.name = 'conveyor'
     this.getChoosedWeightCard = getChoosedWeightCard
 
-    this.width = Globals.getSeesawGameStageDimention().width - TIMER_WIDTH
+    this.width = Globals.getSeesawGameStageDimention().width
     this.container.x = TIMER_WIDTH
     this.container.y = TOP_PADDING
 
@@ -27,13 +27,6 @@ export class Conveyor {
     this.stop = false
 
     this.createConveyor()
-
-    // this.container.pivot.x = this.container.width / 2
-    // this.container.pivot.y = this.colorBarHeight
-
-    // setInterval(() => {
-    //   this.container.angle++
-    // }, 100)
   }
 
   createConveyor() {
@@ -42,6 +35,15 @@ export class Conveyor {
     //   setTimeout(() => {
     //   }, i * 2000)
     // }
+
+    // create mask
+    const mask = new PIXI.Graphics()
+    mask.beginFill(0xff0000)
+    mask.drawRect(0, 0, this.width, window.innerHeight)
+    mask.endFill()
+    mask.x = -TIMER_WIDTH
+    this.container.addChild(mask)
+    this.container.mask = mask
   }
 
   addNewWeightCard() {
