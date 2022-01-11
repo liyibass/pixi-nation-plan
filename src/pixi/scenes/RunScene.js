@@ -575,6 +575,8 @@ export class RunScene extends Scene {
       obstacle.ObstacleOperateTicker.stop()
     })
 
+    this.player.changePlayerTexture('stand')
+    this.player.jumpTicker.stop()
     this.player.runningPlayerSprite.stop()
   }
 
