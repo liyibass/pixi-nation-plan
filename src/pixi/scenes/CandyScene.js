@@ -615,22 +615,20 @@ export class CandyScene extends Scene {
   }
 
   async gameLevel0() {
-    this.initGame()
-
     this.startGame()
+    await this.initGame()
   }
 
   async gameLevel1() {
-    this.initGame()
     await this.doctorSay.newSay('level 2!')
     this.startGame()
+    await this.initGame()
   }
 
   async gameLevel2() {
-    this.initGame()
-
     await this.doctorSay.newSay('final level!')
     this.startGame()
+    await this.initGame()
   }
 
   // ===== start game =====

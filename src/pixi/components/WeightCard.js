@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 
 const CARD_PADDING = 10
+const CARD_HEIGHT = 70
 const MIN_SPRITE_WIDTH = 30
 
 const TIMER_WIDTH = 69
@@ -23,7 +24,7 @@ export class WeightCard {
     this.prevCard = null
 
     this.width = this._getWeightWidth()
-    this.height = 70
+    this.height = CARD_HEIGHT
     this.isDragging = false
 
     // card position which card need bo be in
