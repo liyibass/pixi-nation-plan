@@ -161,37 +161,24 @@ export class WeightCard {
 
     this.container.on('pointerdown', this.onTouchStart.bind(this))
     this.container.on('pointermove', this.onTouchMove.bind(this))
+    this.container.on('pointerup', this.onTouchLeave.bind(this))
   }
 
   onTouchStart() {
     // set the dragging state for this sprite
-    this.isDragging = !this.isDragging
+    this.isDragging = true
 
     this.weightText.alpha = 1
 
     if (this.isOnConveyor) {
-      if (this.isDragging) {
-        // remember the position of the mouse cursor
-        this._rememberOriginalPosition()
+      // remember the position of the mouse cursor
+      this._rememberOriginalPosition()
 
-        // set card's zIndex to top
-        this.container.parent.setChildIndex(
-          this.container,
-          this.container.parent.children.length - 1
-        )
-      } else {
-        // reset card's zIndex
-        this.container.parent.setChildIndex(this.container, 0)
-
-        const { x, y } = this.container
-        const { x: originalX, y: originalY } = this.originalPosition
-
-        if (x !== originalX && y !== originalY && y > originalY + 60) {
-          this._dropWeightCardToSeesaw(this)
-        } else {
-          this._resetToOriginalPosition()
-        }
-      }
+      // set card's zIndex to top
+      this.container.parent.setChildIndex(
+        this.container,
+        this.container.parent.children.length - 1
+      )
     } else {
       // we put card on board before
       // however while board is rotating, card's position will be chaos
@@ -201,29 +188,14 @@ export class WeightCard {
       seesawBoard.removeChild(this.container)
       seesawGroup.addChild(this.container)
 
-      if (this.isDragging) {
-        // remember the position of the mouse cursor
-        this._rememberOriginalPosition()
+      // remember the position of the mouse cursor
+      this._rememberOriginalPosition()
 
-        // set card's zIndex to top
-        this.container.parent.setChildIndex(
-          this.container,
-          this.container.parent.children.length - 1
-        )
-      } else {
-        seesawGroup.removeChild(this.container)
-        seesawBoard.addChild(this.container)
-
-        const { x, y } = this.container
-        const { x: originalX, y: originalY } = this.originalPosition
-
-        if (x !== originalX && y !== originalY) {
-          console.log('drop card in seesaw')
-          this._dropWeightCardToSeesaw(this)
-        } else {
-          this._resetToOriginalPosition()
-        }
-      }
+      // set card's zIndex to top
+      this.container.parent.setChildIndex(
+        this.container,
+        this.container.parent.children.length - 1
+      )
     }
   }
 
@@ -253,6 +225,46 @@ export class WeightCard {
 
       this.container.x = x
       this.container.y = y
+    }
+  }
+
+  onTouchLeave() {
+    console.log('pointer up')
+    this.isDragging = false
+
+    if (this.isOnConveyor) {
+      // reset card's zIndex
+      this.container.parent.setChildIndex(this.container, 0)
+
+      const { x, y } = this.container
+      const { x: originalX, y: originalY } = this.originalPosition
+
+      if (x !== originalX && y !== originalY && y > originalY + 60) {
+        this._dropWeightCardToSeesaw(this)
+      } else {
+        this._resetToOriginalPosition()
+      }
+    } else {
+      // we put card on board before
+      // however while board is rotating, card's position will be chaos
+      // so need to set card's parent to seesawGroup temporary
+      const seesawBoard = this.seesawBoardRef.container
+      const seesawGroup = this.seesawGroupRef.container
+      seesawBoard.removeChild(this.container)
+      seesawGroup.addChild(this.container)
+
+      seesawGroup.removeChild(this.container)
+      seesawBoard.addChild(this.container)
+
+      const { x, y } = this.container
+      const { x: originalX, y: originalY } = this.originalPosition
+
+      if (x !== originalX && y !== originalY) {
+        console.log('drop card in seesaw')
+        this._dropWeightCardToSeesaw(this)
+      } else {
+        this._resetToOriginalPosition()
+      }
     }
   }
 

@@ -336,6 +336,12 @@ export class Scene {
     }
   }
 
+  restartGame() {
+    this.resetGameSetting()
+    this.initGame()
+    this.startGame()
+  }
+
   // ===== game utils =====
   _createMenuButtons() {
     const menuPosition = Globals.getSnakeMenuPosition(2)
