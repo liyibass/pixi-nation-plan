@@ -208,8 +208,6 @@ export class CandyScene extends Scene {
 
   async swapHandler(candy, direction) {
     console.log('swapHandler')
-    console.log(this.isSwaping)
-    console.log(this.isHandlingLine)
 
     if (this.isSwaping || this.isHandlingLine || this.isGameStop) return
 
@@ -294,7 +292,7 @@ export class CandyScene extends Scene {
 
       // this._logGrid()
 
-      // await this.checkLineLoop()
+      await this.checkLineLoop()
     } else {
       console.log('CANT SWAP')
       // redo swap candy's array location in grid
@@ -347,34 +345,33 @@ export class CandyScene extends Scene {
         case 'right':
           await Promise.all([
             candy.moveRightFailTicker(),
-            opponentCandy.moveLeftFailTicker(),
+            // opponentCandy.moveLeftFailTicker(),
           ])
           break
 
         case 'left':
           await Promise.all([
             candy.moveLeftFailTicker(),
-            opponentCandy.moveRightFailTicker(),
+            // opponentCandy.moveRightFailTicker(),
           ])
           break
 
         case 'down':
           await Promise.all([
             candy.moveDownFailTicker(),
-            opponentCandy.moveUpFailTicker(),
+            // opponentCandy.moveUpFailTicker(),
           ])
           break
 
         case 'up':
           await Promise.all([
             candy.moveUpFailTicker(),
-            opponentCandy.moveDownFailTicker(),
+            // opponentCandy.moveDownFailTicker(),
           ])
           break
       }
     }
 
-    console.log('DONE')
     this.isSwaping = false
   }
 
@@ -535,12 +532,11 @@ export class CandyScene extends Scene {
 
   examineIfHasLine() {
     const needToDelete = []
+    // this._logGrid()
 
     for (let j = 0; j < this.colCount; j++) {
       // for (let j = 0; j < 3; j++) {
       for (let i = 0; i < this.rowCount; i++) {
-        if (i >= this.colCount - 2) continue
-
         const candy = this.grid[j][i]
         if (candy === null) continue
         // if (candy.isDelete) continue
@@ -557,25 +553,6 @@ export class CandyScene extends Scene {
               needToDelete.push(this.grid[j][i + k])
             }
           }
-
-          // const lineEndTop = this.grid[j + 1]?.[i + rightLineLength]
-          // const lineEndBottom = this.grid[j - 1]?.[i + rightLineLength]
-          // if (
-          //   lineEndTop &&
-          //   lineEndTop.typeIndex === this.grid[j]?.[i]?.typeIndex
-          // ) {
-          //   console.log('has more candy need for deleting(top)')
-          // }
-
-          // if (
-          //   lineEndBottom &&
-          //   lineEndBottom.typeIndex === this.grid[j]?.[i]?.typeIndex
-          // ) {
-          //   console.log('has more candy need for deleting(bottom)')
-          // }
-
-          // // skip examining lined candy
-          // i += rightLineLength - 1
         }
         if (bottomLineLength >= 3) {
           // console.log(candy)
@@ -607,6 +584,7 @@ export class CandyScene extends Scene {
 
     function bottomLineCheck(candy) {
       const { i, j } = candy
+
       let bottomLineLength = 1
       let bottomIndexOffset = 1
 
@@ -800,11 +778,26 @@ export class CandyScene extends Scene {
   _logGrid() {
     console.log('==========================')
     for (let j = 0; j < this.rowCount; j++) {
-      console.log(this.grid[j])
-      //  for (let i = 0; i < this.colCount; i++) {
-
-      //  }
+      const row = []
+      for (let i = 0; i < this.colCount; i++) {
+        row.push(getColor(this.grid[j][i].typeIndex))
+      }
+      // console.log(this.grid[j])
+      console.log(row)
     }
     console.log('==========================')
+
+    function getColor(typeIndex) {
+      switch (typeIndex) {
+        case 0:
+          return '黃'
+        case 1:
+          return '綠'
+        case 2:
+          return '藍'
+        case 3:
+          return '紅'
+      }
+    }
   }
 }
