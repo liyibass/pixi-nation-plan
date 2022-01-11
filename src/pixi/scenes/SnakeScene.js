@@ -27,17 +27,18 @@ export class SnakeScene {
   constructor(selectStage = () => {}) {
     this.container = new PIXI.Container()
     this.selectStage = selectStage
+
+    // snake property
+    this.snakeArray = []
+    this.moveDirection = ['right']
+    this.newBodyQueue = []
+
     this.createSnakeScene()
 
     this.totalI = Math.floor(this.gameStageWidth / BLOCK_WIDTH)
     this.totalJ = Math.floor(this.gameStageHeight / BLOCK_WIDTH)
     Globals.snakeTotalI = this.totalI
     Globals.snakeTotalJ = this.totalJ
-
-    // snake property
-    this.snakeArray = []
-    this.moveDirection = ['right']
-    this.newBodyQueue = []
 
     // food property
     this.snakeFoodArray = []
@@ -143,8 +144,8 @@ export class SnakeScene {
   }
 
   createSnakeController() {
-    const controller = new SnakeController(Globals.getSnakeControllerPosition())
-    this.container.addChild(controller.container)
+    this.controller = new SnakeController(this.moveDirection)
+    this.container.addChild(this.controller.container)
   }
 
   _createDoctorSay() {
@@ -662,6 +663,7 @@ export class SnakeScene {
 
     this.createKeyboardListener()
     this.startSnakeMoveTicker()
+    this.controller.activeListener()
   }
 
   startSnakeMoveTicker() {
@@ -912,6 +914,7 @@ export class SnakeScene {
   }
 
   pauseGame() {
+    this.controller.deactiveListener()
     this.snakeMoveTicker.stop()
     this.container.removeChild(this.menuButtons.container)
 
@@ -945,10 +948,12 @@ export class SnakeScene {
     await this._countDown(3)
 
     this.snakeMoveTicker.start()
+    this.controller.activeListener()
   }
 
   async gamePassed() {
     this.snakeMoveTicker.stop()
+    this.controller.deactiveListener()
     this.container.removeChild(this.menuButtons.container)
     // window.removeEventListener('keydown', this.keyboardListener)
 
@@ -959,6 +964,7 @@ export class SnakeScene {
 
   async gameOver() {
     this.snakeMoveTicker.stop()
+    this.controller.deactiveListener()
     this.container.removeChild(this.menuButtons.container)
     // window.removeEventListener('keydown', this.keyboardListener)
 
@@ -1066,7 +1072,6 @@ export class SnakeScene {
     }
 
     async function successGameChooseHandler(chosen) {
-      console.log(chosen)
       switch (chosen) {
         case 'nextLevel':
           this.container.removeChild(gameSuccess.container)

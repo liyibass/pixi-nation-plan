@@ -127,7 +127,11 @@ export class IntroScene {
       }
     }
     // start film script
-    this.startButton.on('pointerdown', startFilmScript)
+    console.log(startFilmScript)
+    this.startButton.on('pointerdown', () => {
+      this.selectStage('snake')
+    })
+    // this.startButton.on('pointerdown', startFilmScript)
   }
 
   async startStory() {
