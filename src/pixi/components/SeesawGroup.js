@@ -68,6 +68,7 @@ export class SeesawGroup {
 
   addNewWeightCardToBoard(weightCard, side = 'left') {
     // add seesaw ref into card
+    weightCard.seesawGroupRef = this
     weightCard.seesawBoardRef = this.board
 
     // clean linkList
@@ -78,6 +79,28 @@ export class SeesawGroup {
 
     // display card
     this.board.container.addChild(weightCard.container)
+
+    switch (side) {
+      default:
+      case 'left':
+        weightCard.seesawSide = 'left'
+        this._addToLeft(weightCard)
+        this.leftTotalWeight += weightCard.weight
+        this.leftLoad += weightCard.load
+        break
+
+      case 'right':
+        weightCard.seesawSide = 'right'
+        this._addToRight(weightCard)
+        this.rightTotalWeight += weightCard.weight
+        this.rightLoad += weightCard.load
+        break
+    }
+
+    // hide card's weight text
+    weightCard.weightText.alpha = 0
+
+    this.rotateBoard()
   }
 
   getChoosedWeightCard(weightCard) {

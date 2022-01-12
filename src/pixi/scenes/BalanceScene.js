@@ -6,6 +6,7 @@ import { Scene } from './Scene'
 import { Conveyor } from '../components/Conveyor'
 import { SeesawGroup } from '../components/SeesawGroup'
 import { Timer } from '../components/Timer'
+import { WeightCard } from '../components/WeightCard'
 
 const BLOCK_WIDTH = 16
 
@@ -89,6 +90,20 @@ export class BalanceScene extends Scene {
     this.gameStage.addChild(this.timer.container)
   }
 
+  createInitLoad() {
+    for (let i = 0; i < 1; i++) {
+      const { name, weight, load } = this.getRandomWeight(0)
+      const weightCard = new WeightCard(
+        weight,
+        name,
+        load,
+        this.seesawGroup.getChoosedWeightCard.bind(this.seesawGroup)
+      )
+
+      this.seesawGroup.addNewWeightCardToBoard(weightCard, 'left')
+    }
+  }
+
   // ===== game flow =====
   async startGameFlow() {
     console.log('startGameFlow')
@@ -117,19 +132,20 @@ export class BalanceScene extends Scene {
     this.initGame()
 
     await this.doctorSay.newSay('現在有些人想要搬來你的村莊了')
-    await this.doctorSay.newSay('有沒有看到那個翹翹板？')
+    // await this.doctorSay.newSay('有沒有看到那個翹翹板？')
 
-    await this.doctorSay.newSay(
-      '左邊、右邊各有 4 個格子，每格最多可以放 4 個人'
-    )
-    await this.doctorSay.newSay('你可以先試著放看看，就是這麼簡單')
-
+    // await this.doctorSay.newSay(
+    //   '左邊、右邊各有 4 個格子，每格最多可以放 4 個人'
+    // )
+    // await this.doctorSay.newSay('你可以先試著放看看，就是這麼簡單')
+    // this.createInitLoad()
     this.startGame()
   }
 
   async gameLevel1() {
     this.initGame()
     await this.doctorSay.newSay('level 2!')
+    this.createInitLoad()
     this.startGame()
   }
 
@@ -137,6 +153,7 @@ export class BalanceScene extends Scene {
     this.initGame()
 
     await this.doctorSay.newSay('final level!')
+    this.createInitLoad()
     this.startGame()
   }
 
@@ -235,5 +252,61 @@ export class BalanceScene extends Scene {
       this.timer.container,
       this.conveyor.container
     )
+  }
+
+  getRandomWeight(id) {
+    const randomId = Math.floor(Math.random() * 8)
+    const cardId = typeof id === 'number' ? id : randomId
+
+    switch (cardId) {
+      case 0:
+        return {
+          name: 'weightAdult1',
+          weight: 100,
+          load: 1,
+        }
+      case 1:
+        return {
+          name: 'weightAdult2',
+          weight: 100,
+          load: 1,
+        }
+      case 2:
+        return {
+          name: 'weightChild1',
+          weight: 50,
+          load: 1,
+        }
+      case 3:
+        return {
+          name: 'weightChild2',
+          weight: 50,
+          load: 1,
+        }
+      case 4:
+        return {
+          name: 'weightElder1',
+          weight: 150,
+          load: 1,
+        }
+      case 5:
+        return {
+          name: 'weightElder2',
+          weight: 150,
+          load: 1,
+        }
+      case 6:
+        return {
+          name: 'weightBus',
+          weight: 500,
+          load: 4,
+        }
+      case 7:
+        return {
+          name: 'weightShop',
+          weight: 750,
+          load: 4,
+        }
+    }
   }
 }
