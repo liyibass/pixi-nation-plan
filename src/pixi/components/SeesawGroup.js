@@ -7,6 +7,8 @@ import { SeesawButton } from '../components/SeesawButton'
 const TIMER_WIDTH = 69
 const LIMIT = 17
 
+const { width } = Globals.getSeesawGameStageDimention()
+
 export class SeesawGroup {
   constructor(gameLevel = 0) {
     this.container = new PIXI.Container()
@@ -64,6 +66,20 @@ export class SeesawGroup {
     Globals.SEESAW_HEIGHT = this.container.height
   }
 
+  addNewWeightCardToBoard(weightCard, side = 'left') {
+    // add seesaw ref into card
+    weightCard.seesawBoardRef = this.board
+
+    // clean linkList
+    weightCard.prevCard = null
+    weightCard.nextCard = null
+
+    weightCard.isOnConveyor = false
+
+    // display card
+    this.board.container.addChild(weightCard.container)
+  }
+
   getChoosedWeightCard(weightCard) {
     // block rest cards
 
@@ -79,7 +95,6 @@ export class SeesawGroup {
     if (weightCard.positionTicker && weightCard.positionTicker?.started) {
       weightCard.positionTicker.destroy()
     }
-    const { width } = Globals.getSeesawGameStageDimention()
 
     // put card onto seesaw
     if (weightCard.isOnConveyor) {
@@ -92,12 +107,12 @@ export class SeesawGroup {
       // put card onto board,and calculate each side's weight
       if (weightCard.container.x + TIMER_WIDTH < width / 2) {
         weightCard.seesawSide = 'left'
-        addToLeft.bind(this)()
+        this._addToLeft(weightCard)
         this.leftTotalWeight += weightCard.weight
         this.leftLoad += weightCard.load
       } else {
         weightCard.seesawSide = 'right'
-        addToRight.bind(this)()
+        this._addToRight(weightCard)
         this.rightTotalWeight += weightCard.weight
         this.rightLoad += weightCard.load
       }
@@ -110,7 +125,7 @@ export class SeesawGroup {
     } else {
       // card is from seesaw's another side,and re calculate each side's weight
       if (weightCard.container.x < width / 2) {
-        addToLeft.bind(this)()
+        this._addToLeft(weightCard)
 
         if (weightCard.seesawSide === 'right') {
           weightCard.seesawSide = 'left'
@@ -120,7 +135,7 @@ export class SeesawGroup {
           this.rightLoad -= weightCard.load
         }
       } else {
-        addToRight.bind(this)()
+        this._addToRight(weightCard)
 
         if (weightCard.seesawSide === 'left') {
           weightCard.seesawSide = 'right'
@@ -142,47 +157,46 @@ export class SeesawGroup {
     weightCard.weightText.alpha = 0
 
     this.rotateBoard()
+  }
 
-    function addToLeft() {
-      // linkList
-      const prevCard = this.leftSideLastCard
-      if (prevCard) {
-        prevCard.nextCard = weightCard
-      }
-      weightCard.prevCard = prevCard
+  _addToLeft(weightCard) {
+    // linkList
+    const prevCard = this.leftSideLastCard
+    if (prevCard) {
+      prevCard.nextCard = weightCard
+    }
+    weightCard.prevCard = prevCard
 
-      // update first/last linkList card
-      if (weightCard.prevCard === null) {
-        this.leftSideFirstCard = weightCard
-      }
-      if (weightCard.nextCard === null) {
-        this.leftSideLastCard = weightCard
-      }
-
-      weightCard.container.x =
-        width / 4 + Math.floor(Math.random() * 8 - 4) * 15
-      weightCard.container.y = -20
+    // update first/last linkList card
+    if (weightCard.prevCard === null) {
+      this.leftSideFirstCard = weightCard
+    }
+    if (weightCard.nextCard === null) {
+      this.leftSideLastCard = weightCard
     }
 
-    function addToRight() {
-      // linkList
-      const prevCard = this.rightSideLastCard
-      if (prevCard) {
-        prevCard.nextCard = weightCard
-      }
-      weightCard.prevCard = prevCard
-      // update first/last linkList card
-      if (weightCard.prevCard === null) {
-        this.rightSideLastCard = weightCard
-      }
-      if (weightCard.nextCard === null) {
-        this.rightSideLastCard = weightCard
-      }
+    weightCard.container.x = width / 4 + Math.floor(Math.random() * 8 - 4) * 15
+    weightCard.container.y = -20
+  }
 
-      weightCard.container.x =
-        (width * 3) / 4 + Math.floor(Math.random() * 8 - 4) * 20
-      weightCard.container.y = -20
+  _addToRight(weightCard) {
+    // linkList
+    const prevCard = this.rightSideLastCard
+    if (prevCard) {
+      prevCard.nextCard = weightCard
     }
+    weightCard.prevCard = prevCard
+    // update first/last linkList card
+    if (weightCard.prevCard === null) {
+      this.rightSideLastCard = weightCard
+    }
+    if (weightCard.nextCard === null) {
+      this.rightSideLastCard = weightCard
+    }
+
+    weightCard.container.x =
+      (width * 3) / 4 + Math.floor(Math.random() * 8 - 4) * 20
+    weightCard.container.y = -20
   }
 
   rotateBoard() {
