@@ -9,6 +9,7 @@ import { Taiwan } from '../components/Taiwan'
 import { DoctorDialogBox } from '../components/DoctorDialogBox'
 import { DoctorSay } from '../components/DoctorSay'
 import { GroundGroup } from '../components/GroundGroup'
+import { IntroSlideshow } from '../components/IntroSlideshow'
 
 const skipButtonDimention = Globals.getSkipButtonDimention()
 
@@ -24,6 +25,7 @@ export class IntroScene {
     this.isAnimationSkipped = false
 
     this.filmScript = [
+      this.startSlideshow.bind(this),
       this.startStory.bind(this),
       this.firstLightUp.bind(this),
       this.lookAround.bind(this),
@@ -127,11 +129,18 @@ export class IntroScene {
       }
     }
     // start film script
-    console.log(startFilmScript)
-    this.startButton.on('pointerdown', () => {
-      this.selectStage('balance')
+    // console.log(startFilmScript)
+    // this.startButton.on('pointerdown', () => {
+    //   this.selectStage('balance')
+    // })
+    this.startButton.on('pointerdown', startFilmScript)
+  }
+
+  async startSlideshow() {
+    return new Promise((resolve) => {
+      this.slideshow = new IntroSlideshow(resolve)
+      this.container.addChild(this.slideshow.container)
     })
-    // this.startButton.on('pointerdown', startFilmScript)
   }
 
   async startStory() {

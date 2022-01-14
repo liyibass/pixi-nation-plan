@@ -188,4 +188,22 @@ export const Globals = {
       height: height,
     }
   },
+  getIntroSlideshowDimention: function () {
+    let height = Math.floor((this.height * 1) / 2)
+    if (height > 1000) {
+      height = 1000
+    }
+
+    let width =
+      this.width - 2 * gameStagePadding > height
+        ? height
+        : this.width - 2 * gameStagePadding
+
+    return {
+      x: (this.width - width) / 2,
+      y: (this.height - height) / 2,
+      width: width,
+      height: height,
+    }
+  },
 }

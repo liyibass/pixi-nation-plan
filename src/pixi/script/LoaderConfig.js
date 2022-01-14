@@ -153,6 +153,13 @@ import doctorSay_1 from '../assets/images/doctorSay_1.png'
 import doctorSay_2 from '../assets/images/doctorSay_2.png'
 import doctorSay_3 from '../assets/images/doctorSay_3.png'
 import doctorSay_4 from '../assets/images/doctorSay_4.png'
+import intro_0 from '../assets/images/intro_0.png'
+import intro_1 from '../assets/images/intro_1.png'
+import intro_2 from '../assets/images/intro_2.png'
+import intro_3 from '../assets/images/intro_3.png'
+import intro_4 from '../assets/images/intro_4.png'
+import intro_5 from '../assets/images/intro_5.png'
+import intro_6 from '../assets/images/intro_6.png'
 
 export const LoaderConfig = {
   player,
@@ -310,4 +317,11 @@ export const LoaderConfig = {
   doctorSay_2,
   doctorSay_3,
   doctorSay_4,
+  intro_0,
+  intro_1,
+  intro_2,
+  intro_3,
+  intro_4,
+  intro_5,
+  intro_6,
 }
