@@ -360,7 +360,7 @@ class Arrow {
 
   createActiveRegion() {
     const activeRegion = new PIXI.Graphics()
-    activeRegion.beginFill(0xff0000)
+    activeRegion.beginFill(0xff0000, 0)
     activeRegion.drawCircle(0, 0, 100)
     activeRegion.endFill()
     this.container.addChild(activeRegion)
