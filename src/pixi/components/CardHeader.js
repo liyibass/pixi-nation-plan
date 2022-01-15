@@ -178,7 +178,7 @@ export class CardHeader {
     }
   }
 
-  activateListener() {
+  activeListener() {
     this.arrow1.container.buttonMode = true
     this.arrow1.container.interactive = true
     this.arrow2.container.buttonMode = true

@@ -40,7 +40,19 @@ export class TaiwanCity {
     this.sprite1.height *= ratio
     this.sprite1.alpha = 0
 
-    this.container.addChild(this.sprite0, this.sprite1)
+    this.white = new PIXI.Graphics()
+    this.white.beginFill(0xffffff, 1)
+    this.white.drawRect(0, 0, this.sprite0.width, this.sprite0.height)
+    this.white.endFill()
+    this.white.pivot.set(this.white.width / 2, this.white.height / 2)
+    const whiteMask = new PIXI.Sprite(texture1)
+    // whiteMask.anchor.set(0.5, 0.5)
+    whiteMask.width *= ratio
+    whiteMask.height *= ratio
+    this.white.mask = whiteMask
+    this.white.alpha = 0
+    this.white.addChild(whiteMask)
+    this.container.addChild(this.sprite0, this.sprite1, this.white)
   }
 
   createText() {
@@ -177,6 +189,37 @@ export class TaiwanCity {
         callback()
       }
     })
+  }
+
+  hintCity() {
+    this.hintTicker = new PIXI.Ticker()
+
+    let hintState = 'light'
+    this.hintTicker.add(() => {
+      if (hintState === 'light') {
+        if (this.white.alpha < 1) {
+          this.white.alpha += 0.02
+
+          if (this.white.alpha >= 1) {
+            hintState = 'dark'
+          }
+        }
+      } else {
+        if (this.white.alpha > 0) {
+          this.white.alpha -= 0.02
+
+          if (this.white.alpha <= 0) {
+            hintState = 'light'
+          }
+        }
+      }
+    })
+
+    this.hintTicker.start()
+  }
+
+  stopHintCity() {
+    this.hintTicker?.stop()
   }
 
   deactiveListener() {

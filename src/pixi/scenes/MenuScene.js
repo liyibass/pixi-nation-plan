@@ -23,7 +23,7 @@ export class MenuScene extends Scene {
 
     this.createScene()
 
-    this.startTutorial()
+    this.startGameFlow()
   }
   // ===== init system =====
   createScene() {
@@ -54,23 +54,31 @@ export class MenuScene extends Scene {
     this.container.addChild(this.taiwan.container)
   }
 
+  startGameFlow() {
+    if (this.isNeedTutorial) {
+      this.startTutorial()
+    } else {
+      this.openAllListener()
+    }
+  }
+
   async startTutorial() {
     if (!this.isNeedTutorial) return
 
     this.groundGroup.deactiveListener()
     this.tip = new Tip()
 
-    // await this.doctorSay.newSay('這裡是偉哉鬼島，我是新任的村長馬先生。')
-    // await this.doctorSay.newSay(
-    //   '先說一聲恭喜，這麼愛玩遊戲的你，雀屏中選，成為我治理新村莊的好幫手啦！'
-    // )
-    // await this.doctorSay.newSay('想要回到原本的世界很簡單')
-    // await this.doctorSay.newSay(
-    //   '看看地圖上的一塊塊拼圖，每一個都是獨立的村莊，但他們都遇上了一些麻煩，所以顏色看起來都沒什麼活力…'
-    // )
-    // await this.doctorSay.newSay(
-    //   '你的任務就是搜集每個城市遺失的卡片，只要全部都找齊，村民開心，你也能回家啦！'
-    // )
+    await this.doctorSay.newSay('這裡是偉哉鬼島，我是新任的村長馬先生。')
+    await this.doctorSay.newSay(
+      '先說一聲恭喜，這麼愛玩遊戲的你，雀屏中選，成為我治理新村莊的好幫手啦！'
+    )
+    await this.doctorSay.newSay('想要回到原本的世界很簡單')
+    await this.doctorSay.newSay(
+      '看看地圖上的一塊塊拼圖，每一個都是獨立的村莊，但他們都遇上了一些麻煩，所以顏色看起來都沒什麼活力…'
+    )
+    await this.doctorSay.newSay(
+      '你的任務就是搜集每個城市遺失的卡片，只要全部都找齊，村民開心，你也能回家啦！'
+    )
     await this.doctorSay.newSay(
       '每張卡片都和城市的特色息息相關。你可以點選有興趣的城市，裡面有城市的基本資料，以及未來的規劃。'
     )
@@ -82,6 +90,7 @@ export class MenuScene extends Scene {
 
     const callBack = async () => {
       this.removePointerHint()
+      this.doctorSay.removeHint()
       this.taiwan.deactiveKaoshiungListener()
 
       await this.doctorSay.newSay(
@@ -134,9 +143,11 @@ export class MenuScene extends Scene {
           // hint kaoshiung
           this.tip.createPointerTip(this.taiwan.kaoshiung)
           this.container.addChild(this.tip.pointerTipContainer)
+          this.taiwan.kaoshiung.hintCity()
 
           const kaoshiungCallback = async () => {
             this.removePointerHint()
+            this.taiwan.kaoshiung.stopHintCity()
 
             await this.doctorSay.newSay('接下來點選旁邊被封印的卡片區')
 
@@ -172,11 +183,19 @@ export class MenuScene extends Scene {
     this.taiwan.activeKaoshiungListener(callBack)
   }
 
+  openAllListener() {
+    this.taiwan.activeCityListener()
+    this.taiwan.activeGameListener()
+    this.taiwan.card.activeListener()
+    this.groundGroup.activeListener()
+  }
+
   startGame(choosedGame) {
     this.selectStage(choosedGame.gameName)
   }
 
   removePointerHint() {
-    this.tip?.pointerTipContainer?.destroy()
+    this.tip?.pointerTipTicker?.stop?.()
+    this.tip?.pointerTipContainer?.destroy?.()
   }
 }

@@ -23,6 +23,7 @@ export class CardTab {
 
     this.createCardTab()
     this.startScrollTicker()
+    // this.activeListener()
   }
 
   createCardTab() {
@@ -147,9 +148,6 @@ export class CardTab {
     sideShadow.x = this.tabIndex * (TAB_WIDTH - 20) - 6
     this.tab.x = this.tabIndex * (TAB_WIDTH - 20)
     tabShadow.x = this.tabIndex * (TAB_WIDTH - 20)
-
-    this.tab.buttonMode = true
-    this.tab.interactive = true
   }
 
   insertTabData() {
@@ -286,11 +284,14 @@ export class CardTab {
 
   stopAllProcess() {
     if (this.isInfoCard) return
-
+    console.log('tab stopAllProcess')
     this.tab.removeAllListeners()
   }
 
-  activateListener() {
+  activeListener() {
+    this.tab.buttonMode = true
+    this.tab.interactive = true
+
     this.tab.addListener('pointerdown', () => {
       this.updateTabOrder()
     })

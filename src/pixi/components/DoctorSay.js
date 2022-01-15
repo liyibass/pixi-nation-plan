@@ -82,7 +82,7 @@ export class DoctorSay {
     const textLineCount = Math.ceil((text.length * fontSize) / textMaxWidth)
     const blobWidth = 16 * 2 + textWidth
     const blobHeight = 16 * 2 + textLineCount
-    const dialogBox = new DialogBox({
+    this.dialogBox = new DialogBox({
       text,
       x: (Globals.width - 300) / 2,
       y: talkerY - blobHeight - 70,
@@ -92,12 +92,16 @@ export class DoctorSay {
       height: blobHeight,
       fontSize: fontSize,
     })
-    this.container.addChild(dialogBox.container)
+    this.container.addChild(this.dialogBox.container)
 
     setTimeout(() => {
-      this.container.removeChild(dialogBox.container)
+      this.container.removeChild(this.dialogBox.container)
       // this.container.removeAllListeners()
     }, timeout)
+  }
+
+  removeHint() {
+    this.container.removeChild(this.dialogBox.container)
   }
 
   newSay(text) {

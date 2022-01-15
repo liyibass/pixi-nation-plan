@@ -35,6 +35,10 @@ export class CardFolder {
         tab.scrollTicker?.start?.()
       }
     }
+
+    if (!this.isInfoCard) {
+      this.activeListener()
+    }
   }
 
   createFolderMask() {
@@ -75,6 +79,12 @@ export class CardFolder {
 
       // stop tab click listener
       tab.stopAllProcess()
+    })
+  }
+
+  activeListener() {
+    this.tabArray.forEach((tab) => {
+      tab.activeListener()
     })
   }
 }

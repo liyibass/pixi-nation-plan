@@ -136,6 +136,7 @@ export class Card {
   showCityInfo(selectedCity = { index: 0 }) {
     this.container.visible = true
     this.container.interactive = true
+
     this.header.updateCity(selectedCity.index)
     this.cardFolder.updateCity(
       cityDataArray[selectedCity.index] || cityDataArray[0]
@@ -154,5 +155,11 @@ export class Card {
       this.hideCardInfo()
       // this.container.parent.removeChild(this.container)
     })
+  }
+
+  activeListener() {
+    this.activeCardExitButton()
+    this.header.activeListener()
+    // this.cardFolder.activeListener()
   }
 }
