@@ -2,7 +2,8 @@
 
 // window.PIXI = PIXI
 
-// import { Globals } from '../script/Globals'
+import { Globals } from '../script/Globals'
+import { GroundGroup } from '../components/GroundGroup'
 import { Taiwan } from '../components/Taiwan'
 import { Scene } from './Scene'
 import { Status } from '../script/Status'
@@ -33,6 +34,17 @@ export class MenuScene extends Scene {
     // this._addMaskToGameStage()
 
     this._createDoctorSay()
+  }
+
+  _createItems() {
+    const groundGroupDimention = Globals.getGroundDimention()
+
+    this.groundGroup = new GroundGroup(groundGroupDimention)
+
+    this.groundGroup.container.x = groundGroupDimention.x
+    this.groundGroup.container.y = groundGroupDimention.y
+    this.container.addChild(this.groundGroup.container)
+    // this.groundGroup.activeListener()
   }
 
   createTaiwan() {
@@ -69,7 +81,8 @@ export class MenuScene extends Scene {
     this.container.addChild(this.tip.pointerTipContainer)
 
     const callBack = async () => {
-      this.tip?.pointerTipContainer?.destroy()
+      this.removePointerHint()
+      this.taiwan.deactiveKaoshiungListener()
 
       await this.doctorSay.newSay(
         '接著就是重頭戲啦！有看到每個城市都有數張貼上封條的卡片嗎？那些就是你的任務了！'
@@ -84,10 +97,9 @@ export class MenuScene extends Scene {
       this.tip.createPointerTip(demoTab.tabWording)
       this.container.addChild(this.tip.pointerTipContainer)
 
-      console.log(demoTab)
       demoTab.tab.addListener('pointerdown', async () => {
         demoTab.updateTabOrder()
-        this.tip?.pointerTipContainer?.destroy()
+        this.removePointerHint()
 
         await this._wait(1000)
         await this.doctorSay.newSay(
@@ -108,6 +120,52 @@ export class MenuScene extends Scene {
           this.groundGroup.iconArray[this.groundGroup.iconArray.length - 1]
         this.tip.createPointerTip(infoCard)
         this.container.addChild(this.tip.pointerTipContainer)
+
+        const infoCardEnderCallback = async () => {
+          console.log('enter infoCard')
+          this.removePointerHint()
+        }
+        const infoCardExitCallback = async () => {
+          console.log('eixt infoCard')
+          await this.doctorSay.newSay(
+            '讓我帶著你實作一次吧！你看畫面上有座城市正在微微發亮，點擊它之後，可以先看看他的基本資料'
+          )
+
+          // hint kaoshiung
+          this.tip.createPointerTip(this.taiwan.kaoshiung)
+          this.container.addChild(this.tip.pointerTipContainer)
+
+          const kaoshiungCallback = async () => {
+            this.removePointerHint()
+
+            await this.doctorSay.newSay('接下來點選旁邊被封印的卡片區')
+
+            const waterTab =
+              this.taiwan.card.cardFolder.tabArray[
+                this.taiwan.card.cardFolder.tabArray.length - 2
+              ]
+
+            // hint second card tab
+            this.tip.createPointerTip(waterTab.tabWording)
+            this.container.addChild(this.tip.pointerTipContainer)
+
+            waterTab.tab.addListener('pointerdown', async () => {
+              waterTab.updateTabOrder()
+              this.removePointerHint()
+
+              await this._wait(1000)
+              await this.doctorSay.newSay(
+                '是不是有看到一個關卡？點進去試試看，試著達成任務目標，找回卡片！'
+              )
+            })
+          }
+
+          this.taiwan.activeKaoshiungListener(kaoshiungCallback)
+        }
+        this.groundGroup.activeListener(
+          infoCardEnderCallback,
+          infoCardExitCallback
+        )
       })
     }
 
@@ -116,5 +174,9 @@ export class MenuScene extends Scene {
 
   startGame(choosedGame) {
     this.selectStage(choosedGame.gameName)
+  }
+
+  removePointerHint() {
+    this.tip?.pointerTipContainer?.destroy()
   }
 }

@@ -68,18 +68,21 @@ export class GroundGroupIcon {
     this.animationTicker.add(() => {})
   }
 
-  activeListener() {
+  activeListener(enterCallback, exitCallback) {
     if (this.iconIndex !== 2) return
 
     this.container.interactive = true
     this.container.buttonMode = true
 
     this.container.addListener('pointerdown', () => {
-      console.log('show info')
-      const infoCard = new InfoCard()
+      const infoCard = new InfoCard(exitCallback)
       const topParent = this.container.parent.parent.parent
 
       topParent.addChild(infoCard.container)
+
+      if (enterCallback) {
+        enterCallback?.()
+      }
     })
   }
 }

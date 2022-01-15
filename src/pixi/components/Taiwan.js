@@ -95,6 +95,10 @@ export class Taiwan {
     this.kaoshiung.activeListener(callBack)
   }
 
+  deactiveKaoshiungListener() {
+    this.kaoshiung.deactiveListener()
+  }
+
   activeGameListener() {
     this.container.interactiveChildren = true
     this.gameIconArray.forEach((gameIcon) => {

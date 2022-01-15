@@ -9,8 +9,8 @@ const cardDimention = Globals.getCardDimention()
 const CARD_MARGIN = 12
 
 export class InfoCard {
-  constructor(index = 0) {
-    this.cityIndex = index
+  constructor(exitCallback = () => {}) {
+    this.exitCallback = exitCallback
     this.cityData = infoCard
 
     this.container = new PIXI.Container()
@@ -57,6 +57,10 @@ export class InfoCard {
       this.stopAllProcess()
 
       this.container.parent.removeChild(this.container)
+
+      if (this.exitCallback) {
+        this.exitCallback()
+      }
     })
   }
 

@@ -65,9 +65,9 @@ export class GroundGroup {
     this.player.container.alpha = 0
   }
 
-  activeListener() {
+  activeListener(enterCallback = () => {}, exitCallback = () => {}) {
     this.iconArray.forEach((icon) => {
-      icon.activeListener?.()
+      icon.activeListener?.(enterCallback, exitCallback)
     })
   }
 
