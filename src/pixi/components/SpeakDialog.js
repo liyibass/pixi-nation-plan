@@ -54,7 +54,7 @@ export class SpeakDialog {
 
     this.doctorOriginX = (Globals.width - Globals.maxContentWidth) / 2
 
-    this.doctor.x = 0 + this.doctor.width / 4
+    this.doctor.x = (Globals.width - Globals.maxContentWidth) / 2 - 70
     this.doctor.y = 0 + 2
     // this.doctor.y = -this.doctor.height / 2
     this.doctor.alpha = 0
