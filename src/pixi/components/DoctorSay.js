@@ -68,16 +68,26 @@ export class DoctorSay {
     })
   }
 
-  hint(text, timeout) {
+  hint(text, timeout = 3000) {
+    const talkerX = this.doctorDimention.x + 30
+    const talkerY = this.doctorDimention.y
     const fontSize = 14
-    const blobWidth = 16 * 2 + text.length * fontSize
-    const blobHeight = 16 * 2 + (Math.floor(text.length / 20) + 1) * fontSize
+    const textMaxWidth =
+      window.innerWidth - 32 > 300 ? 300 : window.innerWidth - 32
+
+    const textWidth =
+      text.length * fontSize > textMaxWidth
+        ? textMaxWidth
+        : text.length * fontSize
+    const textLineCount = Math.ceil((text.length * fontSize) / textMaxWidth)
+    const blobWidth = 16 * 2 + textWidth
+    const blobHeight = 16 * 2 + textLineCount
     const dialogBox = new DialogBox({
       text,
-      x: this.doctorDimention.x + 50,
-      y: this.doctorDimention.y - blobHeight - 20,
-      talkerX: this.doctorDimention.x + 60,
-      talkerY: this.doctorDimention.y + 30,
+      x: (Globals.width - 300) / 2,
+      y: talkerY - blobHeight - 70,
+      talkerX: talkerX,
+      talkerY: talkerY,
       width: blobWidth,
       height: blobHeight,
       fontSize: fontSize,
@@ -85,8 +95,8 @@ export class DoctorSay {
     this.container.addChild(dialogBox.container)
 
     setTimeout(() => {
-      this.container.removeChildren()
-      this.container.removeAllListeners()
+      this.container.removeChild(dialogBox.container)
+      // this.container.removeAllListeners()
     }, timeout)
   }
 

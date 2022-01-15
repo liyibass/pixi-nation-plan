@@ -47,18 +47,11 @@ export class Card {
 
     // exit button
     const buttonTexture = new PIXI.Texture(Globals.resources['exit']?.texture)
-    const buttonSprite = new PIXI.Sprite(buttonTexture)
-    this.container.addChild(buttonSprite)
-    buttonSprite.x = cardDimention.width - buttonSprite.width - CARD_MARGIN
-    buttonSprite.y = CARD_MARGIN
-    buttonSprite.buttonMode = true
-    buttonSprite.interactive = true
-
-    buttonSprite.addListener('pointerdown', () => {
-      // this.stopAllProcess()
-      this.container.visible = false
-      // this.container.parent.removeChild(this.container)
-    })
+    this.exitButtonSprite = new PIXI.Sprite(buttonTexture)
+    this.container.addChild(this.exitButtonSprite)
+    this.exitButtonSprite.x =
+      cardDimention.width - this.exitButtonSprite.width - CARD_MARGIN
+    this.exitButtonSprite.y = CARD_MARGIN
   }
 
   stopAllProcess() {
@@ -140,12 +133,26 @@ export class Card {
     }
   }
 
-  showCityInfo(selectedCity) {
+  showCityInfo(selectedCity = { index: 0 }) {
     this.container.visible = true
     this.container.interactive = true
     this.header.updateCity(selectedCity.index)
     this.cardFolder.updateCity(
       cityDataArray[selectedCity.index] || cityDataArray[0]
     )
+  }
+
+  hideCardInfo() {
+    this.container.visible = false
+  }
+
+  activeCardExitButton() {
+    this.exitButtonSprite.buttonMode = true
+    this.exitButtonSprite.interactive = true
+    this.exitButtonSprite.addListener('pointerdown', () => {
+      // this.stopAllProcess()
+      this.hideCardInfo()
+      // this.container.parent.removeChild(this.container)
+    })
   }
 }

@@ -129,11 +129,11 @@ export class IntroScene {
       }
     }
     // start film script
-    // console.log(startFilmScript)
-    // this.startButton.on('pointerdown', () => {
-    //   this.selectStage('balance')
-    // })
-    this.startButton.on('pointerdown', startFilmScript)
+    console.log(startFilmScript)
+    this.startButton.on('pointerdown', () => {
+      this.selectStage('menu')
+    })
+    // this.startButton.on('pointerdown', startFilmScript)
   }
 
   async startSlideshow() {
@@ -388,9 +388,11 @@ export class IntroScene {
 
   async doctorExplain() {
     console.log('doctorExplain')
+    this.lightUpBackground()
 
+    await this.doctorSay.newSay('新的挑戰者出現啦！歡迎光臨模擬村莊計畫!')
     await this.doctorSay.newSay(
-      '經營村莊的不二法門，就是別讓村民不開心，但村子久了總是會出現一些狀況，像是垃圾變多、公共設備損壞，你的任務就是要幫我解決問題。'
+      '想要回去很簡單，只要協助我破解任務，我就放你回去唷'
     )
 
     this.selectStage('menu')

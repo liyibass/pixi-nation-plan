@@ -105,23 +105,19 @@ export class CardHeader {
   createArrow() {
     if (this.isInfoCard) return
     // arrows
-    const arrow1 = new Arrow(0)
-    const arrow2 = new Arrow(1)
-    this.arrowArray = [arrow1, arrow2]
-    this.titleSectionContainer.addChild(arrow1.container, arrow2.container)
+    this.arrow1 = new Arrow(0)
+    this.arrow2 = new Arrow(1)
+    this.arrowArray = [this.arrow1, this.arrow2]
+    this.titleSectionContainer.addChild(
+      this.arrow1.container,
+      this.arrow2.container
+    )
 
-    arrow1.container.y =
-      (this.titleSectionContainer.height - arrow1.container.height) / 2
-    arrow2.container.y =
-      (this.titleSectionContainer.height - arrow2.container.height) / 2
-    arrow2.container.x = CARD_CONTENT_WIDTH
-
-    arrow1.container.addListener('pointerdown', () => {
-      this.changeCityHandler('prev')
-    })
-    arrow2.container.addListener('pointerdown', () => {
-      this.changeCityHandler('next')
-    })
+    this.arrow1.container.y =
+      (this.titleSectionContainer.height - this.arrow1.container.height) / 2
+    this.arrow2.container.y =
+      (this.titleSectionContainer.height - this.arrow2.container.height) / 2
+    this.arrow2.container.x = CARD_CONTENT_WIDTH
   }
 
   stopAllProcess() {
@@ -181,6 +177,19 @@ export class CardHeader {
         return '金門縣'
     }
   }
+
+  activateListener() {
+    this.arrow1.container.buttonMode = true
+    this.arrow1.container.interactive = true
+    this.arrow2.container.buttonMode = true
+    this.arrow2.container.interactive = true
+    this.arrow1.container.addListener('pointerdown', () => {
+      this.changeCityHandler('prev')
+    })
+    this.arrow2.container.addListener('pointerdown', () => {
+      this.changeCityHandler('next')
+    })
+  }
 }
 
 class Bar {
@@ -198,8 +207,7 @@ class Bar {
 class Arrow {
   constructor(index = 0) {
     this.container = new PIXI.Container()
-    this.container.buttonMode = true
-    this.container.interactive = true
+
     this.direction = index === 0 ? 'left' : 'right'
     this.createArrow()
   }

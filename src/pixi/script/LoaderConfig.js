@@ -160,6 +160,8 @@ import intro_3 from '../assets/images/intro_3.png'
 import intro_4 from '../assets/images/intro_4.png'
 import intro_5 from '../assets/images/intro_5.png'
 import intro_6 from '../assets/images/intro_6.png'
+import tipHead from '../assets/images/tipHead.png'
+import tipHeadFinger from '../assets/images/tipHeadFinger.png'
 
 export const LoaderConfig = {
   player,
@@ -324,4 +326,6 @@ export const LoaderConfig = {
   intro_4,
   intro_5,
   intro_6,
+  tipHead,
+  tipHeadFinger,
 }

@@ -53,6 +53,7 @@ export class TaiwanCity {
       fontSize: 14,
       fill: ['0x000000'],
     })
+    this.name = this._getCityName(this.index)
 
     nameText.x = (this.textArea.width - nameText.width) / 2
     nameText.y = (this.textArea.height - nameText.height) / 2
@@ -160,7 +161,7 @@ export class TaiwanCity {
     this.container.y = (this.y * taiwanDimention.height) / 100
   }
 
-  activeListener() {
+  activeListener(callback = () => {}) {
     this.container.addListener('pointerover', async () => {
       // await this.unlockCity()
       this.textArea.alpha = 1
@@ -172,6 +173,9 @@ export class TaiwanCity {
     this.container.addListener('pointerdown', async () => {
       // await this.unlockCity()
       this.chooseCityHandler(this)
+      if (callback) {
+        callback()
+      }
     })
   }
 

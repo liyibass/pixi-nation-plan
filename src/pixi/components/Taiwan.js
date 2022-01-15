@@ -47,6 +47,10 @@ export class Taiwan {
       const taiwanCity = new TaiwanCity(i, this._chooseCityHandler.bind(this))
       this.taiwanCityArray.push(taiwanCity)
       this.taiwanContainer.addChild(taiwanCity.container)
+
+      if (i === 11) {
+        this.kaoshiung = taiwanCity
+      }
     }
   }
 
@@ -77,13 +81,22 @@ export class Taiwan {
     this.container.addChild(this.card.container)
   }
 
-  activeListener() {
+  activeCityListener() {
     this.container.interactiveChildren = true
 
     this.taiwanCityArray.forEach((city) => {
       city.activeListener()
     })
+  }
 
+  activeKaoshiungListener(callBack) {
+    this.container.interactiveChildren = true
+
+    this.kaoshiung.activeListener(callBack)
+  }
+
+  activeGameListener() {
+    this.container.interactiveChildren = true
     this.gameIconArray.forEach((gameIcon) => {
       gameIcon.activeListener()
     })

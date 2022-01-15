@@ -91,6 +91,7 @@ export class CardTab {
     if (this.isInfoCard) return
 
     this.tabContainer = new PIXI.Container()
+    this.tabContainer.name = 'tabContainer'
 
     const sideShadow = new PIXI.Graphics()
     sideShadow.beginFill(0x000000, 0.2)
