@@ -52,9 +52,9 @@ export class SpeakDialog {
     // this.doctor.width = Globals.maxContentWidth / 2
     // this.doctor.height = this.doctor.width * ratio
 
-    this.doctorOriginX = (Globals.width - Globals.maxContentWidth) / 2
+    this.doctorOriginX = (Globals.width - Globals.maxContentWidth) / 2 + 30
 
-    this.doctor.x = (Globals.width - Globals.maxContentWidth) / 2 - 70
+    this.doctor.x = (Globals.width - Globals.maxContentWidth) / 2 - 40
     this.doctor.y = 0 + 2
     // this.doctor.y = -this.doctor.height / 2
     this.doctor.alpha = 0
@@ -63,12 +63,18 @@ export class SpeakDialog {
     this.speakDialogGroup.addChild(this.whiteBackground)
 
     // create text
+    const fontSize = Globals.sayFontSize
+    // const textWidth = this.text.length*fontSize
+    const contentWidth =
+      Globals.width - 2 * 16 > Globals.maxContentWidth
+        ? Globals.maxContentWidth
+        : Globals.width - 2 * 16
     const text = new PIXI.Text(this.text, {
       align: 'center', // 對齊
-      fontSize: 20,
+      fontSize,
       wordWrap: true,
       breakWords: true,
-      wordWrapWidth: (Globals.maxContentWidth * 2) / 3 - 5,
+      wordWrapWidth: contentWidth,
     })
     text.x = (Globals.width - text.width) / 2
     text.y = (this.whiteBackground.height - text.height) / 2

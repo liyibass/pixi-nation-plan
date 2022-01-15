@@ -206,4 +206,5 @@ export const Globals = {
       height: height,
     }
   },
+  sayFontSize: window.innerWidth < 500 ? 14 : 20,
 }
