@@ -70,4 +70,10 @@ export class GroundGroup {
       icon.activeListener?.()
     })
   }
+
+  deactiveListener() {
+    this.iconArray.forEach((icon) => {
+      icon.deactiveListener?.()
+    })
+  }
 }

@@ -440,7 +440,7 @@ export class IntroScene {
     this.groundGroup.container.y = groundGroupDimention.y
 
     this.container.addChild(this.groundGroup.container)
-    this.groundGroup.activeListener()
+    // this.groundGroup.activeListener()
 
     // fix taiwan's zIndex
 

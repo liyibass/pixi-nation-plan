@@ -44,6 +44,8 @@ export class MenuScene extends Scene {
 
   async startTutorial() {
     if (!this.isNeedTutorial) return
+
+    this.groundGroup.deactiveListener()
     this.tip = new Tip()
 
     // await this.doctorSay.newSay('這裡是偉哉鬼島，我是新任的村長馬先生。')
@@ -81,7 +83,34 @@ export class MenuScene extends Scene {
       // hint second card tab
       this.tip.createPointerTip(demoTab.tabWording)
       this.container.addChild(this.tip.pointerTipContainer)
+
+      console.log(demoTab)
+      demoTab.tab.addListener('pointerdown', async () => {
+        demoTab.updateTabOrder()
+        this.tip?.pointerTipContainer?.destroy()
+
+        await this._wait(1000)
+        await this.doctorSay.newSay(
+          '另外，也能看到卡片藏身的關卡位置。只要挑戰關卡成功，你就能找回不見的卡片！是不是很簡單！'
+        )
+
+        this.taiwan.card.hideCardInfo()
+
+        await this.doctorSay.newSay(
+          '最後就是，如果你好奇我為什麼想推動村莊大改造'
+        )
+        await this.doctorSay.newSay(
+          '你還可以點選我的企劃書，這可是機密資料，我只分享給你看哦！助手的殺必斯啦！'
+        )
+
+        // hint infoCard
+        const infoCard =
+          this.groundGroup.iconArray[this.groundGroup.iconArray.length - 1]
+        this.tip.createPointerTip(infoCard)
+        this.container.addChild(this.tip.pointerTipContainer)
+      })
     }
+
     this.taiwan.activeKaoshiungListener(callBack)
   }
 

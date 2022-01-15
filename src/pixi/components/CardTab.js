@@ -150,10 +150,6 @@ export class CardTab {
 
     this.tab.buttonMode = true
     this.tab.interactive = true
-
-    this.tab.addListener('pointerdown', () => {
-      this.updateTabOrder()
-    })
   }
 
   insertTabData() {
@@ -260,7 +256,7 @@ export class CardTab {
     }
   }
 
-  updateTabOrder() {
+  updateTabOrder(callback) {
     // set selected tab to top
     this.cardFolder.container.setChildIndex(
       this.container,
@@ -282,11 +278,24 @@ export class CardTab {
 
     this.scrollTicker?.start?.()
     this.content.y = 0
+
+    if (callback) {
+      callback()
+    }
   }
 
   stopAllProcess() {
     if (this.isInfoCard) return
 
+    this.tab.removeAllListeners()
+  }
+
+  activateListener() {
+    this.tab.addListener('pointerdown', () => {
+      this.updateTabOrder()
+    })
+  }
+  deactiveListener() {
     this.tab.removeAllListeners()
   }
 }
