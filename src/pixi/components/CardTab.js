@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
+import { UnlockButton } from './UnlockButton'
 
 const TAB_HEIGHT = 34
 const TAB_WIDTH = 80
@@ -251,7 +252,25 @@ export class CardTab {
     if (this.tabData.isLocked) {
       // lock graphics
       this.content.filters = [new PIXI.filters.BlurFilter(5)]
+
+      this.createUnlockButton()
     }
+  }
+
+  createUnlockButton() {
+    this.unlockButton = new UnlockButton(this.unlockGame.bind(this))
+
+    this.unlockButton.container.x =
+      (this.page.width - this.unlockButton.container.width) / 2
+    this.unlockButton.container.y =
+      (this.page.height - this.unlockButton.container.height) / 2
+    this.page.addChild(this.unlockButton.container)
+  }
+
+  unlockGame() {
+    console.log('play unlockGame')
+    const game = this.tabData.unlockGame
+    console.log(game)
   }
 
   updateTabOrder(callback) {
