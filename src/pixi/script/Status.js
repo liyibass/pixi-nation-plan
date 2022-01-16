@@ -1,3 +1,3 @@
 export const Status = {
-  isNeedTutorial: true,
+  isNeedTutorial: false,
 }

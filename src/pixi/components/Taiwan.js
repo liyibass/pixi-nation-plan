@@ -43,7 +43,7 @@ export class Taiwan {
   }
 
   createTaiwanCity() {
-    for (let i = 0; i < 21; i++) {
+    for (let i = 0; i < 19; i++) {
       const taiwanCity = new TaiwanCity(i, this._chooseCityHandler.bind(this))
       this.taiwanCityArray.push(taiwanCity)
       this.taiwanContainer.addChild(taiwanCity.container)

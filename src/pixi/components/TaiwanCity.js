@@ -284,10 +284,6 @@ export class TaiwanCity {
         return '南投縣'
       case 18:
         return '澎湖縣'
-      case 19:
-        return '連江縣'
-      case 20:
-        return '金門縣'
     }
   }
 }

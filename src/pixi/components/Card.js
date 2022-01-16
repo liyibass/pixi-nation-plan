@@ -66,9 +66,9 @@ export class Card {
 
   _changeCityHandler(choose) {
     if (choose === 'prev') {
-      this.cityIndex = this.cityIndex !== 0 ? this.cityIndex - 1 : 16
+      this.cityIndex = this.cityIndex !== 0 ? this.cityIndex - 1 : 18
     } else {
-      this.cityIndex = this.cityIndex !== 16 ? this.cityIndex + 1 : 0
+      this.cityIndex = this.cityIndex !== 18 ? this.cityIndex + 1 : 0
     }
     this.header.updateCity(this.cityIndex)
     this.cardFolder.updateCity(
@@ -126,10 +126,6 @@ export class Card {
         return '南投縣'
       case 18:
         return '澎湖縣'
-      case 19:
-        return '連江縣'
-      case 20:
-        return '金門縣'
     }
   }
 
