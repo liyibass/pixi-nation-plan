@@ -68,6 +68,7 @@ export class Card {
   }
 
   _changeCityHandler(choose) {
+    console.log('_changeCityHandler')
     if (choose === 'prev') {
       this.cityIndex = this.cityIndex !== 0 ? this.cityIndex - 1 : 18
     } else {
@@ -140,14 +141,14 @@ export class Card {
     }
   }
 
-  showCityInfo(selectedCity = { index: 0 }) {
+  showCityInfo(selectedCity = { cityIndex: 0 }) {
     this.container.visible = true
     this.container.interactive = true
 
-    this.header.updateCity(selectedCity.index)
+    this.header.updateCity(selectedCity.cityIndex)
     this.cardFolder.updateCity(
       cityDataArray.find(
-        (cityData) => cityData.cityIndex === selectedCity.index
+        (cityData) => cityData.cityIndex === selectedCity.cityIndex
       ) || cityDataArray[0]
     )
   }

@@ -164,6 +164,7 @@ import tipHead from '../assets/images/tipHead.png'
 import tipHeadFinger from '../assets/images/tipHeadFinger.png'
 import scrollHintHand from '../assets/images/scrollHintHand.png'
 import scrollHintArrow from '../assets/images/scrollHintArrow.png'
+import Fuck from '../assets/images/Fuck.png'
 
 export const LoaderConfig = {
   player,
@@ -332,4 +333,5 @@ export const LoaderConfig = {
   tipHeadFinger,
   scrollHintHand,
   scrollHintArrow,
+  Fuck,
 }

@@ -1,13 +1,14 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
+import { cityDataArray } from '../script/CityData'
 
 const taiwanDimention = Globals.getTaiwanDimention()
 
 const ratio = taiwanDimention.width / (375 * 3)
 
 export class TaiwanCity {
-  constructor(index = 0, chooseCityHandler = () => {}) {
-    this.index = index
+  constructor(cityIndex = 0, chooseCityHandler = () => {}) {
+    this.cityIndex = cityIndex
     this.chooseCityHandler = chooseCityHandler
 
     this.container = new PIXI.Container()
@@ -16,7 +17,13 @@ export class TaiwanCity {
 
     this.x = 0
     this.y = 0
+
+    this.cityData =
+      cityDataArray.find((cityData) => cityData.cityIndex === this.cityIndex) ||
+      cityDataArray[0]
+
     this.createTaiwanCity()
+    this.createDecocation()
     this.createText()
 
     this.assignPosition()
@@ -25,14 +32,14 @@ export class TaiwanCity {
   }
 
   createTaiwanCity() {
-    const texture0 = Globals.resources[`land_${this.index}_0`]?.texture
+    const texture0 = Globals.resources[`land_${this.cityIndex}_0`]?.texture
     this.sprite0 = new PIXI.Sprite(texture0)
     this.sprite0.anchor.set(0.5, 0.5)
 
     this.sprite0.width *= ratio
     this.sprite0.height *= ratio
 
-    const texture1 = Globals.resources[`land_${this.index}_1`]?.texture
+    const texture1 = Globals.resources[`land_${this.cityIndex}_1`]?.texture
     this.sprite1 = new PIXI.Sprite(texture1)
     this.sprite1.anchor.set(0.5, 0.5)
 
@@ -55,17 +62,35 @@ export class TaiwanCity {
     this.container.addChild(this.sprite0, this.sprite1, this.white)
   }
 
+  createDecocation() {
+    this.decoration = new PIXI.Container()
+
+    const notYetUnlock = !!this.cityData.tabs.find((tab) => {
+      return tab.isLocked === true
+    })
+
+    if (notYetUnlock) {
+      const workingTexture = new PIXI.Texture(Globals.resources['Fuck'].texture)
+      const workingSprite = new PIXI.Sprite(workingTexture)
+
+      this.decoration.addChild(workingSprite)
+      // this.decoration.x = this.container.width / 2
+      this.decoration.y = -this.sprite0.height / 2 - this.decoration.height
+      this.sprite0.addChild(this.decoration)
+    }
+  }
+
   createText() {
     this.textArea = new PIXI.Graphics()
     this.textArea.beginFill(0xffffff)
     this.textArea.drawRoundedRect(0, 0, 48, 21, 5)
     this.textArea.endFill()
 
-    const nameText = new PIXI.Text(`${this._getCityName(this.index)}`, {
+    const nameText = new PIXI.Text(`${this._getCityName(this.cityIndex)}`, {
       fontSize: 14,
       fill: ['0x000000'],
     })
-    this.name = this._getCityName(this.index)
+    this.name = this._getCityName(this.cityIndex)
 
     nameText.x = (this.textArea.width - nameText.width) / 2
     nameText.y = (this.textArea.height - nameText.height) / 2
@@ -77,7 +102,7 @@ export class TaiwanCity {
   }
 
   assignPosition() {
-    switch (this.index) {
+    switch (this.cityIndex) {
       case 0:
         this.x = 78
         this.y = 24
