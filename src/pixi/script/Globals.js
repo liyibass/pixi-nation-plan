@@ -133,6 +133,29 @@ export const Globals = {
     }
   },
   getCandyGameStageDimention: function () {
+    // const windowWidth =
+    //   this.width - 2 * gameStagePadding < Math.floor((this.height * 5) / 8)
+    //     ? this.width - 2 * gameStagePadding
+    //     : Math.floor((this.height * 5) / 8)
+
+    // const candyWidth = Math.floor((windowWidth - 2 * gameStagePadding) / 8)
+
+    // const colCount = 8
+    // const rowCount = Math.floor((this.height * 5) / 8 / candyWidth)
+    // const width = candyWidth * colCount
+    // const height = candyWidth * rowCount
+
+    // return {
+    //   x: (this.width - width) / 2,
+    //   y: 0 + gameStagePadding * 2 + 28,
+    //   // y: this.height / 5,
+    //   width,
+    //   height,
+    //   colCount,
+    //   rowCount,
+    //   candyWidth,
+    // }
+
     const windowWidth =
       this.width - 2 * gameStagePadding < Math.floor((this.height * 5) / 8)
         ? this.width - 2 * gameStagePadding
@@ -141,7 +164,7 @@ export const Globals = {
     const candyWidth = Math.floor((windowWidth - 2 * gameStagePadding) / 8)
 
     const colCount = 8
-    const rowCount = Math.floor((this.height * 5) / 8 / candyWidth)
+    const rowCount = 8
     const width = candyWidth * colCount
     const height = candyWidth * rowCount
 
