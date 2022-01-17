@@ -500,7 +500,7 @@ export class SnakeScene {
 
     if (chosen === 'play') {
       // this.createPoisonInterval('fauset')
-      this.gameLevel0_1
+      this.gameLevel0_1()
     } else {
       await this.doctorSay.newSay(
         '什麼！這麼快就要放棄啦？看在我們有緣，只要把遊戲分享出去，就可以解鎖獨家角色（黑熊、石虎）哦！'

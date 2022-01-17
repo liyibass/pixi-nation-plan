@@ -23,8 +23,8 @@ export class Card {
 
     this.landCityIcon = new PIXI.Container()
 
-    this.createCard()
     this.container.visible = false
+    this.createCard()
   }
 
   createCard() {
@@ -78,6 +78,7 @@ export class Card {
       cityDataArray.find((cityData) => cityData.cityIndex === this.cityIndex) ||
         cityDataArray[0]
     )
+    this.cardFolder.activeListener()
   }
 
   createTab() {
@@ -168,6 +169,6 @@ export class Card {
   activeListener() {
     this.activeCardExitButton()
     this.header.activeListener()
-    // this.cardFolder.activeListener()
+    this.cardFolder.activeListener()
   }
 }

@@ -7,7 +7,7 @@ export class UnlockButton {
     this.container = new PIXI.Container()
     this.createButton()
     this.createLockIcon()
-    this.activeListener()
+    // this.activeListener()
   }
 
   createButton() {

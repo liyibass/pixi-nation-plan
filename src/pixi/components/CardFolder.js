@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { CardTab } from './CardTab'
 import { Globals } from '../script/Globals'
+import { Status } from '../script/Status'
 
 const cardDimention = Globals.getCardDimention()
 const TAB_HEIGHT = 34
@@ -44,9 +45,9 @@ export class CardFolder {
       }
     }
 
-    // if (!this.isInfoCard) {
-    // }
-    this.activeListener()
+    if (!this.isInfoCard && Status.isNeedTutorial === false) {
+      this.activeListener()
+    }
   }
 
   createFolderMask() {
@@ -91,8 +92,14 @@ export class CardFolder {
   }
 
   activeListener() {
+    console.log('activeListener')
     this.tabArray.forEach((tab) => {
       tab.activeListener()
+    })
+  }
+  deactiveListener() {
+    this.tabArray.forEach((tab) => {
+      tab.deactiveListener()
     })
   }
 }

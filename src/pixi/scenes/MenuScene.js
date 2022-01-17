@@ -80,7 +80,7 @@ export class MenuScene extends Scene {
       '你的任務就是搜集每個城市遺失的卡片，只要全部都找齊，村民開心，你也能回家啦！'
     )
     await this.doctorSay.newSay(
-      '每張卡片都和城市的特色息息相關。你可以點選有興趣的城市，裡面有城市的基本資料，以及未來的規劃。'
+      '每張卡片都和城市的特色息息相關。你可以點選有興趣的城市!'
     )
     await this.doctorSay.hint('你可以從卡片上的資訊深入認識每一個城市～', 3000)
 
@@ -94,7 +94,7 @@ export class MenuScene extends Scene {
       this.taiwan.deactiveKaoshiungListener()
 
       await this.doctorSay.newSay(
-        '接著就是重頭戲啦！有看到每個城市都有數張貼上封條的卡片嗎？那些就是你的任務了！'
+        '裡面有城市的基本資料，以及未來的規劃。你可以從卡片上的資訊深入認識每一個城市～'
       )
 
       const demoTab =
@@ -105,12 +105,17 @@ export class MenuScene extends Scene {
       // hint second card tab
       this.tip.createPointerTip(demoTab.tabWording)
       this.container.addChild(this.tip.pointerTipContainer)
-
+      console.log(demoTab)
+      demoTab.tab.buttonMode = true
+      demoTab.tab.interactive = true
       demoTab.tab.addListener('pointerdown', async () => {
         demoTab.updateTabOrder()
         this.removePointerHint()
 
         await this._wait(1000)
+        await this.doctorSay.newSay(
+          '接著就是重頭戲啦！有看到每個城市都有數張貼上封條的卡片嗎？那些就是你的任務了！'
+        )
         await this.doctorSay.newSay(
           '另外，也能看到卡片藏身的關卡位置。只要挑戰關卡成功，你就能找回不見的卡片！是不是很簡單！'
         )
@@ -161,6 +166,8 @@ export class MenuScene extends Scene {
                 this.taiwan.card.cardFolder.tabArray.length - 2
               ]
 
+            waterTab.activeTabListener()
+
             // hint second card tab
             this.tip.createPointerTip(waterTab.tabWording)
             this.container.addChild(this.tip.pointerTipContainer)
@@ -168,11 +175,15 @@ export class MenuScene extends Scene {
             waterTab.tab.addListener('pointerdown', async () => {
               waterTab.updateTabOrder()
               this.removePointerHint()
+              waterTab.deactiveListener()
+              waterTab.unlockButton.activeListener()
 
               await this._wait(1000)
               await this.doctorSay.newSay(
                 '是不是有看到一個關卡？點進去試試看，試著達成任務目標，找回卡片！'
               )
+
+              Status.isNeedTutorial = false
             })
           }
 

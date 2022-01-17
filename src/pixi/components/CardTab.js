@@ -334,14 +334,30 @@ export class CardTab {
   }
 
   activeListener() {
+    console.log('tab activeListener')
     this.tab.buttonMode = true
     this.tab.interactive = true
 
     this.tab.addListener('pointerdown', () => {
       this.updateTabOrder()
+      this.unlockButton?.activeListener?.()
     })
   }
+
+  activeTabListener() {
+    console.log('tab activeListener')
+    this.tab.buttonMode = true
+    this.tab.interactive = true
+
+    this.tab.addListener('pointerdown', () => {
+      this.updateTabOrder()
+      // this.unlockButton.activeListener()
+    })
+  }
+
   deactiveListener() {
+    this.tab.buttonMode = false
+    this.tab.interactive = false
     this.tab.removeAllListeners()
   }
 }
