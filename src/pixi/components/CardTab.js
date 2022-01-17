@@ -1,5 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
+import { Status } from '../script/Status'
+import { Tip } from './Tip'
 import { UnlockButton } from './UnlockButton'
 
 const TAB_HEIGHT = 34
@@ -231,6 +233,19 @@ export class CardTab {
         }
       }
     })
+
+    this.createScrollHint()
+  }
+
+  createScrollHint() {
+    if (Status.isNeedScrollHint) {
+      Status.isNeedScrollHint = false
+
+      const tip = new Tip()
+      tip.createScrollHint()
+      console.log(tip.scrollHintContainer)
+      this.page.addChild(tip.scrollHintContainer)
+    }
   }
 
   startScrollTicker() {

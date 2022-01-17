@@ -45,6 +45,16 @@ export const cityDataArray = [
       },
       {
         isLocked: true,
+        unlockGame: 'snake',
+        tabTag: '缺水問題',
+        tabTitle: '豐枯期水資源差異大',
+        tabContent: [
+          '審查委員：仰賴高屏溪川流水，水資源非常不穩定，在枯水期供水已經有幾十萬噸的不足，還需外縣市支援供水',
+          '市府：將推動自來水減漏、鼓勵工廠廢水回收，降低水資源浪費，並優先引進低耗水產業。自來水公司於高屏溪沿岸進行溪埔及大泉伏流水開發，預計民國110年完成',
+        ],
+      },
+      {
+        isLocked: true,
         unlockGame: 'balance',
         tabTag: '人口問題',
         tabTitle: '人口停滯、城鄉失衡',
@@ -63,16 +73,7 @@ export const cityDataArray = [
           '市府：住宅供給雖然充裕，但有超過四成屬於30年以上老屋，必須預先儲備住宅更新的空間',
         ],
       },
-      {
-        isLocked: true,
-        unlockGame: 'snake',
-        tabTag: '缺水問題',
-        tabTitle: '豐枯期水資源差異大',
-        tabContent: [
-          '審查委員：仰賴高屏溪川流水，水資源非常不穩定，在枯水期供水已經有幾十萬噸的不足，還需外縣市支援供水',
-          '市府：將推動自來水減漏、鼓勵工廠廢水回收，降低水資源浪費，並優先引進低耗水產業。自來水公司於高屏溪沿岸進行溪埔及大泉伏流水開發，預計民國110年完成',
-        ],
-      },
+
       {
         isLocked: true,
         unlockGame: 'run',

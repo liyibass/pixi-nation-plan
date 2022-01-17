@@ -151,6 +151,11 @@ export class MenuScene extends Scene {
 
             await this.doctorSay.newSay('接下來點選旁邊被封印的卡片區')
 
+            // deactive all tab except waterTab
+            this.taiwan.card.cardFolder.tabArray.forEach((cardTab) => {
+              cardTab.deactiveListener()
+            })
+
             const waterTab =
               this.taiwan.card.cardFolder.tabArray[
                 this.taiwan.card.cardFolder.tabArray.length - 2

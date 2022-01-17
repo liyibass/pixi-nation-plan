@@ -76,7 +76,7 @@ export class IntroScene {
   createSkipButton() {
     this.skipButton = new PIXI.Text('跳過動畫', {
       fill: '0xeeeeee',
-      fontSize: '24px',
+      fontSize: '20px',
     })
     this.skipButton.position.x = skipButtonDimention.x
     this.skipButton.position.y = skipButtonDimention.y
@@ -129,11 +129,11 @@ export class IntroScene {
       }
     }
     // start film script
-    console.log(startFilmScript)
-    this.startButton.on('pointerdown', () => {
-      this.selectStage('menu')
-    })
-    // this.startButton.on('pointerdown', startFilmScript)
+    // console.log(startFilmScript)
+    // this.startButton.on('pointerdown', () => {
+    //   this.selectStage('menu')
+    // })
+    this.startButton.on('pointerdown', startFilmScript)
   }
 
   async startSlideshow() {
