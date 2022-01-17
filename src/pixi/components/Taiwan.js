@@ -77,7 +77,7 @@ export class Taiwan {
   }
 
   createCard() {
-    this.card = new Card(0)
+    this.card = new Card(this._chooseGameHandler.bind(this))
     this.container.addChild(this.card.container)
   }
 

@@ -9,9 +9,12 @@ const cardDimention = Globals.getCardDimention()
 const CARD_MARGIN = 12
 
 export class Card {
-  constructor(index = 0) {
-    this.cityIndex = index
-    this.cityData = cityDataArray[this.cityIndex] || cityDataArray[0]
+  constructor(chooseGameHandler) {
+    this.chooseGameHandler = chooseGameHandler
+    this.cityIndex = 0
+    this.cityData =
+      cityDataArray.find((cityData) => cityData.cityIndex === this.cityIndex) ||
+      cityDataArray[0]
 
     this.container = new PIXI.Container()
     this.container.name = 'card'
@@ -72,7 +75,8 @@ export class Card {
     }
     this.header.updateCity(this.cityIndex)
     this.cardFolder.updateCity(
-      cityDataArray[this.cityIndex] || cityDataArray[0]
+      cityDataArray.find((cityData) => cityData.cityIndex === this.cityIndex) ||
+        cityDataArray[0]
     )
   }
 
@@ -81,7 +85,13 @@ export class Card {
     const margin = 15
     const folderHeight = cardDimention.height - headerHeight - margin
 
-    this.cardFolder = new CardFolder(0, this.cityData, folderHeight)
+    this.cardFolder = new CardFolder(
+      0,
+      this.cityData,
+      folderHeight,
+      false,
+      this.chooseGameHandler
+    )
     this.container.addChild(this.cardFolder.container)
     this.cardFolder.container.y = headerHeight + margin
   }
@@ -135,7 +145,9 @@ export class Card {
 
     this.header.updateCity(selectedCity.index)
     this.cardFolder.updateCity(
-      cityDataArray[selectedCity.index] || cityDataArray[0]
+      cityDataArray.find(
+        (cityData) => cityData.cityIndex === selectedCity.index
+      ) || cityDataArray[0]
     )
   }
 

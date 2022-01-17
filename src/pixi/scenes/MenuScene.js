@@ -191,7 +191,8 @@ export class MenuScene extends Scene {
   }
 
   startGame(choosedGame) {
-    this.selectStage(choosedGame.gameName)
+    console.log(choosedGame)
+    this.selectStage(choosedGame.gameName || choosedGame)
   }
 
   removePointerHint() {

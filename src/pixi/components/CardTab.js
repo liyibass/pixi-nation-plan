@@ -9,7 +9,14 @@ const CONTENT_PADDING = 12
 const cardDimention = Globals.getCardDimention()
 
 export class CardTab {
-  constructor(tabIndex, tabData, folderHeight, cardFolder, isInfoCard = false) {
+  constructor(
+    tabIndex,
+    tabData,
+    folderHeight,
+    cardFolder,
+    isInfoCard = false,
+    chooseGameHandler
+  ) {
     this.container = new PIXI.Container()
     this.container.name = 'cardTab'
     this.tabIndex = tabIndex
@@ -19,6 +26,7 @@ export class CardTab {
     this.contentHeight = this.folderHeight - TAB_HEIGHT
     this.cardFolder = cardFolder
     this.isInfoCard = isInfoCard
+    this.chooseGameHandler = chooseGameHandler
 
     this.isScrolling = false
 
@@ -117,7 +125,7 @@ export class CardTab {
       fill: ['0xffffff'],
       fontSize: 20,
     })
-    this.tabWording = new PIXI.Text(`${this.tabData.tabTitle}`, {
+    this.tabWording = new PIXI.Text(`${this.tabData.tabTag}`, {
       fill: ['0xffffff'],
       fontSize: 14,
       wordWrap: true,
@@ -270,7 +278,8 @@ export class CardTab {
   unlockGame() {
     console.log('play unlockGame')
     const game = this.tabData.unlockGame
-    console.log(game)
+
+    this.chooseGameHandler(game)
   }
 
   updateTabOrder(callback) {

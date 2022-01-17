@@ -525,7 +525,7 @@ export class CandyScene extends Scene {
     const addedCandyArray = []
 
     for (let i = 0; i < this.colCount; i++) {
-      for (let j = this.colCount - 1; j >= 0; j--) {
+      for (let j = this.rowCount - 1; j >= 0; j--) {
         const element = this.grid[j][i]
         if (element !== null) continue
 
@@ -554,9 +554,9 @@ export class CandyScene extends Scene {
     const needToDelete = []
     // this._logGrid()
 
-    for (let j = 0; j < this.colCount; j++) {
+    for (let j = 0; j < this.rowCount; j++) {
       // for (let j = 0; j < 3; j++) {
-      for (let i = 0; i < this.rowCount; i++) {
+      for (let i = 0; i < this.colCount; i++) {
         const candy = this.grid[j][i]
         if (candy === null) continue
         // if (candy.isDelete) continue
@@ -587,6 +587,8 @@ export class CandyScene extends Scene {
     }
 
     function rightLineCheck(candy) {
+      if (!candy) return 1
+
       const { i, j } = candy
       let rightLineLength = 1
       let rightIndexOffset = 1
@@ -603,6 +605,7 @@ export class CandyScene extends Scene {
     }
 
     function bottomLineCheck(candy) {
+      if (!candy) return 1
       const { i, j } = candy
 
       let bottomLineLength = 1
@@ -670,6 +673,7 @@ export class CandyScene extends Scene {
   }
 
   fixError() {
+    this._logGrid()
     console.error('fixError')
     this.candyBox.removeChildren()
     for (let j = this.rowCount - 1; j >= 0; j--) {
