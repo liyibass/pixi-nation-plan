@@ -98,7 +98,7 @@ export class CardTab {
   }
 
   createTab() {
-    if (this.isInfoCard) return
+    // if (this.isInfoCard) return
 
     this.tabContainer = new PIXI.Container()
     this.tabContainer.name = 'tabContainer'
@@ -111,13 +111,13 @@ export class CardTab {
     sideShadow.filters = [new PIXI.filters.BlurFilter(5)]
 
     const tabShadow = new PIXI.Graphics()
-    tabShadow.beginFill(0xa75d31)
+    tabShadow.beginFill(this.isInfoCard ? 0x999999 : 0xa75d31)
     // +10 is for hiding bottom rounded rect curve
     tabShadow.drawRoundedRect(0, 0, TAB_WIDTH + 2, TAB_HEIGHT + 10, 10)
     tabShadow.endFill()
 
     this.tab = new PIXI.Graphics()
-    this.tab.beginFill(getTabColor(this.tabIndex))
+    this.tab.beginFill(getTabColor.bind(this)(this.tabIndex))
     this.tab.drawRoundedRect(0, 0, TAB_WIDTH, TAB_HEIGHT + 10, 10)
     this.tab.endFill()
 
@@ -135,6 +135,8 @@ export class CardTab {
     poundSign.x = 15
     poundSign.y = (TAB_HEIGHT - poundSign.height) / 2
     this.tabWording.x = 32
+    this.tabWording.y = (TAB_HEIGHT - this.tabWording.height) / 2
+
     this.tab.addChild(poundSign, this.tabWording)
 
     // mask

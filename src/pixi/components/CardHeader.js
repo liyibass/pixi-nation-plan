@@ -39,6 +39,8 @@ export class CardHeader {
   }
 
   createLandCity() {
+    if (this.isInfoCard) return
+
     // landCity
     const landCityTexture = new PIXI.Texture(
       Globals.resources[`land_${this.cityIndex}_1`]?.texture
@@ -72,8 +74,8 @@ export class CardHeader {
       fill: ['0xffffff'],
       fontSize: 36,
       wordWrap: true,
-      breakWords: true,
-      wordWrapWidth: 183,
+      breakWords: !this.isInfoCard,
+      wordWrapWidth: 190,
       align: 'center',
     })
     titleContainer.addChild(this.titleText)
@@ -81,6 +83,10 @@ export class CardHeader {
     // titleBar
     const titleBar1 = new Bar()
     const titleBar2 = new Bar()
+    if (this.isInfoCard) {
+      titleBar1.graphics.alpha = 0
+      titleBar2.graphics.alpha = 0
+    }
     titleContainer.addChild(titleBar1.graphics, titleBar2.graphics)
 
     titleBar1.graphics.width = this.titleText.width
@@ -130,7 +136,7 @@ export class CardHeader {
 
   _getCityName(currentCityIndex) {
     if (this.isInfoCard) {
-      return '什麼是 國土計畫'
+      return '什麼是 「國土計畫」'
     }
     switch (currentCityIndex) {
       case 0:

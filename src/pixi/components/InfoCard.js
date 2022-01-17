@@ -81,7 +81,7 @@ export class InfoCard {
 
     this.cardFolder = new CardFolder(0, this.cityData, folderHeight, true)
     this.container.addChild(this.cardFolder.container)
-    this.cardFolder.container.y = headerHeight + margin
+    this.cardFolder.container.y = headerHeight + margin * 2
   }
 
   _getCityName(currentCityIndex) {

@@ -44,9 +44,9 @@ export class CardFolder {
       }
     }
 
-    if (!this.isInfoCard) {
-      this.activeListener()
-    }
+    // if (!this.isInfoCard) {
+    // }
+    this.activeListener()
   }
 
   createFolderMask() {
