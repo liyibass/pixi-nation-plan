@@ -8,6 +8,7 @@ import { Taiwan } from '../components/Taiwan'
 import { Scene } from './Scene'
 import { Status } from '../script/Status'
 import { Tip } from '../components/Tip'
+import { unlockWater, unlockCandy } from '../script/CityData'
 
 export class MenuScene extends Scene {
   constructor(selectStage = () => {}) {
@@ -20,6 +21,9 @@ export class MenuScene extends Scene {
     this.currentCityIndex = 0
 
     this.isNeedTutorial = Status.isNeedTutorial
+
+    unlockWater()
+    unlockCandy()
 
     this.createScene()
 

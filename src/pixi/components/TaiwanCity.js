@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
-import { cityDataArray } from '../script/CityData'
+import { cityDataArray, unlockCardCityArray } from '../script/CityData'
 
 const taiwanDimention = Globals.getTaiwanDimention()
 
@@ -22,13 +22,16 @@ export class TaiwanCity {
       cityDataArray.find((cityData) => cityData.cityIndex === this.cityIndex) ||
       cityDataArray[0]
 
-    this.createTaiwanCity()
-    this.createDecoration()
-    this.createText()
+    // this.activeListener()
+    this.createFlow()
+  }
 
+  async createFlow() {
+    this.createTaiwanCity()
     this.assignPosition()
     this.setupPosition()
-    // this.activeListener()
+    this.createDecoration()
+    this.createText()
   }
 
   createTaiwanCity() {
@@ -62,73 +65,84 @@ export class TaiwanCity {
     this.container.addChild(this.sprite0, this.sprite1, this.white)
   }
 
-  createDecoration() {
+  async createDecoration() {
     this.decoration = new PIXI.Container()
 
-    const notYetUnlock = !!this.cityData.tabs.find((tab) => {
+    const notYetUnlockAll = !!this.cityData.tabs.find((tab) => {
       return tab.isLocked === true
     })
 
-    if (notYetUnlock) {
+    if (notYetUnlockAll) {
       const workingTexture = new PIXI.Texture(Globals.resources['Fuck'].texture)
-      const workingSprite = new PIXI.Sprite(workingTexture)
+      this.workingSprite = new PIXI.Sprite(workingTexture)
 
-      workingSprite.alpha = 0
+      this.workingSprite.alpha = 0
 
-      this.decoration.addChild(workingSprite)
-      this.decoration.x = -20
-      this.decoration.y = -this.sprite0.height / 2 - this.decoration.height
+      this.workingSprite.x = -20
+      this.workingSprite.y =
+        -this.sprite0.height / 2 - this.workingSprite.height
+      this.decoration.addChild(this.workingSprite)
       this.sprite0.addChild(this.decoration)
 
       return new Promise((resolve) => {
         this.decorationTicker = new PIXI.Ticker()
 
         this.decorationTicker.add(() => {
-          if (workingSprite.alpha < 1) {
-            workingSprite.alpha += 0.02
+          if (this.workingSprite.alpha < 1) {
+            this.workingSprite.alpha += 0.02
           } else {
-            workingSprite.alpha = 1
+            this.workingSprite.alpha = 1
             this.decorationTicker.stop()
             resolve()
           }
         })
 
         this.decorationTicker.start()
-
-        this.unlockNewCardHighlight()
       })
+    } else {
+      await this.unlockCity()
+    }
+
+    const hasNewUnlock = unlockCardCityArray.find(
+      (cityData) => cityData.cityIndex === this.cityIndex
+    )
+
+    if (hasNewUnlock) {
+      await this.unlockNewCardHighlight()
     }
   }
 
   unlockNewCardHighlight() {
+    console.log('unlockNewCardHighlight')
     const pingTexture = new PIXI.Texture(Globals.resources['ping']?.texture)
     this.pingSprite = new PIXI.Sprite(pingTexture)
+    this.pingSprite.name = 'pingSprite'
 
-    this.pingSprite.width = 73.94
-    this.pingSprite.height = 110.29
-    this.pingSprite.pivot.set(
-      this.pingSprite.width / 2,
-      this.pingSprite.height * 2
-    )
-    this.decoration.addChild(this.pingSprite)
+    this.pingSprite.width = 73.94 * 0.3
+    this.pingSprite.height = 110.29 * 0.3
+    this.pingSprite.pivot.set(this.pingSprite.width / 2, this.pingSprite.height)
+    const initY = -this.pingSprite.height
+    this.pingSprite.y = initY
+    this.container.addChild(this.pingSprite)
+    this.container.setChildIndex(this.pingSprite, 1)
 
     // ping animation
     this.pingTicker = new PIXI.Ticker()
     let direction = 'up'
     this.pingTicker.add(() => {
       if (direction === 'up') {
-        if (this.pingSprite.y > -this.pingSprite.height / 4) {
-          this.pingSprite.y--
+        if (this.pingSprite.y > initY - this.pingSprite.height / 4) {
+          this.pingSprite.y -= 0.2
 
-          if (this.pingSprite.y <= -this.pingSprite.height / 4) {
+          if (this.pingSprite.y <= initY - this.pingSprite.height / 4) {
             direction = 'down'
           }
         }
       } else {
-        if (this.pingSprite.y < 0) {
-          this.pingSprite.y++
+        if (this.pingSprite.y < initY) {
+          this.pingSprite.y += 0.2
 
-          if (this.pingSprite.y >= 0) {
+          if (this.pingSprite.y >= initY) {
             direction = 'up'
           }
         }
@@ -143,8 +157,10 @@ export class TaiwanCity {
     this.decorationTicker?.stop?.()
   }
 
-  createText() {
+  async createText() {
+    console.log('createText')
     this.textArea = new PIXI.Graphics()
+    this.textArea.name = 'textArea'
     this.textArea.beginFill(0xffffff)
     this.textArea.drawRoundedRect(0, 0, 48, 21, 5)
     this.textArea.endFill()
@@ -161,6 +177,7 @@ export class TaiwanCity {
 
     this.textArea.pivot.set(this.textArea.width / 2, this.textArea.height)
     this.container.addChild(this.textArea)
+
     this.textArea.alpha = 0
   }
 

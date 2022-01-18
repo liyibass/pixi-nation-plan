@@ -14,6 +14,7 @@ import { GameFail } from '../components/GameFail'
 import { GameSuccess } from '../components/GameSuccess'
 import { FoodScore } from '../components/FoodScore'
 import { Status } from '../script/Status'
+
 // import { SnakeBody } from '../components/SnakeBody'
 
 const BLOCK_WIDTH = 16
