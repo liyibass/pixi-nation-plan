@@ -1116,6 +1116,80 @@ export const cityDataArray = [
   },
 
   {
+    cityIndex: 14,
+    cityName: '宜蘭縣',
+    tabs: [
+      {
+        isLocked: false,
+        unlockGame: '',
+        tabTag: '基本資料',
+        tabContent: [
+          {
+            type: 'paragraph',
+            content:
+              '1.宜蘭縣未來 20 年發展重點：鐵路、東部快鐵、北宜高鐵「三鐵共構」是確定的發展方向，未來宜蘭的人口成長及假日人潮須再評估。',
+          },
+          {
+            type: 'paragraph',
+            content:
+              '2.5 年內有具體規劃的開發案主要落在礁溪鄉和頭城鎮，共新增 109.33 公頃的住商用地。另外還有「清水地區自然養生及觀光遊憩園區」新增 37.86 公頃觀光用地，要在清水地熱的上游興建旅館，並設置露營區及泡湯區。',
+          },
+          {
+            type: 'paragraph',
+            content:
+              '3.發展山海田園宜居城市，全縣超過 7 成列入國土保育地區，宜維護農地則劃設了 28682 公頃，佔 13% 面積。',
+          },
+        ],
+      },
+      {
+        isLocked: true,
+        unlockGame: 'run',
+        tabTag: '個別問題',
+        tabContent: [
+          {
+            type: 'hint',
+            content:
+              '每個縣市都因為發展歷史的獨特性，衍生出各自的問題，以下是國土計畫審查時討論到宜蘭縣獨有的問題：',
+          },
+          {
+            type: 'title',
+            content: '豪華農舍亂象？ ',
+          },
+          {
+            type: 'paragraph',
+            content:
+              '雪隧開通後，宜蘭農舍問題日益嚴重。根據宜蘭縣國土計畫書，縣內共有 1124 筆違規使用土地，包含住家、買賣業、倉儲、宮廟、未登記工廠。',
+          },
+          {
+            type: 'paragraph',
+            content:
+              '<bold>審查委員：</bold>宜蘭有 1 萬多間農舍，吃掉 1000 多公頃農地',
+          },
+          {
+            type: 'paragraph',
+            content:
+              '<bold>農委會：</bold>先有農業經營需求、又兼有自住需要，才特許核准農舍，未來會專案討論。',
+          },
+          {
+            type: 'title',
+            content: '地質敏感區蓋旅館？  ',
+          },
+          {
+            type: 'paragraph',
+            content:
+              '<bold>環團：</bold>清水 BOT 園區預定地為河川地，等於將河川地讓財團蓋別墅，且該處鄰近山崩地滑地質敏感區、地下水補注敏感區，公益性何在？',
+          },
+          {
+            type: 'paragraph',
+            content:
+              '<bold>縣府：</bold>申請性質為遊憩設施，非屬重大公共設施或公用事業計畫項目。計畫內容，如建築高度及樓層數配置、引進人口、客房數及土地使用強度等，將一併考量。',
+          },
+        ],
+      },
+    ],
+  },
+
+  {
     cityIndex: 15,
     cityName: '基隆市',
     tabs: [

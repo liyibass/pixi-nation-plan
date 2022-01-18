@@ -79,9 +79,6 @@ export class CardTab {
     this.scrollPart = new PIXI.Container()
     this.scrollPart.name = 'scrollPart'
 
-    this.scrollPart.buttonMode = true
-    this.scrollPart.interactive = true
-
     // assing position and record its inner width/height
     this.scrollPart.x = CONTENT_PADDING
     this.scrollPart.y = CONTENT_PADDING
@@ -298,6 +295,11 @@ export class CardTab {
   }
 
   startScrollTicker() {
+    if (this.tabData.isLocked) return
+
+    this.scrollPart.buttonMode = true
+    this.scrollPart.interactive = true
+
     // if content is shorter than page, then no need to prepare scrollTicker
     const maxScrollDistance = this.content.height - this.scrollPartHeight
     if (maxScrollDistance < 0) return
@@ -342,33 +344,44 @@ export class CardTab {
   }
 
   unlockGame() {
-    console.log('play unlockGame')
     const game = this.tabData.unlockGame
 
     this.chooseGameHandler(game)
   }
 
+  activateScrollTicker() {
+    this.scrollTicker?.start?.()
+    this.scrollPart.buttonMode = true
+    this.scrollPart.interactive = true
+  }
+
+  stopScrollTicker() {
+    this.scrollTicker?.stop?.()
+    this.scrollPart.buttonMode = false
+    this.scrollPart.interactive = false
+  }
+
   updateTabOrder(callback) {
-    // set selected tab to top
+    // set rest tabs in order
+    const exclusiveTabs = []
+    this.cardFolder.tabArray.forEach((cardTab) => {
+      if (cardTab.tabIndex !== this.tabIndex) {
+        exclusiveTabs.push(cardTab)
+      }
+    })
+
+    exclusiveTabs.forEach((cardTab, index) => {
+      this.cardFolder.container.setChildIndex(cardTab.container, index)
+      cardTab.stopScrollTicker()
+    })
+
+    // set selected cardTab to top
     this.cardFolder.container.setChildIndex(
       this.container,
       this.cardFolder.tabArray.length - 1
     )
 
-    // set rest tabs in order
-    const exclusiveTabs = []
-    this.cardFolder.tabArray.forEach((tab) => {
-      if (tab.tabIndex !== this.tabIndex) {
-        exclusiveTabs.push(tab)
-      }
-    })
-
-    this.cardFolder.tabArray.forEach((tab, index) => {
-      this.cardFolder.container.setChildIndex(this.container, index)
-      tab.scrollTicker?.stop?.()
-    })
-
-    this.scrollTicker?.start?.()
+    this.activateScrollTicker()
     this.content.y = 0
 
     if (callback) {
