@@ -329,12 +329,12 @@ export class CardTab {
 
   stopAllProcess() {
     if (this.isInfoCard) return
-    console.log('tab stopAllProcess')
+    // console.log('tab stopAllProcess')
     this.tab.removeAllListeners()
   }
 
   activeListener() {
-    console.log('tab activeListener')
+    // console.log('tab activeListener')
     this.tab.buttonMode = true
     this.tab.interactive = true
 
@@ -345,7 +345,7 @@ export class CardTab {
   }
 
   activeTabListener() {
-    console.log('tab activeListener')
+    // console.log('tab activeListener')
     this.tab.buttonMode = true
     this.tab.interactive = true
 

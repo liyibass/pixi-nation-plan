@@ -14,6 +14,10 @@ export class TaiwanCity {
     this.container = new PIXI.Container()
     this.container.buttonMode = true
     this.container.interactive = true
+    this.layer1 = new PIXI.Container()
+    this.layer2 = new PIXI.Container()
+    this.layer3 = new PIXI.Container()
+    this.container.addChild(this.layer1, this.layer2, this.layer3)
 
     this.x = 0
     this.y = 0
@@ -62,11 +66,12 @@ export class TaiwanCity {
     this.white.mask = whiteMask
     this.white.alpha = 0
     this.white.addChild(whiteMask)
-    this.container.addChild(this.sprite0, this.sprite1, this.white)
+    this.layer1.addChild(this.sprite0, this.sprite1, this.white)
   }
 
   async createDecoration() {
     this.decoration = new PIXI.Container()
+    this.layer1.addChild(this.decoration)
 
     const notYetUnlockAll = !!this.cityData.tabs.find((tab) => {
       return tab.isLocked === true
@@ -76,13 +81,14 @@ export class TaiwanCity {
       const workingTexture = new PIXI.Texture(Globals.resources['Fuck'].texture)
       this.workingSprite = new PIXI.Sprite(workingTexture)
 
+      this.workingSprite.width = 33 * 0.3
+      this.workingSprite.height = 43 * 0.3
+      this.workingSprite.anchor.set(0.5, 1)
       this.workingSprite.alpha = 0
 
-      this.workingSprite.x = -20
-      this.workingSprite.y =
-        -this.sprite0.height / 2 - this.workingSprite.height
+      // this.workingSprite.x = -20
+      this.workingSprite.y = -this.workingSprite.height / 2
       this.decoration.addChild(this.workingSprite)
-      this.sprite0.addChild(this.decoration)
 
       return new Promise((resolve) => {
         this.decorationTicker = new PIXI.Ticker()
@@ -100,7 +106,9 @@ export class TaiwanCity {
         this.decorationTicker.start()
       })
     } else {
+      await this._wait(100 * this.cityIndex)
       await this.unlockCity()
+      await this.growTree()
     }
 
     const hasNewUnlock = unlockCardCityArray.find(
@@ -108,12 +116,11 @@ export class TaiwanCity {
     )
 
     if (hasNewUnlock) {
-      await this.unlockNewCardHighlight()
+      this.unlockNewCardHighlight()
     }
   }
 
   unlockNewCardHighlight() {
-    console.log('unlockNewCardHighlight')
     const pingTexture = new PIXI.Texture(Globals.resources['ping']?.texture)
     this.pingSprite = new PIXI.Sprite(pingTexture)
     this.pingSprite.name = 'pingSprite'
@@ -123,8 +130,8 @@ export class TaiwanCity {
     this.pingSprite.pivot.set(this.pingSprite.width / 2, this.pingSprite.height)
     const initY = -this.pingSprite.height
     this.pingSprite.y = initY
-    this.container.addChild(this.pingSprite)
-    this.container.setChildIndex(this.pingSprite, 1)
+    this.layer2.addChild(this.pingSprite)
+    // this.layer2.setChildIndex(this.pingSprite, 1)
 
     // ping animation
     this.pingTicker = new PIXI.Ticker()
@@ -152,13 +159,37 @@ export class TaiwanCity {
     this.pingTicker.start()
   }
 
+  growTree() {
+    const treeTexture = new PIXI.Texture(Globals.resources['tree']?.texture)
+    this.treeSprite = new PIXI.Sprite(treeTexture)
+
+    this.treeSprite.width = 45 * 0.3
+    this.treeSprite.height = 0
+    const treeInitHeight = 92 * 0.3
+    // this.treeSprite.pivot.set(this.treeSprite.width / 2, this.treeSprite.height)
+    this.treeSprite.anchor.set(0.5, 1)
+
+    this.decoration.addChild(this.treeSprite)
+
+    this.treeTicker = new PIXI.Ticker()
+    this.treeTicker.add(() => {
+      if (this.treeSprite.height < treeInitHeight) {
+        this.treeSprite.height += 0.5
+      } else {
+        this.treeTicker.stop()
+        this.treeSprite.height = treeInitHeight
+      }
+    })
+
+    this.treeTicker.start()
+  }
+
   removeAllTicker() {
     this.pingTicker?.stop?.()
     this.decorationTicker?.stop?.()
   }
 
   async createText() {
-    console.log('createText')
     this.textArea = new PIXI.Graphics()
     this.textArea.name = 'textArea'
     this.textArea.beginFill(0xffffff)
@@ -176,7 +207,7 @@ export class TaiwanCity {
     this.textArea.addChild(nameText)
 
     this.textArea.pivot.set(this.textArea.width / 2, this.textArea.height)
-    this.container.addChild(this.textArea)
+    this.layer3.addChild(this.textArea)
 
     this.textArea.alpha = 0
   }
@@ -341,6 +372,7 @@ export class TaiwanCity {
           this.sprite1.alpha += 0.02
         } else {
           this.unlockTicker.stop()
+          this.sprite1.alpha = 1
           resolve()
         }
       })
@@ -390,5 +422,13 @@ export class TaiwanCity {
       case 18:
         return '澎湖縣'
     }
+  }
+
+  _wait(delayTime) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, delayTime)
+    })
   }
 }

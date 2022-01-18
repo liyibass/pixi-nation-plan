@@ -92,7 +92,7 @@ export class CardFolder {
   }
 
   activeListener() {
-    console.log('activeListener')
+    // console.log('activeListener')
     this.tabArray.forEach((tab) => {
       tab.activeListener()
     })
