@@ -84,39 +84,4 @@ export class InfoCard {
     this.cardFolder.container.y = headerHeight + margin * 2
     this.cardFolder.activeListener()
   }
-
-  _getCityName(currentCityIndex) {
-    switch (currentCityIndex) {
-      case 0:
-        return 'Taipei'
-      case 1:
-        return 'Taoyuan'
-      case 3:
-        return 'Hsinchu'
-      case 4:
-        return 'Miaoli'
-      case 5:
-        return 'Taizhong'
-      case 6:
-        return 'Zhanghua'
-      case 7:
-        return 'Yunlin'
-      case 8:
-        return 'Jiayi'
-      case 9:
-        return 'Tainan'
-      case 10:
-        return 'Kaohsiung'
-      case 11:
-        return 'Pingdong'
-      case 12:
-        return 'Taidong'
-      case 13:
-        return 'Hualian'
-      case 14:
-        return 'Yilan'
-      case 15:
-        return 'Nantou'
-    }
-  }
 }

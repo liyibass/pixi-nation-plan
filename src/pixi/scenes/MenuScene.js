@@ -22,8 +22,6 @@ export class MenuScene extends Scene {
     this.inWindowObstacles = []
     this.container.name = 'MenuScene'
 
-    this.currentCityIndex = 0
-
     this.isNeedTutorial = Status.isNeedTutorial
 
     // unlockWater()

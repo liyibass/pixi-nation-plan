@@ -223,83 +223,83 @@ export class TaiwanCity {
         this.x = 78
         this.y = 24
         break
+      // case 1:
+      //   this.x = 74
+      //   this.y = 14
+      //   break
       case 1:
-        this.x = 74
-        this.y = 14
-        break
-      case 2:
         this.x = 56
         this.y = 20
         break
-      case 3:
+      case 2:
         this.x = 62
         this.y = 30
         break
-      case 4:
+      case 3:
         this.x = 52
         this.y = 28
         break
-      case 5:
+      case 4:
         this.x = 38
         this.y = 24
         break
-      case 6:
+      case 5:
         this.x = 38
         this.y = 32
         break
-      case 7:
+      case 6:
         this.x = 39
         this.y = 42
         break
-      case 8:
+      case 7:
         this.x = 16
         this.y = 42
         break
-      case 9:
+      case 8:
         this.x = 34
         this.y = 52
         break
-      case 10:
+      case 9:
         this.x = 22
         this.y = 62
         break
-      case 11:
+      case 10:
         this.x = 38
         this.y = 70
         break
-      case 12:
+      case 11:
         this.x = 42
         this.y = 86
         break
-      case 13:
+      case 12:
         this.x = 72
         this.y = 70
         break
-      case 14:
+      case 13:
         this.x = 72
         this.y = 52
         break
-      case 15:
+      case 14:
         this.x = 82
         this.y = 35
         break
-      case 16:
+      case 15:
         this.x = 90
         this.y = 19
         break
-      case 17:
+      case 16:
         this.x = 58
         this.y = 44
         break
-      case 18:
+      case 17:
         this.x = 12
         this.y = 26
         break
-      case 19:
+      case 18:
         this.x = 28
         this.y = 14
         break
-      case 20:
+      case 19:
         this.x = 48
         this.y = 10
         break
@@ -390,41 +390,41 @@ export class TaiwanCity {
     switch (currentCityIndex) {
       case 0:
         return '新北市'
+      // case 1:
+      //   return '臺北市'
       case 1:
-        return '臺北市'
-      case 2:
         return '桃園市'
-      case 3:
+      case 2:
         return '新竹縣'
-      case 4:
+      case 3:
         return '新竹市'
-      case 5:
+      case 4:
         return '苗栗縣'
-      case 6:
+      case 5:
         return '台中市'
-      case 7:
+      case 6:
         return '彰化市'
-      case 8:
+      case 7:
         return '雲林縣'
-      case 9:
+      case 8:
         return '嘉義縣'
-      case 10:
+      case 9:
         return '臺南市'
-      case 11:
+      case 10:
         return '高雄市'
-      case 12:
+      case 11:
         return '屏東縣'
-      case 13:
+      case 12:
         return '臺東縣'
-      case 14:
+      case 13:
         return '花蓮縣'
-      case 15:
+      case 14:
         return '宜蘭縣'
-      case 16:
+      case 15:
         return '基隆市'
-      case 17:
+      case 16:
         return '南投縣'
-      case 18:
+      case 17:
         return '澎湖縣'
     }
   }
