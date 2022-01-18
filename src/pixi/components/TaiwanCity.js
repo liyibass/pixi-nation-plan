@@ -53,15 +53,19 @@ export class TaiwanCity {
 
     this.sprite1.width *= ratio
     this.sprite1.height *= ratio
-    this.sprite1.alpha = 0
+
+    // if city is unlocked all, no need to set sprite1 to alpha 0
+    if (!cityDataArray[this.cityIndex]?.isUnlockAll) {
+      this.sprite1.alpha = 0
+    }
 
     this.white = new PIXI.Graphics()
     this.white.beginFill(0xffffff, 1)
-    this.white.drawRect(0, 0, this.sprite0.width, this.sprite0.height)
+    this.white.drawRect(0, 0, this.sprite1.width, this.sprite1.height)
     this.white.endFill()
     this.white.pivot.set(this.white.width / 2, this.white.height / 2)
     const whiteMask = new PIXI.Sprite(texture1)
-    // whiteMask.anchor.set(0.5, 0.5)
+
     whiteMask.width *= ratio
     whiteMask.height *= ratio
     this.white.mask = whiteMask
@@ -97,6 +101,10 @@ export class TaiwanCity {
 
       return new Promise((resolve) => {
         this.decorationTicker = new PIXI.Ticker()
+        if (hasNewUnlock) {
+          this.unlockNewCardHighlight()
+          this.hintCity()
+        }
 
         this.decorationTicker.add(() => {
           if (this.workingSprite.alpha < 1) {
@@ -105,10 +113,6 @@ export class TaiwanCity {
             this.workingSprite.alpha = 1
             this.decorationTicker.stop()
 
-            if (hasNewUnlock) {
-              this.unlockNewCardHighlight()
-              this.hintCity()
-            }
             resolve()
           }
         })
@@ -116,13 +120,20 @@ export class TaiwanCity {
         this.decorationTicker.start()
       })
     } else {
-      await this._wait(100 * this.cityIndex)
-      await this.unlockCity()
-      await this.growTree()
+      cityDataArray[this.cityIndex].isUnlockAll = true
+
+      const delayIndex =
+        unlockCardCityArray.findIndex(
+          (city) => city.cityIndex === this.cityIndex
+        ) || this.cityIndex
 
       if (hasNewUnlock) {
+        this.hintCity()
         this.unlockNewCardHighlight()
       }
+      await this._wait(100 * delayIndex)
+      await this.unlockCity()
+      await this.growTree()
     }
   }
 
@@ -194,7 +205,7 @@ export class TaiwanCity {
   removeAllTicker() {
     this.pingTicker?.stop?.()
     this.decorationTicker?.stop?.()
-    this.pingTicker?.stop?.()
+    this.hintTicker?.stop?.()
     this.treeTicker?.stop?.()
   }
 

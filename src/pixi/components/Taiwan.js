@@ -115,7 +115,6 @@ export class Taiwan {
     })
 
     this.gameIconArray.forEach((gameIcon) => {
-      console.log(gameIcon)
       gameIcon.deactiveListener()
     })
   }

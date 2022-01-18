@@ -1,4 +1,4 @@
-// import * as PIXI from 'pixi.js'
+import * as PIXI from 'pixi.js'
 
 // window.PIXI = PIXI
 
@@ -17,14 +17,13 @@ import {
   unlockGarbage,
   clearUnlockCardCityArray,
 } from '../script/Utils'
-const test = false
 
 export class MenuScene extends Scene {
   constructor(selectStage = () => {}) {
     super()
     this.selectStage = selectStage
 
-    this.clearUnlockArray()
+    clearUnlockCardCityArray()
 
     this.inWindowObstacles = []
     this.container.name = 'MenuScene'
@@ -34,19 +33,59 @@ export class MenuScene extends Scene {
     this.createScene()
 
     this.startGameFlow()
+    this.createTestButton()
   }
-  clearUnlockArray() {
-    clearUnlockCardCityArray()
 
-    unlockWater()
-    unlockGarbage()
-    if (test) {
-      console.log('TEST')
-      unlockBalance()
-      unlockCandy()
-      unlockRun()
-    }
+  createTestButton() {
+    this.createUnlockButton('water', 0)
+    this.createUnlockButton('garbage', 1)
+    this.createUnlockButton('balance', 2)
+    this.createUnlockButton('run', 3)
+    this.createUnlockButton('candy', 4)
   }
+
+  createUnlockButton(unlockTarget, position) {
+    this.stageButton = new PIXI.Text(`unlock ${unlockTarget}`, {
+      fill: '0xeeeeee',
+      fontSize: '24px',
+    })
+    this.stageButton.position.x = 0
+    this.stageButton.position.y = position * 30
+
+    this.stageButton.interactive = true
+    this.stageButton.buttonMode = true
+    this.container.addChild(this.stageButton)
+
+    this.stageButton.on('pointerdown', () => {
+      clearUnlockCardCityArray()
+      console.log(unlockTarget)
+      switch (unlockTarget) {
+        case 'water':
+          unlockWater()
+          break
+        case 'garbage':
+          unlockGarbage()
+          break
+        case 'run':
+          unlockRun()
+          break
+        case 'balance':
+          unlockBalance()
+          break
+        case 'candy':
+          unlockCandy()
+          break
+      }
+
+      this.taiwan.destroyTaiwan()
+      this.taiwan.container.destroy()
+      this.createTaiwan()
+      this.taiwan.activeCityListener()
+      this.taiwan.activeGameListener()
+      this.taiwan.card.activeListener()
+    })
+  }
+
   // ===== init system =====
   createScene() {
     this._createBackground(0x92b79c)
