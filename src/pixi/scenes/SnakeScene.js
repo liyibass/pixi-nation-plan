@@ -14,6 +14,7 @@ import { GameFail } from '../components/GameFail'
 import { GameSuccess } from '../components/GameSuccess'
 import { FoodScore } from '../components/FoodScore'
 import { Status } from '../script/Status'
+import { unlockWater, unlockGarbage } from '../script/CityData'
 
 // import { SnakeBody } from '../components/SnakeBody'
 
@@ -1113,6 +1114,8 @@ export class SnakeScene {
       await this.doctorSay.newSay(
         '你同時也解開了其他擁有缺水問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
       )
+
+      unlockWater()
     }
 
     if (this.gameLevel === 2) {
@@ -1124,6 +1127,8 @@ export class SnakeScene {
       await this.doctorSay.newSay(
         '因為你也順利解決了缺水的問題，可以點選有此困擾的縣市，看各地政府如何因應。'
       )
+
+      unlockGarbage()
     }
 
     async function successGameChooseHandler(chosen) {

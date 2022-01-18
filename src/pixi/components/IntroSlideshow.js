@@ -229,6 +229,11 @@ export class IntroSlideshow {
     // updateImage
     // this._createImage()
     // await this._startFadeInTicker()
+    if (this.currentFrame === 0) {
+      this.prevArrow.alpha = 0
+    } else {
+      this.prevArrow.alpha = 1
+    }
 
     switch (this.currentFrame) {
       case 0:

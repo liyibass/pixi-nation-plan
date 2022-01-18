@@ -77,6 +77,10 @@ export class TaiwanCity {
       return tab.isLocked === true
     })
 
+    const hasNewUnlock = unlockCardCityArray.find((cityData) => {
+      return cityData.cityIndex === this.cityIndex
+    })
+
     if (notYetUnlockAll) {
       const workingTexture = new PIXI.Texture(Globals.resources['Fuck'].texture)
       this.workingSprite = new PIXI.Sprite(workingTexture)
@@ -87,7 +91,7 @@ export class TaiwanCity {
       this.workingSprite.alpha = 0
 
       // this.workingSprite.x = -20
-      this.workingSprite.y = -this.workingSprite.height / 2
+      // this.workingSprite.y = -this.workingSprite.height / 2
       this.decoration.addChild(this.workingSprite)
 
       return new Promise((resolve) => {
@@ -99,6 +103,10 @@ export class TaiwanCity {
           } else {
             this.workingSprite.alpha = 1
             this.decorationTicker.stop()
+
+            if (hasNewUnlock) {
+              this.unlockNewCardHighlight()
+            }
             resolve()
           }
         })
@@ -109,14 +117,10 @@ export class TaiwanCity {
       await this._wait(100 * this.cityIndex)
       await this.unlockCity()
       await this.growTree()
-    }
 
-    const hasNewUnlock = unlockCardCityArray.find(
-      (cityData) => cityData.cityIndex === this.cityIndex
-    )
-
-    if (hasNewUnlock) {
-      this.unlockNewCardHighlight()
+      if (hasNewUnlock) {
+        this.unlockNewCardHighlight()
+      }
     }
   }
 
