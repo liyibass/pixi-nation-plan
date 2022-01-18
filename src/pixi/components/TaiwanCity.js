@@ -107,6 +107,7 @@ export class TaiwanCity {
 
             if (hasNewUnlock) {
               this.unlockNewCardHighlight()
+              this.hintCity()
             }
             resolve()
           }

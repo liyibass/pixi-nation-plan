@@ -6507,6 +6507,11 @@ pinkie@^2.0.0:
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
+pixi-multistyle-text@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/pixi-multistyle-text/-/pixi-multistyle-text-0.10.0.tgz#4134c96604e837166eafcdf6f65f886f9af7f469"
+  integrity sha512-1OB/+QDkdUAZlm3DaNTYkDEN8VI0uIUgblhD46cxC3CRcrz0yUYFhmX+aYx9hbg8pV1rATQTUEbsXq1tmnvc7Q==
+
 pixi.js@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/pixi.js/-/pixi.js-6.2.0.tgz#502f197f87e5f8675afd7da0ab70b27b6542171e"

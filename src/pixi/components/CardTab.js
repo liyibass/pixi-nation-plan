@@ -4,6 +4,8 @@ import { Status } from '../script/Status'
 import { Tip } from './Tip'
 import { UnlockButton } from './UnlockButton'
 
+import MultiStyleText from 'pixi-multistyle-text'
+
 const TAB_HEIGHT = 34
 const TAB_WIDTH = 80
 const CONTENT_PADDING = 12
@@ -170,44 +172,65 @@ export class CardTab {
     this.scrollPart.addChild(this.content)
 
     let contentHeight = 0
-    const style = new PIXI.TextStyle({
-      fill: ['0xffffff'],
-      fontSize: 14,
-      wordWrap: true,
-      breakWords: true,
-      wordWrapWidth: cardDimention.width - CONTENT_PADDING * 2,
-    })
 
-    if (this.tabData.tabTitle) {
-      const titleText = new PIXI.Text(`${this.tabData.tabTitle}`, {
-        fill: ['0xffffff'],
-        fontSize: 20,
-        wordWrap: true,
-        breakWords: true,
-        fontWeight: 'bold',
-        wordWrapWidth: cardDimention.width - CONTENT_PADDING * 2,
-      })
+    // if (this.tabData.tabTitle) {
+    //   const titleText = new MultiStyleText(`${this.tabData.tabTitle}`, {
+    //     default: {
+    //       fill: ['0xffffff'],
+    //       fontSize: 20,
+    //       wordWrap: true,
+    //       breakWords: true,
+    //       fontWeight: 'bold',
+    //       wordWrapWidth: cardDimention.width - CONTENT_PADDING * 2,
+    //     },
+    //     bold: {
+    //       fill: ['0xffffff'],
+    //       fontSize: 20,
+    //       fontWeight: 'bold',
+    //     },
+    //   })
 
-      titleText.y = contentHeight
-      contentHeight += titleText.height + CONTENT_PADDING
-      this.content.addChild(titleText)
-    }
+    //   titleText.y = contentHeight
+    //   contentHeight += titleText.height + CONTENT_PADDING
+    //   this.content.addChild(titleText)
+    // }
 
     // feed paragraph
     for (let i = 0; i < this.tabData.tabContent.length; i++) {
       const paragraph = this.tabData.tabContent[i]
 
-      const paragraphText = new PIXI.Text(paragraph, style)
+      const paragraphText = new MultiStyleText(getStyledContent(paragraph), {
+        default: {
+          fill: ['0xffffff'],
+          fontSize: 14,
+          wordWrap: true,
+          breakWords: true,
+          wordWrapWidth: cardDimention.width - CONTENT_PADDING * 2,
+        },
+        bold: {
+          fill: ['0xffffff'],
+          fontSize: 14,
+          fontWeight: 900,
+        },
+        title: {
+          fill: ['0xffffff'],
+          fontSize: 20,
+          fontWeight: 900,
+        },
+      })
       paragraphText.y = contentHeight
       contentHeight += paragraphText.height + CONTENT_PADDING
 
       this.content.addChild(paragraphText)
 
       // if paragraph is not last one, add white division line
-      if (i < this.tabData.tabContent.length - 1) {
+      if (
+        i < this.tabData.tabContent.length - 1 &&
+        paragraph.type !== 'title'
+      ) {
         const line = new PIXI.Graphics()
         line.beginFill(0xffffff)
-        line.drawRect(0, 0, this.scrollPartWidth, 2)
+        line.drawRect(0, 0, this.scrollPartWidth, 1)
         line.endFill()
 
         line.y = contentHeight
@@ -384,5 +407,15 @@ function getTabColor(tabIndex) {
     return 0xcc8053
   } else {
     return 0xa75d31
+  }
+}
+
+function getStyledContent(paragraph) {
+  switch (paragraph.type) {
+    case 'title':
+      return `<title>${paragraph.content}</title>`
+
+    default:
+      return paragraph.content
   }
 }
