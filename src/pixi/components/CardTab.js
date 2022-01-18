@@ -242,7 +242,7 @@ export class CardTab {
         line.y = contentHeight
         this.content.addChild(line)
 
-        if (nextParagraph?.type === 'title') {
+        if (nextParagraph?.type === 'title' && paragraph.type !== 'hint') {
           line.alpha = 0
           contentHeight += CONTENT_PADDING
         }
