@@ -69,6 +69,10 @@ export class TaiwanGameIcon {
       this.chooseGameHandler(this)
     })
   }
+
+  deactiveListener() {
+    this.container.removeAllListeners()
+  }
 }
 
 function getGameName(index) {

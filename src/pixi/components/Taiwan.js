@@ -105,4 +105,18 @@ export class Taiwan {
       gameIcon.activeListener()
     })
   }
+
+  destroyTaiwan() {
+    this.container.interactiveChildren = false
+
+    this.taiwanCityArray.forEach((city) => {
+      city.deactiveListener()
+      city.removeAllTicker()
+    })
+
+    this.gameIconArray.forEach((gameIcon) => {
+      console.log(gameIcon)
+      gameIcon.deactiveListener()
+    })
+  }
 }

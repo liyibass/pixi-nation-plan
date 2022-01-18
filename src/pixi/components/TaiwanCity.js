@@ -192,6 +192,8 @@ export class TaiwanCity {
   removeAllTicker() {
     this.pingTicker?.stop?.()
     this.decorationTicker?.stop?.()
+    this.pingTicker?.stop?.()
+    this.treeTicker?.stop?.()
   }
 
   async createText() {

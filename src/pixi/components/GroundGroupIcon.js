@@ -85,6 +85,14 @@ export class GroundGroupIcon {
       }
     })
   }
+
+  deactiveListener() {
+    this.container.removeAllListeners()
+  }
+
+  removeTicker() {
+    this.animationTicker?.stop?.()
+  }
 }
 
 function getTotalCount(index) {

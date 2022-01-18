@@ -13,13 +13,10 @@ export class MainScene {
   constructor() {
     this.container = new PIXI.Container()
 
-    this._createBackground()
     // this.createPlayer()
     this.createIntroScene()
     // this.createSnakeScene()
   }
-
-  _createBackground() {}
 
   createIntroScene() {
     const introScene = new IntroScene(this.selectStage.bind(this))
@@ -27,55 +24,39 @@ export class MainScene {
   }
 
   createSnakeScene() {
-    // remove unuse scene
-    this.container.removeChildren()
-    this.container.removeAllListeners()
-
     // create snake scene
     const snakeScene = new SnakeScene(this.selectStage.bind(this))
     this.container.addChild(snakeScene.container)
   }
 
   createBalanceScene() {
-    // remove unuse scene
-    this.container.removeChildren()
-    this.container.removeAllListeners()
-
     // create snake scene
     const balanceScene = new BalanceScene(this.selectStage.bind(this))
     this.container.addChild(balanceScene.container)
   }
 
   createRunScene() {
-    // remove unuse scene
-    this.container.removeChildren()
-    this.container.removeAllListeners()
-
     // create snake scene
     const runScene = new RunScene(this.selectStage.bind(this))
     this.container.addChild(runScene.container)
   }
 
   createCandyScene() {
-    // remove unuse scene
-    this.container.removeChildren()
-    this.container.removeAllListeners()
-
     // create snake scene
     const candyScene = new CandyScene(this.selectStage.bind(this))
     this.container.addChild(candyScene.container)
   }
 
   createMenuScene() {
-    this.container.removeChildren()
-    this.container.removeAllListeners()
-
     const menuScene = new MenuScene(this.selectStage.bind(this))
 
     this.container.addChild(menuScene.container)
   }
 
   selectStage(stageName) {
+    this.container.removeChildren()
+    this.container.removeAllListeners()
+
     console.log('clicked ' + stageName)
     switch (stageName) {
       case 'snake':

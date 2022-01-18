@@ -8,7 +8,7 @@ import { Taiwan } from '../components/Taiwan'
 import { Scene } from './Scene'
 import { Status } from '../script/Status'
 import { Tip } from '../components/Tip'
-// import { unlockCandy } from '../script/Utils'
+import { unlockCandy } from '../script/Utils'
 
 export class MenuScene extends Scene {
   constructor(selectStage = () => {}) {
@@ -16,7 +16,7 @@ export class MenuScene extends Scene {
     this.selectStage = selectStage
     // unlockWater()
     // unlockBalance()
-    // unlockCandy()
+    unlockCandy()
     // unlockRun()
 
     this.inWindowObstacles = []
@@ -218,7 +218,8 @@ export class MenuScene extends Scene {
   }
 
   startGame(choosedGame) {
-    console.log(choosedGame)
+    this.taiwan.destroyTaiwan()
+
     this.selectStage(choosedGame.gameName || choosedGame)
   }
 
