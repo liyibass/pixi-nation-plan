@@ -178,6 +178,21 @@ export class CardTab {
       wordWrapWidth: cardDimention.width - CONTENT_PADDING * 2,
     })
 
+    if (this.tabData.tabTitle) {
+      const titleText = new PIXI.Text(`${this.tabData.tabTitle}`, {
+        fill: ['0xffffff'],
+        fontSize: 20,
+        wordWrap: true,
+        breakWords: true,
+        fontWeight: 'bold',
+        wordWrapWidth: cardDimention.width - CONTENT_PADDING * 2,
+      })
+
+      titleText.y = contentHeight
+      contentHeight += titleText.height + CONTENT_PADDING
+      this.content.addChild(titleText)
+    }
+
     // feed paragraph
     for (let i = 0; i < this.tabData.tabContent.length; i++) {
       const paragraph = this.tabData.tabContent[i]
