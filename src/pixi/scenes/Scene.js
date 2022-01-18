@@ -174,8 +174,8 @@ export class Scene {
     if (this.menuButtons?.container) {
       this.container.removeChild(this.menuButtons.container)
     }
-    const gameFail = new GameFail(
-      failGameChooseHandler.bind(this),
+    this.gameFail = new GameFail(
+      this.failGameChooseHandler.bind(this),
       {
         text: '再玩一次',
         color: 0xffffff,
@@ -190,35 +190,27 @@ export class Scene {
       }
     )
 
-    this.container.addChild(gameFail.container)
+    this.container.addChild(this.gameFail.container)
 
     // reset doctorSay
     this.doctorSay.container.destroy()
     this._createDoctorSay()
+  }
 
-    async function failGameChooseHandler(chosen) {
-      switch (chosen) {
-        case 'restart':
-          this.container.removeChild(gameFail.container)
+  async failGameChooseHandler(chosen) {
+    switch (chosen) {
+      case 'restart':
+        this.container.removeChild(this.gameFail.container)
 
-          this.resetGameSetting()
-          this.initGame()
-          this.startGame()
-          break
+        this.resetGameSetting()
+        this.initGame()
+        this.startGame()
+        break
 
-        case 'menu':
-          this.container.removeChild(gameFail.container)
-          this.backToMenu(true)
-          break
-
-        // case 'menu':
-        //   await this.doctorSay.newSay(
-        //     '什麼！這麼快就要放棄啦？那只好請你幫我找下一個替死鬼，我才能放你回家。'
-        //   )
-
-        //   this.backToMenu()
-        //   break
-      }
+      case 'menu':
+        this.container.removeChild(this.gameFail.container)
+        this.backToMenu(true)
+        break
     }
   }
 
@@ -239,54 +231,68 @@ export class Scene {
       this.container.removeChild(this.menuButtons.container)
     }
 
-    const gameSuccess = new GameSuccess(
-      successGameChooseHandler.bind(this),
-      {
-        text: '繼續挑戰',
-        color: 0xffffff,
-        bgColor: '0x3B6BD6',
-        value: 'nextLevel',
-      },
-      {
-        text: '想看結果',
-        color: 0x000000,
-        bgColor: '0xC4C4C4',
-        value: 'result',
-      }
-    )
+    if (this.gameLevel === 2) {
+      this.gameSuccess = new GameSuccess(
+        this.successGameChooseHandler.bind(this),
+        {
+          text: '回到選單',
+          color: 0x000000,
+          bgColor: '0xC4C4C4',
+          value: 'exit',
+        }
+      )
 
-    this.container.addChild(gameSuccess.container)
+      this.container.addChild(this.gameSuccess.container)
+    } else {
+      this.gameSuccess = new GameSuccess(
+        this.successGameChooseHandler.bind(this),
+        {
+          text: '繼續挑戰',
+          color: 0xffffff,
+          bgColor: '0x3B6BD6',
+          value: 'nextLevel',
+        },
+        {
+          text: '我不想玩',
+          color: 0x000000,
+          bgColor: '0xC4C4C4',
+          value: 'exit',
+        }
+      )
+    }
+
+    this.container.addChild(this.gameSuccess.container)
 
     // reset doctorSay
     this.doctorSay.container.destroy()
     this._createDoctorSay()
+  }
 
-    async function successGameChooseHandler(chosen) {
-      switch (chosen) {
-        case 'nextLevel':
-          this.container.removeChild(gameSuccess.container)
+  async successGameChooseHandler(chosen) {
+    switch (chosen) {
+      case 'nextLevel':
+        this.container.removeChild(this.gameSuccess.container)
 
-          this.gameLevel++
+        this.gameLevel++
 
-          this.resetGameSetting()
-          // this.initGame()
-          this.startGameFlow()
-          break
+        this.resetGameSetting()
+        // this.initGame()
+        this.startGameFlow()
+        break
 
-        case 'result':
-          await this.doctorSay.newSay(
-            '表現得很不錯哦！恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
-          )
-          await this.doctorSay.newSay(
-            '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
-          )
-          this.container.removeChild(gameSuccess.container)
-          this.backToMenu(true)
-          break
+      case 'result':
+        await this.doctorSay.newSay(
+          '表現得很不錯哦！恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
+        )
+        await this.doctorSay.newSay(
+          '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
+        )
+        this.container.removeChild(this.gameSuccess.container)
+        this.backToMenu(true)
+        break
 
-        default:
-          break
-      }
+      default:
+        break
     }
   }
 

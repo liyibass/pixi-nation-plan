@@ -8,11 +8,16 @@ import { Taiwan } from '../components/Taiwan'
 import { Scene } from './Scene'
 import { Status } from '../script/Status'
 import { Tip } from '../components/Tip'
+import { unlockCandy } from '../script/CityData'
 
 export class MenuScene extends Scene {
   constructor(selectStage = () => {}) {
     super()
     this.selectStage = selectStage
+    // unlockWater()
+    // unlockBalance()
+    unlockCandy()
+    // unlockRun()
 
     this.inWindowObstacles = []
     this.container.name = 'MenuScene'

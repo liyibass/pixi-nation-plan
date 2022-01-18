@@ -770,6 +770,23 @@ export class CandyScene extends Scene {
     }
   }
 
+  async failGameChooseHandler(chosen) {
+    switch (chosen) {
+      case 'restart':
+        this.container.removeChild(this.gameFail.container)
+
+        this.resetGameSetting()
+        this.initGame()
+        this.startGame()
+        break
+
+      case 'menu':
+        this.container.removeChild(this.gameFail.container)
+        this.backToMenu(true)
+        break
+    }
+  }
+
   // ===== game pass =====
 
   async successGameHint() {
@@ -787,6 +804,34 @@ export class CandyScene extends Scene {
       await this.doctorSay.newSay(
         '因為你也順利解決了缺水的問題，可以點選有此困擾的縣市，看各地政府如何因應。'
       )
+    }
+  }
+
+  async successGameChooseHandler(chosen) {
+    switch (chosen) {
+      case 'nextLevel':
+        this.container.removeChild(this.gameSuccess.container)
+
+        this.gameLevel++
+
+        this.resetGameSetting()
+        // this.initGame()
+        this.startGameFlow()
+        break
+
+      case 'result':
+        await this.doctorSay.newSay(
+          '表現得很不錯哦！恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
+        )
+        await this.doctorSay.newSay(
+          '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
+        )
+        this.container.removeChild(this.gameSuccess.container)
+        this.backToMenu(true)
+        break
+
+      default:
+        break
     }
   }
 
