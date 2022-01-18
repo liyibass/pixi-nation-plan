@@ -1,6 +1,7 @@
 export const Status = {
-  isNeedTutorial: true,
+  isNeedTutorial: false,
   isNeedScrollHint: true,
+  isShared: false,
   snake: {
     gameLevel: 0,
   },

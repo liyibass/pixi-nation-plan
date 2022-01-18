@@ -159,3 +159,7 @@ export const infoCard = {
     },
   ],
 }
+
+export const unlockWater = () => {
+  console.log(cityDataArray)
+}

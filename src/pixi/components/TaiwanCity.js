@@ -23,7 +23,7 @@ export class TaiwanCity {
       cityDataArray[0]
 
     this.createTaiwanCity()
-    this.createDecocation()
+    this.createDecoration()
     this.createText()
 
     this.assignPosition()
@@ -62,7 +62,7 @@ export class TaiwanCity {
     this.container.addChild(this.sprite0, this.sprite1, this.white)
   }
 
-  createDecocation() {
+  createDecoration() {
     this.decoration = new PIXI.Container()
 
     const notYetUnlock = !!this.cityData.tabs.find((tab) => {
@@ -73,11 +73,74 @@ export class TaiwanCity {
       const workingTexture = new PIXI.Texture(Globals.resources['Fuck'].texture)
       const workingSprite = new PIXI.Sprite(workingTexture)
 
+      workingSprite.alpha = 0
+
       this.decoration.addChild(workingSprite)
-      // this.decoration.x = this.container.width / 2
+      this.decoration.x = -20
       this.decoration.y = -this.sprite0.height / 2 - this.decoration.height
       this.sprite0.addChild(this.decoration)
+
+      return new Promise((resolve) => {
+        this.decorationTicker = new PIXI.Ticker()
+
+        this.decorationTicker.add(() => {
+          if (workingSprite.alpha < 1) {
+            workingSprite.alpha += 0.02
+          } else {
+            workingSprite.alpha = 1
+            this.decorationTicker.stop()
+            resolve()
+          }
+        })
+
+        this.decorationTicker.start()
+
+        this.unlockNewCardHighlight()
+      })
     }
+  }
+
+  unlockNewCardHighlight() {
+    const pingTexture = new PIXI.Texture(Globals.resources['ping']?.texture)
+    this.pingSprite = new PIXI.Sprite(pingTexture)
+
+    this.pingSprite.width = 73.94
+    this.pingSprite.height = 110.29
+    this.pingSprite.pivot.set(
+      this.pingSprite.width / 2,
+      this.pingSprite.height * 2
+    )
+    this.decoration.addChild(this.pingSprite)
+
+    // ping animation
+    this.pingTicker = new PIXI.Ticker()
+    let direction = 'up'
+    this.pingTicker.add(() => {
+      if (direction === 'up') {
+        if (this.pingSprite.y > -this.pingSprite.height / 4) {
+          this.pingSprite.y--
+
+          if (this.pingSprite.y <= -this.pingSprite.height / 4) {
+            direction = 'down'
+          }
+        }
+      } else {
+        if (this.pingSprite.y < 0) {
+          this.pingSprite.y++
+
+          if (this.pingSprite.y >= 0) {
+            direction = 'up'
+          }
+        }
+      }
+    })
+
+    this.pingTicker.start()
+  }
+
+  removeAllTicker() {
+    this.pingTicker?.stop?.()
+    this.decorationTicker?.stop?.()
   }
 
   createText() {

@@ -54,13 +54,18 @@ export class MenuScene extends Scene {
     this.container.addChild(this.taiwan.container)
   }
 
-  startGameFlow() {
+  async startGameFlow() {
     if (this.isNeedTutorial) {
       this.startTutorial()
     } else {
       this.openAllListener()
     }
+
+    await this.checkCityAnimation()
+    // check if there's unlocked city
   }
+
+  async checkCityAnimation() {}
 
   async startTutorial() {
     if (!this.isNeedTutorial) return
