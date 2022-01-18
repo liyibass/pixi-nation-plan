@@ -201,6 +201,7 @@ export class CardTab {
         default: {
           fill: ['0xffffff'],
           fontSize: 14,
+          fontWeight: 'normal',
           wordWrap: true,
           breakWords: true,
           wordWrapWidth: cardDimention.width - CONTENT_PADDING * 2,
