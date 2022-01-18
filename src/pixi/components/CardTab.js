@@ -217,6 +217,11 @@ export class CardTab {
           fontSize: 20,
           fontWeight: 900,
         },
+        hint: {
+          fill: ['0x813F2B'],
+          fontSize: 14,
+          fontWeight: 900,
+        },
       })
       paragraphText.y = contentHeight
       contentHeight += paragraphText.height + CONTENT_PADDING
@@ -229,7 +234,7 @@ export class CardTab {
         paragraph.type !== 'title'
       ) {
         const line = new PIXI.Graphics()
-        line.beginFill(0xffffff)
+        line.beginFill(paragraph.type === 'hint' ? 0x813f2b : 0xffffff)
         line.drawRect(0, 0, this.scrollPartWidth, 1)
         line.endFill()
 
@@ -414,6 +419,8 @@ function getStyledContent(paragraph) {
   switch (paragraph.type) {
     case 'title':
       return `<title>${paragraph.content}</title>`
+    case 'hint':
+      return `<hint>${paragraph.content}</hint>`
 
     default:
       return paragraph.content
