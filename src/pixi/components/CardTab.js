@@ -198,6 +198,7 @@ export class CardTab {
     // feed paragraph
     for (let i = 0; i < this.tabData.tabContent.length; i++) {
       const paragraph = this.tabData.tabContent[i]
+      const nextParagraph = this.tabData?.tabContent?.[i + 1]
 
       const paragraphText = new MultiStyleText(getStyledContent(paragraph), {
         default: {
@@ -240,6 +241,11 @@ export class CardTab {
 
         line.y = contentHeight
         this.content.addChild(line)
+
+        if (nextParagraph?.type === 'title') {
+          line.alpha = 0
+          contentHeight += CONTENT_PADDING
+        }
 
         contentHeight += line.height + CONTENT_PADDING
       }
