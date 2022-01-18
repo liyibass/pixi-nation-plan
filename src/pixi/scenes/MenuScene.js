@@ -8,35 +8,44 @@ import { Taiwan } from '../components/Taiwan'
 import { Scene } from './Scene'
 import { Status } from '../script/Status'
 import { Tip } from '../components/Tip'
+
 import {
   unlockCandy,
   unlockRun,
   unlockBalance,
   unlockWater,
   unlockGarbage,
+  clearUnlockCardCityArray,
 } from '../script/Utils'
+const test = false
 
 export class MenuScene extends Scene {
   constructor(selectStage = () => {}) {
     super()
     this.selectStage = selectStage
-    unlockWater()
-    unlockGarbage()
-    unlockBalance()
-    unlockCandy()
-    unlockRun()
+
+    this.clearUnlockArray()
 
     this.inWindowObstacles = []
     this.container.name = 'MenuScene'
 
     this.isNeedTutorial = Status.isNeedTutorial
 
-    // unlockWater()
-    // unlockCandy()
-
     this.createScene()
 
     this.startGameFlow()
+  }
+  clearUnlockArray() {
+    clearUnlockCardCityArray()
+
+    unlockWater()
+    unlockGarbage()
+    if (test) {
+      console.log('TEST')
+      unlockBalance()
+      unlockCandy()
+      unlockRun()
+    }
   }
   // ===== init system =====
   createScene() {

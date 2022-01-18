@@ -71,12 +71,14 @@ export class CardHeader {
   }
 
   createTitle() {
-    console.log(CARD_HEADER_LAND_CITY_HEIGHT)
     const titleContainer = new PIXI.Container()
     // title
     this.titleText = new PIXI.Text(this._getCityName(this.cityIndex), {
       fill: ['0xffffff'],
-      fontSize: CARD_HEADER_LAND_CITY_HEIGHT - 6 * 2,
+      fontSize:
+        CARD_HEADER_LAND_CITY_HEIGHT - 6 * 2 > 40
+          ? 40
+          : CARD_HEADER_LAND_CITY_HEIGHT - 6 * 2,
       wordWrap: true,
       breakWords: !this.isInfoCard,
       wordWrapWidth: 190,

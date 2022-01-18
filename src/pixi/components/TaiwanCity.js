@@ -133,8 +133,9 @@ export class TaiwanCity {
 
     this.pingSprite.width = 73.94 * 0.3
     this.pingSprite.height = 110.29 * 0.3
-    this.pingSprite.pivot.set(this.pingSprite.width / 2, this.pingSprite.height)
-    const initY = -this.pingSprite.height
+    // this.pingSprite.pivot.set(this.pingSprite.width / 2, this.pingSprite.height)
+    const initY = -this.pingSprite.height * 1.3
+    this.pingSprite.x = -this.pingSprite.width / 2
     this.pingSprite.y = initY
     this.layer2.addChild(this.pingSprite)
     // this.layer2.setChildIndex(this.pingSprite, 1)

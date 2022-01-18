@@ -414,7 +414,7 @@ export class CardTab {
 function getTabColor(tabIndex) {
   if (this?.isInfoCard) return 0x000000
 
-  if (tabIndex === 0) {
+  if (tabIndex === 0 || !this.tabData.isLocked) {
     return 0xcc8053
   } else {
     return 0xa75d31

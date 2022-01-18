@@ -2,8 +2,12 @@ import { cityDataArray } from './CityData'
 
 export let unlockCardCityArray = []
 
-export const unlockWater = () => {
+export const clearUnlockCardCityArray = () => {
   unlockCardCityArray = []
+}
+
+export const unlockWater = () => {
+  // unlockCardCityArray = []
 
   cityDataArray.forEach((cityData) => {
     let hasUnlock = false
@@ -14,13 +18,16 @@ export const unlockWater = () => {
       }
     })
 
-    if (hasUnlock) {
+    if (
+      hasUnlock &&
+      !unlockCardCityArray.find((city) => city.cityIndex === cityData.cityIndex)
+    ) {
       unlockCardCityArray.push(cityData)
     }
   })
 }
 export const unlockGarbage = () => {
-  unlockCardCityArray = []
+  // unlockCardCityArray = []
   cityDataArray.forEach((cityData) => {
     let hasUnlock = false
     cityData.tabs.forEach((tab) => {
@@ -30,13 +37,16 @@ export const unlockGarbage = () => {
       }
     })
 
-    if (hasUnlock) {
+    if (
+      hasUnlock &&
+      !unlockCardCityArray.find((city) => city.cityIndex === cityData.cityIndex)
+    ) {
       unlockCardCityArray.push(cityData)
     }
   })
 }
 export const unlockBalance = () => {
-  unlockCardCityArray = []
+  // unlockCardCityArray = []
   cityDataArray.forEach((cityData) => {
     let hasUnlock = false
     cityData.tabs.forEach((tab) => {
@@ -46,13 +56,16 @@ export const unlockBalance = () => {
       }
     })
 
-    if (hasUnlock) {
+    if (
+      hasUnlock &&
+      !unlockCardCityArray.find((city) => city.cityIndex === cityData.cityIndex)
+    ) {
       unlockCardCityArray.push(cityData)
     }
   })
 }
 export const unlockCandy = () => {
-  unlockCardCityArray = []
+  // unlockCardCityArray = []
   cityDataArray.forEach((cityData) => {
     let hasUnlock = false
     cityData.tabs.forEach((tab) => {
@@ -62,13 +75,16 @@ export const unlockCandy = () => {
       }
     })
 
-    if (hasUnlock) {
+    if (
+      hasUnlock &&
+      !unlockCardCityArray.find((city) => city.cityIndex === cityData.cityIndex)
+    ) {
       unlockCardCityArray.push(cityData)
     }
   })
 }
 export const unlockRun = () => {
-  unlockCardCityArray = []
+  // unlockCardCityArray = []
   cityDataArray.forEach((cityData) => {
     let hasUnlock = false
     cityData.tabs.forEach((tab) => {
@@ -78,7 +94,10 @@ export const unlockRun = () => {
       }
     })
 
-    if (hasUnlock) {
+    if (
+      hasUnlock &&
+      !unlockCardCityArray.find((city) => city.cityIndex === cityData.cityIndex)
+    ) {
       unlockCardCityArray.push(cityData)
     }
   })
