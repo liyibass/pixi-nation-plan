@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
-import { cityDataArray, unlockCardCityArray } from '../script/CityData'
+import { cityDataArray } from '../script/CityData'
+import { unlockCardCityArray } from '../script/Utils'
 
 const taiwanDimention = Globals.getTaiwanDimention()
 
