@@ -5,7 +5,10 @@ const cardDimention = Globals.getCardDimention()
 
 const CARD_MARGIN = 12
 const CARD_CONTENT_WIDTH = cardDimention.width - 2 * CARD_MARGIN
-const CARD_HEADER_HEIGHT = Math.floor(cardDimention.height * 0.3)
+const CARD_HEADER_HEIGHT =
+  window.innerWidth < 500
+    ? Math.floor(cardDimention.height * 0.15)
+    : Math.floor(cardDimention.height * 0.3)
 const CARD_HEADER_LAND_CITY_HEIGHT = CARD_HEADER_HEIGHT * 0.5
 // const CARD_HEADER_TITLE_HEIGHT = CARD_HEADER_HEIGHT * 0.5
 
@@ -68,11 +71,12 @@ export class CardHeader {
   }
 
   createTitle() {
+    console.log(CARD_HEADER_LAND_CITY_HEIGHT)
     const titleContainer = new PIXI.Container()
     // title
     this.titleText = new PIXI.Text(this._getCityName(this.cityIndex), {
       fill: ['0xffffff'],
-      fontSize: 36,
+      fontSize: CARD_HEADER_LAND_CITY_HEIGHT - 6 * 2,
       wordWrap: true,
       breakWords: !this.isInfoCard,
       wordWrapWidth: 190,

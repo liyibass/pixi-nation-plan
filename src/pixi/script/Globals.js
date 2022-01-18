@@ -181,8 +181,8 @@ export const Globals = {
   },
 
   getCardDimention: function () {
-    const TOP_PADDING = 48
-    const SIDE_PADDING = 25
+    const TOP_PADDING = window.innerWidth < 360 ? 10 : 48
+    const SIDE_PADDING = window.innerWidth < 360 ? 10 : 25
     const width =
       this.width - 2 * SIDE_PADDING < Math.floor((this.height * 5) / 8)
         ? this.width - 2 * SIDE_PADDING
