@@ -7,6 +7,7 @@ export const clearUnlockCardCityArray = () => {
 }
 
 export const unlockWater = () => {
+  console.log('unlockWater')
   // unlockCardCityArray = []
 
   cityDataArray.forEach((cityData) => {
@@ -27,6 +28,7 @@ export const unlockWater = () => {
   })
 }
 export const unlockGarbage = () => {
+  console.log('unlockGarbage')
   // unlockCardCityArray = []
   cityDataArray.forEach((cityData) => {
     let hasUnlock = false
@@ -46,6 +48,7 @@ export const unlockGarbage = () => {
   })
 }
 export const unlockBalance = () => {
+  console.log('unlockBalance')
   // unlockCardCityArray = []
   cityDataArray.forEach((cityData) => {
     let hasUnlock = false
@@ -65,6 +68,7 @@ export const unlockBalance = () => {
   })
 }
 export const unlockCandy = () => {
+  console.log('unlockCandy')
   // unlockCardCityArray = []
   cityDataArray.forEach((cityData) => {
     let hasUnlock = false
@@ -84,6 +88,7 @@ export const unlockCandy = () => {
   })
 }
 export const unlockRun = () => {
+  console.log('unlockRun')
   // unlockCardCityArray = []
   cityDataArray.forEach((cityData) => {
     let hasUnlock = false

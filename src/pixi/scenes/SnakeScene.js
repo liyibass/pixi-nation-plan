@@ -676,6 +676,7 @@ export class SnakeScene {
 
     this.createKeyboardListener()
     this.startSnakeMoveTicker()
+    this.controller.updateMoveDirectionObject(this.moveDirection)
     this.controller.activeListener()
   }
 
@@ -980,6 +981,7 @@ export class SnakeScene {
     await this._countDown(3)
 
     this.snakeMoveTicker.start()
+    this.controller.updateMoveDirectionObject(this.moveDirection)
     this.controller.activeListener()
   }
 

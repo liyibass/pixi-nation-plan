@@ -57,8 +57,6 @@ export class FoodScore {
   }
 
   eatPoisonAndVerifyIfPassedGame(poisonType) {
-    console.log(poisonType)
-    console.log(this)
     this.score[poisonType] += 1
     this.updateScoreWord(poisonType)
 

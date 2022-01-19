@@ -79,6 +79,8 @@ export class SnakeController {
   }
 
   activeListener() {
+    console.log('activeController')
+
     this.activeRegionArray.forEach((activeRegion) => {
       activeRegion.interactive = true
       activeRegion.buttonMode = true
@@ -139,11 +141,16 @@ export class SnakeController {
   }
 
   deactiveListener() {
+    console.log('deactiveController')
     this.activeRegionArray.forEach((activeRegion) => {
       activeRegion.interactive = false
       activeRegion.buttonMode = false
       activeRegion.removeAllListeners()
     })
+  }
+
+  updateMoveDirectionObject(moveDirection) {
+    this.moveDirection = moveDirection
   }
 }
 
