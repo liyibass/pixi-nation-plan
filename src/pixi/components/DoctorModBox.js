@@ -53,7 +53,7 @@ class ShareBox extends DialogBox {
   }
 
   init() {
-    this.twoIcons = new TwoIcons(this.chosenHandler, 'bear', 'tiger')
+    this.twoIcons = new TwoIcons(this.chosenHandler, 'bearHead', 'tigerHead')
     this.container.addChild(this.twoIcons.container)
     this.container.interactive = true
     this.container.buttonMode = false

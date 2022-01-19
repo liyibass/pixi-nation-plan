@@ -1,11 +1,8 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
-const {
-  BUTTON_CONTAINER_WIDTH,
-  BUTTON_CONTAINER_HEIGHT,
-  BUTTON_WIDTH,
-  BUTTON_HEIGHT,
-} = Globals
+const { BUTTON_CONTAINER_WIDTH, BUTTON_CONTAINER_HEIGHT } = Globals
+
+let ICON_WIDTH = 40
 
 export class TwoIcons {
   constructor(chosenHandler, icon1Name = 'facebook', icon2Name = 'line') {
@@ -24,14 +21,14 @@ export class TwoIcons {
     outerFrame.drawRect(
       0,
       0,
-      this.icon2Name ? BUTTON_CONTAINER_WIDTH : BUTTON_WIDTH,
+      this.icon2Name ? BUTTON_CONTAINER_WIDTH : ICON_WIDTH,
       BUTTON_CONTAINER_HEIGHT
     )
-    this.container.addChild(outerFrame)
+    // this.container.addChild(outerFrame)
   }
 
   createTwoIcons() {
-    this.icon1 = this.getButtonContainer(this.icon1Name)
+    this.icon1 = this.getIconContainer(this.icon1Name)
 
     this.icon1.x = 0
     this.icon1.y = 0
@@ -45,11 +42,12 @@ export class TwoIcons {
     this.container.addChild(this.icon1)
 
     if (this.icon2Name) {
-      this.icon2 = this.getButtonContainer(this.icon2Name)
+      this.icon2 = this.getIconContainer(this.icon2Name)
 
       this.icon1.x = 0
       this.icon1.y = 0
-      this.icon2.x = this.container.width - this.icon2.width
+      this.icon2.x = this.icon2.width + 21
+      // this.icon2.x = this.container.width - this.icon2.width
       this.icon2.y = 0
 
       this.icon2.on('pointerdown', async () => {
@@ -67,21 +65,25 @@ export class TwoIcons {
     this.icon2.removeAllListeners()
   }
 
-  getButtonContainer(text) {
+  getIconContainer(text) {
     const buttonContainer = new PIXI.Container()
 
-    const buttonBackground = new PIXI.Graphics()
-    buttonBackground.beginFill(0xffffff)
-    buttonBackground.drawRoundedRect(0, 0, BUTTON_WIDTH, BUTTON_HEIGHT, 5)
-    buttonBackground.endFill()
+    if (text === 'tigerHead') {
+      ICON_WIDTH = 60
+    } else if (text === 'bearHead') {
+      ICON_WIDTH = 70
+    }
 
-    const buttonText = new PIXI.Text(text, { fontSize: 14, fill: ['0x000000'] })
+    const texture = new PIXI.Texture(Globals.resources[`${text}`]?.texture)
+    const sprite = new PIXI.Sprite(texture)
+    sprite.anchor.set(0, 0.5)
 
-    buttonText.anchor.set(0.5, 0.5)
-    buttonText.x = buttonBackground.width / 2
-    buttonText.y = buttonBackground.height / 2
+    const ratio = ICON_WIDTH / sprite.width
+    sprite.width *= ratio
+    sprite.height *= ratio
+    buttonContainer.addChild(sprite)
+    // buttonContainer.pivot.set(sprite.width / 2, sprite.height / 2)
 
-    buttonContainer.addChild(buttonBackground, buttonText)
     buttonContainer.buttonMode = true
     buttonContainer.interactive = true
 

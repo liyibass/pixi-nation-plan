@@ -62,6 +62,6 @@ class ShareBox extends DialogBox {
     this.pixiText.y = this.pixiText.height / 2 + PADDING * 2
     this.twoIcons.container.x =
       (this.roundRect.width - this.twoIcons.container.width) / 2
-    this.twoIcons.container.y = this.roundRect.height / 2 + PADDING * 2
+    this.twoIcons.container.y = this.roundRect.height / 2 + PADDING * 2.4
   }
 }

@@ -167,6 +167,10 @@ import scrollHintArrow from '../assets/images/scrollHintArrow.png'
 import Fuck from '../assets/images/Fuck.png'
 import ping from '../assets/images/ping.png'
 import tree from '../assets/images/tree.png'
+import facebook from '../assets/images/facebook.png'
+import line from '../assets/images/line.png'
+import tigerHead from '../assets/images/tigerHead.png'
+import bearHead from '../assets/images/bearHead.png'
 
 export const LoaderConfig = {
   player,
@@ -338,4 +342,8 @@ export const LoaderConfig = {
   Fuck,
   ping,
   tree,
+  facebook,
+  line,
+  tigerHead,
+  bearHead,
 }

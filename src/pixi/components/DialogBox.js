@@ -1,8 +1,8 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 
-const PADDING = 15
-const MAX_BOX_WIDTH = 320
+const PADDING = 16
+const MAX_BOX_WIDTH = 350
 // const MAX_BOX_HEIGHT = 200
 
 export class DialogBox {
