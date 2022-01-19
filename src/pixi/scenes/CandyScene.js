@@ -17,6 +17,7 @@ export class CandyScene extends Scene {
     this.container.name = 'CandyScene'
 
     this.grid = []
+    // unlockCandy()
 
     this.isSwaping = false
     this.isHandlingLine = false
@@ -712,11 +713,17 @@ export class CandyScene extends Scene {
 
   async gameLevel0_0() {
     await this.doctorSay.newSay(
-      '村莊最重要的就是村民，怎麼讓他們過得舒適，均衡發展就很重要啦！'
+      '蓋一個村莊最重要的就是找資源啦！我需要你幫忙蒐集素材。'
+    )
+    await this.doctorSay.newSay(
+      '綠色方塊代表農業區，紅色方塊代表工業區，白色方塊代表住商區，黃色方塊代表鄉村區，藍色方塊代表國土保育區。每一個資源都有不同的分數。'
+    )
+    await this.doctorSay.newSay(
+      '遊戲方式很簡單，只要讓3個以上相同的方塊連在一起，就可以獲得這個素材了！'
     )
 
     const chosen = await this.doctorSay.chooseSay(
-      '現在有些人想要搬來你的村莊了，你的工作是好好分配他們居住的地方，準備好了嗎？',
+      '只要幫我收集到每一關需要的分數，你想怎麼蓋都可以！',
       {
         text: '準備好了',
         color: '0x000000',
@@ -743,18 +750,35 @@ export class CandyScene extends Scene {
   }
 
   async gameLevel0_1() {
+    await this.doctorSay.newSay('萬事起頭難，要建立一個村莊很不容易啊！')
+    await this.doctorSay.newSay(
+      '我可以給你小小的提示，對一座剛發展的村莊來說，均衡是很重要的，少了哪個區塊，對未來都不是好事～'
+    )
     await this.startGame()
     await this.initGame()
   }
 
   async gameLevel1() {
-    await this.doctorSay.newSay('level 2!')
+    await this.doctorSay.newSay('你的村莊越來越有規模了，資源也變多啦～')
+    await this.doctorSay.newSay('哎，你有注意到愈來愈多人想搬進來嗎？')
+    await this.doctorSay.newSay(
+      '想讓城市發展得更興旺的話，工業區、住宅區跟商業區很重要呢，你會做出怎樣的選擇呢？'
+    )
     await this.startGame()
     await this.initGame()
   }
 
   async gameLevel2() {
-    await this.doctorSay.newSay('final level!')
+    await this.doctorSay.newSay('你的村莊發展得很快！')
+    await this.doctorSay.newSay(
+      '不過成長得太迅速也不是好事哦，像違章工廠就悄悄長出來了。'
+    )
+    await this.doctorSay.newSay(
+      '如果工廠繼續增加的話，雖然能提高城市的收入，但環境就會被污染，長不出其他的方塊了。'
+    )
+    await this.doctorSay.newSay(
+      '當然，你也可以選擇忽略違章工廠，收集其他的素材來達到目標分數，你該怎麼辦呢？'
+    )
     await this.startGame()
     await this.initGame()
   }
@@ -829,10 +853,16 @@ export class CandyScene extends Scene {
     Status.candy.gameLevel++
 
     if (this.gameLevel === 3) {
-      await this.doctorSay.newSay('沒想到你這麼優秀，我真是找對人了！')
-    }
+      await this.doctorSay.newSay('哇，你真的很有當村長的天份！')
+      await this.doctorSay.newSay(
+        '一個村莊必須要有農地、工業區、商業區和住宅區等等的分區規劃，村民才能住得開心舒適，'
+      )
+      await this.doctorSay.newSay(
+        '想要治理好一個村莊是不是很不容易呢？別擔心，你已經做得很好了！'
+      )
 
-    unlockCandy()
+      unlockCandy()
+    }
   }
 
   async successGameChooseHandler(chosen) {
@@ -847,12 +877,12 @@ export class CandyScene extends Scene {
 
       default:
       case 'menu':
-        await this.doctorSay.newSay(
-          '表現得很不錯哦！恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
-        )
-        await this.doctorSay.newSay(
-          '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
-        )
+        if (this.gameLevel === 3) {
+          await this.doctorSay.newSay(
+            '下面這些村莊也遭遇到類似的問題，好好閱讀他們的經驗，相信會對你有所幫助！'
+          )
+        }
+
         this.container.removeChild(this.gameSuccess.container)
         this.backToMenu(true)
         break

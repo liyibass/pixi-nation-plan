@@ -122,19 +122,23 @@ export class TaiwanCity {
     } else {
       cityDataArray[this.cityIndex].isUnlockAll = true
 
-      const delayIndex =
-        unlockCardCityArray.findIndex(
-          (city) => city.cityIndex === this.cityIndex
-        ) || this.cityIndex
+      await this.unlockAnimation()
 
       if (hasNewUnlock) {
         this.hintCity()
         this.unlockNewCardHighlight()
       }
-      await this._wait(100 * delayIndex)
-      await this.unlockCity()
-      await this.growTree()
     }
+  }
+  async unlockAnimation() {
+    const delayIndex =
+      unlockCardCityArray.findIndex(
+        (city) => city.cityIndex === this.cityIndex
+      ) || this.cityIndex
+
+    await this._wait(100 * delayIndex)
+    await this.unlockCity()
+    await this.growTree()
   }
 
   unlockNewCardHighlight() {
