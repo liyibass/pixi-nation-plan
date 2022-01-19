@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 import { CityStatusArray } from '../script/Status'
 
-import { unlockCardCityArray } from '../script/Utils'
+import { setCityUnlockStatusToTrue, unlockCardCityArray } from '../script/Utils'
 
 const taiwanDimention = Globals.getTaiwanDimention()
 
@@ -122,7 +122,7 @@ export class TaiwanCity {
         this.decorationTicker.start()
       })
     } else {
-      CityStatusArray[this.cityIndex].isUnlockAll = true
+      setCityUnlockStatusToTrue(this.cityIndex)
 
       await this.unlockAnimation()
 

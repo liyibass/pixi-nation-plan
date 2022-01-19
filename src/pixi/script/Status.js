@@ -1,4 +1,8 @@
-export const Status = {
+import { deserializeGameStatus } from './Utils'
+
+const storedStatus = deserializeGameStatus()
+
+export const Status = storedStatus?.Status || {
   isNeedTutorial: false,
   isNeedScrollHint: true,
   isShared: false,
@@ -20,7 +24,7 @@ export const Status = {
   },
 }
 
-export const CityStatusArray = [
+export const CityStatusArray = storedStatus?.CityStatusArray || [
   {
     cityIndex: 0,
     cityName: '新北市',

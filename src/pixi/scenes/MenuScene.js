@@ -58,7 +58,7 @@ export class MenuScene extends Scene {
 
     this.stageButton.on('pointerdown', () => {
       clearUnlockCardCityArray()
-      console.log(unlockTarget)
+
       switch (unlockTarget) {
         case 'water':
           unlockWater()
@@ -109,7 +109,6 @@ export class MenuScene extends Scene {
   }
 
   createTaiwan() {
-    console.log('createTaiwan')
     this.taiwan = new Taiwan(this.startGame.bind(this))
     // this.taiwan.container.interactiveChildren = false
     this.taiwan.container.alpha = 1

@@ -27,6 +27,8 @@ export const unlockWater = () => {
       unlockCardCityArray.push(cityData)
     }
   })
+
+  storeStatusIntoStorage()
 }
 export const unlockGarbage = () => {
   console.log('unlockGarbage')
@@ -49,6 +51,8 @@ export const unlockGarbage = () => {
       unlockCardCityArray.push(cityData)
     }
   })
+
+  storeStatusIntoStorage()
 }
 export const unlockBalance = () => {
   console.log('unlockBalance')
@@ -71,6 +75,8 @@ export const unlockBalance = () => {
       unlockCardCityArray.push(cityData)
     }
   })
+
+  storeStatusIntoStorage()
 }
 export const unlockCandy = () => {
   console.log('unlockCandy')
@@ -93,6 +99,8 @@ export const unlockCandy = () => {
       unlockCardCityArray.push(cityData)
     }
   })
+
+  storeStatusIntoStorage()
 }
 export const unlockRun = () => {
   console.log('unlockRun')
@@ -115,4 +123,40 @@ export const unlockRun = () => {
       unlockCardCityArray.push(cityData)
     }
   })
+
+  storeStatusIntoStorage()
+}
+
+export const storeStatusIntoStorage = () => {
+  window.localStorage.setItem('gameStatus', serializeGameStatus())
+}
+
+export const setCityUnlockStatusToTrue = (cityIndex) => {
+  CityStatusArray[cityIndex].isUnlockAll = true
+  storeStatusIntoStorage()
+}
+
+export const serializeGameStatus = () => {
+  const status = {
+    Status,
+    CityStatusArray,
+    storedDate: Date.now(),
+  }
+
+  return JSON.stringify(status)
+}
+
+export const deserializeGameStatus = () => {
+  const storedStatusString = window.localStorage['gameStatus']
+
+  if (storedStatusString) {
+    const storedStatus = JSON.parse(storedStatusString)
+
+    if (
+      storedStatus.storedDate &&
+      Date.now() - storedStatus.storedDate < 60 * 60 * 24 * 7
+    ) {
+      return storedStatus
+    }
+  }
 }
