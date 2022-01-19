@@ -197,13 +197,6 @@ export class BalanceScene extends Scene {
       )
       this.backToMenu()
     }
-    // await this.doctorSay.newSay('有沒有看到那個翹翹板？')
-
-    // await this.doctorSay.newSay(
-    //   '左邊、右邊各有 4 個格子，每格最多可以放 4 個人'
-    // )
-    // await this.doctorSay.newSay('你可以先試著放看看，就是這麼簡單')
-    // this.createInitLoad()
   }
 
   async gameLevel0_1() {
@@ -351,13 +344,10 @@ export class BalanceScene extends Scene {
         this.startGameFlow()
         break
 
+      default:
       case 'menu':
         this.container.removeChild(this.gameSuccess.container)
-        console.log('YOYO')
         this.backToMenu(true)
-        break
-
-      default:
         break
     }
   }

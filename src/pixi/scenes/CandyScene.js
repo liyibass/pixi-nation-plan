@@ -4,6 +4,7 @@ import { CandyHeader } from '../components/CandyHeader'
 
 import { Globals } from '../script/Globals'
 import { Status } from '../script/Status'
+import { unlockCandy } from '../script/Utils'
 import { Scene } from './Scene'
 
 const gameStageDimention = Globals.getCandyGameStageDimention()
@@ -12,7 +13,7 @@ const gameStageDimention = Globals.getCandyGameStageDimention()
 export class CandyScene extends Scene {
   constructor(...args) {
     super(...args)
-
+    this.gameLevel = Status.candy.gameLevel
     this.container.name = 'CandyScene'
 
     this.grid = []
@@ -198,7 +199,7 @@ export class CandyScene extends Scene {
   removeAllCandys() {
     for (let j = 0; j < this.rowCount; j++) {
       for (let i = 0; i < this.colCount; i++) {
-        const candy = this.grid[j][i]
+        const candy = this.grid?.[j]?.[i]
 
         candy?.container?.destroy()
       }
@@ -693,7 +694,7 @@ export class CandyScene extends Scene {
 
     switch (this.gameLevel) {
       case 0:
-        this.gameLevel0()
+        this.gameLevel0_0()
         break
 
       case 1:
@@ -709,7 +710,39 @@ export class CandyScene extends Scene {
     }
   }
 
-  async gameLevel0() {
+  async gameLevel0_0() {
+    await this.doctorSay.newSay(
+      '村莊最重要的就是村民，怎麼讓他們過得舒適，均衡發展就很重要啦！'
+    )
+
+    const chosen = await this.doctorSay.chooseSay(
+      '現在有些人想要搬來你的村莊了，你的工作是好好分配他們居住的地方，準備好了嗎？',
+      {
+        text: '準備好了',
+        color: '0x000000',
+        bgColor: '0xFF8B29',
+        value: 'play',
+      },
+      {
+        text: '我不想玩',
+        color: '0x000000',
+        bgColor: '0xc4c4c4',
+        value: 'menu',
+      }
+    )
+
+    if (chosen === 'play') {
+      // this.createPoisonInterval('fauset')
+      this.gameLevel0_1()
+    } else {
+      await this.doctorSay.newSay(
+        '什麼！這麼快就要放棄啦？看在我們有緣，只要把遊戲分享出去，就可以解鎖獨家角色哦！'
+      )
+      this.backToMenu(true)
+    }
+  }
+
+  async gameLevel0_1() {
     await this.startGame()
     await this.initGame()
   }
@@ -795,19 +828,11 @@ export class CandyScene extends Scene {
     this.gameLevel++
     Status.candy.gameLevel++
 
-    if (this.gameLevel === 1) {
+    if (this.gameLevel === 3) {
       await this.doctorSay.newSay('沒想到你這麼優秀，我真是找對人了！')
-      await this.doctorSay.newSay(
-        '先恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算怎麼處理。'
-      )
-
-      await this.doctorSay.newSay(
-        '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
-      )
-      await this.doctorSay.newSay(
-        '因為你也順利解決了缺水的問題，可以點選有此困擾的縣市，看各地政府如何因應。'
-      )
     }
+
+    unlockCandy()
   }
 
   async successGameChooseHandler(chosen) {
@@ -820,7 +845,8 @@ export class CandyScene extends Scene {
         this.startGameFlow()
         break
 
-      case 'result':
+      default:
+      case 'menu':
         await this.doctorSay.newSay(
           '表現得很不錯哦！恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
         )
@@ -829,9 +855,6 @@ export class CandyScene extends Scene {
         )
         this.container.removeChild(this.gameSuccess.container)
         this.backToMenu(true)
-        break
-
-      default:
         break
     }
   }

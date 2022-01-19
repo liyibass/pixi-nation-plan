@@ -290,7 +290,7 @@ export class Scene {
   }
 
   resetGameSetting() {
-    this.sceneTicker.destroy()
+    this.sceneTicker?.destroy?.()
     this.sceneTicker = null
 
     if (this.menuButtons?.container) {
