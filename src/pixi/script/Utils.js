@@ -3,12 +3,13 @@ import { cityDataArray } from './CityData'
 export let unlockCardCityArray = []
 
 export const clearUnlockCardCityArray = () => {
+  console.log('clearUnlockCardCityArray')
   unlockCardCityArray = []
 }
 
 export const unlockWater = () => {
   console.log('unlockWater')
-  // unlockCardCityArray = []
+  unlockCardCityArray = []
 
   cityDataArray.forEach((cityData) => {
     let hasUnlock = false
@@ -29,7 +30,7 @@ export const unlockWater = () => {
 }
 export const unlockGarbage = () => {
   console.log('unlockGarbage')
-  // unlockCardCityArray = []
+  unlockCardCityArray = []
   cityDataArray.forEach((cityData) => {
     let hasUnlock = false
     cityData.tabs.forEach((tab) => {
@@ -49,7 +50,7 @@ export const unlockGarbage = () => {
 }
 export const unlockBalance = () => {
   console.log('unlockBalance')
-  // unlockCardCityArray = []
+  unlockCardCityArray = []
   cityDataArray.forEach((cityData) => {
     let hasUnlock = false
     cityData.tabs.forEach((tab) => {
@@ -69,7 +70,7 @@ export const unlockBalance = () => {
 }
 export const unlockCandy = () => {
   console.log('unlockCandy')
-  // unlockCardCityArray = []
+  unlockCardCityArray = []
   cityDataArray.forEach((cityData) => {
     let hasUnlock = false
     cityData.tabs.forEach((tab) => {
@@ -89,7 +90,7 @@ export const unlockCandy = () => {
 }
 export const unlockRun = () => {
   console.log('unlockRun')
-  // unlockCardCityArray = []
+  unlockCardCityArray = []
   cityDataArray.forEach((cityData) => {
     let hasUnlock = false
     cityData.tabs.forEach((tab) => {

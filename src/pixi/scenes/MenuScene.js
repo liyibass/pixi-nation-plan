@@ -23,7 +23,7 @@ export class MenuScene extends Scene {
     super()
     this.selectStage = selectStage
 
-    clearUnlockCardCityArray()
+    // clearUnlockCardCityArray()
 
     this.inWindowObstacles = []
     this.container.name = 'MenuScene'
@@ -109,6 +109,7 @@ export class MenuScene extends Scene {
   }
 
   createTaiwan() {
+    console.log('createTaiwan')
     this.taiwan = new Taiwan(this.startGame.bind(this))
     // this.taiwan.container.interactiveChildren = false
     this.taiwan.container.alpha = 1

@@ -8,6 +8,7 @@ import { BalanceScene } from './BalanceScene'
 import { RunScene } from './RunScene'
 import { CandyScene } from './CandyScene'
 import { MenuScene } from './MenuScene'
+// import { clearUnlockCardCityArray } from '../script/Utils'
 
 export class MainScene {
   constructor() {
@@ -54,6 +55,8 @@ export class MainScene {
   }
 
   selectStage(stageName) {
+    console.log('selectStage : ' + stageName)
+    // clearUnlockCardCityArray()
     this.container.removeChildren()
     this.container.removeAllListeners()
 
