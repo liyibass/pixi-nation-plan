@@ -1,6 +1,10 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 
+const PADDING = 15
+const MAX_BOX_WIDTH = 320
+// const MAX_BOX_HEIGHT = 200
+
 export class DialogBox {
   constructor({
     text,
@@ -23,10 +27,21 @@ export class DialogBox {
     this.text = text
     this.fontSize = fontSize
 
+    this.getSize()
     this.createDialogBox()
     this.createText()
     this.createSpin()
     this.setPosition()
+  }
+
+  getSize() {
+    const BOX_WIDTH =
+      window.innerWidth - 2 * PADDING > MAX_BOX_WIDTH
+        ? MAX_BOX_WIDTH
+        : window.innerWidth - 2 * PADDING
+
+    this.width = BOX_WIDTH
+    this.x = (Globals.width - this.width) / 2
   }
 
   createDialogBox() {
@@ -45,7 +60,7 @@ export class DialogBox {
       fontSize: this.fontSize,
       wordWrap: true,
       breakWords: true,
-      wordWrapWidth: this.width - 20,
+      wordWrapWidth: this.width - PADDING * 2,
     })
 
     this.container.addChild(this.pixiText)

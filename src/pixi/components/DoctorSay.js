@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 import { DialogBox } from './DialogBox'
 import { DoctorDialogBox } from './DoctorDialogBox'
+import { DoctorShareBox } from './DoctorShareBox'
 import { SpeakDialog } from './SpeakDialog'
 
 export class DoctorSay {
@@ -62,6 +63,38 @@ export class DoctorSay {
         chosenHandler,
         button1,
         button2,
+      })
+
+      this.container.addChild(dialogBox.container)
+    })
+  }
+  share(text) {
+    return new Promise((resolve) => {
+      const shareHandler = (chosen) => {
+        console.log(chosen)
+        this.container.removeChildren()
+        this.container.removeAllListeners()
+
+        if (chosen === 'cancel') {
+          resolve(false)
+        } else {
+          resolve(true)
+        }
+      }
+
+      const width = 327
+      const height = 170
+
+      const dialogBox = new DoctorShareBox({
+        text,
+        x: (Globals.width - width) / 2,
+        y: this.doctorDimention.y - height - 70,
+        talkerX: this.doctorDimention.x + 30,
+        talkerY: this.doctorDimention.y,
+        width: width,
+        height: height,
+        fontSize: 16,
+        chosenHandler: shareHandler,
       })
 
       this.container.addChild(dialogBox.container)
