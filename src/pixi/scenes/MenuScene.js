@@ -116,7 +116,14 @@ export class MenuScene extends Scene {
   }
 
   async startGameFlow() {
-    if (!this.isNeedTutorial) {
+    if (Status.enteredGame) {
+      // still in game, and back to menu
+      this.openAllListener()
+    } else if (this.isNeedTutorial) {
+      // play game first time
+      this.startTutorial()
+    } else {
+      // play game second time
       const chosen = await this.doctorSay.chooseSay(
         '是否要觀看遊戲介紹？',
         {
@@ -138,9 +145,9 @@ export class MenuScene extends Scene {
       } else {
         this.openAllListener()
       }
-    } else {
-      this.startTutorial()
     }
+
+    Status.enteredGame = true
 
     // const isShared = await this.doctorSay.share(
     //   '好吧…那只好請你幫我分享，讓我找下一個小幫手～別擔心，我也會送一些小禮物，讓你不會空手而歸，先別急著關掉視窗！'
