@@ -35,7 +35,8 @@ export class CardFolder {
         this.folderHeight,
         this,
         this.isInfoCard,
-        this.chooseGameHandler
+        this.chooseGameHandler,
+        this.cityIndex
       )
       this.tabArray.push(tab)
       this.container.addChild(tab.container)

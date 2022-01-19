@@ -76,4 +76,11 @@ export class GroundGroup {
       icon.deactiveListener?.()
     })
   }
+
+  updateStageStatus() {
+    for (let i = 0; i < 2; i++) {
+      const icon = this.iconArray[2]
+      console.log(icon)
+    }
+  }
 }

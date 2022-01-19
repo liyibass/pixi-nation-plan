@@ -2,10 +2,10 @@ export const cityDataArray = [
   {
     cityIndex: 0,
     cityName: '新北市',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
         tabContent: [
@@ -37,7 +37,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'snake',
         tabTag: '區位問題',
         //tabTitle:'？',
@@ -83,10 +83,10 @@ export const cityDataArray = [
   {
     cityIndex: 1,
     cityName: '桃園市',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
         tabContent: [
@@ -113,7 +113,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
         tabContent: [
@@ -144,7 +144,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
         tabContent: [
@@ -179,10 +179,10 @@ export const cityDataArray = [
   {
     cityIndex: 2,
     cityName: '新竹縣',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
         tabContent: [
@@ -204,7 +204,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'snake',
         tabTag: '垃圾問題',
         tabContent: [
@@ -230,7 +230,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
         tabContent: [
@@ -257,7 +257,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'snake',
         tabTag: '缺水問題',
         tabContent: [
@@ -289,10 +289,10 @@ export const cityDataArray = [
   {
     cityIndex: 3,
     cityName: '新竹市',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
         tabContent: [
@@ -314,7 +314,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
         tabContent: [
@@ -340,7 +340,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'snake',
         tabTag: '缺水問題',
         tabContent: [
@@ -367,7 +367,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
         tabContent: [
@@ -399,10 +399,10 @@ export const cityDataArray = [
   {
     cityIndex: 4,
     cityName: '苗栗縣',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
         tabContent: [
@@ -419,7 +419,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
         tabContent: [
@@ -450,10 +450,10 @@ export const cityDataArray = [
   {
     cityIndex: 5,
     cityName: '臺中市',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
         tabContent: [
@@ -480,7 +480,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
         tabContent: [
@@ -525,10 +525,10 @@ export const cityDataArray = [
   {
     cityIndex: 6,
     cityName: '彰化縣',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
         tabContent: [
@@ -555,7 +555,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'balance',
         tabTag: '人口問題',
         tabContent: [
@@ -581,7 +581,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
         tabContent: [
@@ -630,10 +630,10 @@ export const cityDataArray = [
   {
     cityIndex: 7,
     cityName: '雲林縣',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
         tabContent: [
@@ -660,7 +660,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
         tabContent: [
@@ -686,7 +686,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
         tabContent: [
@@ -722,7 +722,7 @@ export const cityDataArray = [
       },
 
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'snake',
         tabTag: '垃圾問題',
         tabContent: [
@@ -753,10 +753,10 @@ export const cityDataArray = [
   {
     cityIndex: 8,
     cityName: '嘉義縣',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
         tabContent: [
@@ -778,7 +778,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'balance',
         tabTag: '人口問題',
         tabContent: [
@@ -804,7 +804,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
         tabContent: [
@@ -845,10 +845,10 @@ export const cityDataArray = [
   {
     cityIndex: 9,
     cityName: '臺南市',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
         tabContent: [
@@ -865,7 +865,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'balance',
         tabTag: '人口問題',
         tabContent: [
@@ -896,7 +896,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
         tabContent: [
@@ -928,10 +928,10 @@ export const cityDataArray = [
   {
     cityIndex: 10,
     cityName: '高雄市',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
         tabContent: [
@@ -958,7 +958,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'balance',
         tabTag: '人口問題',
         tabContent: [
@@ -984,7 +984,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
         tabContent: [
@@ -1011,7 +1011,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'snake',
         tabTag: '缺水問題',
         tabContent: [
@@ -1038,7 +1038,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
         tabContent: [
@@ -1069,10 +1069,10 @@ export const cityDataArray = [
   {
     cityIndex: 11,
     cityName: '屏東縣',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
         tabContent: [
@@ -1094,7 +1094,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
         tabContent: [
@@ -1130,10 +1130,10 @@ export const cityDataArray = [
   {
     cityIndex: 12,
     cityName: '臺東縣',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
         tabContent: [
@@ -1155,7 +1155,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'snake',
         tabTag: '垃圾問題',
         tabContent: [
@@ -1186,10 +1186,10 @@ export const cityDataArray = [
   {
     cityIndex: 13,
     cityName: '花蓮縣',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
         tabContent: [
@@ -1211,7 +1211,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'balance',
         tabTag: '人口問題',
         tabContent: [
@@ -1237,7 +1237,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
         tabContent: [
@@ -1268,10 +1268,10 @@ export const cityDataArray = [
   {
     cityIndex: 14,
     cityName: '宜蘭縣',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
         tabContent: [
@@ -1293,7 +1293,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
         tabContent: [
@@ -1343,10 +1343,10 @@ export const cityDataArray = [
   {
     cityIndex: 15,
     cityName: '基隆市',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
         tabContent: [
@@ -1363,7 +1363,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
         tabContent: [
@@ -1394,10 +1394,10 @@ export const cityDataArray = [
   {
     cityIndex: 16,
     cityName: '南投縣',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
         tabContent: [
@@ -1414,7 +1414,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'snake',
         tabTag: '垃圾問題',
         tabContent: [
@@ -1440,7 +1440,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
         tabContent: [
@@ -1481,10 +1481,10 @@ export const cityDataArray = [
   {
     cityIndex: 17,
     cityName: '澎湖縣',
-    isUnlockAll: false,
+    // isUnlockAll: false,
     tabs: [
       {
-        isLocked: false,
+        // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
         tabContent: [
@@ -1506,7 +1506,7 @@ export const cityDataArray = [
         ],
       },
       {
-        isLocked: true,
+        // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
         tabContent: [
@@ -1560,7 +1560,7 @@ export const infoCard = {
   cityName: '',
   tabs: [
     {
-      isLocked: false,
+      // isLocked: false,
       unlockGame: 'snake',
       tabTag: '基本資料',
       tabTitle: '什麼是國土計畫？',
@@ -1572,7 +1572,7 @@ export const infoCard = {
       ],
     },
     {
-      isLocked: false,
+      // isLocked: false,
       unlockGame: 'snake',
       tabTag: '目的',
       tabTitle: '目的是什麼？',
@@ -1582,7 +1582,7 @@ export const infoCard = {
       ],
     },
     {
-      isLocked: false,
+      // isLocked: false,
       unlockGame: 'snake',
       tabTag: '主要內涵',
       tabTitle: '主要內涵？',
@@ -1594,7 +1594,7 @@ export const infoCard = {
       ],
     },
     {
-      isLocked: false,
+      // isLocked: false,
       unlockGame: 'snake',
       tabTag: '誰來訂定',
       tabTitle: '誰來訂定？',
@@ -1605,7 +1605,7 @@ export const infoCard = {
       ],
     },
     {
-      isLocked: false,
+      // isLocked: false,
       unlockGame: 'snake',
       tabTag: '何時上路',
       tabTitle: '何時上路？',
@@ -1615,7 +1615,7 @@ export const infoCard = {
       ],
     },
     {
-      isLocked: false,
+      // isLocked: false,
       unlockGame: 'snake',
       tabTag: '影響範圍',
       tabTitle: '影響範圍有多大？',

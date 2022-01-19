@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
-import { cityDataArray } from '../script/CityData'
+import { CityStatusArray } from '../script/Status'
+
 import { unlockCardCityArray } from '../script/Utils'
 
 const taiwanDimention = Globals.getTaiwanDimention()
@@ -23,9 +24,10 @@ export class TaiwanCity {
     this.x = 0
     this.y = 0
 
-    this.cityData =
-      cityDataArray.find((cityData) => cityData.cityIndex === this.cityIndex) ||
-      cityDataArray[0]
+    this.cityStatus =
+      CityStatusArray.find(
+        (cityData) => cityData.cityIndex === this.cityIndex
+      ) || CityStatusArray[0]
 
     // this.activeListener()
     this.createFlow()
@@ -55,7 +57,7 @@ export class TaiwanCity {
     this.sprite1.height *= ratio
 
     // if city is unlocked all, no need to set sprite1 to alpha 0
-    if (!cityDataArray[this.cityIndex]?.isUnlockAll) {
+    if (!CityStatusArray[this.cityIndex]?.isUnlockAll) {
       this.sprite1.alpha = 0
     }
 
@@ -78,7 +80,7 @@ export class TaiwanCity {
     this.decoration = new PIXI.Container()
     this.layer1.addChild(this.decoration)
 
-    const notYetUnlockAll = !!this.cityData.tabs.find((tab) => {
+    const notYetUnlockAll = !!this.cityStatus.tabs.find((tab) => {
       return tab.isLocked === true
     })
 
@@ -120,7 +122,7 @@ export class TaiwanCity {
         this.decorationTicker.start()
       })
     } else {
-      cityDataArray[this.cityIndex].isUnlockAll = true
+      CityStatusArray[this.cityIndex].isUnlockAll = true
 
       await this.unlockAnimation()
 

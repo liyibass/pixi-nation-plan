@@ -55,12 +55,9 @@ export class MainScene {
   }
 
   selectStage(stageName) {
-    console.log('selectStage : ' + stageName)
-
     this.container.removeChildren()
     this.container.removeAllListeners()
 
-    console.log('clicked ' + stageName)
     switch (stageName) {
       case 'snake':
         this.createSnakeScene()

@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
+import { Status, CityStatusArray } from '../script/Status'
 import { InfoCard } from './InfoCard'
 
 // const groundDimention = Globals.getGroundDimention()
@@ -9,7 +10,7 @@ export class GroundGroupIcon {
     this.container = new PIXI.Container()
     this.container.name = 'icon'
     this.iconIndex = iconIndex
-    this.currentCount = 0
+    this.currentCount = getCount(this.iconIndex)
     this.totalCount = getTotalCount(iconIndex)
 
     this.createGroundGroupIcon()
@@ -101,10 +102,38 @@ function getTotalCount(index) {
       return 4
 
     case 1:
-      return 21
+      return CityStatusArray.length
 
     default:
     case 2:
       return null
+  }
+}
+
+function getCount(iconIndex) {
+  let acc = 0
+  switch (iconIndex) {
+    case 0:
+      // game
+      for (const key in Status) {
+        if (Object.hasOwnProperty.call(Status, key)) {
+          const element = Status[key]
+
+          if (element?.isCleared) {
+            acc++
+          }
+        }
+      }
+      return acc
+
+    default:
+    case 1:
+      // city
+      CityStatusArray.forEach((city) => {
+        if (city?.isUnlockAll) {
+          acc++
+        }
+      })
+      return acc
   }
 }

@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
-import { Status } from '../script/Status'
+import { Status, CityStatusArray } from '../script/Status'
 import { Tip } from './Tip'
 import { UnlockButton } from './UnlockButton'
 
@@ -19,12 +19,16 @@ export class CardTab {
     folderHeight,
     cardFolder,
     isInfoCard = false,
-    chooseGameHandler
+    chooseGameHandler,
+    cityIndex
   ) {
     this.container = new PIXI.Container()
     this.container.name = 'cardTab'
     this.tabIndex = tabIndex
+    this.cityIndex = cityIndex
     this.tabData = tabData
+    this.tabStatus = CityStatusArray[this.cityIndex].tabs[this.tabIndex]
+
     this.container.tabIndex = this.tabIndex
     this.folderHeight = folderHeight
     this.contentHeight = this.folderHeight - TAB_HEIGHT
@@ -170,28 +174,6 @@ export class CardTab {
 
     let contentHeight = 0
 
-    // if (this.tabData.tabTitle) {
-    //   const titleText = new MultiStyleText(`${this.tabData.tabTitle}`, {
-    //     default: {
-    //       fill: ['0xffffff'],
-    //       fontSize: 20,
-    //       wordWrap: true,
-    //       breakWords: true,
-    //       fontWeight: 'bold',
-    //       wordWrapWidth: cardDimention.width - CONTENT_PADDING * 2,
-    //     },
-    //     bold: {
-    //       fill: ['0xffffff'],
-    //       fontSize: 20,
-    //       fontWeight: 'bold',
-    //     },
-    //   })
-
-    //   titleText.y = contentHeight
-    //   contentHeight += titleText.height + CONTENT_PADDING
-    //   this.content.addChild(titleText)
-    // }
-
     // feed paragraph
     for (let i = 0; i < this.tabData.tabContent.length; i++) {
       const paragraph = this.tabData.tabContent[i]
@@ -296,7 +278,7 @@ export class CardTab {
   }
 
   startScrollTicker() {
-    if (this.tabData.isLocked) return
+    if (this.tabStatus.isLocked) return
 
     this.scrollPart.buttonMode = true
     this.scrollPart.interactive = true
@@ -326,7 +308,7 @@ export class CardTab {
   }
 
   lockHandler() {
-    if (this.tabData.isLocked) {
+    if (this.tabStatus.isLocked) {
       // lock graphics
       this.content.filters = [new PIXI.filters.BlurFilter(5)]
 
@@ -428,7 +410,7 @@ export class CardTab {
 function getTabColor(tabIndex) {
   if (this?.isInfoCard) return 0x000000
 
-  if (tabIndex === 0 || !this.tabData.isLocked) {
+  if (tabIndex === 0 || !this.tabStatus.isLocked) {
     return 0xcc8053
   } else {
     return 0xa75d31
