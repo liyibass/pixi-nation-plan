@@ -8,12 +8,14 @@ import { Conveyor } from '../components/Conveyor'
 import { SeesawGroup } from '../components/SeesawGroup'
 import { Timer } from '../components/Timer'
 import { WeightCard } from '../components/WeightCard'
+import { unlockBalance } from '../script/Utils'
 
 const BLOCK_WIDTH = 16
 
 export class BalanceScene extends Scene {
   constructor(...args) {
     super(...args)
+    this.gameLevel = Status.balance.gameLevel
 
     this.createScene()
     this.startGameFlow()
@@ -182,7 +184,7 @@ export class BalanceScene extends Scene {
         text: '我不想玩',
         color: '0x000000',
         bgColor: '0xc4c4c4',
-        value: 'skip',
+        value: 'menu',
       }
     )
 
@@ -325,9 +327,21 @@ export class BalanceScene extends Scene {
     super.successGameHint()
     this.gameLevel++
     Status.balance.gameLevel++
+
+    if (this.gameLevel === 3) {
+      await this.doctorSay.newSay(
+        '謝謝你讓村莊變得更好了！不只是來住的人增加，居民生活的品質也越來越高。'
+      )
+      await this.doctorSay.newSay(
+        '要解決村莊的老年化、人口外流和發展失衡問題，是不是不容易呢？你已經踏出成功的第一步！'
+      )
+
+      unlockBalance()
+    }
   }
 
   async successGameChooseHandler(chosen) {
+    console.log('successGameChooseHandler in Balance')
     switch (chosen) {
       case 'nextLevel':
         this.container.removeChild(this.gameSuccess.container)
@@ -337,14 +351,9 @@ export class BalanceScene extends Scene {
         this.startGameFlow()
         break
 
-      case 'result':
-        await this.doctorSay.newSay(
-          '表現得很不錯哦！恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
-        )
-        await this.doctorSay.newSay(
-          '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
-        )
+      case 'menu':
         this.container.removeChild(this.gameSuccess.container)
+        console.log('YOYO')
         this.backToMenu(true)
         break
 

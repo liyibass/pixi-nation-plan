@@ -238,7 +238,7 @@ export class Scene {
           text: '回到選單',
           color: 0x000000,
           bgColor: '0xC4C4C4',
-          value: 'exit',
+          value: 'menu',
         }
       )
 
@@ -253,10 +253,10 @@ export class Scene {
           value: 'nextLevel',
         },
         {
-          text: '我不想玩',
+          text: '回主選單',
           color: 0x000000,
           bgColor: '0xC4C4C4',
-          value: 'exit',
+          value: 'menu',
         }
       )
     }
@@ -269,6 +269,7 @@ export class Scene {
   }
 
   async successGameChooseHandler(chosen) {
+    // replace by extend
     switch (chosen) {
       case 'nextLevel':
         this.container.removeChild(this.gameSuccess.container)
@@ -279,12 +280,6 @@ export class Scene {
         break
 
       case 'result':
-        await this.doctorSay.newSay(
-          '表現得很不錯哦！恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
-        )
-        await this.doctorSay.newSay(
-          '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
-        )
         this.container.removeChild(this.gameSuccess.container)
         this.backToMenu(true)
         break
@@ -307,6 +302,11 @@ export class Scene {
     console.log('go to menu')
 
     this.sceneTicker?.stop?.()
+
+    if (this.gameLevel === 3) {
+      this.selectStage('menu')
+      return
+    }
 
     const chosen = await this.doctorSay.chooseSay(
       '離開遊戲將會中斷遊戲進程，確定要離開？',
