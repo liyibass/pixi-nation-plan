@@ -278,7 +278,7 @@ export class CardTab {
   }
 
   startScrollTicker() {
-    if (this.tabStatus.isLocked) return
+    if (this.tabStatus?.isLocked) return
 
     this.scrollPart.buttonMode = true
     this.scrollPart.interactive = true
@@ -308,7 +308,7 @@ export class CardTab {
   }
 
   lockHandler() {
-    if (this.tabStatus.isLocked) {
+    if (this.tabStatus?.isLocked) {
       // lock graphics
       this.content.filters = [new PIXI.filters.BlurFilter(5)]
 
