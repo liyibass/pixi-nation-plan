@@ -22,6 +22,7 @@ export class RunScene extends Scene {
     this.currentCityIndex = 0
     this.inWindowObstacles = []
     this.container.name = 'RunScene'
+    this.gameLevel = Status.run.gameLevel
 
     this.bottomLayer = new PIXI.Container()
     this.cityBackgroundLayer = new PIXI.Container()
@@ -126,8 +127,6 @@ export class RunScene extends Scene {
       this.player.container,
       this.gameStage.children.length - 1
     )
-
-    await this._playerJumpAnimation()
   }
 
   async _playerJumpAnimation() {
@@ -228,7 +227,7 @@ export class RunScene extends Scene {
         break
 
       case 2:
-        this.gameLevel2()
+        this.gameLevel2_0()
         break
 
       default:
@@ -248,10 +247,41 @@ export class RunScene extends Scene {
     this.startGame()
   }
 
-  async gameLevel2() {
-    this.initGame()
+  async gameLevel2_0() {
+    await this.doctorSay.newSay('哎呀！我收到通報，附近的城市遇到麻煩了')
 
-    await this.doctorSay.newSay('final level!')
+    const chosen = await this.doctorSay.chooseSay(
+      '附近的城市遇到麻煩了，你願意去幫幫他們嗎？',
+      {
+        text: '準備好了',
+        color: '0x000000',
+        bgColor: '0xFF8B29',
+        value: 'play',
+      },
+      {
+        text: '我不想玩',
+        color: '0x000000',
+        bgColor: '0xc4c4c4',
+        value: 'menu',
+      }
+    )
+
+    if (chosen === 'play') {
+      // this.createPoisonInterval('fauset')
+      this.gameLevel2_1()
+    } else {
+      await this.doctorSay.newSay(
+        '什麼！這麼快就要放棄啦？看在我們有緣，只要把遊戲分享出去，就可以解鎖獨家角色哦！'
+      )
+      this.backToMenu()
+    }
+  }
+  async gameLevel2_1() {
+    await this.doctorSay.newSay(
+      '方法很簡單，你只要完成每個村莊的指定任務就可以了，麻煩你啦！'
+    )
+    this.initGame()
+    await this._playerJumpAnimation()
     this.startGame()
   }
 
@@ -690,7 +720,9 @@ export class RunScene extends Scene {
         this.container.removeChild(this.gameFail.container)
 
         this.resetGameSetting()
+
         this.initGame()
+        await this._playerJumpAnimation()
         this.startGame()
         break
 
@@ -721,9 +753,8 @@ export class RunScene extends Scene {
     Status.run.gameLevel++
 
     if (this.gameLevel === 3) {
-      await this.doctorSay.newSay('沒想到你這麼優秀，我真是找對人了！')
       await this.doctorSay.newSay(
-        '先恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算怎麼處理。'
+        '你真是太可靠了，順利解決所有的問題！這是村民提供的謝禮，你就收下吧！'
       )
     }
   }
@@ -740,12 +771,12 @@ export class RunScene extends Scene {
 
       default:
       case 'menu':
-        await this.doctorSay.newSay(
-          '表現得很不錯哦！恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
-        )
-        await this.doctorSay.newSay(
-          '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
-        )
+        if (this.gameLevel === 3) {
+          await this.doctorSay.newSay(
+            '下面這些村莊也遭遇到類似的問題，好好閱讀他們的經驗，相信會對你有所幫助！'
+          )
+        }
+
         this.container.removeChild(this.gameSuccess.container)
         this.backToMenu(true)
         break

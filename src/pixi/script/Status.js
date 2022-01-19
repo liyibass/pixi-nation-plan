@@ -9,7 +9,7 @@ export const Status = {
     gameLevel: 0,
   },
   run: {
-    gameLevel: 0,
+    gameLevel: 2,
   },
   candy: {
     gameLevel: 0,
