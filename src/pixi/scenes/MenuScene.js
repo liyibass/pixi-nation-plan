@@ -116,10 +116,30 @@ export class MenuScene extends Scene {
   }
 
   async startGameFlow() {
-    if (this.isNeedTutorial) {
-      this.startTutorial()
+    if (!this.isNeedTutorial) {
+      const chosen = await this.doctorSay.chooseSay(
+        '是否要觀看遊戲介紹？',
+        {
+          text: '好哇',
+          color: '0x000000',
+          bgColor: '0xFF8B29',
+          value: 'yes',
+        },
+        {
+          text: '不用',
+          color: '0x000000',
+          bgColor: '0xc4c4c4',
+          value: 'no',
+        }
+      )
+
+      if (chosen === 'yes') {
+        this.startTutorial()
+      } else {
+        this.openAllListener()
+      }
     } else {
-      this.openAllListener()
+      this.startTutorial()
     }
 
     // const isShared = await this.doctorSay.share(
@@ -137,8 +157,6 @@ export class MenuScene extends Scene {
   async checkCityAnimation() {}
 
   async startTutorial() {
-    if (!this.isNeedTutorial) return
-
     this.groundGroup.deactiveListener()
     this.tip = new Tip()
 
