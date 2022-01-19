@@ -273,8 +273,6 @@ export class Scene {
       case 'nextLevel':
         this.container.removeChild(this.gameSuccess.container)
 
-        this.gameLevel++
-
         this.resetGameSetting()
         // this.initGame()
         this.startGameFlow()

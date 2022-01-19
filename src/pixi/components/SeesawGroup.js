@@ -100,6 +100,12 @@ export class SeesawGroup {
     // hide card's weight text
     weightCard.weightText.alpha = 0
 
+    // update left/right weight text
+    this.board.setLeftWeight(this.leftTotalWeight)
+    this.board.setRightWeight(this.rightTotalWeight)
+    this.board.setLeftLoad(this.leftLoad)
+    this.board.setRightLoad(this.rightLoad)
+
     this.rotateBoard()
   }
 
@@ -231,12 +237,14 @@ export class SeesawGroup {
 
     this.seesawRotateTicker.add(() => {
       const difference = this.rightTotalWeight - this.leftTotalWeight
-      const speed = Math.abs(Math.floor(difference / 50))
+      // const speed = Math.abs(speedVelocity)
+
+      const speed = Math.abs(0.01)
 
       if (difference > 0) {
         this.seesawRotateTicker.start()
         if (this.board.container.angle < LIMIT) {
-          this.board.container.angle += 0.01 * speed
+          this.board.container.angle += speed
         } else {
           this.seesawRotateTicker.stop()
           console.log('warning!')
@@ -246,7 +254,7 @@ export class SeesawGroup {
       } else if (difference < 0) {
         this.seesawRotateTicker.start()
         if (this.board.container.angle > -LIMIT) {
-          this.board.container.angle -= 0.01 * speed
+          this.board.container.angle -= speed
         } else {
           this.seesawRotateTicker.stop()
           console.log('warning!')
@@ -262,10 +270,10 @@ export class SeesawGroup {
         this.setClearCountDown()
       } else if (difference === 0 && this.board.container.angle > 0) {
         this.seesawRotateTicker.start()
-        this.board.container.angle -= 0.02
+        this.board.container.angle -= 0.05
       } else if (difference === 0 && this.board.container.angle < 0) {
         this.seesawRotateTicker.start()
-        this.board.container.angle += 0.02
+        this.board.container.angle += 0.05
       }
 
       if (
@@ -321,7 +329,7 @@ export class SeesawGroup {
       } else {
         clearInterval(this.clearCountDown)
       }
-    }, 6000)
+    }, 2000)
   }
 
   clearClearCountDown() {

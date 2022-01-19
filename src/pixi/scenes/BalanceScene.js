@@ -92,16 +92,22 @@ export class BalanceScene extends Scene {
   }
 
   createInitLoad() {
-    for (let i = 0; i < 1; i++) {
-      const { name, weight, load } = this.getRandomWeight(0)
-      const weightCard = new WeightCard(
-        weight,
-        name,
-        load,
-        this.seesawGroup.getChoosedWeightCard.bind(this.seesawGroup)
-      )
+    if (this.gameLevel === 1) {
+      const createList = [0, 1, 0, 1, 2, 3, 4, 5, 4]
 
-      this.seesawGroup.addNewWeightCardToBoard(weightCard, 'left')
+      createList.forEach((id) => {
+        const { name, weight, load } = this.getRandomWeight(id)
+        const weightCard = new WeightCard(
+          weight,
+          name,
+          load,
+          this.seesawGroup.getChoosedWeightCard.bind(this.seesawGroup)
+        )
+
+        this.seesawGroup.addNewWeightCardToBoard(weightCard, 'left')
+      })
+
+      // this.seesawGroup.rotateBoard(true)
     }
   }
 
@@ -113,7 +119,7 @@ export class BalanceScene extends Scene {
 
     switch (this.gameLevel) {
       case 0:
-        this.gameLevel0()
+        this.gameLevel0_0()
         break
 
       case 1:
@@ -129,10 +135,38 @@ export class BalanceScene extends Scene {
     }
   }
 
-  async gameLevel0() {
+  async gameLevel0_0() {
     this.initGame()
 
-    await this.doctorSay.newSay('現在有些人想要搬來你的村莊了')
+    await this.doctorSay.newSay(
+      '村莊最重要的就是村民，怎麼讓他們過得舒適，均衡發展就很重要啦！'
+    )
+
+    const chosen = await this.doctorSay.chooseSay(
+      '現在有些人想要搬來你的村莊了，你的工作是好好分配他們居住的地方，準備好了嗎？',
+      {
+        text: '準備好了',
+        color: '0x000000',
+        bgColor: '0xFF8B29',
+        value: 'play',
+      },
+      {
+        text: '我不想玩',
+        color: '0x000000',
+        bgColor: '0xc4c4c4',
+        value: 'skip',
+      }
+    )
+
+    if (chosen === 'play') {
+      // this.createPoisonInterval('fauset')
+      this.gameLevel0_1()
+    } else {
+      await this.doctorSay.newSay(
+        '什麼！這麼快就要放棄啦？看在我們有緣，只要把遊戲分享出去，就可以解鎖獨家角色哦！'
+      )
+      this.backToMenu()
+    }
     // await this.doctorSay.newSay('有沒有看到那個翹翹板？')
 
     // await this.doctorSay.newSay(
@@ -140,12 +174,25 @@ export class BalanceScene extends Scene {
     // )
     // await this.doctorSay.newSay('你可以先試著放看看，就是這麼簡單')
     // this.createInitLoad()
+  }
+
+  async gameLevel0_1() {
+    await this.doctorSay.newSay(
+      '有沒有看到翹翹板？你可以把畫面上方的人放在翹翹板的兩邊'
+    )
+    await this.doctorSay.newSay(
+      '只要在時間限制內讓兩側保持平衡，就能順利過關～'
+    )
+    await this.doctorSay.newSay('注意！每個人重量都不一樣哦！')
+    this.createInitLoad()
     this.startGame()
   }
 
   async gameLevel1() {
     this.initGame()
-    await this.doctorSay.newSay('level 2!')
+    await this.doctorSay.newSay(
+      '隨著城市發展，有人搬進來，有人搬出去，原本的居民則有無法避免的生老病死，這時候該怎麼好好分配來來去去的人流呢？'
+    )
     this.createInitLoad()
     this.startGame()
   }
@@ -211,19 +258,19 @@ export class BalanceScene extends Scene {
   async failGameHint() {
     super.failGameHint()
 
-    switch (this.gameLevel) {
-      case 0:
-        await this.doctorSay.newSay(
-          '雖然缺水的問題處理得不順利，但整體表現還算不錯！'
-        )
-        await this.doctorSay.newSay(
-          '恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
-        )
-        await this.doctorSay.newSay(
-          '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
-        )
-        break
-    }
+    // switch (this.gameLevel) {
+    //   case 0:
+    //     await this.doctorSay.newSay(
+    //       '雖然缺水的問題處理得不順利，但整體表現還算不錯！'
+    //     )
+    //     await this.doctorSay.newSay(
+    //       '恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
+    //     )
+    //     await this.doctorSay.newSay(
+    //       '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
+    //     )
+    //     break
+    // }
   }
 
   async failGameChooseHandler(chosen) {
@@ -248,28 +295,12 @@ export class BalanceScene extends Scene {
     super.successGameHint()
     this.gameLevel++
     Status.balance.gameLevel++
-
-    if (this.gameLevel === 1) {
-      await this.doctorSay.newSay('沒想到你這麼優秀，我真是找對人了！')
-      await this.doctorSay.newSay(
-        '先恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算怎麼處理。'
-      )
-
-      await this.doctorSay.newSay(
-        '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
-      )
-      await this.doctorSay.newSay(
-        '因為你也順利解決了缺水的問題，可以點選有此困擾的縣市，看各地政府如何因應。'
-      )
-    }
   }
 
   async successGameChooseHandler(chosen) {
     switch (chosen) {
       case 'nextLevel':
         this.container.removeChild(this.gameSuccess.container)
-
-        this.gameLevel++
 
         this.resetGameSetting()
         // this.initGame()

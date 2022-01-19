@@ -991,9 +991,6 @@ export class SnakeScene {
     this.container.removeChild(this.menuButtons.container)
     // window.removeEventListener('keydown', this.keyboardListener)
 
-    this.gameLevel++
-    Status.snake.gameLevel++
-
     this.resetGameSetting()
 
     this.successGameHint()
@@ -1071,6 +1068,9 @@ export class SnakeScene {
   }
 
   async successGameHint() {
+    this.gameLevel++
+    Status.snake.gameLevel++
+
     this.container.removeChild(this.menuButtons.container)
     let gameSuccess
 
