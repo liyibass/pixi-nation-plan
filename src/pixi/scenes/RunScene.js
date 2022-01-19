@@ -7,6 +7,7 @@ import { Globals } from '../script/Globals'
 import { Status } from '../script/Status'
 import { Scene } from './Scene'
 import { Tiger } from '../components/Tiger'
+import { unlockRun } from '../script/Utils'
 
 const BLOCK_WIDTH = 16
 
@@ -756,6 +757,8 @@ export class RunScene extends Scene {
       await this.doctorSay.newSay(
         '你真是太可靠了，順利解決所有的問題！這是村民提供的謝禮，你就收下吧！'
       )
+
+      unlockRun()
     }
   }
 

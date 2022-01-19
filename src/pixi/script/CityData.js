@@ -1388,32 +1388,6 @@ export const cityDataArray = [
           },
         ],
       },
-      {
-        isLocked: true,
-        unlockGame: 'run',
-        tabTag: '個別問題',
-        tabContent: [
-          {
-            type: 'title',
-            content: '煉油廠搬遷爭議',
-          },
-          {
-            type: 'paragraph',
-            content:
-              '設置在龜山區的煉油廠過去發生多次爆炸，且附近居民人數增加，市府基於工安問題，屢次要求中油提出遷廠計畫。',
-          },
-          {
-            type: 'paragraph',
-            content:
-              '<bold>市府：</bold>中油承諾說要搬遷，卻遲遲沒有明確的時間表，建議要在2036年前完成規劃。',
-          },
-          {
-            type: 'paragraph',
-            content:
-              '<bold>中油：</bold>從未承諾遷廠期限，目前仍在規劃階段，市府不能擅自決定搬遷時間。煉油廠是北部最重要的油品輸儲中心，如果要維持全國能源的穩定供應，必須慎重考量，先建後遷。',
-          },
-        ],
-      },
     ],
   },
 
