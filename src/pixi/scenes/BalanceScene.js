@@ -87,13 +87,27 @@ export class BalanceScene extends Scene {
   }
 
   createTimer() {
-    this.timer = new Timer()
+    let time = 0
+
+    switch (this.gameLevel) {
+      case 0:
+        time = 30
+        break
+      case 1:
+        time = 90
+        break
+      default:
+      case 2:
+        time = 120
+        break
+    }
+    this.timer = new Timer(time)
     this.gameStage.addChild(this.timer.container)
   }
 
   createInitLoad() {
     if (this.gameLevel === 1) {
-      const createList = [0, 1, 0, 1, 2, 3, 4, 5, 4]
+      const createList = [0, 1, 0, 1, 4, 5, 2, 3, 2]
 
       createList.forEach((id) => {
         const { name, weight, load } = this.getRandomWeight(id)
@@ -108,6 +122,20 @@ export class BalanceScene extends Scene {
       })
 
       // this.seesawGroup.rotateBoard(true)
+    } else if (this.gameLevel === 2) {
+      const createList = [7, 0, 1, 0, 1, 0, 1, 2, 3, 2, 3, 2, 4, 5, 4, 5, 4]
+
+      createList.forEach((id) => {
+        const { name, weight, load } = this.getRandomWeight(id)
+        const weightCard = new WeightCard(
+          weight,
+          name,
+          load,
+          this.seesawGroup.getChoosedWeightCard.bind(this.seesawGroup)
+        )
+
+        this.seesawGroup.addNewWeightCardToBoard(weightCard, 'left')
+      })
     }
   }
 
@@ -199,8 +227,10 @@ export class BalanceScene extends Scene {
 
   async gameLevel2() {
     this.initGame()
+    await this.doctorSay.newSay(
+      '哎呀！都市裡突然開了一間新的商店，好多人都搬到那附近了，翹翹板傾斜得好嚴重，你該怎麼辦呢？'
+    )
 
-    await this.doctorSay.newSay('final level!')
     this.createInitLoad()
     this.startGame()
   }

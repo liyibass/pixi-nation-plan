@@ -165,13 +165,15 @@ export class SeesawBoard {
       this.width - (this.colorBarLength + this.rightWeightText.width) / 2
   }
   setLeftLoad(newLoad) {
-    this.leftLoad = newLoad
+    this.leftLoad = newLoad > this.leftMaxLoad ? this.rightMaxLoad : newLoad
+
     this.leftLoadTextContainer.text = this.leftLoad
     this.leftLoadTextContainer.x =
       (TEXT_WIDTH - this.leftLoadTextContainer.width) / 2
   }
   setRightLoad(newLoad) {
-    this.rightLoad = newLoad
+    this.rightLoad = newLoad > this.rightMaxLoad ? this.rightMaxLoad : newLoad
+
     this.rightLoadTextContainer.text = this.rightLoad
     this.rightLoadTextContainer.x =
       (TEXT_WIDTH - this.rightLoadTextContainer.width) / 2

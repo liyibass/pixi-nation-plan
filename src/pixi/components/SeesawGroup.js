@@ -237,7 +237,6 @@ export class SeesawGroup {
 
     this.seesawRotateTicker.add(() => {
       const difference = this.rightTotalWeight - this.leftTotalWeight
-      // const speed = Math.abs(speedVelocity)
 
       const speed = Math.abs(0.01)
 
@@ -263,7 +262,7 @@ export class SeesawGroup {
         }
       } else if (
         difference === 0 &&
-        Math.abs(this.board.container.angle) <= 0.02
+        Math.abs(this.board.container.angle) <= 2
       ) {
         this.board.container.angle = 0
         this.seesawRotateTicker.stop()

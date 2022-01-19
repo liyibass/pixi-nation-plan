@@ -3,11 +3,11 @@ const TIMER_WIDTH = 69
 const TOP_PADDING = 31
 const TIMER_RADIUS = 22
 export class Timer {
-  constructor() {
+  constructor(time = 120) {
     this.container = new PIXI.Container()
     this.container.name = 'timer'
 
-    this.time = 120
+    this.time = time
     this._createBackground()
     this.createTimerText()
     this.position()
