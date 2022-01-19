@@ -3,6 +3,7 @@ import { Globals } from '../script/Globals'
 import { DialogBox } from './DialogBox'
 import { DoctorDialogBox } from './DoctorDialogBox'
 import { DoctorShareBox } from './DoctorShareBox'
+import { DoctorModBox } from './DoctorModBox'
 import { SpeakDialog } from './SpeakDialog'
 
 export class DoctorSay {
@@ -95,6 +96,39 @@ export class DoctorSay {
         height: height,
         fontSize: 16,
         chosenHandler: shareHandler,
+      })
+
+      this.container.addChild(dialogBox.container)
+    })
+  }
+
+  mod(text) {
+    return new Promise((resolve) => {
+      const modHandler = (chosen) => {
+        console.log(chosen)
+        this.container.removeChildren()
+        this.container.removeAllListeners()
+
+        if (chosen === 'cancel') {
+          resolve(false)
+        } else {
+          resolve(true)
+        }
+      }
+
+      const width = 327
+      const height = 170
+
+      const dialogBox = new DoctorModBox({
+        text,
+        x: (Globals.width - width) / 2,
+        y: this.doctorDimention.y - height - 70,
+        talkerX: this.doctorDimention.x + 30,
+        talkerY: this.doctorDimention.y,
+        width: width,
+        height: height,
+        fontSize: 16,
+        chosenHandler: modHandler,
       })
 
       this.container.addChild(dialogBox.container)

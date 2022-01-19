@@ -3,13 +3,13 @@ import { Globals } from '../script/Globals'
 import { DialogBox } from './DialogBox'
 import { TwoIcons } from './TwoIcons'
 
-export class DoctorShareBox {
+export class DoctorModBox {
   constructor(props) {
     this.props = props
     this.container = new PIXI.Container()
 
     this._createBackground()
-    this.createDoctorShareBox()
+    this.createDoctorModBox()
   }
 
   clickHandler(chosen) {
@@ -35,7 +35,7 @@ export class DoctorShareBox {
     this.container.addChild(bg)
   }
 
-  createDoctorShareBox() {
+  createDoctorModBox() {
     this.shareBox = new ShareBox({
       ...this.props,
       clickHandler: this.clickHandler.bind(this),
@@ -53,7 +53,7 @@ class ShareBox extends DialogBox {
   }
 
   init() {
-    this.twoIcons = new TwoIcons(this.chosenHandler, 'facebook', 'line')
+    this.twoIcons = new TwoIcons(this.chosenHandler, 'bear', 'tiger')
     this.container.addChild(this.twoIcons.container)
     this.container.interactive = true
     this.container.buttonMode = false
