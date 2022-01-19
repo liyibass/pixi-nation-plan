@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 window.PIXI = PIXI
 
 import { Globals } from '../script/Globals'
+import { Status } from '../script/Status'
 import { Scene } from './Scene'
 import { Conveyor } from '../components/Conveyor'
 import { SeesawGroup } from '../components/SeesawGroup'
@@ -245,6 +246,8 @@ export class BalanceScene extends Scene {
   // ===== game pass =====
   async successGameHint() {
     super.successGameHint()
+    this.gameLevel++
+    Status.balance.gameLevel++
 
     if (this.gameLevel === 1) {
       await this.doctorSay.newSay('沒想到你這麼優秀，我真是找對人了！')

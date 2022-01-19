@@ -5,4 +5,13 @@ export const Status = {
   snake: {
     gameLevel: 0,
   },
+  balance: {
+    gameLevel: 0,
+  },
+  run: {
+    gameLevel: 0,
+  },
+  candy: {
+    gameLevel: 0,
+  },
 }

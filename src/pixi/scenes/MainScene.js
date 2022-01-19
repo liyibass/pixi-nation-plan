@@ -56,7 +56,7 @@ export class MainScene {
 
   selectStage(stageName) {
     console.log('selectStage : ' + stageName)
-    // clearUnlockCardCityArray()
+
     this.container.removeChildren()
     this.container.removeAllListeners()
 

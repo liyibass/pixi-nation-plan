@@ -33,7 +33,7 @@ export class MenuScene extends Scene {
     this.createScene()
 
     this.startGameFlow()
-    this.createTestButton()
+    // this.createTestButton()
   }
 
   createTestButton() {

@@ -4,6 +4,7 @@ import { City } from '../components/City'
 // window.PIXI = PIXI
 
 import { Globals } from '../script/Globals'
+import { Status } from '../script/Status'
 import { Scene } from './Scene'
 import { Tiger } from '../components/Tiger'
 
@@ -716,6 +717,8 @@ export class RunScene extends Scene {
 
   async successGameHint() {
     super.successGameHint()
+    this.gameLevel++
+    Status.run.gameLevel++
 
     if (this.gameLevel === 1) {
       await this.doctorSay.newSay('沒想到你這麼優秀，我真是找對人了！')

@@ -3,6 +3,7 @@ import { Candy } from '../components/Candy'
 import { CandyHeader } from '../components/CandyHeader'
 
 import { Globals } from '../script/Globals'
+import { Status } from '../script/Status'
 import { Scene } from './Scene'
 
 const gameStageDimention = Globals.getCandyGameStageDimention()
@@ -791,6 +792,8 @@ export class CandyScene extends Scene {
 
   async successGameHint() {
     super.successGameHint()
+    this.gameLevel++
+    Status.candy.gameLevel++
 
     if (this.gameLevel === 1) {
       await this.doctorSay.newSay('沒想到你這麼優秀，我真是找對人了！')
