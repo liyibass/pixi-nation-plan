@@ -199,8 +199,10 @@ export class IntroSlideshow {
     )
     const sprite = new PIXI.Sprite(texture)
     const ratio = sprite.height / sprite.width
-    sprite.width = introSlideshowDimention.width
-    sprite.height = introSlideshowDimention.width * ratio
+    const scale = this.currentFrame === 2 || this.currentFrame === 3 ? 0.8 : 1
+
+    sprite.width = introSlideshowDimention.width * scale
+    sprite.height = introSlideshowDimention.width * ratio * scale
     // sprite.y -= 40
 
     // sprite.pivot.set(0, sprite.height / 2)
@@ -208,6 +210,7 @@ export class IntroSlideshow {
     this.imageContainer.addChild(sprite)
 
     this.imageContainer.x = introSlideshowDimention.x
+    sprite.x = (introSlideshowDimention.width - sprite.width) / 2
     sprite.y = (Globals.height - sprite.height) / 2
 
     if (this.currentFrame < 4) {
