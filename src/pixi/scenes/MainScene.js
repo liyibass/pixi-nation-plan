@@ -13,6 +13,7 @@ import { MenuScene } from './MenuScene'
 export class MainScene {
   constructor() {
     this.container = new PIXI.Container()
+    this.container.name = 'MainScene'
 
     // this.createPlayer()
     this.createIntroScene()

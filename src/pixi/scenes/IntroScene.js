@@ -18,6 +18,7 @@ export class IntroScene {
   constructor(selectStage) {
     this.selectStage = selectStage
     this.container = new PIXI.Container()
+    this.container.name = 'introScene'
     this.container.interactive = true
     this.container.visible = true
 

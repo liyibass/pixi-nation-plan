@@ -2,9 +2,11 @@ import * as PIXI from 'pixi.js'
 
 import { Globals } from '../script/Globals'
 const introSlideshowDimention = Globals.getIntroSlideshowDimention()
-const padding = 47
 
-const FONT_SIZE = 14
+const PADDING = 47
+
+// const CONTENT_MAX_WIDTH = Globals.width - PADDING
+
 export class IntroSlideshow {
   constructor(resolve) {
     this.container = new PIXI.Container()
@@ -114,8 +116,7 @@ export class IntroSlideshow {
 
     // setup textGroup dimention
     this.textGroup.x = introSlideshowDimention.x
-    this.textGroup.y =
-      window.innerHeight / 2 + introSlideshowDimention.height / 3
+    this.textGroup.y = introSlideshowDimention.textY
   }
 
   _createArrows() {
@@ -129,14 +130,10 @@ export class IntroSlideshow {
   _createText() {
     // create text
 
-    const textWidth =
-      introSlideshowDimention.width -
-      this.prevArrow.arrowSprite.width -
-      this.nextArrow.arrowSprite.width -
-      padding * 2
+    const textWidth = 13 * introSlideshowDimention.slideshowFontSize
 
     this.wordingText = new PIXI.Text(this._getCurrentText(), {
-      fontSize: FONT_SIZE,
+      fontSize: introSlideshowDimention.slideshowFontSize,
       fill: ['0xffffff'],
       wordWrap: true,
       breakWords: true,
@@ -203,8 +200,8 @@ export class IntroSlideshow {
     const ratio = sprite.height / sprite.width
     const scale = this.currentFrame === 2 || this.currentFrame === 3 ? 0.8 : 1
 
-    sprite.width = introSlideshowDimention.width * scale
-    sprite.height = introSlideshowDimention.width * ratio * scale
+    sprite.width = introSlideshowDimention.imageWidth * scale
+    sprite.height = introSlideshowDimention.imageWidth * ratio * scale
     // sprite.y -= 40
 
     // sprite.pivot.set(0, sprite.height / 2)
@@ -245,7 +242,7 @@ export class IntroSlideshow {
       introSlideshowDimention.width -
       this.prevArrow.arrowSprite.width -
       this.nextArrow.arrowSprite.width -
-      padding * 2
+      PADDING * 2
 
     switch (this.currentFrame) {
       case 0:
@@ -257,7 +254,11 @@ export class IntroSlideshow {
         this.wordingText.x =
           (introSlideshowDimention.width - this.wordingText.width) / 2
 
-        if (this.wordingText.text.length * FONT_SIZE < textWidth) {
+        if (
+          this.wordingText.text.length *
+            introSlideshowDimention.slideshowFontSize <
+          textWidth
+        ) {
           this.wordingText.y = this.wordingText.height / 2
         } else {
           this.wordingText.y = 0

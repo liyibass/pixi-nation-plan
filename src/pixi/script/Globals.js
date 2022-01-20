@@ -1,12 +1,20 @@
 const gameStagePadding = 10
 
+const ratio = 376 / 812
+const height = window.innerHeight
+const maxWidth = height * ratio
+const width = window.innerWidth > maxWidth ? maxWidth : maxWidth
+const OUTER_PADDING = 20
+
 export const Globals = {
   resources: {},
   playerType: 'player',
-  width: window.innerWidth,
-  height: window.innerHeight,
-  maxContentWidth:
-    window.innerWidth < 500 ? window.innerWidth - 3 * gameStagePadding : 500,
+  width: width,
+  height: height,
+  WIDTH: width,
+  HEIGHT: height,
+
+  maxContentWidth: width - 2 * OUTER_PADDING,
   contentHeight:
     window.innerHeight / 2 < 450
       ? window.innerHeight / 2 - 30
@@ -17,6 +25,7 @@ export const Globals = {
     return !!this.width < 1280
   },
   GROUND_HEIGHT: 101,
+
   getGroundDimention: function () {
     return {
       x: this.width / 2,
@@ -212,21 +221,17 @@ export const Globals = {
     }
   },
   getIntroSlideshowDimention: function () {
-    let height = Math.floor((this.height * 1) / 2)
-    if (height > 1000) {
-      height = 1000
-    }
-
-    let width =
-      this.width - 2 * gameStagePadding > height
-        ? height
-        : this.width - 2 * gameStagePadding
-
+    const textPositionRatio = 546 / 812
+    const slideshowFontRatio = 14 / 812
     return {
-      x: (this.width - width) / 2,
-      y: (this.height - height) / 2,
-      width: width,
-      height: height,
+      x: (window.innerWidth - this.maxContentWidth) / 2,
+      y: (window.innerHeight - this.height) / 2,
+      width: this.maxContentWidth,
+      height: this.height,
+
+      textY: Math.floor(this.height * textPositionRatio),
+      slideshowFontSize: Math.floor(height * slideshowFontRatio),
+      imageWidth: this.maxContentWidth + OUTER_PADDING * 2,
     }
   },
   sayFontSize: window.innerWidth < 500 ? 14 : 20,
