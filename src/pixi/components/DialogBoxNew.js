@@ -2,13 +2,13 @@ import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 
 const PADDING = 20
-const MARGING = 16
+const MARGING = 20
 const MAX_BOX_WIDTH = 350
 const MAX_CONTENT_WIDTH =
   Globals.width < MAX_BOX_WIDTH
     ? Globals.width - 2 * MARGING
     : MAX_BOX_WIDTH - 2 * MARGING
-const FONT_SIZE = Globals.width < 500 ? 16 : 20
+const FONT_SIZE = Globals.width < 500 ? 14 : 16
 const PING_LENGTH = 50
 const DOCTOR_HEIGHT = 66
 
@@ -25,7 +25,7 @@ export class DialogBoxNew {
     this.talkerY = talkerY
     this.text = text
 
-    this.init()
+    // this.init()
   }
 
   init() {
@@ -34,7 +34,7 @@ export class DialogBoxNew {
     this.getPosition()
 
     this.createText()
-    this.positionText()
+    this.positionContent()
     this.createSpin()
   }
 
@@ -96,7 +96,7 @@ export class DialogBoxNew {
     this.container.addChild(this.pixiText)
   }
 
-  positionText() {
+  positionContent() {
     this.pixiText.position.x = (this.boxWidth - this.pixiText.width) / 2
     this.pixiText.position.y = (this.boxHeight - this.pixiText.height) / 2
   }

@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 import { DialogBox } from './DialogBox'
 import { DialogBoxNew } from './DialogBoxNew'
-import { DoctorDialogBox } from './DoctorDialogBox'
+import { DoctorDialogBoxNew } from './DoctorDialogBoxNew'
 import { DoctorShareBox } from './DoctorShareBox'
 import { DoctorModBox } from './DoctorModBox'
 import { SpeakDialog } from './SpeakDialog'
@@ -26,10 +26,8 @@ export class DoctorSay {
       text,
       talkerX: this.doctorDimention.x,
       talkerY: this.doctorDimention.y,
-      width: 300,
-      height: 150,
-      fontSize: 16,
     })
+    dialogBox.init()
     this.container.addChild(dialogBox.container)
 
     return new Promise((resolve) => {
@@ -45,6 +43,7 @@ export class DoctorSay {
   }
 
   chooseSay(text, button1, button2) {
+    console.log('chooseSay')
     return new Promise((resolve) => {
       const chosenHandler = (chosen) => {
         this.container.removeChildren()
@@ -52,19 +51,15 @@ export class DoctorSay {
         resolve(chosen)
       }
 
-      const dialogBox = new DoctorDialogBox({
+      const dialogBox = new DoctorDialogBoxNew({
         text,
-        x: (Globals.width - 300) / 2,
-        y: Globals.height / 2 - 30,
-        talkerX: this.doctorDimention.x + 30,
+        talkerX: this.doctorDimention.x,
         talkerY: this.doctorDimention.y,
-        width: 300,
-        height: 150,
-        fontSize: 16,
         chosenHandler,
         button1,
         button2,
       })
+      dialogBox.init()
 
       this.container.addChild(dialogBox.container)
     })
