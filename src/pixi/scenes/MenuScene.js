@@ -17,6 +17,7 @@ import {
   unlockGarbage,
   clearUnlockCardCityArray,
 } from '../script/Utils'
+import { GameTitle } from '../components/GameTitle'
 
 export class MenuScene extends Scene {
   constructor(selectStage = () => {}) {
@@ -122,9 +123,13 @@ export class MenuScene extends Scene {
       this.openAllListener()
     } else if (this.isNeedTutorial) {
       // play game first time
+      await this.showGameTitle()
+
       this.startTutorial()
     } else {
       // play game second time
+      await this.showGameTitle()
+
       const chosen = await this.doctorSay.chooseSay(
         '是否要觀看遊戲介紹？',
         {
@@ -152,6 +157,12 @@ export class MenuScene extends Scene {
 
     await this.checkCityAnimation()
     // check if there's unlocked city
+  }
+
+  async showGameTitle() {
+    // this.gameTitle = new GameTitle('menu')
+    // this.container.addChild(this.gameTitle.container)
+    // await this.gameTitle.revealTitle()
   }
 
   async checkCityAnimation() {}
@@ -297,7 +308,11 @@ export class MenuScene extends Scene {
     this.groundGroup.activeListener()
   }
 
-  startGame(choosedGame) {
+  async startGame(choosedGame) {
+    this.gameTitle = new GameTitle(choosedGame)
+    this.container.addChild(this.gameTitle.container)
+    await this.gameTitle.revealTitle()
+
     this.taiwan.destroyTaiwan()
 
     this.selectStage(choosedGame.gameName || choosedGame, this)

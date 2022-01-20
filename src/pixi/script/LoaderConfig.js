@@ -174,6 +174,14 @@ import bearHead from '../assets/images/bearHead.png'
 import readr from '../assets/images/readr.png'
 import donate from '../assets/images/donate.png'
 import arrowBlack from '../assets/images/arrowBlack.png'
+import game1_0 from '../assets/images/game1_0.png'
+import game2_0 from '../assets/images/game2_0.png'
+import game3_0 from '../assets/images/game3_0.png'
+import game4_0 from '../assets/images/game4_0.png'
+import game1_1 from '../assets/images/game1_1.png'
+import game2_1 from '../assets/images/game2_1.png'
+import game3_1 from '../assets/images/game3_1.png'
+import game4_1 from '../assets/images/game4_1.png'
 
 export const LoaderConfig = {
   player,
@@ -352,4 +360,12 @@ export const LoaderConfig = {
   readr,
   donate,
   arrowBlack,
+  game1_0,
+  game2_0,
+  game3_0,
+  game4_0,
+  game1_1,
+  game2_1,
+  game3_1,
+  game4_1,
 }

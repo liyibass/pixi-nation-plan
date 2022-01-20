@@ -105,7 +105,6 @@ export class SpeakDialog {
           }
         }
       } else {
-        console.log(this.arrowSprite.y <= initY)
         if (this.arrowSprite.y <= initY) {
           this.arrowSprite.y += 0.2
 
