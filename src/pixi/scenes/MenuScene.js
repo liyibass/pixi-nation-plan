@@ -32,8 +32,10 @@ export class MenuScene extends Scene {
     this.isNeedTutorial = Status.isNeedTutorial
 
     this.createScene()
-
-    this.startGameFlow()
+    this.doctorSay.say(
+      '想要回去很簡單，只要協助我破解任務，我就放你回去唷，你準備好了嗎？'
+    )
+    // this.startGameFlow()
     // this.createTestButton()
   }
 
@@ -123,12 +125,12 @@ export class MenuScene extends Scene {
       this.openAllListener()
     } else if (this.isNeedTutorial) {
       // play game first time
-      await this.showGameTitle()
+      // await this.showGameTitle()
 
       this.startTutorial()
     } else {
       // play game second time
-      await this.showGameTitle()
+      // await this.showGameTitle()
 
       const chosen = await this.doctorSay.chooseSay(
         '是否要觀看遊戲介紹？',

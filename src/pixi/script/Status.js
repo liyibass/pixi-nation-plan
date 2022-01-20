@@ -3,7 +3,7 @@ import { deserializeGameStatus } from './Utils'
 const storedStatus = deserializeGameStatus()
 
 export const Status = storedStatus?.Status || {
-  isNeedTutorial: true,
+  isNeedTutorial: false,
   isNeedScrollHint: true,
   isShared: false,
   snake: {

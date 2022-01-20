@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 import { DialogBox } from './DialogBox'
+import { DialogBoxNew } from './DialogBoxNew'
 import { DoctorDialogBox } from './DoctorDialogBox'
 import { DoctorShareBox } from './DoctorShareBox'
 import { DoctorModBox } from './DoctorModBox'
@@ -21,11 +22,9 @@ export class DoctorSay {
   }
 
   say(text) {
-    const dialogBox = new DialogBox({
+    const dialogBox = new DialogBoxNew({
       text,
-      x: (Globals.width - 300) / 2,
-      y: Globals.height / 2 - 30,
-      talkerX: this.doctorDimention.x + 30,
+      talkerX: this.doctorDimention.x,
       talkerY: this.doctorDimention.y,
       width: 300,
       height: 150,
