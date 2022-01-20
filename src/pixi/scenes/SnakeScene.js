@@ -854,7 +854,7 @@ export class SnakeScene {
       }
     })
 
-    if (this.isEatFirstPoison) {
+    if (this.isEatFirstPoison && this.gameLevel === 0) {
       this.isEatFirstPoison = false
 
       // first poison show up
@@ -869,7 +869,11 @@ export class SnakeScene {
       await this._countDown(3)
       this.snakeMoveTicker.start()
 
-      this.createPoisonInterval('fauset')
+      if (this.gameLevel === 0) {
+        this.createPoisonInterval('fauset')
+      } else if (this.gameLevel === 1) {
+        this.createPoisonInterval('incinerator')
+      }
     }
 
     // add score
@@ -1021,6 +1025,7 @@ export class SnakeScene {
   }
 
   async gameOver() {
+    this.doctorSay.hint('啊')
     this.snakeMoveTicker.stop()
     this.controller.deactiveListener()
     this.container.removeChild(this.menuButtons.container)

@@ -144,7 +144,7 @@ export class GameTitle {
       this.titleTicker.add(() => {
         if (this.title0Sprite.y < this.title0InitY) {
           this.title0Sprite.y += 2
-          this.title0Sprite.alpha += 0.005
+          this.title0Sprite.alpha += 0.01
         } else {
           this.title0Sprite.y = this.title0InitY
           this.title0Sprite.alpha = 1
@@ -152,7 +152,7 @@ export class GameTitle {
 
         if (this.title1Sprite.y > this.title1InitY) {
           this.title1Sprite.y -= 2
-          this.title1Sprite.alpha += 0.005
+          this.title1Sprite.alpha += 0.01
         } else {
           this.titleTicker.stop()
           this.title1Sprite.y = this.title1InitY

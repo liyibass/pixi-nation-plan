@@ -9,7 +9,7 @@ const MAX_CONTENT_WIDTH =
     ? Globals.width - 2 * MARGING
     : MAX_BOX_WIDTH - 2 * MARGING
 const FONT_SIZE = Globals.width < 500 ? 14 : 16
-const PING_LENGTH = 50
+const PING_LENGTH = 30
 const DOCTOR_HEIGHT = 66
 
 export class DialogBoxNew {
@@ -103,23 +103,23 @@ export class DialogBoxNew {
 
   createSpin() {
     const TALKER_WIDTH = 30
-    const TALKER_HEIGHT = 60
-    const spinX = this.talkerX - this.x
-    const spinY = this.talkerY - this.y
+    // const TALKER_HEIGHT = 60
+    const spinX = Math.abs(this.talkerX - this.x)
+    const spinY = Math.abs(this.boxHeight + PING_LENGTH)
 
     const graphics = new PIXI.Graphics()
     graphics.lineStyle(2, 0xeeeeee, 1)
     graphics.beginFill(0xeeeeee)
-    graphics.drawPolygon([
-      this.boxWidth / 3 - 3,
-      this.boxHeight,
+
+    graphics.moveTo(this.boxWidth / 3 - 3, this.boxHeight)
+    graphics.lineTo(
       this.talkerX > this.x + this.boxWidth / 2
-        ? spinX - TALKER_WIDTH
-        : spinX + TALKER_WIDTH,
-      spinY - TALKER_HEIGHT,
-      this.boxWidth / 3 + 3,
-      this.boxHeight,
-    ])
+        ? spinX - TALKER_WIDTH / 2
+        : spinX + TALKER_WIDTH / 2,
+      spinY
+    )
+    graphics.lineTo(this.boxWidth / 3 + 3, this.boxHeight)
+    graphics.closePath()
     graphics.endFill()
     this.container.addChild(graphics)
   }

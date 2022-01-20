@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
-import { DialogBox } from './DialogBox'
+
 import { DialogBoxNew } from './DialogBoxNew'
 import { DoctorDialogBoxNew } from './DoctorDialogBoxNew'
 import { DoctorShareBoxGroup } from './DoctorShareBoxGroup'
@@ -131,29 +131,15 @@ export class DoctorSay {
   }
 
   hint(text, timeout = 3000) {
-    const talkerX = this.doctorDimention.x + 30
+    const talkerX = this.doctorDimention.x
     const talkerY = this.doctorDimention.y
-    const fontSize = 14
-    const textMaxWidth =
-      window.innerWidth - 32 > 300 ? 300 : window.innerWidth - 32
 
-    const textWidth =
-      text.length * fontSize > textMaxWidth
-        ? textMaxWidth
-        : text.length * fontSize
-    const textLineCount = Math.ceil((text.length * fontSize) / textMaxWidth)
-    const blobWidth = 16 * 2 + textWidth
-    const blobHeight = 16 * 2 + textLineCount
-    this.dialogBox = new DialogBox({
+    this.dialogBox = new DialogBoxNew({
       text,
-      x: (Globals.width - 300) / 2,
-      y: talkerY - blobHeight - 70,
       talkerX: talkerX,
       talkerY: talkerY,
-      width: blobWidth,
-      height: blobHeight,
-      fontSize: fontSize,
     })
+    this.dialogBox.init()
     this.container.addChild(this.dialogBox.container)
 
     setTimeout(() => {

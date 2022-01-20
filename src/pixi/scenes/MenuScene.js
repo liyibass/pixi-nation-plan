@@ -32,7 +32,7 @@ export class MenuScene extends Scene {
     this.isNeedTutorial = Status.isNeedTutorial
 
     this.createScene()
-
+    // this.doctorSay.hint('啊', 100000)
     this.startGameFlow()
     // this.createTestButton()
   }

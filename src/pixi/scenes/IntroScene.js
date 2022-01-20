@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 import { Player } from '../components/Player'
-import { DialogBox } from '../components/DialogBox'
+import { DialogBoxNew } from '../components/DialogBoxNew'
 import { Ground } from '../components/Ground'
 import { Spotlight } from '../components/Spotlight'
 import { Doctor } from '../components/Doctor'
 import { Taiwan } from '../components/Taiwan'
-import { DoctorDialogBox } from '../components/DoctorDialogBox'
+import { DoctorDialogBoxNew } from '../components/DoctorDialogBoxNew'
 import { DoctorSay } from '../components/DoctorSay'
 import { GroundGroup } from '../components/GroundGroup'
 import { IntroSlideshow } from '../components/IntroSlideshow'
@@ -131,11 +131,11 @@ export class IntroScene {
       }
     }
     // start film script
-    console.log(startFilmScript)
-    this.startButton.on('pointerdown', () => {
-      this.selectStage('menu')
-    })
-    // this.startButton.on('pointerdown', startFilmScript)
+    // console.log(startFilmScript)
+    // this.startButton.on('pointerdown', () => {
+    //   this.selectStage('menu')
+    // })
+    this.startButton.on('pointerdown', startFilmScript)
   }
 
   _createHeader() {
@@ -400,12 +400,6 @@ export class IntroScene {
     this.container.removeChild(this.skipButton)
 
     this.selectStage('menu')
-    // await this.lightUpBackground()
-    // await this.doctorSay.newSay('111')
-    // await this.doctorSay.newSay('222')
-    // await this.doctorSay.newSay('333')
-
-    // this.taiwan.activeListener()
   }
 
   async lightUpBackground() {
@@ -525,7 +519,7 @@ export class IntroScene {
     width,
     height,
   }) {
-    this.playerDialogBox = new DialogBox({
+    this.playerDialogBox = new DialogBoxNew({
       x,
       y,
       talkerX,
@@ -558,7 +552,7 @@ export class IntroScene {
     width,
     height,
   }) {
-    this.doctorDialogBox = new DoctorDialogBox({
+    this.doctorDialogBox = new DoctorDialogBoxNew({
       x,
       y,
       talkerX,
