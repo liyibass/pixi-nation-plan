@@ -188,6 +188,7 @@ export class DoctorSay {
       this.container.addListener('pointerdown', () => {
         this.container.removeChild(speakDialog.container)
         this.container.removeAllListeners()
+        speakDialog.destorySpeakDialog?.()
 
         setTimeout(() => {
           resolve()

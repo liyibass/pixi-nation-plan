@@ -173,6 +173,7 @@ import tigerHead from '../assets/images/tigerHead.png'
 import bearHead from '../assets/images/bearHead.png'
 import readr from '../assets/images/readr.png'
 import donate from '../assets/images/donate.png'
+import arrowBlack from '../assets/images/arrowBlack.png'
 
 export const LoaderConfig = {
   player,
@@ -350,4 +351,5 @@ export const LoaderConfig = {
   bearHead,
   readr,
   donate,
+  arrowBlack,
 }

@@ -80,9 +80,46 @@ export class SpeakDialog {
     text.y = (this.whiteBackground.height - text.height) / 2
     this.speakDialogGroup.addChild(text)
 
+    // continueHint
+    const arrowTexture = new PIXI.Texture(
+      Globals.resources['arrowBlack']?.texture
+    )
+    this.arrowSprite = new PIXI.Sprite(arrowTexture)
+    this.arrowSprite.angle = 270
+    const initY = (this.whiteBackground.height * 3) / 4
+    this.arrowSprite.x = (Globals.width + contentWidth) / 2
+    this.arrowSprite.y = initY
+
+    this.speakDialogGroup.addChild(this.arrowSprite)
+
+    // arrow animation
+    this.arrowTicker = new PIXI.Ticker()
+    let direction = 'up'
+    this.arrowTicker.add(() => {
+      if (direction === 'up') {
+        if (this.arrowSprite.y >= initY - this.arrowSprite.height / 2) {
+          this.arrowSprite.y -= 0.2
+
+          if (this.arrowSprite.y < initY - this.arrowSprite.height / 2) {
+            direction = 'down'
+          }
+        }
+      } else {
+        console.log(this.arrowSprite.y <= initY)
+        if (this.arrowSprite.y <= initY) {
+          this.arrowSprite.y += 0.2
+
+          if (this.arrowSprite.y > initY) {
+            direction = 'up'
+          }
+        }
+      }
+    })
+    this.arrowTicker.start()
+
     // slide-fade-in animation
-    const talkTicker = new PIXI.Ticker()
-    talkTicker.add(() => {
+    this.talkTicker = new PIXI.Ticker()
+    this.talkTicker.add(() => {
       if (this.doctor.x < this.doctorOriginX) {
         this.doctor.x = this.doctor.x + 3
       }
@@ -92,9 +129,14 @@ export class SpeakDialog {
       }
 
       if (this.doctor.x >= this.doctorOriginX && this.doctor.alpha >= 1) {
-        talkTicker.destroy()
+        this.talkTicker.stop()
       }
     })
-    talkTicker.start()
+    this.talkTicker.start()
+  }
+
+  destorySpeakDialog() {
+    this.talkTicker?.destroy?.()
+    this.arrowTicker?.destroy?.()
   }
 }
