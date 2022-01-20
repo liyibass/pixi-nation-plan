@@ -32,8 +32,8 @@ export class MenuScene extends Scene {
     this.isNeedTutorial = Status.isNeedTutorial
 
     this.createScene()
-
-    this.startGameFlow()
+    this.doctorSay.share('別擔心，我也會送一些小禮物，讓你不會空手而歸')
+    // this.startGameFlow()
     // this.createTestButton()
   }
 

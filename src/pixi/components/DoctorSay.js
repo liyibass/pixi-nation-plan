@@ -3,7 +3,7 @@ import { Globals } from '../script/Globals'
 import { DialogBox } from './DialogBox'
 import { DialogBoxNew } from './DialogBoxNew'
 import { DoctorDialogBoxNew } from './DoctorDialogBoxNew'
-import { DoctorShareBox } from './DoctorShareBox'
+import { DoctorShareBoxGroup } from './DoctorShareBoxGroup'
 import { DoctorModBox } from './DoctorModBox'
 import { SpeakDialog } from './SpeakDialog'
 import { clickUrl } from '../script/Utils'
@@ -64,6 +64,7 @@ export class DoctorSay {
       this.container.addChild(dialogBox.container)
     })
   }
+
   share(text) {
     return new Promise((resolve) => {
       const shareHandler = async (chosen) => {
@@ -82,18 +83,10 @@ export class DoctorSay {
         }
       }
 
-      const width = 327
-      const height = 170
-
-      const dialogBox = new DoctorShareBox({
+      const dialogBox = new DoctorShareBoxGroup({
         text,
-        x: (Globals.width - width) / 2,
-        y: this.doctorDimention.y - height - 70,
         talkerX: this.doctorDimention.x + 30,
         talkerY: this.doctorDimention.y,
-        width: width,
-        height: height,
-        fontSize: 16,
         chosenHandler: shareHandler,
       })
 
