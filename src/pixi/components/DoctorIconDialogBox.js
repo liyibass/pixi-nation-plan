@@ -11,14 +11,20 @@ const MAX_CONTENT_WIDTH =
     : MAX_BOX_WIDTH - 2 * MARGING
 const FONT_SIZE = Globals.width < 500 ? 14 : 16
 
-export class DoctorShareBox extends DialogBoxNew {
+export class DoctorIconDialogBox extends DialogBoxNew {
   constructor(...args) {
     super(...args)
     this.chosenHandler = args[0].clickHandler
+    this.icon1Name = args[0].icon1Name
+    this.icon2Name = args[0].icon2Name
   }
 
   createTwoIcons() {
-    this.twoIcons = new TwoIcons(this.chosenHandler, 'facebook', 'line')
+    this.twoIcons = new TwoIcons(
+      this.chosenHandler,
+      this.icon1Name,
+      this.icon2Name
+    )
     // this.container.addChild(this.twoIcons.container)
     // this.container.interactive = true
     // this.container.buttonMode = false

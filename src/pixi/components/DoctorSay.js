@@ -4,7 +4,7 @@ import { DialogBox } from './DialogBox'
 import { DialogBoxNew } from './DialogBoxNew'
 import { DoctorDialogBoxNew } from './DoctorDialogBoxNew'
 import { DoctorShareBoxGroup } from './DoctorShareBoxGroup'
-import { DoctorModBox } from './DoctorModBox'
+import { DoctorModBoxGroup } from './DoctorModBoxGroup'
 import { SpeakDialog } from './SpeakDialog'
 import { clickUrl } from '../script/Utils'
 
@@ -97,7 +97,6 @@ export class DoctorSay {
   mod(text, isClickable = true) {
     return new Promise((resolve) => {
       const modHandler = (chosen) => {
-        console.log(chosen)
         this.container.removeChildren()
         this.container.removeAllListeners()
 
@@ -115,7 +114,7 @@ export class DoctorSay {
       const width = 327
       const height = 170
 
-      const dialogBox = new DoctorModBox({
+      const dialogBox = new DoctorModBoxGroup({
         text,
         x: (Globals.width - width) / 2,
         y: this.doctorDimention.y - height - 70,
