@@ -2,7 +2,9 @@ import * as PIXI from 'pixi.js'
 
 import { Globals } from '../script/Globals'
 const introSlideshowDimention = Globals.getIntroSlideshowDimention()
+const padding = 47
 
+const FONT_SIZE = 14
 export class IntroSlideshow {
   constructor(resolve) {
     this.container = new PIXI.Container()
@@ -126,7 +128,7 @@ export class IntroSlideshow {
 
   _createText() {
     // create text
-    const padding = 47
+
     const textWidth =
       introSlideshowDimention.width -
       this.prevArrow.arrowSprite.width -
@@ -134,7 +136,7 @@ export class IntroSlideshow {
       padding * 2
 
     this.wordingText = new PIXI.Text(this._getCurrentText(), {
-      fontSize: 14,
+      fontSize: FONT_SIZE,
       fill: ['0xffffff'],
       wordWrap: true,
       breakWords: true,
@@ -210,7 +212,6 @@ export class IntroSlideshow {
     this.imageContainer.addChild(sprite)
 
     this.imageContainer.x = introSlideshowDimention.x
-    sprite.x = (introSlideshowDimention.width - sprite.width) / 2
     sprite.y = (Globals.height - sprite.height) / 2
 
     if (this.currentFrame < 4) {
@@ -238,6 +239,12 @@ export class IntroSlideshow {
       this.prevArrow.alpha = 1
     }
 
+    const textWidth =
+      introSlideshowDimention.width -
+      this.prevArrow.arrowSprite.width -
+      this.nextArrow.arrowSprite.width -
+      padding * 2
+
     switch (this.currentFrame) {
       case 0:
       case 1:
@@ -248,6 +255,11 @@ export class IntroSlideshow {
         this.wordingText.x =
           (introSlideshowDimention.width - this.wordingText.width) / 2
 
+        if (this.wordingText.text.length * FONT_SIZE < textWidth) {
+          this.wordingText.y = this.wordingText.height / 2
+        } else {
+          this.wordingText.y = 0
+        }
         this._createImage()
         await this._startFadeInTicker()
         break
