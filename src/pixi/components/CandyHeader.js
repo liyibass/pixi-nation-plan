@@ -146,19 +146,12 @@ export class CandyHeader {
 
   _createResetButton() {
     const resetTexture = new PIXI.Texture(Globals.resources[`reset`]?.texture)
-    const resetSprite = new PIXI.Sprite(resetTexture)
+    this.resetSprite = new PIXI.Sprite(resetTexture)
 
-    this.container.addChild(resetSprite)
+    this.container.addChild(this.resetSprite)
 
-    resetSprite.y = (HEADER_HEIGHT - resetSprite.height) / 2
-    resetSprite.x = RESET_X
-
-    resetSprite.buttonMode = true
-    resetSprite.interactive = true
-
-    resetSprite.addListener('pointerdown', () => {
-      this.reCreateCandys()
-    })
+    this.resetSprite.y = (HEADER_HEIGHT - this.resetSprite.height) / 2
+    this.resetSprite.x = RESET_X
   }
 
   decreaseStepCount() {
@@ -228,5 +221,25 @@ export class CandyHeader {
     this.currentPointText.text = this.currentPoint
     this.currentPointText.y = -17
     this.currentPointText.x = 0
+  }
+
+  activeCandyHeader() {
+    this.resetSprite.buttonMode = true
+    this.resetSprite.interactive = true
+
+    this.resetSprite.addListener('pointerdown', () => {
+      this.reCreateCandys()
+    })
+  }
+
+  deactiveCandyHeader() {
+    this.resetSprite.buttonMode = false
+    this.resetSprite.interactive = false
+
+    this.resetSprite.removeAllListeners()
+  }
+
+  destoryCandyHeader() {
+    this.deactiveCandyHeader()
   }
 }

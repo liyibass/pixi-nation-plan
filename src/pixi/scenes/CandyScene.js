@@ -98,7 +98,6 @@ export class CandyScene extends Scene {
       this.gamePassed.bind(this)
     )
     this.container.addChild(this.candyHeader.container)
-    console.log(this.candyHeader)
 
     this.candyHeader.container.x = gameStageDimention.x
     this.candyHeader.container.y = 16
@@ -787,6 +786,7 @@ export class CandyScene extends Scene {
     await super.startGame()
     this.isGameStop = false
 
+    this.candyHeader.activeCandyHeader()
     this._startSceneTicker()
   }
 
@@ -801,10 +801,14 @@ export class CandyScene extends Scene {
   // ===== game pause =====
   _pauseAllGameActivity() {
     this.isGameStop = true
+
+    this.candyHeader.deactiveCandyHeader()
   }
 
   _resumeAllGameActivity() {
     this.isGameStop = false
+
+    this.candyHeader.activeCandyHeader()
   }
 
   // ===== game over =====
@@ -923,5 +927,9 @@ export class CandyScene extends Scene {
           return null
       }
     }
+  }
+
+  destroyScene() {
+    this.candyHeader.destoryCandyHeader()
   }
 }

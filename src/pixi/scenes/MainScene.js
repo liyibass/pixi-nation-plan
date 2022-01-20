@@ -84,7 +84,7 @@ export class MainScene {
   }
 
   clearPrevScene(prevScene) {
-    // console.log(prevScene)
     prevScene?.header?.destoryHeader()
+    prevScene?.destroyScene?.()
   }
 }
