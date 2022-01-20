@@ -354,6 +354,10 @@ export class CardTab {
   }
 
   updateTabOrder(callback) {
+    if (!Status.isNeedScrollHint) {
+      this.removeScrollHint()
+    }
+
     // set rest tabs in order
     const exclusiveTabs = []
     this.cardFolder.tabArray.forEach((cardTab) => {
