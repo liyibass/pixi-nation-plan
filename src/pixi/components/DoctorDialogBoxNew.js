@@ -65,11 +65,7 @@ export class DoctorDialogBoxNew extends DialogBoxNew {
     this.contentWidth = CONTENT_WIDTH
     this.contentHeight = CONTENT_HEIGHT
 
-    if (CONTENT_WIDTH < Globals.width / 2) {
-      this.dialogBoxPosition = 'side'
-    } else {
-      this.dialogBoxPosition = 'center'
-    }
+    this.dialogBoxPosition = 'center'
   }
 
   positionContent() {

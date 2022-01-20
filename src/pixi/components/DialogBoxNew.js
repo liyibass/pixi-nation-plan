@@ -55,7 +55,7 @@ export class DialogBoxNew {
     this.contentWidth = CONTENT_WIDTH
     this.contentHeight = CONTENT_HEIGHT
 
-    if (CONTENT_WIDTH < Globals.width / 2) {
+    if (CONTENT_WIDTH < (MAX_CONTENT_WIDTH * 2) / 3) {
       this.dialogBoxPosition = 'side'
     } else {
       this.dialogBoxPosition = 'center'
@@ -72,6 +72,7 @@ export class DialogBoxNew {
 
     this.container.x = this.x
     this.container.y = this.y
+    console.log(this)
   }
 
   createDialogBox() {
