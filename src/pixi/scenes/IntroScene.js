@@ -401,7 +401,7 @@ export class IntroScene {
 
     await this.doctorSay.newSay('新的挑戰者出現啦！歡迎光臨模擬村莊計畫!')
     await this.doctorSay.newSay(
-      '想要回去很簡單，只要協助我破解任務，我就放你回去唷'
+      '想要回去很簡單，只要協助我破解任務，我就放你回去唷，你準備好了嗎？'
     )
 
     this.selectStage('menu')

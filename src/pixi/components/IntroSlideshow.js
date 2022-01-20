@@ -330,9 +330,9 @@ export class IntroSlideshow {
       case 0:
         return '哎，來不及了啦，政府都開怪手來了，哪裡擋得住？'
       case 1:
-        return '（此時，手機的通知響起）'
+        return '（手機通知響起）'
       case 2:
-        return '差點忘了！今天oooo有新企劃活動，趕快點進去拿限定版道具～'
+        return '今天模擬村莊有新企劃活動，趕快開啟遊戲拿限定版道具～'
 
       case 3:
         return '嗯？'

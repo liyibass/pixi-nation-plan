@@ -173,21 +173,75 @@ export class MenuScene extends Scene {
     this.groundGroup.deactiveListener()
     this.tip = new Tip()
 
-    await this.doctorSay.newSay('這裡是偉哉鬼島，我是新任的村長馬先生。')
+    await this.doctorSay.newSay('新的挑戰者出現啦！歡迎光臨模擬村莊計畫')
+
+    const chosen = await this.doctorSay.chooseSay(
+      '想要回去很簡單，只要協助我破解任務，我就放你回去唷，你準備好了嗎？',
+      {
+        text: '準備好了',
+        color: '0x000000',
+        bgColor: '0xFF8B29',
+        value: 'yes',
+      },
+      {
+        text: '我不想玩',
+        color: '0x000000',
+        bgColor: '0xc4c4c4',
+        value: 'no',
+      }
+    )
+
+    if (chosen === 'yes') {
+      this.tutorialFlow()
+    } else {
+      await this.doctorSay.newSay('什麼！你也太快放棄了吧！真的不試試看嗎？')
+      const chosen2 = await this.doctorSay.chooseSay(
+        '想要回去很簡單，只要協助我破解任務，我就放你回去唷，你準備好了嗎？',
+        {
+          text: '好啦',
+          color: '0x000000',
+          bgColor: '0xFF8B29',
+          value: 'yes',
+        },
+        {
+          text: '不要',
+          color: '0x000000',
+          bgColor: '0xc4c4c4',
+          value: 'no',
+        }
+      )
+
+      if (chosen2 === 'yes') {
+        this.tutorialFlow()
+      } else {
+        await this.doctorSay.newSay(
+          '好吧…那只好請你幫我分享，讓我找下一個小幫手～'
+        )
+        // await this.doctorSay.newSay('別擔心，我也會送一些小禮物，讓你不會空手而歸')
+        await this.doctorSay.share(
+          '別擔心，我也會送一些小禮物，讓你不會空手而歸'
+        )
+        this.openAllListener()
+      }
+    }
+  }
+
+  async tutorialFlow() {
+    await this.doctorSay.newSay('這裡是「模擬村莊007」，我是新任的村長馬先生。')
     await this.doctorSay.newSay(
       '先說一聲恭喜，這麼愛玩遊戲的你，雀屏中選，成為我治理新村莊的好幫手啦！'
     )
     await this.doctorSay.newSay('想要回到原本的世界很簡單')
     await this.doctorSay.newSay(
-      '看看地圖上的一塊塊拼圖，每一個都是獨立的村莊，但他們都遇上了一些麻煩，所以顏色看起來都沒什麼活力…'
+      '看看地圖上的一塊塊拼圖，每一個都是獨立的村莊，但他們都遇上了一些麻煩，所以顏色看起來沒什麼活力…'
     )
     await this.doctorSay.newSay(
-      '你的任務就是搜集每個城市遺失的卡片，只要全部都找齊，村民開心，你也能回家啦！'
+      '你的任務就是搜集每個村莊遺失的卡片，只要全部都找齊，村民開心，你也能回家啦！'
     )
     await this.doctorSay.newSay(
-      '每張卡片都和城市的特色息息相關。你可以點選有興趣的城市!'
+      '每張卡片都和村莊的特色息息相關。你可以點選有興趣的村莊～'
     )
-    await this.doctorSay.hint('你可以從卡片上的資訊深入認識每一個城市～', 3000)
+    await this.doctorSay.hint('你可以從卡片上的資訊深入認識每一個村莊～', 3000)
 
     // hint kaoshiung
     this.tip.createPointerTip(this.taiwan.kaoshiung)
@@ -199,7 +253,7 @@ export class MenuScene extends Scene {
       this.taiwan.deactiveKaoshiungListener()
 
       await this.doctorSay.newSay(
-        '裡面有城市的基本資料，以及未來的規劃。你可以從卡片上的資訊深入認識每一個城市～'
+        '裡面有村莊的基本資料，以及未來的規劃。你可以從卡片上的資訊深入認識每一個村莊～'
       )
 
       const demoTab =
@@ -219,7 +273,7 @@ export class MenuScene extends Scene {
 
         await this._wait(1000)
         await this.doctorSay.newSay(
-          '接著就是重頭戲啦！有看到每個城市都有數張貼上封條的卡片嗎？那些就是你的任務了！'
+          '接著就是重頭戲啦！有看到每個村莊都有好幾張被鎖住的卡片嗎？那些就是你的任務了！'
         )
         await this.doctorSay.newSay(
           '另外，也能看到卡片藏身的關卡位置。只要挑戰關卡成功，你就能找回不見的卡片！是不是很簡單！'
@@ -231,7 +285,7 @@ export class MenuScene extends Scene {
           '最後就是，如果你好奇我為什麼想推動村莊大改造'
         )
         await this.doctorSay.newSay(
-          '你還可以點選我的企劃書，這可是機密資料，我只分享給你看哦！助手的殺必斯啦！'
+          '你還可以點選我的企劃書，這可是機密資料，我只分享給你看哦！'
         )
 
         // hint infoCard
@@ -247,7 +301,7 @@ export class MenuScene extends Scene {
         const infoCardExitCallback = async () => {
           console.log('eixt infoCard')
           await this.doctorSay.newSay(
-            '讓我帶著你實作一次吧！你看畫面上有座城市正在微微發亮，點擊它之後，可以先看看他的基本資料'
+            '讓我帶著你實作一次吧！你看畫面上有座城市正在發亮，點擊它，看看它的基本資料。'
           )
 
           // hint kaoshiung
