@@ -25,6 +25,7 @@ export const Status = storedStatus?.Status || {
 }
 
 Status.enteredGame = false
+Status.isShared = false
 
 export const CityStatusArray = storedStatus?.CityStatusArray || [
   {
