@@ -55,7 +55,18 @@ export class Scene {
     this.groundGroup.container.x = groundGroupDimention.x
     this.groundGroup.container.y = groundGroupDimention.y
     this.container.addChild(this.groundGroup.container)
-    this.groundGroup.activeListener()
+    this.groundGroup.activeListener(
+      this.infoCardEnterCallback.bind(this),
+      this.infoCardLeaveCallback.bind(this)
+    )
+  }
+
+  infoCardEnterCallback() {
+    this._pauseAllGameActivity()
+    this.container.removeChild(this.menuButtons.container)
+  }
+  infoCardLeaveCallback() {
+    this.resumeGame()
   }
 
   _createGameStage() {

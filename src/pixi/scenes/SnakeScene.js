@@ -15,6 +15,7 @@ import { GameSuccess } from '../components/GameSuccess'
 import { FoodScore } from '../components/FoodScore'
 import { Status } from '../script/Status'
 import { unlockWater, unlockGarbage } from '../script/Utils'
+import { Header } from '../components/Header'
 
 // import { SnakeBody } from '../components/SnakeBody'
 
@@ -74,6 +75,11 @@ export class SnakeScene {
     // todo introduce
   }
 
+  _createHeader() {
+    this.header = new Header()
+    this.container.addChild(this.header.container)
+  }
+
   _createBackground() {
     const bg = new PIXI.Graphics()
     // bg.lineStyle(4, 0x00000, 1)
@@ -91,6 +97,18 @@ export class SnakeScene {
     this.groundGroup.container.y = groundGroupDimention.y
 
     this.container.addChild(this.groundGroup.container)
+    this.groundGroup.activeListener(
+      this.infoCardEnterCallback.bind(this),
+      this.infoCardLeaveCallback.bind(this)
+    )
+  }
+
+  infoCardEnterCallback() {
+    this._pauseAllGameActivity()
+    this.container.removeChild(this.menuButtons.container)
+  }
+  infoCardLeaveCallback() {
+    this.resumeGame()
   }
 
   _createGameStage() {
@@ -944,9 +962,19 @@ export class SnakeScene {
     }
   }
 
-  pauseGame() {
+  _pauseAllGameActivity() {
     this.controller.deactiveListener()
     this.snakeMoveTicker.stop()
+  }
+
+  _resumeAllGameActivity() {
+    this.snakeMoveTicker.start()
+    this.controller.updateMoveDirectionObject(this.moveDirection)
+    this.controller.activeListener()
+  }
+
+  pauseGame() {
+    this._pauseAllGameActivity()
     this.container.removeChild(this.menuButtons.container)
 
     const pauseGame = new PauseGame(
@@ -978,10 +1006,7 @@ export class SnakeScene {
   async resumeGame() {
     console.log('resume game')
     await this._countDown(3)
-
-    this.snakeMoveTicker.start()
-    this.controller.updateMoveDirectionObject(this.moveDirection)
-    this.controller.activeListener()
+    this._resumeAllGameActivity()
   }
 
   async gamePassed() {
