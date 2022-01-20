@@ -160,9 +160,10 @@ export class MenuScene extends Scene {
   }
 
   async showGameTitle() {
-    // this.gameTitle = new GameTitle('menu')
-    // this.container.addChild(this.gameTitle.container)
-    // await this.gameTitle.revealTitle()
+    this.gameTitle = new GameTitle('menu')
+    this.container.addChild(this.gameTitle.container)
+    await this.gameTitle.revealTitle()
+    this.container.removeChild(this.gameTitle.container)
   }
 
   async checkCityAnimation() {}
@@ -312,7 +313,7 @@ export class MenuScene extends Scene {
     this.gameTitle = new GameTitle(choosedGame)
     this.container.addChild(this.gameTitle.container)
     await this.gameTitle.revealTitle()
-
+    this.container.removeChild(this.gameTitle.container)
     this.taiwan.destroyTaiwan()
 
     this.selectStage(choosedGame.gameName || choosedGame, this)

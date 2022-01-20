@@ -234,10 +234,11 @@ export class IntroSlideshow {
     // updateImage
     // this._createImage()
     // await this._startFadeInTicker()
+
     if (this.currentFrame === 0) {
-      this.prevArrow.alpha = 0
+      this.prevArrow.container.alpha = 0
     } else {
-      this.prevArrow.alpha = 1
+      this.prevArrow.container.alpha = 1
     }
 
     const textWidth =

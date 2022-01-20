@@ -27,6 +27,8 @@ export class GameTitle {
   }
   getTextureNumber() {
     switch (this.gameName) {
+      case 'menu':
+        return 0
       case 'snake':
         return 1
       case 'balance':
@@ -37,7 +39,7 @@ export class GameTitle {
         return 4
 
       default:
-        break
+        return 0
     }
   }
   createTitle() {
@@ -65,8 +67,10 @@ export class GameTitle {
     this.title1Sprite.x = (this.bg.width - this.title1Sprite.width) / 2
     this.title0InitY = Globals.height / 2 - this.title0Sprite.height - 15
     this.title1InitY = Globals.height / 2 - 15
-    this.title0Sprite.y = this.title0InitY - this.title0Sprite.height * 2
-    this.title1Sprite.y = this.title1InitY + this.title1Sprite.height * 2
+
+    const offset = this.title1Sprite.height * 2
+    this.title0Sprite.y = this.title0InitY - offset
+    this.title1Sprite.y = this.title1InitY + offset
 
     this.container.addChild(this.title0Sprite, this.title1Sprite)
   }
@@ -107,12 +111,10 @@ export class GameTitle {
           this.title0Sprite.y += 2
           this.title0Sprite.alpha += 0.005
         } else {
-          this.titleTicker.stop()
           this.title0Sprite.y = this.title0InitY
           this.title0Sprite.alpha = 1
-
-          resolve()
         }
+
         if (this.title1Sprite.y > this.title1InitY) {
           this.title1Sprite.y -= 2
           this.title1Sprite.alpha += 0.005
@@ -132,20 +134,42 @@ export class GameTitle {
   goToDark() {
     this.darkTicker = new PIXI.Ticker()
 
-    return new Promise((resolve) => {
-      this.darkTicker.add(() => {
-        if (this.bg.alpha < 1) {
-          this.bg.alpha += 0.005
-          this.title0Sprite.alpha -= 0.02
-          this.title1Sprite.alpha -= 0.02
-        } else {
-          this.darkTicker.stop()
-          resolve()
-        }
-      })
+    let constant = 1
+    if (this.gameName === 'menu') {
+      constant = -1
+    }
 
-      this.darkTicker.start()
-    })
+    if (constant > 0) {
+      return new Promise((resolve) => {
+        this.darkTicker.add(() => {
+          if (this.bg.alpha < 1) {
+            this.bg.alpha += 0.005
+            this.title0Sprite.alpha -= 0.02
+            this.title1Sprite.alpha -= 0.02
+          } else {
+            this.darkTicker.stop()
+            resolve()
+          }
+        })
+
+        this.darkTicker.start()
+      })
+    } else {
+      return new Promise((resolve) => {
+        this.darkTicker.add(() => {
+          if (this.bg.alpha > 0) {
+            this.bg.alpha -= 0.005
+            this.title0Sprite.alpha -= 0.02
+            this.title1Sprite.alpha -= 0.02
+          } else {
+            this.darkTicker.stop()
+            resolve()
+          }
+        })
+
+        this.darkTicker.start()
+      })
+    }
   }
 
   _wait(delayTime) {

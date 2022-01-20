@@ -182,6 +182,10 @@ import game1_1 from '../assets/images/game1_1.png'
 import game2_1 from '../assets/images/game2_1.png'
 import game3_1 from '../assets/images/game3_1.png'
 import game4_1 from '../assets/images/game4_1.png'
+import game0_0 from '../assets/images/game0_0.png'
+import game0_1 from '../assets/images/game0_1.png'
+import game0_2 from '../assets/images/game0_2.png'
+import game0_3 from '../assets/images/game0_3.png'
 
 export const LoaderConfig = {
   player,
@@ -368,4 +372,8 @@ export const LoaderConfig = {
   game2_1,
   game3_1,
   game4_1,
+  game0_0,
+  game0_1,
+  game0_2,
+  game0_3,
 }
