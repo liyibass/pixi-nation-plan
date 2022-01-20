@@ -212,6 +212,7 @@ export class IntroSlideshow {
     this.imageContainer.addChild(sprite)
 
     this.imageContainer.x = introSlideshowDimention.x
+    sprite.x = (introSlideshowDimention.width - sprite.width) / 2
     sprite.y = (Globals.height - sprite.height) / 2
 
     if (this.currentFrame < 4) {
