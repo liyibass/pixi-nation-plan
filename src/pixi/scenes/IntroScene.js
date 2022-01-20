@@ -13,6 +13,7 @@ import { IntroSlideshow } from '../components/IntroSlideshow'
 import { Header } from '../components/Header'
 
 const skipButtonDimention = Globals.getSkipButtonDimention()
+const groundGroupDimention = Globals.getGroundDimention()
 
 export class IntroScene {
   constructor(selectStage) {
@@ -50,12 +51,12 @@ export class IntroScene {
   _createBackground() {
     const bg = new PIXI.Graphics()
     bg.beginFill(0x92b79c)
-    bg.drawRect(0, 0, Globals.width, Globals.height)
+    bg.drawRect(0, 0, Globals.outerWidth, Globals.outerHeight)
     bg.endFill()
 
     this.darkBg = new PIXI.Graphics()
     this.darkBg.beginFill(0x00000)
-    this.darkBg.drawRect(0, 0, Globals.width, Globals.height)
+    this.darkBg.drawRect(0, 0, Globals.outerWidth, Globals.outerHeight)
     this.darkBg.endFill()
 
     this.container.addChild(bg, this.darkBg)
@@ -66,8 +67,8 @@ export class IntroScene {
       fill: '0xeeeeee',
       fontSize: '24px',
     })
-    this.startButton.position.x = Globals.width / 2
-    this.startButton.position.y = Globals.height / 2
+    this.startButton.position.x = Globals.outerWidth / 2
+    this.startButton.position.y = Globals.outerHeight / 2
     this.startButton.anchor.set(0.5, 0.5)
 
     this.startButton.interactive = true
@@ -154,23 +155,30 @@ export class IntroScene {
   async startStory() {
     console.log('startStory')
 
-    this.player = new Player({
-      x: Globals.width / 2,
-      y: Globals.height / 2 + 50,
-    })
     this.ground = new Ground({
-      x: Globals.width / 2,
-      y: Globals.height / 2 + 58,
+      x: Globals.outerWidth / 2,
+      y: Globals.outerHeight / 2 + 58,
       isDarkGreen: true,
+      groundGroupDimention,
     })
+    const scale = this.ground.getSpriteScale()
+
+    this.player = new Player({
+      x: Globals.outerWidth / 2,
+      y: Globals.outerHeight / 2 + 50,
+      scale,
+    })
+
     this.spotlight = new Spotlight({
-      x: Globals.width / 2,
-      y: Globals.height - 110,
+      x: Globals.outerWidth / 2,
+      y: Globals.outerHeight - 110,
+      width: this.ground.sprite.width,
     })
     this.createTaiwan()
     this.doctor = new Doctor({
-      x: Globals.width / 2,
+      x: Globals.outerWidth / 2,
       y: 0,
+      scale,
     })
 
     await wait(1000)
@@ -227,7 +235,7 @@ export class IntroScene {
     await this.playerSay({
       text: '這不是模擬城市的入口嗎？',
       time: 2000,
-      x: Globals.width / 2 - 100,
+      x: Globals.outerWidth / 2 - 100,
     })
   }
 
@@ -244,7 +252,7 @@ export class IntroScene {
           moveDown(this.ground.sprite)
         }
 
-        if (this.taiwan.container.y >= Globals.height / 4 + 100) {
+        if (this.taiwan.container.y >= Globals.outerHeight / 4 + 100) {
           moveUp(this.taiwan.container)
           this.taiwan.container.filters.pop()
         }
@@ -291,8 +299,8 @@ export class IntroScene {
     await this.playerSay({
       text: '!?',
       time: 3000,
-      y: Globals.height - 299,
-      talkerY: Globals.height - 155,
+      y: Globals.outerHeight - 299,
+      talkerY: Globals.outerHeight - 155,
     })
   }
 
@@ -311,7 +319,7 @@ export class IntroScene {
           moveDown(this.doctor.sprite)
           this.doctor.sprite.angle += 4
         }
-        if (this.player.container.x >= Globals.width / 2 - 50) {
+        if (this.player.container.x >= Globals.outerWidth / 2 - 50) {
           moveLeft(this.player.container)
         }
 
@@ -343,15 +351,15 @@ export class IntroScene {
       positionCharactersTicker.add(async () => {
         console.log('positionCharactersTicker')
 
-        if (this.player.container.y <= Globals.height - 110) {
+        if (this.player.container.y <= Globals.outerHeight - 110) {
           this.player.container.x -= 0.8
           this.player.container.y += 2
         }
-        if (this.doctor.sprite.y <= Globals.height - 138) {
+        if (this.doctor.sprite.y <= Globals.outerHeight - 138) {
           this.doctor.sprite.y += 0.5
         }
 
-        if (this.doctor.sprite.x >= Globals.width / 2 - 111) {
+        if (this.doctor.sprite.x >= Globals.outerWidth / 2 - 111) {
           this.doctor.sprite.x -= 2.1
         }
 
@@ -360,9 +368,9 @@ export class IntroScene {
         }
 
         if (
-          this.player.container.y >= Globals.height - 110 &&
-          this.doctor.sprite.y >= Globals.height - 138 &&
-          this.doctor.sprite.x <= Globals.width / 2 - 111
+          this.player.container.y >= Globals.outerHeight - 110 &&
+          this.doctor.sprite.y >= Globals.outerHeight - 138 &&
+          this.doctor.sprite.x <= Globals.outerWidth / 2 - 111
         ) {
           positionCharactersTicker.destroy()
 
@@ -431,8 +439,6 @@ export class IntroScene {
     delete this.doctor
     delete this.player
 
-    const groundGroupDimention = Globals.getGroundDimention()
-
     this.groundGroup = new GroundGroup(groundGroupDimention)
 
     this.groundGroup.container.x = groundGroupDimention.x
@@ -483,10 +489,10 @@ export class IntroScene {
         await this.doctorSay({
           fontSize: 16,
           text: promptArray[this.skipCount - 1],
-          x: Globals.width / 2 - 327 / 2,
-          y: Globals.height - 130 - 182 - 80,
-          talkerX: Globals.width / 2 - 80,
-          talkerY: Globals.height - 130,
+          x: Globals.outerWidth / 2 - 327 / 2,
+          y: Globals.outerHeight - 130 - 182 - 80,
+          talkerX: Globals.outerWidth / 2 - 80,
+          talkerY: Globals.outerHeight - 130,
           width: 327,
           height: 182,
         })
@@ -495,10 +501,10 @@ export class IntroScene {
           {
             fontSize: 16,
             text: '幹！都不玩！',
-            x: Globals.width / 2 - 327 / 2,
-            y: Globals.height - 130 - 182 - 80,
-            talkerX: Globals.width / 2 - 80,
-            talkerY: Globals.height - 130,
+            x: Globals.outerWidth / 2 - 327 / 2,
+            y: Globals.outerHeight - 130 - 182 - 80,
+            talkerX: Globals.outerWidth / 2 - 80,
+            talkerY: Globals.outerHeight - 130,
             width: 327,
             height: 182,
           },
@@ -582,9 +588,9 @@ export class IntroScene {
   }
 
   getGroundPosition() {
-    return (Globals.height * 3) / 4 > Globals.height - 108
-      ? (Globals.height * 3) / 4
-      : Globals.height - 108
+    return (Globals.outerHeight * 3) / 4 > Globals.outerHeight - 108
+      ? (Globals.outerHeight * 3) / 4
+      : Globals.outerHeight - 108
   }
 }
 

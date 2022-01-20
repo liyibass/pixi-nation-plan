@@ -28,7 +28,7 @@ export class Header {
     this.donateSprite.height = DONATE_WIDTH
 
     this.readrSprite.x = PADDING
-    this.donateSprite.x = Globals.width - this.donateSprite.width - PADDING
+    this.donateSprite.x = Globals.outerWidth - this.donateSprite.width - PADDING
     this.readrSprite.y = PADDING
     this.donateSprite.y = PADDING
 

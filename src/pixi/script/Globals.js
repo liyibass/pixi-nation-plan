@@ -3,7 +3,7 @@ const gameStagePadding = 10
 const ratio = 376 / 812
 const height = window.innerHeight
 const maxWidth = height * ratio
-const width = window.innerWidth > maxWidth ? maxWidth : maxWidth
+const width = window.innerWidth > maxWidth ? maxWidth : window.innerWidth
 const OUTER_PADDING = 20
 
 export const Globals = {
@@ -11,8 +11,8 @@ export const Globals = {
   playerType: 'player',
   width: width,
   height: height,
-  WIDTH: width,
-  HEIGHT: height,
+  outerWidth: window.innerWidth,
+  outerHeight: window.innerHeight,
 
   maxContentWidth: width - 2 * OUTER_PADDING,
   contentHeight:
@@ -22,20 +22,25 @@ export const Globals = {
       ? window.innerHeight / 2 - 100
       : 500,
   isSmallScreen: function () {
-    return !!this.width < 1280
+    return !!this.outerWidth < 1280
   },
   GROUND_HEIGHT: 101,
 
   getGroundDimention: function () {
+    const groundScale = 101 / 812
+    const groundRatio = 321 / 101
+
     return {
-      x: this.width / 2,
-      y: this.height / 2 + gameStagePadding + (this.contentHeight / 6) * 5,
+      x: this.outerWidth / 2,
+      y: this.outerHeight / 2 + gameStagePadding + (this.height / 6) * 5,
+      groundHeight: this.height * groundScale,
+      groundWidth: this.height * groundScale * groundRatio,
     }
   },
   getSkipButtonDimention: function () {
     return {
-      x: this.width - 20,
-      y: this.height - 20,
+      x: this.outerWidth - 20,
+      y: this.outerHeight - 20,
     }
   },
   getDoctorDimention: function () {
@@ -57,25 +62,26 @@ export const Globals = {
 
     let shortLength
 
-    if (this.width > this.height / 2) {
+    if (this.outerWidth > this.outerHeight / 2) {
       shortLength =
-        parseInt((this.height / 2 - 2 * gameStagePadding) / BLOCK_WIDTH - 2) *
-        BLOCK_WIDTH
+        parseInt(
+          (this.outerHeight / 2 - 2 * gameStagePadding) / BLOCK_WIDTH - 2
+        ) * BLOCK_WIDTH
 
       return {
-        x: (this.width - shortLength) / 2,
-        y: this.height / 2 - (shortLength + gameStagePadding),
+        x: (this.outerWidth - shortLength) / 2,
+        y: this.outerHeight / 2 - (shortLength + gameStagePadding),
         width: shortLength,
         height: shortLength,
       }
     } else {
       shortLength =
-        parseInt((this.width - gameStagePadding * 2) / BLOCK_WIDTH) *
+        parseInt((this.outerWidth - gameStagePadding * 2) / BLOCK_WIDTH) *
         BLOCK_WIDTH
 
       return {
-        x: (this.width - shortLength) / 2,
-        y: (this.height / 2 - shortLength) / 2,
+        x: (this.outerWidth - shortLength) / 2,
+        y: (this.outerHeight / 2 - shortLength) / 2,
         width: shortLength,
         height: shortLength,
       }
@@ -84,9 +90,9 @@ export const Globals = {
   CONTROLLER_WIDTH: 75,
   getSnakeControllerPosition: function () {
     return {
-      x: this.width / 2 - this.CONTROLLER_WIDTH / 2,
+      x: this.outerWidth / 2 - this.CONTROLLER_WIDTH / 2,
       y:
-        this.height / 2 +
+        this.outerHeight / 2 +
         gameStagePadding +
         this.contentHeight / 6 -
         this.CONTROLLER_WIDTH / 2,
@@ -102,9 +108,9 @@ export const Globals = {
     const containerWidth =
       buttonCount === 2 ? this.BUTTON_CONTAINER_WIDTH : this.BUTTON_WIDTH
     return {
-      x: this.width / 2 - containerWidth / 2,
+      x: this.outerWidth / 2 - containerWidth / 2,
       y:
-        this.height / 2 +
+        this.outerHeight / 2 +
         gameStagePadding +
         (this.contentHeight / 6) * 3 -
         this.BUTTON_CONTAINER_HEIGHT / 2 -
@@ -112,30 +118,30 @@ export const Globals = {
     }
   },
   getSeesawGameStageDimention: function () {
-    let height = Math.floor((this.height * 5) / 8)
+    let height = Math.floor((this.outerHeight * 5) / 8)
     let width =
-      this.width - 2 * gameStagePadding > height
+      this.outerWidth - 2 * gameStagePadding > height
         ? height
-        : this.width - 2 * gameStagePadding
+        : this.outerWidth - 2 * gameStagePadding
 
     return {
-      x: (this.width - width) / 2,
+      x: (this.outerWidth - width) / 2,
       y: 0 + gameStagePadding,
       width: width,
       height: height,
     }
   },
   getRunGameStageDimention: function () {
-    let height = Math.floor((this.height * 5) / 8)
+    let height = Math.floor((this.outerHeight * 5) / 8)
     let width =
-      this.width - 2 * gameStagePadding < 600
-        ? this.width - 2 * gameStagePadding
-        : this.width - 2 * gameStagePadding < 1280
+      this.outerWidth - 2 * gameStagePadding < 600
+        ? this.outerWidth - 2 * gameStagePadding
+        : this.outerWidth - 2 * gameStagePadding < 1280
         ? 700
         : 900
 
     return {
-      x: (this.width - width) / 2,
+      x: (this.outerWidth - width) / 2,
       y: 0 + gameStagePadding,
       width: width,
       height: height,
@@ -143,21 +149,21 @@ export const Globals = {
   },
   getCandyGameStageDimention: function () {
     // const windowWidth =
-    //   this.width - 2 * gameStagePadding < Math.floor((this.height * 5) / 8)
-    //     ? this.width - 2 * gameStagePadding
-    //     : Math.floor((this.height * 5) / 8)
+    //   this.outerWidth - 2 * gameStagePadding < Math.floor((this.outerHeight * 5) / 8)
+    //     ? this.outerWidth - 2 * gameStagePadding
+    //     : Math.floor((this.outerHeight * 5) / 8)
 
     // const candyWidth = Math.floor((windowWidth - 2 * gameStagePadding) / 8)
 
     // const colCount = 8
-    // const rowCount = Math.floor((this.height * 5) / 8 / candyWidth)
+    // const rowCount = Math.floor((this.outerHeight * 5) / 8 / candyWidth)
     // const width = candyWidth * colCount
     // const height = candyWidth * rowCount
 
     // return {
-    //   x: (this.width - width) / 2,
+    //   x: (this.outerWidth - width) / 2,
     //   y: 0 + gameStagePadding * 2 + 28,
-    //   // y: this.height / 5,
+    //   // y: this.outerHeight / 5,
     //   width,
     //   height,
     //   colCount,
@@ -166,9 +172,10 @@ export const Globals = {
     // }
 
     const windowWidth =
-      this.width - 2 * gameStagePadding < Math.floor((this.height * 5) / 8)
-        ? this.width - 2 * gameStagePadding
-        : Math.floor((this.height * 5) / 8)
+      this.outerWidth - 2 * gameStagePadding <
+      Math.floor((this.outerHeight * 5) / 8)
+        ? this.outerWidth - 2 * gameStagePadding
+        : Math.floor((this.outerHeight * 5) / 8)
 
     const candyWidth = Math.floor((windowWidth - 2 * gameStagePadding) / 8)
 
@@ -178,9 +185,9 @@ export const Globals = {
     const height = candyWidth * rowCount
 
     return {
-      x: (this.width - width) / 2,
+      x: (this.outerWidth - width) / 2,
       y: 0 + gameStagePadding * 2 + 28,
-      // y: this.height / 5,
+      // y: this.outerHeight / 5,
       width,
       height,
       colCount,
@@ -193,28 +200,29 @@ export const Globals = {
     const TOP_PADDING = window.innerWidth < 360 ? 10 : 48
     const SIDE_PADDING = window.innerWidth < 360 ? 10 : 25
     const width =
-      this.width - 2 * SIDE_PADDING < Math.floor((this.height * 5) / 8)
-        ? this.width - 2 * SIDE_PADDING
-        : Math.floor((this.height * 5) / 8)
+      this.outerWidth - 2 * SIDE_PADDING <
+      Math.floor((this.outerHeight * 5) / 8)
+        ? this.outerWidth - 2 * SIDE_PADDING
+        : Math.floor((this.outerHeight * 5) / 8)
 
-    const height = this.height - 2 * TOP_PADDING
+    const height = this.outerHeight - 2 * TOP_PADDING
 
     return {
-      x: (this.width - width) / 2,
+      x: (this.outerWidth - width) / 2,
       y: 0 + TOP_PADDING,
       width,
       height,
     }
   },
   getTaiwanDimention: function () {
-    let height = Math.floor((this.height * 3) / 5)
+    let height = Math.floor((this.outerHeight * 3) / 5)
     let width =
-      this.width - 2 * gameStagePadding > height
+      this.outerWidth - 2 * gameStagePadding > height
         ? height
-        : this.width - 2 * gameStagePadding
+        : this.outerWidth - 2 * gameStagePadding
 
     return {
-      x: (this.width - width) / 2,
+      x: (this.outerWidth - width) / 2,
       y: 0 + gameStagePadding,
       width: width,
       height: height,
@@ -225,11 +233,11 @@ export const Globals = {
     const slideshowFontRatio = 14 / 812
     return {
       x: (window.innerWidth - this.maxContentWidth) / 2,
-      y: (window.innerHeight - this.height) / 2,
+      y: (window.innerHeight - this.outerHeight) / 2,
       width: this.maxContentWidth,
-      height: this.height,
+      height: this.outerHeight,
 
-      textY: Math.floor(this.height * textPositionRatio),
+      textY: Math.floor(this.outerHeight * textPositionRatio),
       slideshowFontSize: Math.floor(height * slideshowFontRatio),
       imageWidth: this.maxContentWidth + OUTER_PADDING * 2,
     }

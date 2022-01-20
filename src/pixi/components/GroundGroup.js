@@ -1,10 +1,11 @@
 import * as PIXI from 'pixi.js'
-// import { Globals } from '../script/Globals'
+import { Globals } from '../script/Globals'
 import { Ground } from '../components/Ground'
 import { Doctor } from '../components/Doctor'
 import { Player } from '../components/Player'
 // import { Globals } from '../script/Globals'
 import { GroundGroupIcon } from './GroundGroupIcon'
+const groundGroupDimention = Globals.getGroundDimention()
 
 export class GroundGroup {
   constructor(groundGroupDimention) {
@@ -25,18 +26,18 @@ export class GroundGroup {
       x: 0,
       y: 0,
       isDarkGreen: false,
+      groundGroupDimention,
     })
+    const scale = this.ground.getSpriteScale()
     this.player = new Player({
       x: -83,
       y: 30,
-      // x: playerDimention.x,
-      // y: playerDimention.y,
+      scale,
     })
     this.doctor = new Doctor({
       x: -104,
       y: -35,
-      // x: doctorDimention.x,
-      // y: doctorDimention.y,
+      scale,
     })
 
     this.container.addChild(

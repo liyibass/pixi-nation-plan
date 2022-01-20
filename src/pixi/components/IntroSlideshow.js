@@ -35,12 +35,12 @@ export class IntroSlideshow {
     this.backgroundContainer = new PIXI.Container()
     this.background = new PIXI.Graphics()
     this.background.beginFill(0x5f5f5f, 0.5)
-    this.background.drawRect(0, 0, Globals.width, Globals.height)
+    this.background.drawRect(0, 0, Globals.outerWidth, Globals.outerHeight)
     this.background.endFill()
 
     this.blackBackground = new PIXI.Graphics()
     this.blackBackground.beginFill(0x000000)
-    this.blackBackground.drawRect(0, 0, Globals.width, Globals.height)
+    this.blackBackground.drawRect(0, 0, Globals.outerWidth, Globals.outerHeight)
     this.blackBackground.endFill()
     this.blackBackground.alpha = 0
 
@@ -69,7 +69,7 @@ export class IntroSlideshow {
   _addAllYellow() {
     this.yellow = new PIXI.Graphics()
     this.yellow.beginFill(0xf2de5b)
-    this.yellow.drawRect(0, 0, Globals.width, Globals.height)
+    this.yellow.drawRect(0, 0, Globals.outerWidth, Globals.outerHeight)
     this.yellow.endFill()
     this.yellow.alpha = 0
 
@@ -210,7 +210,7 @@ export class IntroSlideshow {
 
     this.imageContainer.x = introSlideshowDimention.x
     sprite.x = (introSlideshowDimention.width - sprite.width) / 2
-    sprite.y = (Globals.height - sprite.height) / 2
+    sprite.y = (Globals.outerHeight - sprite.height) / 2
 
     if (this.currentFrame < 4) {
       sprite.y -= 70

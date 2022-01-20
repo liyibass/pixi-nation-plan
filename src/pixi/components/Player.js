@@ -13,7 +13,8 @@ function getRunningLoopCount(playerType) {
 }
 
 export class Player {
-  constructor(position = { x: 0, y: 0 }) {
+  constructor(position = { x: 0, y: 0, scale: 1 }) {
+    this.scale = position.scale
     this.playerType = Globals.playerType || 'player'
     this.runningLoopCount = getRunningLoopCount(this.playerType)
     this.container = new PIXI.Container()
@@ -42,6 +43,8 @@ export class Player {
     this.playerSprite = new PIXI.Sprite(texture)
     this.container.addChild(this.playerSprite)
     this.playerSprite.anchor.set(0.5, 1)
+    this.playerSprite.width *= this.scale
+    this.playerSprite.height *= this.scale
   }
 
   createRunningPlayerSprite() {

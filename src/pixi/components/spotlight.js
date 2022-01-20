@@ -3,7 +3,8 @@ import { Globals } from '../script/Globals'
 // import { Globals } from '../script/Globals'
 
 export class Spotlight {
-  constructor(position = { x: 0, y: 0 }) {
+  constructor(position = { x: 0, y: 0, width: 1 }) {
+    this.width = position.width
     this.createSpotlight()
     this.x = position.x
     this.y = position.y
@@ -14,6 +15,7 @@ export class Spotlight {
     const texture = Globals.resources['spotlight']?.texture
     this.sprite = new PIXI.Sprite(texture)
     this.sprite.anchor.set(0.5, 1)
+    this.sprite.width = this.width
   }
 
   setupPosition() {

@@ -10,8 +10,8 @@ import { Globals } from '../script/Globals'
 // import menu from '../stages/menu'
 const WIDTH = window.innerWidth
 const HEIGHT = window.innerHeight
-Globals.width = WIDTH
-Globals.height = HEIGHT
+Globals.outerWidth = WIDTH
+Globals.outerHeight = HEIGHT
 // const WIDTH = 375
 // const HEIGHT = 812
 // const MOBILE_HEIGHT = 812
