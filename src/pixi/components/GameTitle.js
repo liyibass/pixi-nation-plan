@@ -43,6 +43,7 @@ export class GameTitle {
     }
   }
   createTitle() {
+    const liftUpDistance = this.gameName === 'menu' ? 45 : 15
     const title0Texture = new PIXI.Texture(
       Globals.resources[`game${this.getTextureNumber()}_0`]?.texture
     )
@@ -66,20 +67,53 @@ export class GameTitle {
 
     this.title0Sprite.x = (this.bg.width - this.title0Sprite.width) / 2
     this.title1Sprite.x = (this.bg.width - this.title1Sprite.width) / 2
-    this.title0InitY = Globals.height / 2 - this.title0Sprite.height - 15
-    this.title1InitY = Globals.height / 2 - 15
+    this.title0InitY =
+      Globals.height / 2 - this.title0Sprite.height - liftUpDistance
+    this.title1InitY = Globals.height / 2 - liftUpDistance
 
     const offset = this.title1Sprite.height * 2
     this.title0Sprite.y = this.title0InitY - offset
     this.title1Sprite.y = this.title1InitY + offset
 
+    if (this.gameName === 'menu') {
+      const title2Texture = new PIXI.Texture(
+        Globals.resources[`game${this.getTextureNumber()}_2`]?.texture
+      )
+      const readrTexture = new PIXI.Texture(
+        Globals.resources[`game${this.getTextureNumber()}_3`]?.texture
+      )
+
+      this.title2Sprite = new PIXI.Sprite(title2Texture)
+      this.readrSprite = new PIXI.Sprite(readrTexture)
+
+      this.title2Sprite.width *= scale
+      this.title2Sprite.height *= scale
+      this.readrSprite.width *= scale
+      this.readrSprite.height *= scale
+      this.title2Sprite.alpha = 0
+      this.readrSprite.alpha = 0
+
+      this.title2Sprite.x = (this.bg.width - this.title2Sprite.width) / 2
+      this.readrSprite.x = (this.bg.width - this.readrSprite.width) / 2
+      this.title2InitY =
+        Globals.height / 2 - this.title1Sprite.height / 2 + 20 - liftUpDistance
+      this.readrInitY =
+        Globals.height / 2 + this.title1Sprite.height + 100 - liftUpDistance
+
+      const offset2 = 0
+      this.title2Sprite.y = this.title2InitY - offset2
+      this.readrSprite.y = this.readrInitY + offset2
+
+      this.container.addChild(this.title2Sprite, this.readrSprite)
+    }
     this.container.addChild(this.title0Sprite, this.title1Sprite)
   }
 
   async revealTitle() {
     await this.revealBg()
     await this.showTitle()
-
+    await this.showRestTitle()
+    await this.showReadr()
     await this._wait(3000)
     await this.goToDark()
     await this._wait(1000)
@@ -132,6 +166,46 @@ export class GameTitle {
     })
   }
 
+  showRestTitle() {
+    if (this.gameName !== 'menu') return
+
+    this.titleTicker = new PIXI.Ticker()
+
+    return new Promise((resolve) => {
+      this.titleTicker.add(() => {
+        if (this.title2Sprite.alpha < 1) {
+          this.title2Sprite.alpha += 0.02
+        } else {
+          this.title2Sprite.alpha = 1
+          this.titleTicker.stop()
+          resolve()
+        }
+      })
+
+      this.titleTicker.start()
+    })
+  }
+
+  showReadr() {
+    if (this.gameName !== 'menu') return
+
+    this.titleTicker = new PIXI.Ticker()
+
+    return new Promise((resolve) => {
+      this.titleTicker.add(() => {
+        if (this.readrSprite.alpha < 1) {
+          this.readrSprite.alpha += 0.02
+        } else {
+          this.readrSprite.alpha = 1
+          this.titleTicker.stop()
+          resolve()
+        }
+      })
+
+      this.titleTicker.start()
+    })
+  }
+
   goToDark() {
     this.darkTicker = new PIXI.Ticker()
 
@@ -162,6 +236,9 @@ export class GameTitle {
             this.bg.alpha -= 0.005
             this.title0Sprite.alpha -= 0.02
             this.title1Sprite.alpha -= 0.02
+
+            this.title2Sprite.alpha -= 0.02
+            this.readrSprite.alpha -= 0.02
           } else {
             this.darkTicker.stop()
             resolve()
