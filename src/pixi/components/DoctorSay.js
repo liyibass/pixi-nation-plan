@@ -5,6 +5,7 @@ import { DoctorDialogBox } from './DoctorDialogBox'
 import { DoctorShareBox } from './DoctorShareBox'
 import { DoctorModBox } from './DoctorModBox'
 import { SpeakDialog } from './SpeakDialog'
+import { clickUrl } from '../script/Utils'
 
 export class DoctorSay {
   constructor() {
@@ -75,6 +76,7 @@ export class DoctorSay {
         console.log(chosen)
         this.container.removeChildren()
         this.container.removeAllListeners()
+        clickUrl(chosen)
 
         if (chosen === 'cancel') {
           resolve(false)

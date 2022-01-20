@@ -160,3 +160,21 @@ export const deserializeGameStatus = () => {
     }
   }
 }
+
+export const clickUrl = (urlName) => {
+  let url
+
+  switch (urlName) {
+    case 'facebook':
+      url = 'https://www.facebook.com'
+      break
+    case 'line':
+      url = 'https://www.google.com'
+      break
+    default:
+    case 'readr':
+      url = 'https://www.readr.tw/'
+      break
+  }
+  window.open(url, '_blank').focus()
+}
