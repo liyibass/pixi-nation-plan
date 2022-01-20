@@ -271,6 +271,11 @@ export const CityStatusArray = storedStatus?.CityStatusArray || [
       },
       {
         isLocked: true,
+        // unlockGame: 'snake',
+        tabTag: '缺水問題',
+      },
+      {
+        isLocked: true,
         // unlockGame: 'balance',
         tabTag: '人口問題',
       },
@@ -278,11 +283,6 @@ export const CityStatusArray = storedStatus?.CityStatusArray || [
         isLocked: true,
         // unlockGame: 'candy',
         tabTag: '區位問題',
-      },
-      {
-        isLocked: true,
-        // unlockGame: 'snake',
-        tabTag: '缺水問題',
       },
       {
         isLocked: true,

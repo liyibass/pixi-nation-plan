@@ -11,7 +11,7 @@ export class Tip {
       target?.worldTransform || { tx: 0, ty: 0 }
     this.pointerTipContainer = new PIXI.Container()
     this.pointerTipContainer.x = tx
-    this.pointerTipContainer.y = ty - 20
+    this.pointerTipContainer.y = ty - 40
 
     const headTexture = new PIXI.Texture(Globals.resources['tipHead']?.texture)
     const fingerTexture = new PIXI.Texture(

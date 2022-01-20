@@ -959,6 +959,33 @@ export const cityDataArray = [
       },
       {
         // isLocked: true,
+        unlockGame: 'snake',
+        tabTag: '缺水問題',
+        tabContent: [
+          {
+            type: 'hint',
+            content:
+              '人們的日常生活需要水、產業發展需要水、觀光活動也需要水，而受極端氣候影響，水資源日益珍貴，以下是國土計畫審查時在高雄市討論到的水資源問題：',
+          },
+          {
+            type: 'title',
+            content: '豐枯期水資源差異大',
+          },
+
+          {
+            type: 'paragraph',
+            content:
+              '<bold>審查委員：</bold>高雄仰賴高屏溪川流水，水資源非常不穩定，在枯水期供水已經有幾十萬噸的不足，還需外縣市支援供水。',
+          },
+          {
+            type: 'paragraph',
+            content:
+              '<bold>市府：</bold>將推動更換老舊的自來水管線、鼓勵工廠廢水回收，降低水資源浪費，並優先引進低耗水產業。自來水公司於高屏溪沿岸進行溪埔及大泉伏流水開發，預計民國110年完成。',
+          },
+        ],
+      },
+      {
+        // isLocked: true,
         unlockGame: 'balance',
         tabTag: '人口問題',
         tabContent: [
@@ -1010,33 +1037,7 @@ export const cityDataArray = [
           },
         ],
       },
-      {
-        // isLocked: true,
-        unlockGame: 'snake',
-        tabTag: '缺水問題',
-        tabContent: [
-          {
-            type: 'hint',
-            content:
-              '人們的日常生活需要水、產業發展需要水、觀光活動也需要水，而受極端氣候影響，水資源日益珍貴，以下是國土計畫審查時在高雄市討論到的水資源問題：',
-          },
-          {
-            type: 'title',
-            content: '豐枯期水資源差異大',
-          },
 
-          {
-            type: 'paragraph',
-            content:
-              '<bold>審查委員：</bold>高雄仰賴高屏溪川流水，水資源非常不穩定，在枯水期供水已經有幾十萬噸的不足，還需外縣市支援供水。',
-          },
-          {
-            type: 'paragraph',
-            content:
-              '<bold>市府：</bold>將推動更換老舊的自來水管線、鼓勵工廠廢水回收，降低水資源浪費，並優先引進低耗水產業。自來水公司於高屏溪沿岸進行溪埔及大泉伏流水開發，預計民國110年完成。',
-          },
-        ],
-      },
       {
         // isLocked: true,
         unlockGame: 'run',

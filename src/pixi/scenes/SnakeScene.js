@@ -1370,7 +1370,6 @@ export class SnakeScene {
 
   async backToMenu(isGameOver) {
     console.log('go to menu')
-    console.log(this.selectStage)
     this.snakeMoveTicker?.stop?.()
 
     if (this.gameLevel === 2) {
