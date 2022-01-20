@@ -274,6 +274,7 @@ export class RunScene extends Scene {
       await this.doctorSay.newSay(
         '什麼！這麼快就要放棄啦？看在我們有緣，只要把遊戲分享出去，就可以解鎖獨家角色哦！'
       )
+      await this.shareGame()
       this.backToMenu()
     }
   }
@@ -700,19 +701,19 @@ export class RunScene extends Scene {
   async failGameHint() {
     super.failGameHint()
 
-    switch (this.gameLevel) {
-      case 1:
-        await this.doctorSay.newSay(
-          '雖然缺水的問題處理得不順利，但整體表現還算不錯！'
-        )
-        await this.doctorSay.newSay(
-          '恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
-        )
-        await this.doctorSay.newSay(
-          '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
-        )
-        break
-    }
+    // switch (this.gameLevel) {
+    //   case 1:
+    //     await this.doctorSay.newSay(
+    //       '雖然缺水的問題處理得不順利，但整體表現還算不錯！'
+    //     )
+    //     await this.doctorSay.newSay(
+    //       '恭喜你獲得臺東縣的限定卡，可以看到這裡的垃圾問題多麽嚴重，以及縣政府打算如何處理。'
+    //     )
+    //     await this.doctorSay.newSay(
+    //       '你同時也解開了其他擁有垃圾問題的縣市，可以點選有此困擾的縣市，看各地政府如何因應。'
+    //     )
+    //     break
+    // }
   }
 
   async failGameChooseHandler(chosen) {
@@ -729,6 +730,10 @@ export class RunScene extends Scene {
 
       case 'menu':
         this.container.removeChild(this.gameFail.container)
+        await this.doctorSay.newSay(
+          '什麼！這麼快就要放棄啦？看在我們有緣，只要把遊戲分享出去，就可以解鎖獨家角色哦！'
+        )
+        await this.shareGame()
         this.backToMenu(true)
         break
     }

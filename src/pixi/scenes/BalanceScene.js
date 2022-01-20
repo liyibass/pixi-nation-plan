@@ -195,6 +195,7 @@ export class BalanceScene extends Scene {
       await this.doctorSay.newSay(
         '什麼！這麼快就要放棄啦？看在我們有緣，只要把遊戲分享出去，就可以解鎖獨家角色哦！'
       )
+      await this.shareGame()
       this.backToMenu()
     }
   }
@@ -310,6 +311,7 @@ export class BalanceScene extends Scene {
 
       case 'menu':
         this.container.removeChild(this.gameFail.container)
+        await this.shareGame()
         this.backToMenu(true)
         break
     }

@@ -507,6 +507,7 @@ export class SnakeScene {
       await this.doctorSay.newSay(
         '什麼！這麼快就要放棄啦？看在我們有緣，只要把遊戲分享出去，就可以解鎖獨家角色（黑熊、石虎）哦！'
       )
+      await this.shareGame()
       this.backToMenu()
     }
   }
@@ -1060,6 +1061,7 @@ export class SnakeScene {
           await this.doctorSay.newSay(
             '看在我們有緣，只要把遊戲分享出去，就可以解鎖獨家角色（黑熊、石虎）哦！'
           )
+          await this.shareGame()
           this.container.removeChild(gameFail.container)
           this.backToMenu(true)
           break
@@ -1388,6 +1390,17 @@ export class SnakeScene {
           this.resumeGame()
         }
         break
+    }
+  }
+
+  async shareGame() {
+    const isShared = await this.doctorSay.share(
+      '好吧…那只好請你幫我分享，讓我找下一個小幫手～別擔心，我也會送一些小禮物，讓你不會空手而歸，先別急著關掉視窗！'
+    )
+
+    if (isShared) {
+      Status.isShared = true
+      await this.doctorSay.mod('恭喜你解鎖了新人物！', false)
     }
   }
 }

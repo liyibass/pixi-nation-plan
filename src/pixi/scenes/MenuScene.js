@@ -33,7 +33,7 @@ export class MenuScene extends Scene {
     this.createScene()
 
     this.startGameFlow()
-    this.createTestButton()
+    // this.createTestButton()
   }
 
   createTestButton() {
@@ -148,15 +148,6 @@ export class MenuScene extends Scene {
     }
 
     Status.enteredGame = true
-
-    const isShared = await this.doctorSay.share(
-      '好吧…那只好請你幫我分享，讓我找下一個小幫手～別擔心，我也會送一些小禮物，讓你不會空手而歸，先別急著關掉視窗！'
-    )
-
-    if (isShared) {
-      // Status.isShared = true
-      await this.doctorSay.mod('恭喜你解鎖了新人物！')
-    }
 
     await this.checkCityAnimation()
     // check if there's unlocked city

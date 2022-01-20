@@ -72,15 +72,18 @@ export class DoctorSay {
   }
   share(text) {
     return new Promise((resolve) => {
-      const shareHandler = (chosen) => {
+      const shareHandler = async (chosen) => {
         console.log(chosen)
-        this.container.removeChildren()
-        this.container.removeAllListeners()
-        clickUrl(chosen)
 
         if (chosen === 'cancel') {
+          this.container.removeChildren()
+          this.container.removeAllListeners()
           resolve(false)
         } else {
+          clickUrl(chosen)
+          await this._wait(2000)
+          this.container.removeChildren()
+          this.container.removeAllListeners()
           resolve(true)
         }
       }
@@ -104,12 +107,16 @@ export class DoctorSay {
     })
   }
 
-  mod(text) {
+  mod(text, isClickable = true) {
     return new Promise((resolve) => {
       const modHandler = (chosen) => {
         console.log(chosen)
         this.container.removeChildren()
         this.container.removeAllListeners()
+
+        if (!isClickable) {
+          return resolve(false)
+        }
 
         if (chosen === 'cancel') {
           resolve(false)
@@ -186,6 +193,13 @@ export class DoctorSay {
           resolve()
         }, 200)
       })
+    })
+  }
+  _wait(delayTime) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, delayTime)
     })
   }
 }

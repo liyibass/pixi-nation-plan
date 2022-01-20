@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 window.PIXI = PIXI
 // import _ from 'lodash'
 import { Globals } from '../script/Globals'
+import { Status } from '../script/Status'
 import { GroundGroup } from '../components/GroundGroup'
 
 import { DoctorSay } from '../components/DoctorSay'
@@ -425,6 +426,18 @@ export class Scene {
   removeKeyboardListener() {
     if (this.keyboardListenerCallBack) {
       document.removeEventListener('keydown', this.keyboardListenerCallBack)
+    }
+  }
+
+  async shareGame() {
+    // note : snakeScene has same function
+    const isShared = await this.doctorSay.share(
+      '好吧…那只好請你幫我分享，讓我找下一個小幫手～別擔心，我也會送一些小禮物，讓你不會空手而歸，先別急著關掉視窗！'
+    )
+
+    if (isShared) {
+      Status.isShared = true
+      await this.doctorSay.mod('恭喜你解鎖了新人物！', false)
     }
   }
 }
