@@ -54,9 +54,11 @@ export class MainScene {
     this.container.addChild(menuScene.container)
   }
 
-  selectStage(stageName) {
+  selectStage(stageName, prevScene) {
     this.container.removeChildren()
     this.container.removeAllListeners()
+
+    this.clearPrevScene(prevScene)
 
     switch (stageName) {
       case 'snake':
@@ -79,5 +81,10 @@ export class MainScene {
       default:
         break
     }
+  }
+
+  clearPrevScene(prevScene) {
+    // console.log(prevScene)
+    prevScene?.header?.destoryHeader()
   }
 }

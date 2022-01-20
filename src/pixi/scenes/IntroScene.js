@@ -10,6 +10,7 @@ import { DoctorDialogBox } from '../components/DoctorDialogBox'
 import { DoctorSay } from '../components/DoctorSay'
 import { GroundGroup } from '../components/GroundGroup'
 import { IntroSlideshow } from '../components/IntroSlideshow'
+import { Header } from '../components/Header'
 
 const skipButtonDimention = Globals.getSkipButtonDimention()
 
@@ -108,6 +109,7 @@ export class IntroScene {
   async createIntro() {
     this._createBackground()
     this.createStartButton()
+    this._createHeader()
 
     // this.createTaiwan()
     // this.createCard()
@@ -134,6 +136,11 @@ export class IntroScene {
       this.selectStage('menu')
     })
     // this.startButton.on('pointerdown', startFilmScript)
+  }
+
+  _createHeader() {
+    this.header = new Header()
+    this.container.addChild(this.header.container)
   }
 
   async startSlideshow() {

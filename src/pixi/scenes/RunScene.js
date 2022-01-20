@@ -44,6 +44,7 @@ export class RunScene extends Scene {
     // this._addMaskToGameStage()
 
     this._createDoctorSay()
+    this._createHeader()
   }
 
   _createGameStage() {

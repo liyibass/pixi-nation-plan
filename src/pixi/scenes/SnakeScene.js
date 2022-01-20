@@ -67,6 +67,7 @@ export class SnakeScene {
     this._createGameStage()
     this.createSnakeController()
     this._createDoctorSay()
+    this._createHeader()
 
     // this.createChessBoard()
 
@@ -1348,7 +1349,7 @@ export class SnakeScene {
     this.snakeMoveTicker?.stop?.()
 
     if (this.gameLevel === 2) {
-      this.selectStage('menu')
+      this.selectStage('menu', this)
       return
     }
 
@@ -1370,7 +1371,7 @@ export class SnakeScene {
 
     switch (chosen) {
       case 'return':
-        this.selectStage('menu')
+        this.selectStage('menu', this)
         break
 
       default:

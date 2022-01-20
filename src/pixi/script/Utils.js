@@ -175,6 +175,9 @@ export const clickUrl = (urlName) => {
     case 'readr':
       url = 'https://www.readr.tw/'
       break
+    case 'donate':
+      url = 'https://www.readr.tw/donate'
+      break
   }
   window.open(url, '_blank').focus()
 }

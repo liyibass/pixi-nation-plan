@@ -171,6 +171,8 @@ import facebook from '../assets/images/facebook.png'
 import line from '../assets/images/line.png'
 import tigerHead from '../assets/images/tigerHead.png'
 import bearHead from '../assets/images/bearHead.png'
+import readr from '../assets/images/readr.png'
+import donate from '../assets/images/donate.png'
 
 export const LoaderConfig = {
   player,
@@ -346,4 +348,6 @@ export const LoaderConfig = {
   line,
   tigerHead,
   bearHead,
+  readr,
+  donate,
 }

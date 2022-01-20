@@ -11,6 +11,7 @@ import { TwoButtons } from '../components/TwoButtons'
 import { PauseGame } from '../components/PauseGame'
 import { GameFail } from '../components/GameFail'
 import { GameSuccess } from '../components/GameSuccess'
+import { Header } from '../components/Header'
 
 const BLOCK_WIDTH = 16
 
@@ -28,6 +29,11 @@ export class Scene {
 
     // _createDoctorSay must be last one (TODO)
     this._createDoctorSay()
+  }
+
+  _createHeader() {
+    this.header = new Header()
+    this.container.addChild(this.header.container)
   }
 
   _createBackground(color) {
@@ -305,7 +311,7 @@ export class Scene {
     this.sceneTicker?.stop?.()
 
     if (this.gameLevel === 3) {
-      this.selectStage('menu')
+      this.selectStage('menu', this)
       return
     }
 
@@ -327,7 +333,7 @@ export class Scene {
 
     switch (chosen) {
       case 'return':
-        this.selectStage('menu')
+        this.selectStage('menu', this)
         break
 
       default:

@@ -27,6 +27,7 @@ export class BalanceScene extends Scene {
     this._createItems()
 
     this._createDoctorSay()
+    this._createHeader()
   }
 
   _createGameStage() {

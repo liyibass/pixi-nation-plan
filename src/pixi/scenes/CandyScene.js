@@ -37,6 +37,7 @@ export class CandyScene extends Scene {
     this._createGameStage()
     this.createCandyHeader()
     this._createDoctorSay()
+    this._createHeader()
   }
 
   _createGameStage() {

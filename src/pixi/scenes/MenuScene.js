@@ -95,6 +95,7 @@ export class MenuScene extends Scene {
     // this._addMaskToGameStage()
 
     this._createDoctorSay()
+    this._createHeader()
   }
 
   _createItems() {
@@ -299,7 +300,7 @@ export class MenuScene extends Scene {
   startGame(choosedGame) {
     this.taiwan.destroyTaiwan()
 
-    this.selectStage(choosedGame.gameName || choosedGame)
+    this.selectStage(choosedGame.gameName || choosedGame, this)
   }
 
   removePointerHint() {
