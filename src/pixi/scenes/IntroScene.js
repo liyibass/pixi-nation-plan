@@ -96,7 +96,7 @@ export class IntroScene {
   }
 
   startGame(choosedGame) {
-    this.selectStage(choosedGame.gameName)
+    this.selectStage(choosedGame.gameName, true)
   }
 
   createTaiwan() {
@@ -217,14 +217,14 @@ export class IntroScene {
     const blurFilter = new PIXI.filters.BlurFilter()
     this.taiwan.container.filters = [blurFilter]
 
-    await this.playerSay({ text: '!', time: 1000 })
+    await this.playerSay({ text: '發生什麼事？！這裡是哪裡？！', time: 2000 })
   }
 
   async lookAround() {
     console.log('lookAround')
     await this.player.lookAround()
     await this.playerSay({
-      text: '?',
+      text: '這不是模擬城市的入口嗎？',
       time: 2000,
       x: Globals.width / 2 - 100,
     })
@@ -396,6 +396,8 @@ export class IntroScene {
   async doctorExplain() {
     console.log('doctorExplain')
     this.lightUpBackground()
+    this.skipButton.removeAllListeners()
+    this.container.removeChild(this.skipButton)
 
     await this.doctorSay.newSay('新的挑戰者出現啦！歡迎光臨模擬村莊計畫!')
     await this.doctorSay.newSay(

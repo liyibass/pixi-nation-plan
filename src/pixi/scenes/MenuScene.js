@@ -309,13 +309,15 @@ export class MenuScene extends Scene {
     this.groundGroup.activeListener()
   }
 
-  async startGame(choosedGame) {
-    this.gameTitle = new GameTitle(choosedGame)
-    this.container.addChild(this.gameTitle.container)
-    await this.gameTitle.revealTitle()
-    this.container.removeChild(this.gameTitle.container)
-    this.taiwan.destroyTaiwan()
+  async startGame(choosedGame, needToPlayTitleAnimation = true) {
+    if (needToPlayTitleAnimation) {
+      this.gameTitle = new GameTitle(choosedGame)
+      this.container.addChild(this.gameTitle.container)
+      await this.gameTitle.revealTitle()
+      this.container.removeChild(this.gameTitle.container)
+    }
 
+    this.taiwan.destroyTaiwan()
     this.selectStage(choosedGame.gameName || choosedGame, this)
   }
 

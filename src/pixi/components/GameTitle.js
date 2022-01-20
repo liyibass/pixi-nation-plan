@@ -53,13 +53,14 @@ export class GameTitle {
     this.title0Sprite = new PIXI.Sprite(title0Texture)
     this.title1Sprite = new PIXI.Sprite(title1Texture)
 
-    const scale0 = 151 / this.title0Sprite.width
-    const scale1 = 320 / this.title1Sprite.width
+    const MAX_TITLE_WIDTH = Globals.width - 30 > 320 ? 320 : Globals.width - 30
 
-    this.title0Sprite.width *= scale0
-    this.title0Sprite.height *= scale0
-    this.title1Sprite.width *= scale1
-    this.title1Sprite.height *= scale1
+    const scale = MAX_TITLE_WIDTH / this.title1Sprite.width
+
+    this.title0Sprite.width *= scale
+    this.title0Sprite.height *= scale
+    this.title1Sprite.width *= scale
+    this.title1Sprite.height *= scale
     this.title0Sprite.alpha = 0
     this.title1Sprite.alpha = 0
 

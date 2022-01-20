@@ -68,7 +68,11 @@ export class Taiwan {
 
   _chooseGameHandler(choosedGame) {
     // pass choosedGameIndex to parent
-    this.startGame(choosedGame)
+    this.startGame(choosedGame, true)
+  }
+  _chooseGameInCardHandler(choosedGame) {
+    // pass choosedGameIndex to parent
+    this.startGame(choosedGame, false)
   }
 
   setupPosition() {
@@ -77,7 +81,7 @@ export class Taiwan {
   }
 
   createCard() {
-    this.card = new Card(this._chooseGameHandler.bind(this))
+    this.card = new Card(this._chooseGameInCardHandler.bind(this))
     this.container.addChild(this.card.container)
   }
 
