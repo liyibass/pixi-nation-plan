@@ -245,6 +245,7 @@ export class CardTab {
     })
     this.scrollPart.addListener('pointermove', (e) => {
       if (this.isScrolling) {
+        this.removeScrollHint()
         const currentPositionY = e.data.global.y
 
         const scrollSpeed = Math.floor(
@@ -267,13 +268,21 @@ export class CardTab {
   }
 
   createScrollHint() {
-    if (Status.isNeedScrollHint) {
-      Status.isNeedScrollHint = false
+    if (this.tabStatus?.isLocked) return
+    console.log('createScrollHint')
 
-      const tip = new Tip()
-      tip.createScrollHint()
-      console.log(tip.scrollHintContainer)
-      this.page.addChild(tip.scrollHintContainer)
+    if (Status.isNeedScrollHint) {
+      this.tip = new Tip()
+      this.tip.createScrollHint(this.page)
+      this.page.addChild(this.tip.scrollHintContainer)
+    }
+  }
+
+  removeScrollHint() {
+    if (this.tip?.scrollHint) {
+      this.tip?.scrollHint?.stopScrollHintTicker?.()
+      this.page.removeChild(this.tip.scrollHintContainer)
+      Status.isNeedScrollHint = false
     }
   }
 

@@ -26,6 +26,7 @@ export const Status = storedStatus?.Status || {
 
 Status.enteredGame = false
 Status.isShared = false
+Status.isNeedScrollHint = true
 
 export const CityStatusArray = storedStatus?.CityStatusArray || [
   {
