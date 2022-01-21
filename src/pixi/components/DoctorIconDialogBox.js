@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 import { DialogBoxNew } from './DialogBoxNew'
 import { TwoIcons } from './TwoIcons'
@@ -32,38 +33,47 @@ export class DoctorIconDialogBox extends DialogBoxNew {
 
   init() {
     this.createTwoIcons()
-    this.getSize()
-    this.createDialogBox()
-    this.getPosition()
 
     this.createText()
-    this.positionContent()
+    this.createDialogBox()
 
+    this.addText()
+
+    this.getPosition()
+
+    this.positionContent()
     this.createSpin()
   }
 
-  getSize() {
-    const CONTENT_WIDTH = MAX_CONTENT_WIDTH
-    this.text.length * FONT_SIZE < MAX_CONTENT_WIDTH
-
+  createText() {
+    // calculate content width
+    const CONTENT_WIDTH =
+      this.text.length * FONT_SIZE < MAX_CONTENT_WIDTH
+        ? this.text.length * FONT_SIZE
+        : MAX_CONTENT_WIDTH
     const BOX_WIDTH = CONTENT_WIDTH + 2 * PADDING
+    this.boxWidth = BOX_WIDTH
+    this.contentWidth = CONTENT_WIDTH
 
+    // add text
+    this.pixiText = new PIXI.Text(this.text, {
+      align: 'center', // 對齊
+      fontSize: FONT_SIZE,
+      wordWrap: true,
+      breakWords: true,
+      wordWrapWidth: this.contentWidth,
+    })
+
+    // calculate content height
     const CONTENT_HEIGHT =
-      Math.ceil((this.text.length * FONT_SIZE) / CONTENT_WIDTH) * FONT_SIZE +
-      this.twoIcons.container.height +
-      PADDING
+      this.pixiText.height + this.twoIcons.container.height + PADDING
     const BOX_HEIGHT = CONTENT_HEIGHT + 2 * PADDING
 
-    this.boxWidth = BOX_WIDTH
     this.boxHeight = BOX_HEIGHT
-    this.contentWidth = CONTENT_WIDTH
     this.contentHeight = CONTENT_HEIGHT
 
-    if (CONTENT_WIDTH < Globals.width / 2) {
-      this.dialogBoxPosition = 'side'
-    } else {
-      this.dialogBoxPosition = 'center'
-    }
+    // calculate dialog position
+    this.dialogBoxPosition = 'center'
   }
 
   positionContent() {
