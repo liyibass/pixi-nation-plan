@@ -30,32 +30,43 @@ export class DialogBoxNew {
   }
 
   init() {
-    this.getSize()
+    this.createText()
     this.createDialogBox()
+    this.addText()
+
     this.getPosition()
 
-    this.createText()
     this.positionContent()
     this.createSpin()
   }
 
-  getSize() {
+  createText() {
+    // calculate content width
     const CONTENT_WIDTH =
       this.text.length * FONT_SIZE < MAX_CONTENT_WIDTH
         ? this.text.length * FONT_SIZE
         : MAX_CONTENT_WIDTH
-
     const BOX_WIDTH = CONTENT_WIDTH + 2 * PADDING
+    this.boxWidth = BOX_WIDTH
+    this.contentWidth = CONTENT_WIDTH
 
-    const CONTENT_HEIGHT =
-      Math.ceil((this.text.length * FONT_SIZE) / CONTENT_WIDTH) * FONT_SIZE
+    // add text
+    this.pixiText = new PIXI.Text(this.text, {
+      align: 'center', // 對齊
+      fontSize: FONT_SIZE,
+      wordWrap: true,
+      breakWords: true,
+      wordWrapWidth: this.contentWidth,
+    })
+
+    // calculate content height
+    const CONTENT_HEIGHT = this.pixiText.height
     const BOX_HEIGHT = CONTENT_HEIGHT + 2 * PADDING
 
-    this.boxWidth = BOX_WIDTH
     this.boxHeight = BOX_HEIGHT
-    this.contentWidth = CONTENT_WIDTH
     this.contentHeight = CONTENT_HEIGHT
 
+    // calculate dialog position
     if (CONTENT_WIDTH < (MAX_CONTENT_WIDTH * 2) / 3) {
       this.dialogBoxPosition = 'side'
     } else {
@@ -86,15 +97,7 @@ export class DialogBoxNew {
     this.container.addChild(this.roundRect)
   }
 
-  createText() {
-    this.pixiText = new PIXI.Text(this.text, {
-      align: 'center', // 對齊
-      fontSize: FONT_SIZE,
-      wordWrap: true,
-      breakWords: true,
-      wordWrapWidth: this.contentWidth,
-    })
-
+  addText() {
     this.container.addChild(this.pixiText)
   }
 

@@ -33,7 +33,7 @@ export class MenuScene extends Scene {
 
     this.createScene()
     // this.doctorSay.say('啊')
-    // this.startGameFlow()
+    this.startGameFlow()
     // this.createTestButton()
   }
 
