@@ -94,7 +94,7 @@ export class WeightCard {
 
     this.positionTicker.add(() => {
       if (this.x > this.targetX) {
-        this.x -= 1
+        this.x -= 2
 
         if (!this.isDragging) {
           this.container.x = this.x
