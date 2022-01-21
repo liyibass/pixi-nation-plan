@@ -28,6 +28,7 @@ export class DoctorSay {
       talkerY: this.doctorDimention.y,
     })
     dialogBox.init()
+
     this.container.addChild(dialogBox.container)
 
     return new Promise((resolve) => {
@@ -116,7 +117,7 @@ export class DoctorSay {
 
       const dialogBox = new DoctorModBoxGroup({
         text,
-        x: (Globals.width - width) / 2,
+        x: (Globals.outerWidth - width) / 2,
         y: this.doctorDimention.y - height - 70,
         talkerX: this.doctorDimention.x + 30,
         talkerY: this.doctorDimention.y,

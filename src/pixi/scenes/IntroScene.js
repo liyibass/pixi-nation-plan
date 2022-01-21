@@ -515,27 +515,13 @@ export class IntroScene {
     }
   }
 
-  async playerSay({
-    text,
-    fontSize,
-    time = 0,
-    x,
-    y,
-    talkerX,
-    talkerY,
-    width,
-    height,
-  }) {
+  async playerSay({ text, time = 0, talkerX, talkerY }) {
     this.playerDialogBox = new DialogBoxNew({
-      x,
-      y,
       talkerX,
       talkerY,
-      width,
-      height,
       text,
-      fontSize,
     })
+    console.log(this.playerDialogBox)
     this.container.addChild(this.playerDialogBox.container)
 
     if (time) {

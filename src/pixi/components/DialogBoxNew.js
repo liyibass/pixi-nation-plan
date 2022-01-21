@@ -5,18 +5,18 @@ const PADDING = 20
 const MARGING = 20
 const MAX_BOX_WIDTH = 350
 const MAX_CONTENT_WIDTH =
-  Globals.width < MAX_BOX_WIDTH
-    ? Globals.width - 2 * MARGING
+  Globals.outerWidth < MAX_BOX_WIDTH
+    ? Globals.outerWidth - 2 * MARGING
     : MAX_BOX_WIDTH - 2 * MARGING
-const FONT_SIZE = Globals.width < 500 ? 14 : 16
+const FONT_SIZE = Globals.outerWidth < 500 ? 14 : 16
 const PING_LENGTH = 30
 const DOCTOR_HEIGHT = 66
 
 export class DialogBoxNew {
   constructor({
     text = '',
-    talkerX = Globals.width / 2,
-    talkerY = Globals.height / 2,
+    talkerX = Globals.outerWidth / 2,
+    talkerY = Globals.outerHeight / 2,
   }) {
     this.container = new PIXI.Container()
     this.container.buttonMode = true
@@ -66,7 +66,7 @@ export class DialogBoxNew {
     if (this.dialogBoxPosition === 'side') {
       this.x = this.talkerX
     } else {
-      this.x = (Globals.width - this.boxWidth) / 2
+      this.x = (Globals.outerWidth - this.boxWidth) / 2
     }
     this.y = this.talkerY - PING_LENGTH - DOCTOR_HEIGHT / 2 - this.boxHeight
 
