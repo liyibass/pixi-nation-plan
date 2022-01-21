@@ -161,6 +161,7 @@ export class IntroScene {
       isDarkGreen: true,
       groundGroupDimention,
     })
+
     const scale = this.ground.getSpriteScale()
 
     this.player = new Player({
@@ -521,7 +522,7 @@ export class IntroScene {
       talkerY,
       text,
     })
-    console.log(this.playerDialogBox)
+    this.playerDialogBox.init()
     this.container.addChild(this.playerDialogBox.container)
 
     if (time) {

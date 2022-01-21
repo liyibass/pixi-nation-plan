@@ -33,7 +33,7 @@ export class Ground {
     }
     this.sprite = new PIXI.Sprite(texture)
 
-    this.scale = this.sprite.width / this.groundGroupDimention.groundWidth
+    this.scale = this.groundGroupDimention.groundWidth / this.sprite.width
     this.sprite.width = this.groundGroupDimention?.groundWidth
     this.sprite.height = this.groundGroupDimention?.groundHeight
 

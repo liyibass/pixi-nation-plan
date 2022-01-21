@@ -32,8 +32,8 @@ export class MenuScene extends Scene {
     this.isNeedTutorial = Status.isNeedTutorial
 
     this.createScene()
-    // this.doctorSay.hint('啊', 100000)
-    this.startGameFlow()
+    // this.doctorSay.say('啊')
+    // this.startGameFlow()
     // this.createTestButton()
   }
 
@@ -170,7 +170,7 @@ export class MenuScene extends Scene {
 
   async startTutorial() {
     Status.isNeedTutorial = false
-    this.groundGroup.deactiveListener()
+    this.groundGroup?.deactiveListener?.()
     this.tip = new Tip()
 
     await this.doctorSay.newSay('新的挑戰者出現啦！歡迎光臨模擬村莊計畫')

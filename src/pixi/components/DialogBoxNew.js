@@ -20,6 +20,7 @@ export class DialogBoxNew {
   }) {
     this.container = new PIXI.Container()
     this.container.buttonMode = true
+    this.container.name = 'DialogBoxNew'
 
     this.talkerX = talkerX
     this.talkerY = talkerY

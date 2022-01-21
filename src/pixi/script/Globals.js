@@ -32,7 +32,7 @@ export const Globals = {
 
     return {
       x: this.outerWidth / 2,
-      y: this.outerHeight / 2 + gameStagePadding + (this.height / 6) * 5,
+      y: (709.5 / 812) * this.height,
       groundHeight: this.height * groundScale,
       groundWidth: this.height * groundScale * groundRatio,
     }
