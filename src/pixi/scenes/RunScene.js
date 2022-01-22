@@ -143,6 +143,7 @@ export class RunScene extends Scene {
     this.player = new Player({
       x: 0,
       y: this.gameStageHeight,
+      scale: Globals.textureScale,
     })
     this.gameStage.addChild(this.player.container)
     this.player.initStandHeight = this.player.container.y

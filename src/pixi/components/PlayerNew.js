@@ -50,6 +50,7 @@ export class Player {
     Globals.playerWidth = this.playerSprite.width
     Globals.playerHeight = this.playerSprite.height
     Globals.textureScale = this.scale
+    this.spriteHeight = this.playerSprite.height
   }
 
   createRunningPlayerSprite() {
@@ -59,6 +60,11 @@ export class Player {
       textureArray.push(texture)
     }
     this.runningPlayerSprite = new PIXI.AnimatedSprite(textureArray)
+
+    const heightScale = this.spriteHeight / this.runningPlayerSprite.height
+    this.runningPlayerSprite.width *= heightScale
+    this.runningPlayerSprite.height *= heightScale
+
     this.runningPlayerSprite.anchor.set(0.5, 1)
     this.runningPlayerSprite.animationSpeed = 0.2
 
@@ -179,6 +185,9 @@ export class Player {
   }
 
   jumpIn(groundPlayer) {
+    console.log(groundPlayer)
+    console.log(groundPlayer.container.getGlobalPosition())
+    console.log(this.container.getGlobalPosition())
     const { x: groundX, y: groundY } =
       groundPlayer.container.getGlobalPosition()
     const { x: playerX, y: playerY } = this.container.getGlobalPosition()
