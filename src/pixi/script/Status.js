@@ -4,7 +4,7 @@ const storedStatus = deserializeGameStatus()
 
 export const Status = storedStatus?.Status || {
   isNeedTutorial: true,
-  isNeedScrollHint: true,
+
   isShared: false,
   snake: {
     gameLevel: 0,
@@ -26,7 +26,6 @@ export const Status = storedStatus?.Status || {
 
 Status.enteredGame = false
 Status.isShared = false
-Status.isNeedScrollHint = true
 
 export const CityStatusArray = storedStatus?.CityStatusArray || [
   {

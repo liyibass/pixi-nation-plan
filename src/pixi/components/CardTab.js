@@ -1,16 +1,15 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
-import { Status, CityStatusArray } from '../script/Status'
+import { CityStatusArray } from '../script/Status'
 import { Tip } from './Tip'
 import { UnlockButton } from './UnlockButton'
 
 import MultiStyleText from 'pixi-multistyle-text'
 
-const TAB_HEIGHT = 34
-const TAB_WIDTH = 80
-const CONTENT_PADDING = 12
-
 const cardDimention = Globals.getCardDimention()
+const TAB_HEIGHT = cardDimention.contentFontSize * 3
+const TAB_WIDTH = cardDimention.contentFontSize * 5
+const CONTENT_PADDING = cardDimention.contentFontSize
 
 export class CardTab {
   constructor(
@@ -60,8 +59,13 @@ export class CardTab {
     this.page.beginFill(getTabColor.bind(this)(this.tabIndex))
     this.page.drawRoundedRect(0, 0, cardDimention.width, this.contentHeight, 10)
     this.page.endFill()
-
     this.page.y = TAB_HEIGHT
+
+    const color = new PIXI.Graphics()
+    color.beginFill(getTabColor.bind(this)(this.tabIndex))
+    color.drawRect(0, 0, cardDimention.width, this.contentHeight - 15)
+    color.endFill()
+    color.y = TAB_HEIGHT
 
     // page shadow
     const shadow = new PIXI.Graphics()
@@ -77,7 +81,7 @@ export class CardTab {
     shadow.filters = [new PIXI.filters.BlurFilter(7)]
     shadow.y = TAB_HEIGHT - 6
 
-    this.container.addChild(shadow, this.page)
+    this.container.addChild(shadow, color, this.page)
 
     // scrollable this.content part
     this.scrollPart = new PIXI.Container()
@@ -111,14 +115,14 @@ export class CardTab {
     const sideShadow = new PIXI.Graphics()
     sideShadow.beginFill(0x000000, 0.2)
     // +10 is for hiding bottom rounded rect curve
-    sideShadow.drawRoundedRect(0, 0, TAB_WIDTH + 12, TAB_HEIGHT + 10, 10)
+    sideShadow.drawRoundedRect(0, 0, TAB_WIDTH + 12, TAB_HEIGHT + 0, 10)
     sideShadow.endFill()
     sideShadow.filters = [new PIXI.filters.BlurFilter(5)]
 
     const tabShadow = new PIXI.Graphics()
     tabShadow.beginFill(this.isInfoCard ? 0x999999 : 0xa75d31)
     // +10 is for hiding bottom rounded rect curve
-    tabShadow.drawRoundedRect(0, 0, TAB_WIDTH + 2, TAB_HEIGHT + 10, 10)
+    tabShadow.drawRoundedRect(0, 0, TAB_WIDTH + 2, TAB_HEIGHT + 0, 10)
     tabShadow.endFill()
 
     this.tab = new PIXI.Graphics()
@@ -128,11 +132,11 @@ export class CardTab {
 
     const poundSign = new PIXI.Text(`#`, {
       fill: ['0xffffff'],
-      fontSize: 20,
+      fontSize: cardDimention.contentFontSize,
     })
     this.tabWording = new PIXI.Text(`${this.tabData.tabTag}`, {
       fill: ['0xffffff'],
-      fontSize: 14,
+      fontSize: cardDimention.contentFontSize,
       wordWrap: true,
       breakWords: true,
       wordWrapWidth: 28,
@@ -182,7 +186,7 @@ export class CardTab {
       const paragraphText = new MultiStyleText(getStyledContent(paragraph), {
         default: {
           fill: ['0xffffff'],
-          fontSize: 14,
+          fontSize: cardDimention.contentFontSize,
           fontWeight: 'normal',
           wordWrap: true,
           breakWords: true,
@@ -190,17 +194,17 @@ export class CardTab {
         },
         bold: {
           fill: ['0xffffff'],
-          fontSize: 14,
+          fontSize: cardDimention.contentFontSize,
           fontWeight: 900,
         },
         title: {
           fill: ['0xffffff'],
-          fontSize: 20,
+          fontSize: cardDimention.subTitleFontSize,
           fontWeight: 900,
         },
         hint: {
           fill: ['0x813F2B'],
-          fontSize: 14,
+          fontSize: cardDimention.contentFontSize,
           fontWeight: 900,
         },
       })
@@ -208,6 +212,12 @@ export class CardTab {
       contentHeight += paragraphText.height + CONTENT_PADDING
 
       this.content.addChild(paragraphText)
+
+      if (contentHeight > this.contentHeight) {
+        this.needScroll = true
+      } else {
+        this.needScroll = false
+      }
 
       // if paragraph is not last one, add white division line
       if (
@@ -268,10 +278,7 @@ export class CardTab {
   }
 
   createScrollHint() {
-    if (this.tabStatus?.isLocked) return
-    console.log('createScrollHint')
-
-    if (Status.isNeedScrollHint) {
+    if (this.needScroll && !this.tabStatus?.isLocked) {
       this.tip = new Tip()
       this.tip.createScrollHint(this.page)
       this.page.addChild(this.tip.scrollHintContainer)
@@ -282,7 +289,6 @@ export class CardTab {
     if (this.tip?.scrollHint) {
       this.tip?.scrollHint?.stopScrollHintTicker?.()
       this.page.removeChild(this.tip.scrollHintContainer)
-      Status.isNeedScrollHint = false
     }
   }
 
@@ -354,10 +360,6 @@ export class CardTab {
   }
 
   updateTabOrder(callback) {
-    if (!Status.isNeedScrollHint) {
-      this.removeScrollHint()
-    }
-
     // set rest tabs in order
     const exclusiveTabs = []
     this.cardFolder.tabArray.forEach((cardTab) => {

@@ -75,10 +75,7 @@ export class CardHeader {
     // title
     this.titleText = new PIXI.Text(this._getCityName(this.cityIndex), {
       fill: ['0xffffff'],
-      fontSize:
-        CARD_HEADER_LAND_CITY_HEIGHT - 6 * 2 > 40
-          ? 40
-          : CARD_HEADER_LAND_CITY_HEIGHT - 6 * 2,
+      fontSize: cardDimention.titleFontSize,
       wordWrap: true,
       breakWords: !this.isInfoCard,
       wordWrapWidth: 190,

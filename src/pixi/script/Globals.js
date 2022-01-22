@@ -207,21 +207,36 @@ export const Globals = {
   },
 
   getCardDimention: function () {
-    const TOP_PADDING = window.innerWidth < 360 ? 10 : 48
-    const SIDE_PADDING = window.innerWidth < 360 ? 10 : 25
+    // const TOP_PADDING = window.innerWidth < 360 ? 10 : 48
+    // const SIDE_PADDING = window.innerWidth < 360 ? 10 : 25
+    // const width =
+    //   this.outerWidth - 2 * SIDE_PADDING <
+    //   Math.floor((this.outerHeight * 5) / 8)
+    //     ? this.outerWidth - 2 * SIDE_PADDING
+    //     : Math.floor((this.outerHeight * 5) / 8)
+
+    // const height = this.outerHeight - 2 * TOP_PADDING
+    const sidePadding = 25
+
+    const heightRatio = 724 / 812
+    const height = Math.floor(this.outerHeight * heightRatio)
+    const maxWidth = (height * 327) / 724
     const width =
-      this.outerWidth - 2 * SIDE_PADDING <
-      Math.floor((this.outerHeight * 5) / 8)
-        ? this.outerWidth - 2 * SIDE_PADDING
-        : Math.floor((this.outerHeight * 5) / 8)
+      this.outerWidth - sidePadding * 2 > maxWidth
+        ? maxWidth
+        : this.outerWidth - sidePadding * 2
 
-    const height = this.outerHeight - 2 * TOP_PADDING
-
+    const titleFontRatio = 36 / 812
+    const subTitleFontRatio = 26 / 812
+    const contentFontRatio = 20 / 812
     return {
       x: (this.outerWidth - width) / 2,
-      y: 0 + TOP_PADDING,
+      y: (this.outerHeight - height) / 2,
       width,
       height,
+      titleFontSize: Math.floor(height * titleFontRatio),
+      subTitleFontSize: Math.floor(height * subTitleFontRatio),
+      contentFontSize: Math.floor(height * contentFontRatio),
     }
   },
   getTaiwanDimention: function () {
