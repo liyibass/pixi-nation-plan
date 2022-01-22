@@ -2,9 +2,6 @@ import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 // import { Globals } from '../script/Globals'
 
-const DIALOG_WIDTH = window.innerWidth
-const DIALOG_HEIGHT = (window.innerHeight * 2) / 5 - 50
-
 export class SpeakDialog {
   constructor(text) {
     this.container = new PIXI.Container()
@@ -22,7 +19,7 @@ export class SpeakDialog {
   _createBackground() {
     const bg = new PIXI.Graphics()
     bg.beginFill(0x000000)
-    bg.drawRect(0, 0, Globals.width, Globals.height)
+    bg.drawRect(0, 0, Globals.outerWidth, Globals.outerHeight)
     bg.endFill()
     bg.alpha = 0.7
 
@@ -35,7 +32,12 @@ export class SpeakDialog {
     // create white bg
     this.whiteBackground = new PIXI.Graphics()
     this.whiteBackground.beginFill(0xffffff)
-    this.whiteBackground.drawRect(0, 0, DIALOG_WIDTH, DIALOG_HEIGHT)
+    this.whiteBackground.drawRect(
+      0,
+      0,
+      Globals.dialogWidth,
+      Globals.dialogHeight
+    )
     this.whiteBackground.endFill()
 
     // this.whiteBackground.alpha = 0.8
@@ -63,7 +65,7 @@ export class SpeakDialog {
     this.speakDialogGroup.addChild(this.whiteBackground)
 
     // create text
-    const fontSize = Globals.sayFontSize
+    const fontSize = Globals.dialogFontSize
     // const textWidth = this.text.length*fontSize
     const contentWidth =
       Globals.width - 2 * 16 > Globals.maxContentWidth

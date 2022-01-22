@@ -6,6 +6,12 @@ const maxWidth = height * ratio
 const width = window.innerWidth > maxWidth ? maxWidth : window.innerWidth
 const OUTER_PADDING = 20
 
+const dialogRatio = 165 / 812
+const dialogFontRatio = 16 / 812
+const dialogWidth = window.innerWidth
+const dialogHeight = Math.floor(window.innerHeight * dialogRatio)
+const dialogFontSize = Math.floor(window.innerHeight * dialogFontRatio)
+
 export const Globals = {
   resources: {},
   playerType: 'player',
@@ -13,6 +19,9 @@ export const Globals = {
   height: height,
   outerWidth: window.innerWidth,
   outerHeight: window.innerHeight,
+  dialogWidth,
+  dialogHeight,
+  dialogFontSize,
 
   maxContentWidth: width - 2 * OUTER_PADDING,
   contentHeight:
