@@ -4,6 +4,8 @@ import { Status, CityStatusArray } from '../script/Status'
 import { InfoCard } from './InfoCard'
 
 // const groundDimention = Globals.getGroundDimention()
+const fontRatio = window.innerHeight / 812
+const fontSize = Math.floor(16 * fontRatio)
 
 export class GroundGroupIcon {
   constructor(iconIndex) {
@@ -24,7 +26,9 @@ export class GroundGroupIcon {
       Globals.resources[`icon_${this.iconIndex}`].texture
     )
     this.iconSprite = new PIXI.Sprite(texture)
-    this.iconSprite.pivot.set(this.iconSprite.width / 2, this.iconSprite.height)
+    this.iconSprite.width *= Globals.textureScale
+    this.iconSprite.height *= Globals.textureScale
+    this.iconSprite.anchor.set(0.5, 1)
     this.container.addChild(this.iconSprite)
   }
 
@@ -35,12 +39,12 @@ export class GroundGroupIcon {
     if (this.iconIndex !== 2) {
       this.currentCountText = new PIXI.Text(`${this.currentCount}`, {
         fill: ['0xffffff'],
-        fontSize: 15,
+        fontSize,
       })
 
       this.totalCountText = new PIXI.Text(`/${this.totalCount}`, {
         fill: ['0xffffff'],
-        fontSize: 15,
+        fontSize,
       })
       this.totalCountText.alpha = 0.5
       this.totalCountText.x = this.currentCountText.width
@@ -49,7 +53,7 @@ export class GroundGroupIcon {
     } else {
       const title = new PIXI.Text(`國土計畫`, {
         fill: ['0xffffff'],
-        fontSize: 15,
+        fontSize,
       })
 
       textContainer.addChild(title)

@@ -49,6 +49,7 @@ export class Player {
     // save character's size to Globals
     Globals.playerWidth = this.playerSprite.width
     Globals.playerHeight = this.playerSprite.height
+    Globals.textureScale = this.scale
   }
 
   createRunningPlayerSprite() {

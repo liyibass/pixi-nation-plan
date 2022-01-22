@@ -13,6 +13,7 @@ const dialogHeight = Math.floor(window.innerHeight * dialogRatio)
 const dialogFontSize = Math.floor(window.innerHeight * dialogFontRatio)
 
 export const Globals = {
+  textureScale: 1,
   resources: {},
   playerType: 'player',
   width: width,

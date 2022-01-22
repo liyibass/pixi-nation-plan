@@ -241,7 +241,7 @@ export class MenuScene extends Scene {
     await this.doctorSay.newSay(
       '每張卡片都和村莊的特色息息相關。你可以點選有興趣的村莊～'
     )
-    await this.doctorSay.hint('你可以從卡片上的資訊深入認識每一個村莊～', 3000)
+    await this.doctorSay.hint('你可以從卡片上的資訊深入認識每一個村莊', 3000)
 
     // hint kaoshiung
     this.tip.createPointerTip(this.taiwan.kaoshiung)

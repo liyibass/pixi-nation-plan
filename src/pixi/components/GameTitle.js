@@ -43,7 +43,7 @@ export class GameTitle {
     }
   }
   createTitle() {
-    const liftUpDistance = this.gameName === 'menu' ? 45 : 15
+    const liftUpDistance = this.gameName === 'menu' ? 65 : 15
     const title0Texture = new PIXI.Texture(
       Globals.resources[`game${this.getTextureNumber()}_0`]?.texture
     )
