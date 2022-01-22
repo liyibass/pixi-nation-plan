@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import { Player } from '../components/Player'
+import { Player } from '../components/PlayerNew'
 import { City } from '../components/City'
 // window.PIXI = PIXI
 

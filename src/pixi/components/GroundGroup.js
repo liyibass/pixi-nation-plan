@@ -1,8 +1,8 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 import { Ground } from './Ground'
-import { Doctor } from './Doctor'
-import { Player } from '../components/Player'
+import { Doctor } from './DoctorNew'
+import { Player } from './PlayerNew'
 // import { Globals } from '../script/Globals'
 import { GroundGroupIcon } from './GroundGroupIcon'
 const groundGroupDimention = Globals.getGroundDimention()
