@@ -221,10 +221,13 @@ export const Globals = {
     const heightRatio = 724 / 812
     const height = Math.floor(this.outerHeight * heightRatio)
     const maxWidth = (height * 327) / 724
+    // const maxWidth = (height * 400) / 724
     const width =
       this.outerWidth - sidePadding * 2 > maxWidth
         ? maxWidth
         : this.outerWidth - sidePadding * 2
+
+    const cardHeaderRatio = 188 / 812
 
     const titleFontRatio = 36 / 812
     const subTitleFontRatio = 26 / 812
@@ -234,6 +237,7 @@ export const Globals = {
       y: (this.outerHeight - height) / 2,
       width,
       height,
+      cardHearderHeight: Math.floor(this.outerHeight * cardHeaderRatio),
       titleFontSize: Math.floor(height * titleFontRatio),
       subTitleFontSize: Math.floor(height * subTitleFontRatio),
       contentFontSize: Math.floor(height * contentFontRatio),

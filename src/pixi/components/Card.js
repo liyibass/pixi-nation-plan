@@ -18,8 +18,8 @@ export class Card {
 
     this.container = new PIXI.Container()
     this.container.name = 'card'
-    this.container.x = cardDimention.x
-    this.container.y = cardDimention.y
+    // this.container.x = cardDimention.x
+    // this.container.y = cardDimention.y
 
     this.landCityIcon = new PIXI.Container()
 
@@ -28,9 +28,33 @@ export class Card {
   }
 
   createCard() {
+    this.createBackgroundLayer()
     this.createBody()
+    this.createOverallMask()
     this.createHeader()
     this.createTab()
+  }
+
+  createBackgroundLayer() {
+    // cardDimention
+    // background
+    this.backgroundLayer = new PIXI.Graphics()
+    this.backgroundLayer.beginFill(0xff0000)
+    this.backgroundLayer.drawRect(0, 0, window.innerWidth, window.innerHeight)
+    this.backgroundLayer.endFill()
+
+    this.backgroundLayer.buttonMode = true
+    this.backgroundLayer.interactive = true
+    this.backgroundLayer.alpha = 0
+
+    this.container.addChild(this.backgroundLayer)
+
+    this.cardContainer = new PIXI.Container()
+    this.cardContainer.x = cardDimention.x
+    this.cardContainer.y = cardDimention.y
+    this.cardContainer.buttonMode = true
+    this.cardContainer.interactive = true
+    this.container.addChild(this.cardContainer)
   }
 
   createBody() {
@@ -46,15 +70,31 @@ export class Card {
     )
     cardBackground.endFill()
 
-    this.container.addChild(cardBackground)
+    this.cardContainer.addChild(cardBackground)
 
     // exit button
     const buttonTexture = new PIXI.Texture(Globals.resources['exit']?.texture)
     this.exitButtonSprite = new PIXI.Sprite(buttonTexture)
-    this.container.addChild(this.exitButtonSprite)
+    this.cardContainer.addChild(this.exitButtonSprite)
     this.exitButtonSprite.x =
       cardDimention.width - this.exitButtonSprite.width - CARD_MARGIN
     this.exitButtonSprite.y = CARD_MARGIN
+  }
+
+  createOverallMask() {
+    const overallMask = new PIXI.Graphics()
+    overallMask.beginFill(0xcc8053)
+    overallMask.drawRoundedRect(
+      0,
+      0,
+      cardDimention.width,
+      cardDimention.height,
+      21
+    )
+    overallMask.endFill()
+
+    this.cardContainer.mask = overallMask
+    this.cardContainer.addChild(overallMask)
   }
 
   stopAllProcess() {
@@ -64,7 +104,7 @@ export class Card {
 
   createHeader() {
     this.header = new CardHeader(0, this._changeCityHandler.bind(this))
-    this.container.addChild(this.header.container)
+    this.cardContainer.addChild(this.header.container)
   }
 
   _changeCityHandler(choose) {
@@ -94,7 +134,7 @@ export class Card {
       false,
       this.chooseGameHandler
     )
-    this.container.addChild(this.cardFolder.container)
+    this.cardContainer.addChild(this.cardFolder.container)
     this.cardFolder.container.y = headerHeight + margin
   }
 
@@ -145,6 +185,10 @@ export class Card {
     this.container.visible = true
     this.container.interactive = true
 
+    this.backgroundLayer.addListener('pointerdown', () => {
+      this.hideCardInfo()
+    })
+
     this.header.updateCity(selectedCity.cityIndex)
     this.cardFolder.updateCity(
       cityDataArray.find(
@@ -155,6 +199,7 @@ export class Card {
 
   hideCardInfo() {
     this.container.visible = false
+    this.backgroundLayer.removeAllListeners()
   }
 
   activeCardExitButton() {

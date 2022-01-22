@@ -5,10 +5,7 @@ const cardDimention = Globals.getCardDimention()
 
 const CARD_MARGIN = 12
 const CARD_CONTENT_WIDTH = cardDimention.width - 2 * CARD_MARGIN
-const CARD_HEADER_HEIGHT =
-  window.innerWidth < 500
-    ? Math.floor(cardDimention.height * 0.15)
-    : Math.floor(cardDimention.height * 0.3)
+const CARD_HEADER_HEIGHT = cardDimention.cardHearderHeight
 const CARD_HEADER_LAND_CITY_HEIGHT = CARD_HEADER_HEIGHT * 0.5
 // const CARD_HEADER_TITLE_HEIGHT = CARD_HEADER_HEIGHT * 0.5
 
@@ -49,9 +46,10 @@ export class CardHeader {
       Globals.resources[`land_${this.cityIndex}_1`]?.texture
     )
     const landCitySprite = new PIXI.Sprite(landCityTexture)
-    const ratio = CARD_HEADER_LAND_CITY_HEIGHT / landCitySprite.height
-    landCitySprite.width *= ratio
-    landCitySprite.height *= ratio
+    const heightRatio = CARD_HEADER_LAND_CITY_HEIGHT / landCitySprite.height
+
+    landCitySprite.width *= heightRatio
+    landCitySprite.height *= heightRatio
 
     this.landCityIconContainer.removeChildren()
     this.landCityIconContainer.addChild(landCitySprite)
@@ -71,7 +69,7 @@ export class CardHeader {
   }
 
   createTitle() {
-    const titleContainer = new PIXI.Container()
+    this.titleContainer = new PIXI.Container()
     // title
     this.titleText = new PIXI.Text(this._getCityName(this.cityIndex), {
       fill: ['0xffffff'],
@@ -81,7 +79,7 @@ export class CardHeader {
       wordWrapWidth: 190,
       align: 'center',
     })
-    titleContainer.addChild(this.titleText)
+    this.titleContainer.addChild(this.titleText)
 
     // titleBar
     const titleBar1 = new Bar()
@@ -90,7 +88,7 @@ export class CardHeader {
       titleBar1.graphics.alpha = 0
       titleBar2.graphics.alpha = 0
     }
-    titleContainer.addChild(titleBar1.graphics, titleBar2.graphics)
+    this.titleContainer.addChild(titleBar1.graphics, titleBar2.graphics)
 
     titleBar1.graphics.width = this.titleText.width
     titleBar2.graphics.width = this.titleText.width
@@ -99,9 +97,9 @@ export class CardHeader {
     this.titleText.y = titleBar1.graphics.height
     titleBar2.graphics.y = this.titleText.y + this.titleText.height
 
-    this.titleSectionContainer.addChild(titleContainer)
+    this.titleSectionContainer.addChild(this.titleContainer)
 
-    titleContainer.x = (CARD_CONTENT_WIDTH - titleContainer.width) / 2
+    this.titleContainer.x = (CARD_CONTENT_WIDTH - this.titleContainer.width) / 2
   }
 
   updateCity(newCityIndex) {
@@ -114,8 +112,8 @@ export class CardHeader {
   createArrow() {
     if (this.isInfoCard) return
     // arrows
-    this.arrow1 = new Arrow(0)
-    this.arrow2 = new Arrow(1)
+    this.arrow1 = new Arrow(0, this.titleContainer.height)
+    this.arrow2 = new Arrow(1, this.titleContainer.height)
     this.arrowArray = [this.arrow1, this.arrow2]
     this.titleSectionContainer.addChild(
       this.arrow1.container,
@@ -210,17 +208,32 @@ class Bar {
 }
 
 class Arrow {
-  constructor(index = 0) {
+  constructor(index = 0, activeRegionHeight) {
     this.container = new PIXI.Container()
+    this.activeRegionHeight = activeRegionHeight
 
     this.direction = index === 0 ? 'left' : 'right'
+    this.createActiveRegion()
     this.createArrow()
+  }
+  createActiveRegion() {
+    const activeRegion = new PIXI.Graphics()
+    activeRegion.beginFill(0xff0000)
+    activeRegion.drawRect(0, 0, 100, this.activeRegionHeight)
+    activeRegion.endFill()
+    activeRegion.alpha = 0
+    this.container.addChild(activeRegion)
+    if (this.direction === 'right') {
+      activeRegion.x = -activeRegion.width
+    }
   }
   createArrow() {
     const arrowTexture = new PIXI.Texture(Globals.resources['arrow']?.texture)
     const arrowSprite = new PIXI.Sprite(arrowTexture)
     this.container.addChild(arrowSprite)
     arrowSprite.anchor.set(0, 0.5)
+
+    arrowSprite.y = this.activeRegionHeight / 2
 
     if (this.direction === 'right') {
       arrowSprite.scale.x = -1

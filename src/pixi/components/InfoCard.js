@@ -15,18 +15,45 @@ export class InfoCard {
 
     this.container = new PIXI.Container()
     this.container.name = 'card'
-    this.container.x = cardDimention.x
-    this.container.y = cardDimention.y
 
     this.landCityIcon = new PIXI.Container()
 
     this.createCard()
+    this.activeListener()
   }
 
   createCard() {
+    this.createBackgroundLayer()
     this.createBody()
+    this.createOverallMask()
     this.createHeader()
     this.createTab()
+  }
+
+  createBackgroundLayer() {
+    // cardDimention
+    // background
+    this.backgroundLayer = new PIXI.Graphics()
+    this.backgroundLayer.beginFill(0xff0000)
+    this.backgroundLayer.drawRect(0, 0, window.innerWidth, window.innerHeight)
+    this.backgroundLayer.endFill()
+
+    this.backgroundLayer.buttonMode = true
+    this.backgroundLayer.interactive = true
+    this.backgroundLayer.alpha = 0
+
+    this.container.addChild(this.backgroundLayer)
+
+    this.backgroundLayer.addListener('pointerdown', () => {
+      this.exitInfoCard()
+    })
+
+    this.cardContainer = new PIXI.Container()
+    this.cardContainer.x = cardDimention.x
+    this.cardContainer.y = cardDimention.y
+    this.cardContainer.buttonMode = true
+    this.cardContainer.interactive = true
+    this.container.addChild(this.cardContainer)
   }
 
   createBody() {
@@ -42,36 +69,38 @@ export class InfoCard {
     )
     cardBackground.endFill()
 
-    this.container.addChild(cardBackground)
+    this.cardContainer.addChild(cardBackground)
 
     // exit button
     const buttonTexture = new PIXI.Texture(Globals.resources['exit']?.texture)
-    const buttonSprite = new PIXI.Sprite(buttonTexture)
-    this.container.addChild(buttonSprite)
-    buttonSprite.x = cardDimention.width - buttonSprite.width - CARD_MARGIN
-    buttonSprite.y = CARD_MARGIN
-    buttonSprite.buttonMode = true
-    buttonSprite.interactive = true
-
-    buttonSprite.addListener('pointerdown', () => {
-      this.stopAllProcess()
-
-      this.container.parent.removeChild(this.container)
-
-      if (this.exitCallback) {
-        this.exitCallback()
-      }
-    })
+    this.exitButtonSprite = new PIXI.Sprite(buttonTexture)
+    this.cardContainer.addChild(this.exitButtonSprite)
+    this.exitButtonSprite.x =
+      cardDimention.width - this.exitButtonSprite.width - CARD_MARGIN
+    this.exitButtonSprite.y = CARD_MARGIN
+    this.exitButtonSprite.buttonMode = true
+    this.exitButtonSprite.interactive = true
   }
 
-  stopAllProcess() {
-    this.header.stopAllProcess()
-    this.cardFolder.stopAllProcess()
+  createOverallMask() {
+    const overallMask = new PIXI.Graphics()
+    overallMask.beginFill(0xcc8053)
+    overallMask.drawRoundedRect(
+      0,
+      0,
+      cardDimention.width,
+      cardDimention.height,
+      21
+    )
+    overallMask.endFill()
+
+    this.cardContainer.mask = overallMask
+    this.cardContainer.addChild(overallMask)
   }
 
   createHeader() {
     this.header = new CardHeader(0, null, true)
-    this.container.addChild(this.header.container)
+    this.cardContainer.addChild(this.header.container)
   }
 
   createTab() {
@@ -80,8 +109,38 @@ export class InfoCard {
     const folderHeight = cardDimention.height - headerHeight - margin
 
     this.cardFolder = new CardFolder(0, this.cityData, folderHeight, true)
-    this.container.addChild(this.cardFolder.container)
+    this.cardContainer.addChild(this.cardFolder.container)
     this.cardFolder.container.y = headerHeight + margin * 2
+  }
+
+  activeListener() {
+    this.activeCardExitButton()
     this.cardFolder.activeListener()
+  }
+
+  activeCardExitButton() {
+    this.exitButtonSprite.buttonMode = true
+    this.exitButtonSprite.interactive = true
+
+    this.exitButtonSprite.addListener('pointerdown', () => {
+      this.exitInfoCard()
+      // this.stopAllProcess()
+    })
+  }
+
+  exitInfoCard() {
+    this.stopAllProcess()
+    this.container.parent.removeChild(this.container)
+
+    if (this.exitCallback) {
+      this.exitCallback()
+    }
+  }
+
+  stopAllProcess() {
+    console.log('stopAllProcess')
+    this.cardFolder.stopAllProcess()
+    this.exitButtonSprite.removeAllListeners()
+    this.backgroundLayer.removeAllListeners()
   }
 }
