@@ -163,9 +163,9 @@ export class DoctorSay {
         this.container.removeAllListeners()
         speakDialog.destorySpeakDialog?.()
 
-        setTimeout(() => {
-          resolve()
-        }, 200)
+        resolve()
+        // setTimeout(() => {
+        // }, 200)
       })
     })
   }

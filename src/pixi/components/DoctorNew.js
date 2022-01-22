@@ -18,6 +18,10 @@ export class Doctor {
     this.sprite.anchor.set(0.5, 0.5)
     this.sprite.width *= this.scale
     this.sprite.height *= this.scale
+
+    // save character's size to Globals
+    Globals.doctorWidth = this.sprite.width
+    Globals.doctorHeight = this.sprite.height
   }
 
   setupPosition() {

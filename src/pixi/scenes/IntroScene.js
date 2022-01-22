@@ -37,15 +37,12 @@ export class IntroScene {
       this.doctorDrop.bind(this),
       this.positionCharacters.bind(this),
       this.taiwanShowUp.bind(this),
-      this.updateGroundGroup.bind(this),
       this._createDoctorSay.bind(this),
       this.doctorExplain.bind(this),
     ]
     this.filmScriptStep = 0
 
     this.createIntro()
-
-    this.getGroundPosition = this.getGroundPosition.bind(this)
   }
 
   _createBackground() {
@@ -227,7 +224,8 @@ export class IntroScene {
     const blurFilter = new PIXI.filters.BlurFilter()
     this.taiwan.container.filters = [blurFilter]
 
-    await this.playerSay({ text: '發生什麼事？！這裡是哪裡？！', time: 2000 })
+    await this.playerSay({ text: '發生什麼事？！', time: 1000 })
+    await this.playerSay({ text: '這裡是哪裡？！', time: 1000 })
   }
 
   async lookAround() {
@@ -248,7 +246,7 @@ export class IntroScene {
       const movePlayerToGroundTicker = new PIXI.Ticker()
 
       movePlayerToGroundTicker.add(async () => {
-        if (this.ground.sprite.y <= this.getGroundPosition()) {
+        if (this.ground.sprite.y <= groundGroupDimention.y) {
           moveDown(this.player.container)
           moveDown(this.ground.sprite)
         }
@@ -262,7 +260,7 @@ export class IntroScene {
           this.taiwan.container.alpha += 0.005
         }
 
-        if (this.ground.sprite.y >= this.getGroundPosition()) {
+        if (this.ground.sprite.y >= groundGroupDimention.y) {
           movePlayerToGroundTicker.destroy()
 
           await wait(1500)
@@ -283,7 +281,7 @@ export class IntroScene {
   }
 
   async spotlightOn() {
-    this.spotlight.sprite.y = this.getGroundPosition()
+    this.spotlight.sprite.y = groundGroupDimention.y
     await wait(70)
     this.spotlight.sprite.alpha = 0.3
     await wait(70)
@@ -316,7 +314,7 @@ export class IntroScene {
           this.doctor.sprite.alpha += 0.1
         }
         // console.log(this.ground.sprite.y)
-        if (this.doctor.sprite.y <= this.getGroundPosition() - 55) {
+        if (this.doctor.sprite.y <= groundGroupDimention.y - 55) {
           moveDown(this.doctor.sprite)
           this.doctor.sprite.angle += 4
         }
@@ -324,7 +322,7 @@ export class IntroScene {
           moveLeft(this.player.container)
         }
 
-        if (this.doctor.sprite.y >= this.getGroundPosition() - 55) {
+        if (this.doctor.sprite.y >= groundGroupDimention.y - 55) {
           doctorDropTicker.destroy()
           await wait(1000)
           resolve()
@@ -334,7 +332,7 @@ export class IntroScene {
       doctorDropTicker.start()
 
       function moveDown(sprite) {
-        sprite.y += 3
+        sprite.y += sprite.height / 15
       }
 
       function moveLeft(sprite) {
@@ -346,22 +344,43 @@ export class IntroScene {
   async positionCharacters() {
     this.doctor.stand()
 
+    const playerXRatio = 90 / 359
+    const playerYRatio = 30 / 113
+    const doctorXRatio = 70 / 359
+    const doctorYRatio = 40 / 113
+    const playerX =
+      -groundGroupDimention.groundWidth / 2 +
+      groundGroupDimention.groundWidth * playerXRatio +
+      this.ground.sprite.x
+    const playerY =
+      groundGroupDimention.groundHeight * playerYRatio + this.ground.sprite.y
+    const doctorX =
+      -groundGroupDimention.groundWidth / 2 +
+      groundGroupDimention.groundWidth * doctorXRatio +
+      this.ground.sprite.x
+
+    const doctorY =
+      -groundGroupDimention.groundHeight * doctorYRatio + this.ground.sprite.y
+
     return new Promise((resolve) => {
       const positionCharactersTicker = new PIXI.Ticker()
 
       positionCharactersTicker.add(async () => {
         console.log('positionCharactersTicker')
 
-        if (this.player.container.y <= Globals.outerHeight - 110) {
+        if (this.player.container.x <= playerX) {
           this.player.container.x -= 0.8
+        }
+        if (this.player.container.y <= playerY) {
           this.player.container.y += 2
         }
-        if (this.doctor.sprite.y <= Globals.outerHeight - 138) {
-          this.doctor.sprite.y += 0.5
+
+        if (this.doctor.sprite.x >= doctorX) {
+          this.doctor.sprite.x -= 2.1
         }
 
-        if (this.doctor.sprite.x >= Globals.outerWidth / 2 - 111) {
-          this.doctor.sprite.x -= 2.1
+        if (this.doctor.sprite.y <= doctorY) {
+          this.doctor.sprite.y += 1
         }
 
         if (this.spotlight.sprite.alpha > 0) {
@@ -369,9 +388,9 @@ export class IntroScene {
         }
 
         if (
-          this.player.container.y >= Globals.outerHeight - 110 &&
-          this.doctor.sprite.y >= Globals.outerHeight - 138 &&
-          this.doctor.sprite.x <= Globals.outerWidth / 2 - 111
+          this.player.container.y >= playerY &&
+          this.doctor.sprite.y >= doctorY &&
+          this.doctor.sprite.x <= doctorX
         ) {
           positionCharactersTicker.destroy()
 
@@ -405,7 +424,9 @@ export class IntroScene {
 
   async doctorExplain() {
     console.log('doctorExplain')
-    this.lightUpBackground()
+    await this.lightUpBackground()
+    await this.doctorSay.newSay('新的挑戰者出現啦！')
+    this.updateGroundGroup()
     this.skipButton.removeAllListeners()
     this.container.removeChild(this.skipButton)
 
@@ -572,12 +593,6 @@ export class IntroScene {
   _createDoctorSay() {
     this.doctorSay = new DoctorSay()
     this.container.addChild(this.doctorSay.container)
-  }
-
-  getGroundPosition() {
-    return (Globals.outerHeight * 3) / 4 > Globals.outerHeight - 108
-      ? (Globals.outerHeight * 3) / 4
-      : Globals.outerHeight - 108
   }
 }
 

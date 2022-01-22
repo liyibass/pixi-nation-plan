@@ -10,7 +10,7 @@ const MAX_CONTENT_WIDTH =
     : MAX_BOX_WIDTH - 2 * MARGING
 const FONT_SIZE = Globals.outerWidth < 500 ? 14 : 16
 const PING_LENGTH = 30
-const DOCTOR_HEIGHT = 66
+// const DOCTOR_HEIGHT = 66
 
 export class DialogBoxNew {
   constructor({
@@ -80,11 +80,10 @@ export class DialogBoxNew {
     } else {
       this.x = (Globals.outerWidth - this.boxWidth) / 2
     }
-    this.y = this.talkerY - PING_LENGTH - DOCTOR_HEIGHT / 2 - this.boxHeight
+    this.y = this.talkerY - PING_LENGTH - Globals.doctorHeight - this.boxHeight
 
     this.container.x = this.x
     this.container.y = this.y
-    console.log(this)
   }
 
   createDialogBox() {

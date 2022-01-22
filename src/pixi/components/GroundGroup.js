@@ -30,15 +30,23 @@ export class GroundGroup {
     })
 
     const scale = this.ground.getSpriteScale()
+    const playerXRatio = 90 / 359
+    const playerYRatio = 30 / 113
+    const doctorXRatio = 70 / 359
+    const doctorYRatio = 40 / 113
 
     this.player = new Player({
-      x: -83,
-      y: 30,
+      x:
+        -groundGroupDimention.groundWidth / 2 +
+        groundGroupDimention.groundWidth * playerXRatio,
+      y: groundGroupDimention.groundHeight * playerYRatio,
       scale,
     })
     this.doctor = new Doctor({
-      x: -104,
-      y: -35,
+      x:
+        -groundGroupDimention.groundWidth / 2 +
+        groundGroupDimention.groundWidth * doctorXRatio,
+      y: -groundGroupDimention.groundHeight * doctorYRatio,
       scale,
     })
 

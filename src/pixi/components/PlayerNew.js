@@ -45,6 +45,10 @@ export class Player {
     this.playerSprite.anchor.set(0.5, 1)
     this.playerSprite.width *= this.scale
     this.playerSprite.height *= this.scale
+
+    // save character's size to Globals
+    Globals.playerWidth = this.playerSprite.width
+    Globals.playerHeight = this.playerSprite.height
   }
 
   createRunningPlayerSprite() {

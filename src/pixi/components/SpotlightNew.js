@@ -16,6 +16,7 @@ export class Spotlight {
     this.sprite = new PIXI.Sprite(texture)
     this.sprite.anchor.set(0.5, 1)
     this.sprite.width = this.width
+    this.sprite.height = window.innerHeight
   }
 
   setupPosition() {

@@ -123,12 +123,12 @@ export class MenuScene extends Scene {
       this.openAllListener()
     } else if (this.isNeedTutorial) {
       // play game first time
-      // await this.showGameTitle()
+      await this.showGameTitle()
 
       this.startTutorial()
     } else {
       // play game second time
-      // await this.showGameTitle()
+      await this.showGameTitle()
 
       const chosen = await this.doctorSay.chooseSay(
         '是否要觀看遊戲介紹？',
@@ -173,7 +173,7 @@ export class MenuScene extends Scene {
     this.groundGroup?.deactiveListener?.()
     this.tip = new Tip()
 
-    await this.doctorSay.newSay('新的挑戰者出現啦！歡迎光臨模擬村莊計畫')
+    await this.doctorSay.newSay('歡迎光臨模擬村莊計畫')
 
     const chosen = await this.doctorSay.chooseSay(
       '想要回去很簡單，只要協助我破解任務，我就放你回去唷，你準備好了嗎？',
