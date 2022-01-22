@@ -12,6 +12,8 @@ const dialogWidth = window.innerWidth
 const dialogHeight = Math.floor(window.innerHeight * dialogRatio)
 const dialogFontSize = Math.floor(window.innerHeight * dialogFontRatio)
 
+const snakeButtonRatio = 130 / 812
+
 export const Globals = {
   textureScale: 1,
   resources: {},
@@ -97,7 +99,7 @@ export const Globals = {
       }
     }
   },
-  CONTROLLER_WIDTH: 75,
+  CONTROLLER_WIDTH: window.innerHeight * snakeButtonRatio,
   getSnakeControllerPosition: function () {
     return {
       x: this.outerWidth / 2 - this.CONTROLLER_WIDTH / 2,

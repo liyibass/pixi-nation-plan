@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 const controllerPosition = Globals.getSnakeControllerPosition()
-const CONTROLLER_WIDTH = 75
+const CONTROLLER_WIDTH = Globals.CONTROLLER_WIDTH
 const BUTTON_WIDTH = CONTROLLER_WIDTH / 3
 
 export class SnakeController {
@@ -27,7 +27,11 @@ export class SnakeController {
 
       const activeRegion = new PIXI.Graphics()
       activeRegion.beginFill(0xff0000, 1)
-      activeRegion.drawCircle(0, 0, BUTTON_WIDTH + 2)
+      activeRegion.drawCircle(
+        0,
+        0,
+        i === 1 || i === 3 ? BUTTON_WIDTH * 1.8 : BUTTON_WIDTH * 1.8
+      )
       activeRegion.endFill()
       activeRegion.alpha = 0
 
@@ -39,13 +43,13 @@ export class SnakeController {
           button.x = CONTROLLER_WIDTH / 3
           button.y = 0
           activeRegion.x = CONTROLLER_WIDTH / 3 + BUTTON_WIDTH / 2
-          activeRegion.y = 0
+          activeRegion.y = 0 - BUTTON_WIDTH * 0.8
           break
 
         case 'right':
           button.x = (CONTROLLER_WIDTH * 2) / 3
           button.y = CONTROLLER_WIDTH / 3
-          activeRegion.x = CONTROLLER_WIDTH
+          activeRegion.x = CONTROLLER_WIDTH + BUTTON_WIDTH * 0.8
           activeRegion.y = CONTROLLER_WIDTH / 2
 
           break
@@ -53,12 +57,12 @@ export class SnakeController {
           button.x = CONTROLLER_WIDTH / 3
           button.y = (CONTROLLER_WIDTH * 2) / 3
           activeRegion.x = CONTROLLER_WIDTH / 3 + BUTTON_WIDTH / 2
-          activeRegion.y = CONTROLLER_WIDTH
+          activeRegion.y = CONTROLLER_WIDTH + BUTTON_WIDTH * 0.8
           break
         case 'left':
           button.x = 0
           button.y = CONTROLLER_WIDTH / 3
-          activeRegion.x = 0
+          activeRegion.x = 0 - BUTTON_WIDTH * 0.8
           activeRegion.y = CONTROLLER_WIDTH / 2
           break
 
