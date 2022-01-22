@@ -44,9 +44,12 @@ export class DoctorDialogBoxNew extends DialogBoxNew {
   createText() {
     // calculate content width
     const CONTENT_WIDTH =
-      this.text.length * FONT_SIZE < MAX_CONTENT_WIDTH
+      this.text.length * FONT_SIZE > MAX_CONTENT_WIDTH
+        ? MAX_CONTENT_WIDTH
+        : this.text.length * FONT_SIZE > this.twoButtons.container.width
         ? this.text.length * FONT_SIZE
-        : MAX_CONTENT_WIDTH
+        : this.twoButtons.container.width
+
     const BOX_WIDTH = CONTENT_WIDTH + 2 * PADDING
     this.boxWidth = BOX_WIDTH
     this.contentWidth = CONTENT_WIDTH
