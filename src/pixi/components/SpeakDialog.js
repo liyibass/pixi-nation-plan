@@ -130,14 +130,15 @@ export class SpeakDialog {
       }
 
       if (this.doctor.x >= this.doctorOriginX && this.doctor.alpha >= 1) {
-        this.talkTicker.stop()
+        // this.talkTicker.stop()
+        this.destorySpeakDialog()
       }
     })
     this.talkTicker.start()
   }
 
   destorySpeakDialog() {
-    this.talkTicker?.destroy?.()
-    this.arrowTicker?.destroy?.()
+    this.talkTicker?.stop?.()
+    this.arrowTicker?.stop?.()
   }
 }
