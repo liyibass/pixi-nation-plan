@@ -121,7 +121,7 @@ export class MenuScene extends Scene {
     if (Status.enteredGame) {
       // still in game, and back to menu
       this.openAllListener()
-    } else if (this.isNeedTutorial) {
+    } else if (Status.isNeedTutorial) {
       // play game first time
       await this.showGameTitle()
 
@@ -147,6 +147,7 @@ export class MenuScene extends Scene {
       )
 
       if (chosen === 'yes') {
+        Status.isNeedTutorial = true
         this.startTutorial()
       } else {
         this.openAllListener()
@@ -169,7 +170,6 @@ export class MenuScene extends Scene {
   async checkCityAnimation() {}
 
   async startTutorial() {
-    Status.isNeedTutorial = false
     this.groundGroup?.deactiveListener?.()
     this.tip = new Tip()
 
@@ -295,11 +295,15 @@ export class MenuScene extends Scene {
         this.container.addChild(this.tip.pointerTipContainer)
 
         const infoCardEnderCallback = async () => {
+          if (!Status.isNeedTutorial) return
           console.log('enter infoCard')
           this.removePointerHint()
         }
         const infoCardExitCallback = async () => {
+          console.log(Status.isNeedTutorial)
+          if (!Status.isNeedTutorial) return
           console.log('eixt infoCard')
+
           await this.doctorSay.newSay(
             '讓我帶著你實作一次吧！你看畫面上有座城市正在發亮，點擊它，看看它的基本資料。'
           )
@@ -335,12 +339,33 @@ export class MenuScene extends Scene {
               waterTab.updateTabOrder()
               this.removePointerHint()
               waterTab.deactiveListener()
-              waterTab.unlockButton.activeListener()
+              waterTab?.unlockButton?.activeListener?.()
 
               await this._wait(1000)
-              await this.doctorSay.newSay(
-                '是不是有看到一個關卡？點進去試試看，試著達成任務目標，找回卡片！'
-              )
+
+              if (waterTab?.unlockButton) {
+                await this.doctorSay.newSay(
+                  '是不是有看到一個關卡？點進去試試看，試著達成任務目標，找回卡片！'
+                )
+              } else {
+                await this.doctorSay.newSay(
+                  '因為你先前已經玩過遊戲並解鎖卡片了，所以你可以看到這個隱藏卡片的所有內容'
+                )
+                await this.doctorSay.newSay('可以找找看有沒有其他被封印的卡片')
+                await this.doctorSay.newSay(
+                  '如果卡片中間有「玩遊戲解鎖」，那就點進去玩玩遊戲、解鎖卡片吧！'
+                )
+
+                this.taiwan.card.hideCardInfo()
+                this.groundGroup.deactiveListener()
+                this.openAllListener()
+
+                waterTab.tab.removeAllListeners()
+                demoTab.tab.removeAllListeners()
+              }
+
+              console.log('set to false')
+              Status.isNeedTutorial = false
             })
           }
 
