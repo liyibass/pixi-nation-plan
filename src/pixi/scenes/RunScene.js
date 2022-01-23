@@ -15,7 +15,7 @@ const PLAYER_SPEED = 4
 const BOARD_SPEED = 3
 const BACKGROUND_SPEED = 2
 const OBSTACLE_SPEED = 4
-const gameStageDimention = Globals.getSeesawGameStageDimention()
+const gameStageDimention = Globals.getRunGameStageDimention()
 
 export class RunScene extends Scene {
   constructor(...args) {
@@ -29,8 +29,6 @@ export class RunScene extends Scene {
     this.cityBackgroundLayer = new PIXI.Container()
     this.boardLayer = new PIXI.Container()
     this.obstacleLayer = new PIXI.Container()
-
-    this.currentCityIndex = 0
 
     this.createScene()
     this.startGameFlow()
@@ -123,7 +121,7 @@ export class RunScene extends Scene {
   // ===== init game =====
   async initGame() {
     console.log('initGame')
-    this._createPlayer()
+
     this._createCity(this.currentCityIndex)
     this.gameStage.setChildIndex(
       this.player.container,
@@ -163,15 +161,22 @@ export class RunScene extends Scene {
     )
   }
 
+  middleCallback(lastCityIndex) {
+    // console.log('YOYO')
+    console.log(lastCityIndex)
+    // this.currentCityIndex++
+  }
+
   _createNewCity(cityIndex) {
     const city = new City(
       cityIndex,
       this.collisionMonitor.bind(this),
       this.player,
-      this.currentCityNameMonitor.bind(this)
+      this.currentCityNameMonitor.bind(this),
+      this.middleCallback.bind(this)
     )
 
-    let interval = (cityIndex === 0 ? 0 : 1 * (this.gameStageWidth * 1)) / 3
+    let interval = (cityIndex === 0 ? 0 : 1 * (this.gameStageWidth * 2)) / 3
     if (city.cityName === 'Mountain') {
       interval = 0
     }
@@ -203,7 +208,7 @@ export class RunScene extends Scene {
     if (this.cityName !== cityName) {
       this.cityName = cityName
 
-      if (this.cityName === 'Miaoli') {
+      if (this.cityName === 'Miaoli' && !this.tiger) {
         console.log('GENERATE TIGER')
 
         this.tiger = new Tiger()
@@ -229,11 +234,9 @@ export class RunScene extends Scene {
         this.gameLevel1()
         break
 
+      default:
       case 2:
         this.gameLevel2_0()
-        break
-
-      default:
         break
     }
   }
@@ -281,8 +284,9 @@ export class RunScene extends Scene {
     await this.doctorSay.newSay(
       '方法很簡單，你只要完成每個村莊的指定任務就可以了，麻煩你啦！'
     )
-    this.initGame()
+    this._createPlayer()
     await this._playerJumpAnimation()
+    this.initGame()
     this.startGame()
   }
 
@@ -425,7 +429,10 @@ export class RunScene extends Scene {
   }
 
   activateClickToJump() {
-    this.gameStage.addListener('pointerdown', () => {
+    console.log(this.gameStage)
+    this.container.interactive = true
+    this.container.buttonMode = true
+    this.container.addListener('pointerdown', () => {
       if (!this.player.isJumping) {
         this.player.jump()
       }
@@ -433,7 +440,9 @@ export class RunScene extends Scene {
   }
 
   deactivateClickToJump() {
-    this.gameStage.removeAllListeners()
+    this.container.interactive = false
+    this.container.buttonMode = false
+    this.container.removeAllListeners()
   }
 
   collisionMonitor(obstacle) {
@@ -455,7 +464,8 @@ export class RunScene extends Scene {
   _startSceneTicker() {
     this.sceneTicker = new PIXI.Ticker()
 
-    this.sceneTicker.add(async () => {
+    const tickerCallback = () => {
+      // console.log(time)
       if (
         // player stop when in gameStage center
         this.player.container.x >= this.gameStageWidth / 3 &&
@@ -474,9 +484,6 @@ export class RunScene extends Scene {
 
       // player move depends on its velocity value
       this.player.container.x += this.player.container.vx
-      // if (!this.player.isJumping) {
-      //   this.player.container.y += this.player.container.vy
-      // }
 
       // background move depends on their velocity value
       this.cityBackgroundLayer.x += this.cityBackgroundLayer.vx
@@ -484,19 +491,20 @@ export class RunScene extends Scene {
       this.obstacleLayer.x += this.obstacleLayer.vx
 
       // observe obstacle
+
       this._obstacleProcesser()
 
-      this.cityBackgroundLayer.children.forEach((cityBackground) => {
-        const needToDeleteOldCity =
-          cityBackground.worldTransform.tx + cityBackground.width < 0
+      // this.cityBackgroundLayer.children.forEach((cityBackground) => {
+      //   const needToDeleteOldCity =
+      //     cityBackground.worldTransform.tx + cityBackground.width < 0
 
-        if (needToDeleteOldCity) {
-          cityBackground.visible = false
-          // cityBackground.destroy()
+      //   if (needToDeleteOldCity) {
+      //     cityBackground.visible = false
+      //     // cityBackground.destroy()
 
-          // this.boardLayer.children[index]?.destroy()
-        }
-      })
+      //     // this.boardLayer.children[index]?.destroy()
+      //   }
+      // })
 
       // tiger handler
       if (
@@ -512,13 +520,16 @@ export class RunScene extends Scene {
           this.gameStage.removeChild(this.tiger.container)
         }
       }
-    })
+    }
+
+    this.sceneTicker.add(tickerCallback)
 
     this.sceneTicker.start()
   }
 
   _obstacleProcesser() {
     // console.log(this.inWindowObstacles)
+
     for (let i = 0; i < this.inWindowObstacles.length; i++) {
       const obstacle = this.inWindowObstacles[i]
       obstacle._setGlobalXAndY()
@@ -721,9 +732,9 @@ export class RunScene extends Scene {
         this.container.removeChild(this.gameFail.container)
 
         this.resetGameSetting()
-
-        this.initGame()
+        this._createPlayer()
         await this._playerJumpAnimation()
+        this.initGame()
         this.startGame()
         break
 

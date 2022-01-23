@@ -47,18 +47,14 @@ export class Water extends Obstacle {
   startObstacleTicker() {
     this.defaultX = this.container.x
     this.defaultY = this.container.y
-
     this.ObstacleOperateTicker = new PIXI.Ticker()
-
     this.ObstacleOperateTicker.add(() => {
       this._checkIfObstacleIsInWindow()
-
       if (this.isInWindow) {
         // get water and player's global position
         const { tx: playerX, ty: playerY } =
           this.player.container.worldTransform
         this._setGlobalXAndY()
-
         const rightBoundaryHit =
           playerX >= this.obstacleGlobalX - this.obstacleWidth / 2
         const leftBoundaryHit =
@@ -66,17 +62,14 @@ export class Water extends Obstacle {
         const isInObstacleArea = rightBoundaryHit && leftBoundaryHit
         const standOnWater =
           playerY === this.obstacleGlobalY - this.obstacleHeight
-
         if (isInObstacleArea && standOnWater) {
           console.log('DEAD')
           this.ObstacleOperateTicker.stop()
           this.collisionMonitor(this)
         }
-
         // this.isAddedToProcesser = true
       }
     })
-
     this.ObstacleOperateTicker.start()
   }
 }

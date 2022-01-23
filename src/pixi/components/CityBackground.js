@@ -1,17 +1,23 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
+// import _ from 'lodash'
+
 const gameStageDimention = Globals.getRunGameStageDimention()
 const proximateCityWidth = gameStageDimention.width * 2
 
 export class CityBackground {
-  constructor(cityName) {
+  constructor(cityName, cityIndex, middleCallback) {
     this.cityName = cityName
+    this.cityIndex = cityIndex
+    this.middleCallback = middleCallback
     this.container = new PIXI.Container()
     this.container.name = `cityBackground-${this.cityName}`
 
     this.bottomLayerContainer = new PIXI.Container()
+    this.isInMiddle = false
 
     this.createCityBackground()
+
     this.optimize()
   }
 
@@ -302,24 +308,45 @@ export class CityBackground {
 
   optimize() {
     this.optimizeTicker = new PIXI.Ticker()
-
-    this.optimizeTicker.add(() => {
-      try {
-        if (
-          (this.container.worldTransform.tx < window.innerWidth &&
-            this.container.worldTransform.tx + this.container.width > 0) ||
-          (this.container.worldTransform.tx + this.container.width < 0 &&
-            this.container.worldTransform.tx < 0)
-        ) {
-          this.container.renderable = true
-        } else {
-          this.container.renderable = false
-        }
-      } catch (err) {
-        this.optimizeTicker.stop()
-        this.container.destroy()
+    let debounce = 0
+    const callback = () => {
+      debounce++
+      if (debounce < 60) {
+        return
+      } else {
+        debounce = 0
       }
-    })
+      // console.log(`optimize : ${this.cityName}`)
+
+      const showUp = this.container.worldTransform.tx - window.innerWidth < 0
+      const isInMiddle =
+        this.container.worldTransform.tx < 0 &&
+        this.container.worldTransform.tx + this.container.width / 2 < 0
+
+      const isBehindWindow =
+        this.container.worldTransform.tx + this.container.width < 0 &&
+        this.container.worldTransform.tx < 0
+
+      if (showUp) {
+        this.container.renderable = true
+
+        if (isInMiddle && !this.isInMiddle) {
+          this.isInMiddle = true
+
+          this.middleCallback(this.cityIndex)
+        }
+
+        if (isBehindWindow) {
+          this.container.renderable = false
+          this.optimizeTicker.stop()
+          console.log('end')
+        }
+      } else {
+        this.container.renderable = false
+      }
+    }
+
+    this.optimizeTicker.add(callback)
 
     this.optimizeTicker.start()
   }

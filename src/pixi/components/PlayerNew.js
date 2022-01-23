@@ -185,9 +185,6 @@ export class Player {
   }
 
   jumpIn(groundPlayer) {
-    console.log(groundPlayer)
-    console.log(groundPlayer.container.getGlobalPosition())
-    console.log(this.container.getGlobalPosition())
     const { x: groundX, y: groundY } =
       groundPlayer.container.getGlobalPosition()
     const { x: playerX, y: playerY } = this.container.getGlobalPosition()

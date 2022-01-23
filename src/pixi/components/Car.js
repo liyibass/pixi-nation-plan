@@ -44,13 +44,11 @@ export class Car extends Obstacle {
     if (this.isCarInWater) {
       if (this.vibrateDirection === 'up') {
         this.container.y += 0.2
-
         if (this.container.y > this.defaultY + 5) {
           this.vibrateDirection = 'down'
         }
       } else {
         this.container.y -= 0.2
-
         if (this.container.y < this.defaultY - 5) {
           this.vibrateDirection = 'up'
         }

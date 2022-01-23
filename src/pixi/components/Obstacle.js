@@ -1,4 +1,6 @@
 import * as PIXI from 'pixi.js'
+import { Globals } from '../script/Globals'
+const gameStageDimention = Globals.getRunGameStageDimention()
 
 export class Obstacle {
   constructor(index = 0, collisionMonitor = () => {}) {
@@ -19,15 +21,20 @@ export class Obstacle {
   startObstacleTicker() {
     this.defaultX = this.container.x
     this.defaultY = this.container.y
-
     this.ObstacleOperateTicker = new PIXI.Ticker()
 
+    let debounce = 0
     this.ObstacleOperateTicker.add(() => {
-      this._checkIfObstacleIsInWindow()
+      if (debounce < 30) {
+        debounce++
+        return
+      } else {
+        debounce = 0
+      }
 
+      this._checkIfObstacleIsInWindow()
       if (this.isInWindow) {
         this._turnOnObstacle()
-
         if (!this.isAddedToProcesser) {
           // console.log('in window')
           this.collisionMonitor(this)
@@ -38,22 +45,30 @@ export class Obstacle {
         if (this.isAddedToProcesser) {
           // console.log('out of window')
           this.collisionMonitor(this)
-          this.container.visible = false
-          this.isAddedToProcesser = false
-          this.ObstacleOperateTicker.destroy()
-          this.container.destroy()
-          console.log('destroyed')
+          this.destoryObstacle()
         }
       }
     })
-
     this.ObstacleOperateTicker.start()
+  }
+
+  destoryObstacle() {
+    this.container.visible = false
+    this.isAddedToProcesser = false
+    this.ObstacleOperateTicker.stop()
+    this.ObstacleOperateTicker.destroy()
+    this.container.destroy()
+    console.log('destroyed')
+
+    this.isDestroyed = true
   }
 
   _checkIfObstacleIsInWindow() {
     const { tx } = this.container.worldTransform
 
-    this.isInWindow = tx >= 0 && tx <= window.innerWidth
+    this.isInWindow =
+      tx >= gameStageDimention.x &&
+      tx <= gameStageDimention.x + gameStageDimention.width
   }
 
   _turnOnObstacle() {
