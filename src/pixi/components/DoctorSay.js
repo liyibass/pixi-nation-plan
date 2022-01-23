@@ -6,7 +6,7 @@ import { DoctorDialogBoxNew } from './DoctorDialogBoxNew'
 import { DoctorShareBoxGroup } from './DoctorShareBoxGroup'
 import { DoctorModBoxGroup } from './DoctorModBoxGroup'
 import { SpeakDialog } from './SpeakDialog'
-import { clickUrl } from '../script/Utils'
+import { clickUrl, updateMod } from '../script/Utils'
 
 export class DoctorSay {
   constructor() {
@@ -108,6 +108,7 @@ export class DoctorSay {
         if (chosen === 'cancel') {
           resolve(false)
         } else {
+          updateMod(chosen)
           resolve(true)
         }
       }

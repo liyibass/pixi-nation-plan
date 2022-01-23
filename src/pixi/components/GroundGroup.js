@@ -5,10 +5,13 @@ import { Doctor } from './DoctorNew'
 import { Player } from './PlayerNew'
 // import { Globals } from '../script/Globals'
 import { GroundGroupIcon } from './GroundGroupIcon'
+import { DoctorSay } from './DoctorSay'
+import { Status } from '../script/Status'
 const groundGroupDimention = Globals.getGroundDimention()
 
 export class GroundGroup {
-  constructor(groundGroupDimention) {
+  constructor(groundGroupDimention, menuSceneContainer) {
+    this.menuSceneContainer = menuSceneContainer
     this.container = new PIXI.Container()
     this.container.name = 'groundGroup'
     this.x = groundGroupDimention.x
@@ -80,12 +83,37 @@ export class GroundGroup {
     this.iconArray.forEach((icon) => {
       icon.activeListener?.(enterCallback, exitCallback)
     })
+
+    this.activePlayerModSelection()
+  }
+
+  activePlayerModSelection() {
+    this.player.container.buttonMode = true
+    this.player.container.interactive = true
+    this.player.container.addListener('pointerdown', () => {
+      console.log('MOD')
+
+      if (!Status.isShared) return
+      this.doctorSay = new DoctorSay()
+      this.menuSceneContainer.addChild(this.doctorSay.container)
+      this.doctorSay.mod('已解鎖獨家角色')
+    })
+  }
+
+  deactivePlayModSelection() {
+    this.player.container.removeAllListeners()
+    this.player.container.buttonMode = false
+    this.player.container.interactive = false
   }
 
   deactiveListener() {
     this.iconArray.forEach((icon) => {
       icon.deactiveListener?.()
     })
+
+    this.deactivePlayModSelection()
+
+    this.player.container.removeAllListeners()
   }
 
   updateStageStatus() {

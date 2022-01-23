@@ -183,3 +183,7 @@ export const clickUrl = (urlName) => {
   }
   window.open(url, '_blank').focus()
 }
+
+export const updateMod = (modName) => {
+  console.log(modName)
+}

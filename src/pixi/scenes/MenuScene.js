@@ -102,7 +102,7 @@ export class MenuScene extends Scene {
   _createItems() {
     const groundGroupDimention = Globals.getGroundDimention()
 
-    this.groundGroup = new GroundGroup(groundGroupDimention)
+    this.groundGroup = new GroundGroup(groundGroupDimention, this.container)
 
     this.groundGroup.container.x = groundGroupDimention.x
     this.groundGroup.container.y = groundGroupDimention.y
@@ -218,9 +218,15 @@ export class MenuScene extends Scene {
           '好吧…那只好請你幫我分享，讓我找下一個小幫手～'
         )
         // await this.doctorSay.newSay('別擔心，我也會送一些小禮物，讓你不會空手而歸')
-        await this.doctorSay.share(
+        const isShared = await this.doctorSay.share(
           '別擔心，我也會送一些小禮物，讓你不會空手而歸'
         )
+
+        console.log(isShared)
+        if (isShared) {
+          Status.isShared = true
+          await this.doctorSay.mod('恭喜你解鎖了新人物！', false)
+        }
         this.openAllListener()
       }
     }

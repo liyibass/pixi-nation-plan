@@ -47,9 +47,14 @@ export class DoctorIconDialogBox extends DialogBoxNew {
 
   createText() {
     // calculate content width
-    const CONTENT_WIDTH =
-      this.text.length * FONT_SIZE < MAX_CONTENT_WIDTH
+    const widerContentwidth =
+      this.text.length * FONT_SIZE > this.twoIcons.container.width
         ? this.text.length * FONT_SIZE
+        : this.twoIcons.container.width
+
+    const CONTENT_WIDTH =
+      widerContentwidth < MAX_CONTENT_WIDTH
+        ? widerContentwidth
         : MAX_CONTENT_WIDTH
     const BOX_WIDTH = CONTENT_WIDTH + 2 * PADDING
     this.boxWidth = BOX_WIDTH
