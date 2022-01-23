@@ -252,11 +252,18 @@ export const Globals = {
         ? height
         : this.outerWidth - 2 * gameStagePadding
 
+    const gameNameRatio = 14 / 812
+    const gameNameFontSize = window.innerHeight * gameNameRatio
+    const gameNamePaddingRatio = 1.5 / 812
+    const gameNamePadding = window.innerHeight * gameNamePaddingRatio
+
     return {
       x: (this.outerWidth - width) / 2,
       y: 0 + gameStagePadding,
       width: width,
       height: height,
+      gameNameFontSize,
+      gameNamePadding,
     }
   },
   getIntroSlideshowDimention: function () {
