@@ -3,8 +3,7 @@ import { Globals } from '../script/Globals'
 
 const gameStageDimention = Globals.getCandyGameStageDimention()
 
-const INIT_STEP_COUNT = 50
-const MAX_POINT = 2000
+// const INIT_STEP_COUNT = 50
 
 const HEADER_HEIGHT = 28
 const BAR_HEIGHT = 15
@@ -23,18 +22,21 @@ export class CandyHeader {
   constructor(
     reCreateCandys = () => {},
     gameFail = () => {},
-    gamePassed = () => {}
+    gamePassed = () => {},
+    gameLevel = 0
   ) {
     this.container = new PIXI.Container()
     this.container.name = 'candyHeader'
     this.reCreateCandys = reCreateCandys
     this.gameFail = gameFail
     this.gamePassed = gamePassed
-
-    this.remainStepCount = INIT_STEP_COUNT
+    this.gameLevel = gameLevel
 
     this.currentPoint = 0
-    this.maxPoint = MAX_POINT
+    this.remainStepCount = getRemainStepCount(this.gameLevel)
+    this.maxPoint = getMaxPoint(this.gameLevel)
+
+    console.log(this.maxPoint)
 
     this.createCandyHeader()
   }
@@ -111,14 +113,14 @@ export class CandyHeader {
     this._setWhiteBarWidth()
 
     // scoreBar max point
-    const maxPointText = new PIXI.Text(`${this.maxPoint}`, {
+    this.maxPointText = new PIXI.Text(`${this.maxPoint}`, {
       fill: ['0xffffff'],
       fontSize: 14,
     })
 
-    this.scoreBar.addChild(maxPointText)
-    maxPointText.y = -17
-    maxPointText.x = scoreBackground.width - maxPointText.width
+    this.scoreBar.addChild(this.maxPointText)
+    this.maxPointText.y = -17
+    this.maxPointText.x = scoreBackground.width - this.maxPointText.width
 
     // scoreBar current point
     this.currentPointText = new PIXI.Text(`${this.currentPoint}`, {
@@ -168,13 +170,14 @@ export class CandyHeader {
     // const bonusCount = needToDeleteArray.length % 3
     let pointNew = this.currentPoint
     console.log(isFirstTimeLineCheck)
+
     needToDeleteArray.forEach((candy) => {
-      pointNew += candy.candyPoint
+      pointNew += Math.floor(candy.candyPoint / 3)
     })
 
     // TODO : update score method
 
-    this.currentPoint = pointNew <= MAX_POINT ? pointNew : MAX_POINT
+    this.currentPoint = pointNew <= this.maxPoint ? pointNew : this.maxPoint
     this.currentPointText.text = this.currentPoint
     this._setWhiteBarWidth()
 
@@ -219,14 +222,21 @@ export class CandyHeader {
     })
   }
 
-  resetCandyHeader() {
-    this.remainStepCount = INIT_STEP_COUNT
+  resetCandyHeader(gameLevel) {
+    this.gameLevel = gameLevel
 
     this._setWhiteBarWidth()
     this.currentPoint = 0
     this.currentPointText.text = this.currentPoint
     this.currentPointText.y = -17
     this.currentPointText.x = 0
+
+    this.remainStepCount = getRemainStepCount(this.gameLevel)
+    this.reststepCountText.text = this.remainStepCount
+
+    this.maxPoint = getMaxPoint(this.gameLevel)
+    this.maxPointText.text = this.maxPoint
+    console.log(this)
   }
 
   activeCandyHeader() {
@@ -247,5 +257,30 @@ export class CandyHeader {
 
   destoryCandyHeader() {
     this.deactiveCandyHeader()
+  }
+}
+
+function getRemainStepCount(gameLevel) {
+  switch (gameLevel) {
+    default:
+    case 0:
+      return 30
+    case 1:
+      return 50
+    case 2:
+      return 70
+  }
+}
+function getMaxPoint(gameLevel) {
+  switch (gameLevel) {
+    default:
+    case 0:
+      return 800
+
+    case 1:
+      return 1200
+
+    case 2:
+      return 1500
   }
 }

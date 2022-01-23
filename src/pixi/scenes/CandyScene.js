@@ -95,7 +95,8 @@ export class CandyScene extends Scene {
     this.candyHeader = new CandyHeader(
       this.reCreateCandys.bind(this),
       this.gameOver.bind(this),
-      this.gamePassed.bind(this)
+      this.gamePassed.bind(this),
+      this.gameLevel
     )
     this.container.addChild(this.candyHeader.container)
 
@@ -871,7 +872,6 @@ export class CandyScene extends Scene {
         this.container.removeChild(this.gameSuccess.container)
 
         this.resetGameSetting()
-        // this.initGame()
         this.startGameFlow()
         break
 
@@ -894,7 +894,7 @@ export class CandyScene extends Scene {
     // super.removeKeyboardListener()
     super.resetGameSetting()
     this.removeAllCandys()
-    this.candyHeader.resetCandyHeader()
+    this.candyHeader.resetCandyHeader(this.gameLevel)
     this.grid = []
   }
 
