@@ -11,6 +11,7 @@ import { DoctorSay } from '../components/DoctorSay'
 import { GroundGroup } from '../components/GroundGroup'
 import { IntroSlideshow } from '../components/IntroSlideshow'
 import { Header } from '../components/Header'
+// import { sound } from '@pixi/sound'
 
 const skipButtonDimention = Globals.getSkipButtonDimention()
 const groundGroupDimention = Globals.getGroundDimention()
@@ -132,7 +133,11 @@ export class IntroScene {
     // start film script
     console.log(startFilmScript)
     this.startButton.on('pointerdown', () => {
-      this.selectStage('run')
+      // sound.add('menu', Globals.resources['music_menu'])
+      // console.log(sound)
+      // sound.play('menu')
+
+      this.selectStage('candy')
     })
     // this.startButton.on('pointerdown', startFilmScript)
   }

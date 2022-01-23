@@ -10,6 +10,7 @@ export class Candy {
     this.j = j
     this.i = i
     this.swapHandler = swapHandler
+    this.candyPoint = getCandyPoint(typeIndex)
 
     this.container = new PIXI.Container()
     this.container.name = 'candy'
@@ -353,5 +354,20 @@ export class Candy {
 
       this.vanishTicker.start()
     })
+  }
+}
+
+function getCandyPoint(candyIndex) {
+  switch (candyIndex) {
+    case 0:
+      return 100
+    case 1:
+      return 75
+    case 2:
+      return 50
+    case 3:
+      return 200
+    case 4:
+      return 200
   }
 }

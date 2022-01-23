@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@pixi/sound": "^4.2.0",
     "core-js": "^3.6.5",
     "lodash": "^4.17.21",
     "pixi-multistyle-text": "^0.10.0",

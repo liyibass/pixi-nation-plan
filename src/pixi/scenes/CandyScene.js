@@ -105,10 +105,13 @@ export class CandyScene extends Scene {
 
   async createCandys() {
     this.isFalling = true
+    this.grid = [[], [], [], [], [], [], [], []]
     const fallingCandysPromise = []
     for (let j = this.rowCount - 1; j >= 0; j--) {
       const rowArray = []
-      this.grid.unshift(rowArray)
+      // this.grid.unshift(rowArray)
+      this.grid[j] = rowArray
+
       for (let i = 0; i < this.colCount; i++) {
         const typeIndex = generateTypeIndex.bind(this)(i, j, rowArray)
 
@@ -153,6 +156,7 @@ export class CandyScene extends Scene {
       const topCandyTypeIndex =
         j - 2 >= 0 ? this.grid[j + 2]?.[i]?.typeIndex : null
 
+      // this._logGrid()
       const excludeTypeIndex = [
         leftCandyTypeIndex,
         rightCandyTypeIndex,
@@ -381,12 +385,21 @@ export class CandyScene extends Scene {
     // =====================CHECK LINE LOOP======================
     this.needToDeleteArray = this.examineIfHasLine()
 
+    let isFirstTimeLineCheck = true
     while (this.needToDeleteArray.length > 0) {
       if (this.isGameStop) return
 
       this.isHandlingLine = true
       await this.lineHandler()
-      await this.candyHeader.increaseScore(this.needToDeleteArray)
+      await this.candyHeader.increaseScore(
+        this.needToDeleteArray,
+        isFirstTimeLineCheck
+      )
+
+      if (isFirstTimeLineCheck) {
+        // this is for point counting
+        isFirstTimeLineCheck = false
+      }
 
       // clear
       this.needToDeleteArray = []
@@ -507,23 +520,6 @@ export class CandyScene extends Scene {
   async addNewCandyIntoGrid() {
     let nullCount = 0
     const addCandyPromise = []
-
-    // for (let j = this.rowCount - 1; j >= 0; j--) {
-    //   const rowArray = []
-    //   for (let i = 0; i < this.colCount; i++) {
-    //     if (this.grid[j][i] === null) {
-    //       const typeIndex = Math.floor(Math.random() * 4)
-
-    //       const candy = this.createCandy(typeIndex, i, j)
-    //       this.candyBox.addChild(candy.container)
-    //       this.grid[j][i] = candy
-    //       rowArray.push(candy)
-    //       nullCount++
-    //       addCandyPromise.push(candy.startFallingCandy())
-    //       candy.startDragMonitor()
-    //     }
-    //   }
-    // }
 
     const addedCandyArray = []
 
@@ -907,26 +903,27 @@ export class CandyScene extends Scene {
     for (let j = 0; j < this.rowCount; j++) {
       const row = []
       for (let i = 0; i < this.colCount; i++) {
-        row.push(getColor(this.grid[j][i]?.typeIndex))
+        // row.push(getColor(this.grid[j][i]?.typeIndex))
+        row.push(this.grid[j]?.[i]?.typeIndex)
       }
       // console.log(this.grid[j])
       console.log(row)
     }
 
-    function getColor(typeIndex) {
-      switch (typeIndex) {
-        case 0:
-          return '黃'
-        case 1:
-          return '綠'
-        case 2:
-          return '藍'
-        case 3:
-          return '紅'
-        default:
-          return null
-      }
-    }
+    // function getColor(typeIndex) {
+    //   switch (typeIndex) {
+    //     case 0:
+    //       return '黃'
+    //     case 1:
+    //       return '綠'
+    //     case 2:
+    //       return '藍'
+    //     case 3:
+    //       return '紅'
+    //     default:
+    //       return null
+    //   }
+    // }
   }
 
   destroyScene() {

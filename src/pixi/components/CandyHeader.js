@@ -163,12 +163,18 @@ export class CandyHeader {
     }
   }
 
-  increaseScore(needToDeleteArray) {
-    const lineCount = Math.floor(needToDeleteArray.length / 3)
-    const bonusCount = needToDeleteArray.length % 3
+  increaseScore(needToDeleteArray, isFirstTimeLineCheck) {
+    // const lineCount = Math.floor(needToDeleteArray.length / 3)
+    // const bonusCount = needToDeleteArray.length % 3
+    let pointNew = this.currentPoint
+    console.log(isFirstTimeLineCheck)
+    needToDeleteArray.forEach((candy) => {
+      pointNew += candy.candyPoint
+    })
 
-    const point = this.currentPoint + lineCount * 50 + bonusCount * 5
-    this.currentPoint = point <= MAX_POINT ? point : MAX_POINT
+    // TODO : update score method
+
+    this.currentPoint = pointNew <= MAX_POINT ? pointNew : MAX_POINT
     this.currentPointText.text = this.currentPoint
     this._setWhiteBarWidth()
 
