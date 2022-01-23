@@ -186,6 +186,19 @@ import game0_0 from '../assets/images/game0_0.png'
 import game0_1 from '../assets/images/game0_1.png'
 import game0_2 from '../assets/images/game0_2.png'
 import game0_3 from '../assets/images/game0_3.png'
+import fx_candyRemove from '../assets/images/fx_candyRemove.mp3'
+import fx_click from '../assets/images/fx_click.mp3'
+import fx_eatFood from '../assets/images/fx_eatFood.mp3'
+import fx_fail from '../assets/images/fx_fail.mp3'
+import fx_runJump from '../assets/images/fx_runJump.mp3'
+import fx_success from '../assets/images/fx_success.mp3'
+import fx_weightCardDrop from '../assets/images/fx_weightCardDrop.mp3'
+import music_balance from '../assets/images/music_balance.mp3'
+import music_candy from '../assets/images/music_candy.mp3'
+import music_intro from '../assets/images/music_intro.mp3'
+import music_menu from '../assets/images/music_menu.mp3'
+import music_run from '../assets/images/music_run.mp3'
+import music_snake from '../assets/images/music_snake.mp3'
 
 export const LoaderConfig = {
   player,
@@ -376,4 +389,18 @@ export const LoaderConfig = {
   game0_1,
   game0_2,
   game0_3,
+
+  fx_candyRemove,
+  fx_click,
+  fx_eatFood,
+  fx_fail,
+  fx_runJump,
+  fx_success,
+  fx_weightCardDrop,
+  music_balance,
+  music_candy,
+  music_intro,
+  music_menu,
+  music_run,
+  music_snake,
 }
