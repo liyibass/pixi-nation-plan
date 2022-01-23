@@ -166,10 +166,12 @@ export const clickUrl = (urlName) => {
 
   switch (urlName) {
     case 'facebook':
-      url = 'https://www.facebook.com'
+      url =
+        'https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.readr.tw%2Fpost%2F2892'
       break
     case 'line':
-      url = 'https://www.google.com'
+      url =
+        'https://access.line.me/oauth2/v2.1/login?loginState=JdpW9FfA0rxLMqoGC71QBs&loginChannelId=1446101138&returnUri=%2Foauth2%2Fv2.1%2Fauthorize%2Fconsent%3Fscope%3Dopenid%2Bprofile%2Bfriends%2Bgroups%2Btimeline.post%2Bmessage.write%26response_type%3Dcode%26state%3Db284e28d368a40b14b36f3e6edcf72%26redirect_uri%3Dhttps%253A%252F%252Fsocial-plugins.line.me%252Flineit%252FloginCallback%253FreturnUrl%253Dhttps%25253A%25252F%25252Fsocial-plugins.line.me%25252Flineit%25252Fshare%25253Furl%25253Dhttps%25253A%25252F%25252Fwww.readr.tw%25252Fpost%25252F2892%26client_id%3D1446101138#/'
       break
     default:
     case 'readr':

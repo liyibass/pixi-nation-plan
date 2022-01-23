@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 // import { Globals } from '../script/Globals'
-const MOVE_SPEED = 2
+const MOVE_SPEED = 1
 const BLOCK_WIDTH = 16
 
 export class SnakePart {
