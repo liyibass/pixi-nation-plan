@@ -110,9 +110,10 @@ export class BalanceScene extends Scene {
 
   createInitLoad() {
     if (this.gameLevel === 1) {
-      const createList = [0, 1, 0, 1, 4, 5, 2, 3, 2]
-
-      createList.forEach((id) => {
+      // const createList = [0, 1, 0, 1, 4, 5, 2, 3, 2]
+      const leftList = [0, 1, 0, 1]
+      const rightList = [4, 5, 2, 3, 2]
+      leftList.forEach((id) => {
         const { name, weight, load } = this.getRandomWeight(id)
         const weightCard = new WeightCard(
           weight,
@@ -123,12 +124,24 @@ export class BalanceScene extends Scene {
 
         this.seesawGroup.addNewWeightCardToBoard(weightCard, 'left')
       })
+      rightList.forEach((id) => {
+        const { name, weight, load } = this.getRandomWeight(id)
+        const weightCard = new WeightCard(
+          weight,
+          name,
+          load,
+          this.seesawGroup.getChoosedWeightCard.bind(this.seesawGroup)
+        )
+
+        this.seesawGroup.addNewWeightCardToBoard(weightCard, 'right')
+      })
 
       // this.seesawGroup.rotateBoard(true)
     } else if (this.gameLevel === 2) {
-      const createList = [7, 0, 1, 0, 1, 0, 1, 2, 3, 2, 3, 2, 4, 5, 4, 5, 4]
+      const leftList = [0, 1, 0, 1, 0, 1, 7]
+      const rightList = [2, 3, 2, 3, 2, 4, 5, 4, 5, 4]
 
-      createList.forEach((id) => {
+      leftList.forEach((id) => {
         const { name, weight, load } = this.getRandomWeight(id)
         const weightCard = new WeightCard(
           weight,
@@ -138,6 +151,17 @@ export class BalanceScene extends Scene {
         )
 
         this.seesawGroup.addNewWeightCardToBoard(weightCard, 'left')
+      })
+      rightList.forEach((id) => {
+        const { name, weight, load } = this.getRandomWeight(id)
+        const weightCard = new WeightCard(
+          weight,
+          name,
+          load,
+          this.seesawGroup.getChoosedWeightCard.bind(this.seesawGroup)
+        )
+
+        this.seesawGroup.addNewWeightCardToBoard(weightCard, 'right')
       })
     }
   }
@@ -233,7 +257,7 @@ export class BalanceScene extends Scene {
   async startGame() {
     await super.startGame()
 
-    this.conveyor.startConveyor()
+    this.conveyor.startConveyor(this.gameLevel)
     this.timer.startTimer()
     this._startsceneTicker()
   }

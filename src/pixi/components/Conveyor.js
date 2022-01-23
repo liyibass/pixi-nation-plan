@@ -46,8 +46,9 @@ export class Conveyor {
     this.container.mask = mask
   }
 
-  addNewWeightCard() {
-    const { name, weight, load } = this.getRandomWeight()
+  // TODO:
+  addNewWeightCard(cardType) {
+    const { name, weight, load } = this.getRandomWeight(cardType)
     const weightCard = new WeightCard(
       weight,
       name,
@@ -77,9 +78,9 @@ export class Conveyor {
     weightCard.startPositionCard()
   }
 
-  startConveyor() {
+  startConveyor(gameLevel) {
     this.stop = false
-    this._addWeightCardContinously()
+    this._addWeightCardContinously(gameLevel)
 
     startPositionCard(this.firstWeightCard)
 
@@ -120,7 +121,11 @@ export class Conveyor {
     }
   }
 
-  _addWeightCardContinously() {
+  _addWeightCardContinously(gameLevel) {
+    if (gameLevel === 2) {
+      this.addNewWeightCard(6)
+    }
+
     const createNewWeightCardTimeout = () => {
       this.addNewWeightCardTimeout = setTimeout(() => {
         if (this.stop) return
@@ -139,8 +144,8 @@ export class Conveyor {
     createNewWeightCardTimeout()
   }
 
-  getRandomWeight() {
-    const randomId = Math.floor(Math.random() * 8)
+  getRandomWeight(cardType) {
+    const randomId = cardType || Math.floor(Math.random() * 5)
 
     switch (randomId) {
       case 0:

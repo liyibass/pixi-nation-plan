@@ -137,7 +137,7 @@ export class IntroScene {
       // console.log(sound)
       // sound.play('menu')
 
-      this.selectStage('candy')
+      this.selectStage('balance')
     })
     // this.startButton.on('pointerdown', startFilmScript)
   }

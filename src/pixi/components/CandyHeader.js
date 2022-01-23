@@ -36,8 +36,6 @@ export class CandyHeader {
     this.remainStepCount = getRemainStepCount(this.gameLevel)
     this.maxPoint = getMaxPoint(this.gameLevel)
 
-    console.log(this.maxPoint)
-
     this.createCandyHeader()
   }
 
