@@ -11,7 +11,7 @@ import { DoctorSay } from '../components/DoctorSay'
 import { GroundGroup } from '../components/GroundGroup'
 import { IntroSlideshow } from '../components/IntroSlideshow'
 import { Header } from '../components/Header'
-// import { sound } from '@pixi/sound'
+import { sound } from '@pixi/sound'
 
 const skipButtonDimention = Globals.getSkipButtonDimention()
 const groundGroupDimention = Globals.getGroundDimention()
@@ -91,6 +91,7 @@ export class IntroScene {
       this.isAnimationSkipped = true
       this.container.removeAllListeners()
       this.container.destroy()
+      this.stopMusic()
       this.selectStage('menu')
     })
   }
@@ -110,11 +111,14 @@ export class IntroScene {
     this._createBackground()
     this.createStartButton()
     this._createHeader()
+    this.initMusic()
 
     // this.createTaiwan()
     // this.createCard()
 
     const startFilmScript = async () => {
+      this.playMusic()
+
       if (this.filmScriptStep === 0) {
         this.container.removeChild(this.startButton)
         this.startButton.buttonMode = false
@@ -152,6 +156,18 @@ export class IntroScene {
       this.slideshow = new IntroSlideshow(resolve)
       this.container.addChild(this.slideshow.container)
     })
+  }
+
+  initMusic() {
+    sound.add('intro', Globals.resources['music_intro'])
+  }
+
+  playMusic() {
+    sound.play('intro')
+  }
+
+  stopMusic() {
+    sound.stop('intro')
   }
 
   async startStory() {
@@ -434,7 +450,7 @@ export class IntroScene {
     this.updateGroundGroup()
     this.skipButton.removeAllListeners()
     this.container.removeChild(this.skipButton)
-
+    this.stopMusic()
     this.selectStage('menu')
   }
 
