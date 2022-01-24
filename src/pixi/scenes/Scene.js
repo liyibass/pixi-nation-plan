@@ -206,6 +206,7 @@ export class Scene {
   }
 
   async failGameHint() {
+    console.log('failGameHint')
     if (this.menuButtons?.container) {
       this.container.removeChild(this.menuButtons.container)
     }
@@ -236,7 +237,7 @@ export class Scene {
     switch (chosen) {
       case 'restart':
         this.container.removeChild(this.gameFail.container)
-
+        this.playMusic()
         this.resetGameSetting()
         this.initGame()
         this.startGame()
@@ -380,6 +381,7 @@ export class Scene {
   }
 
   restartGame() {
+    this.playMusic()
     this.resetGameSetting()
     this.initGame()
     this.startGame()

@@ -750,7 +750,7 @@ export class RunScene extends Scene {
     switch (chosen) {
       case 'restart':
         this.container.removeChild(this.gameFail.container)
-
+        this.playMusic()
         this.resetGameSetting()
         this._createPlayer()
         await this._playerJumpAnimation()

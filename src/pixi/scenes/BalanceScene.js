@@ -346,7 +346,7 @@ export class BalanceScene extends Scene {
     switch (chosen) {
       case 'restart':
         this.container.removeChild(this.gameFail.container)
-
+        this.playMusic()
         this.resetGameSetting()
         this.initGame()
         this.startGame()

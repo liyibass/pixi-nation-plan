@@ -1118,6 +1118,7 @@ export class SnakeScene {
       this.stopFailMusic()
       switch (chosen) {
         case 'restart':
+          this.playMusic()
           this.container.removeChild(gameFail.container)
           this.restartGame()
           break
