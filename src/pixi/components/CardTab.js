@@ -323,6 +323,8 @@ export class CardTab {
   }
 
   lockHandler() {
+    if (this.isInfoCard) return
+
     if (this.tabStatus?.isLocked) {
       // lock graphics
       this.content.filters = [new PIXI.filters.BlurFilter(5)]
