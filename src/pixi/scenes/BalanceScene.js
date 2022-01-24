@@ -291,6 +291,10 @@ export class BalanceScene extends Scene {
   }
 
   _gameStateMonitor() {
+    if (this.timer.time <= 0) {
+      this.gameOver()
+    }
+
     if (
       this.seesawGroup.isDead ||
       (this.timer.time <= 0 &&
@@ -308,6 +312,7 @@ export class BalanceScene extends Scene {
 
   // ===== game pause =====
   _pauseAllGameActivity() {
+    this.sceneTicker.stop()
     this.conveyor.stopConveyor()
     this.timer.stopTimer()
     this.seesawGroup.stopSeesawGroup()
@@ -316,6 +321,7 @@ export class BalanceScene extends Scene {
   }
 
   _resumeAllGameActivity() {
+    this.sceneTicker.start()
     this.conveyor.startConveyor()
     this.timer.startTimer()
     this.seesawGroup.startSeesawGroup()
