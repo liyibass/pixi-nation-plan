@@ -181,6 +181,11 @@ export const clickUrl = (urlName) => {
       url = 'https://www.readr.tw/donate'
       break
   }
+
+  openUrl(url)
+}
+
+function openUrl(url) {
   window.open(url, '_blank').focus()
 }
 
