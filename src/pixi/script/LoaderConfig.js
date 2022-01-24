@@ -199,6 +199,7 @@ import music_intro from '../assets/audios/music_intro.mp3'
 import music_menu from '../assets/audios/music_menu.mp3'
 import music_run from '../assets/audios/music_run.mp3'
 import music_snake from '../assets/audios/music_snake.mp3'
+import volume from '../assets/images/volume.png'
 
 export const LoaderConfig = {
   player,
@@ -403,4 +404,5 @@ export const LoaderConfig = {
   music_menu,
   music_run,
   music_snake,
+  volume,
 }

@@ -4,6 +4,7 @@ import { clickUrl } from '../script/Utils'
 const READR_WIDTH = 31
 const DONATE_WIDTH = 22
 const PADDING = 10
+import { sound } from '@pixi/sound'
 
 export class Header {
   constructor() {
@@ -18,6 +19,7 @@ export class Header {
   createHeader() {
     const readrTexture = new PIXI.Texture(Globals.resources['readr']?.texture)
     const donateTexture = new PIXI.Texture(Globals.resources['donate']?.texture)
+    const volumeTexture = new PIXI.Texture(Globals.resources['volume']?.texture)
 
     this.readrSprite = new PIXI.Sprite(readrTexture)
     this.readrSprite.width = READR_WIDTH
@@ -27,12 +29,27 @@ export class Header {
     this.donateSprite.width = DONATE_WIDTH
     this.donateSprite.height = DONATE_WIDTH
 
+    this.volumeSprite = new PIXI.Sprite(volumeTexture)
+    this.volumeSprite.width = DONATE_WIDTH
+    this.volumeSprite.height = DONATE_WIDTH
+
     this.readrSprite.x = PADDING
     this.donateSprite.x = Globals.outerWidth - this.donateSprite.width - PADDING
+    this.volumeSprite.x =
+      Globals.outerWidth -
+      this.donateSprite.width -
+      PADDING -
+      this.volumeSprite.width -
+      PADDING
     this.readrSprite.y = PADDING
     this.donateSprite.y = PADDING
+    this.volumeSprite.y = PADDING
 
-    this.container.addChild(this.readrSprite, this.donateSprite)
+    this.container.addChild(
+      this.readrSprite,
+      this.donateSprite,
+      this.volumeSprite
+    )
   }
 
   activeListener() {
@@ -40,12 +57,23 @@ export class Header {
     this.readrSprite.interactive = true
     this.donateSprite.buttonMode = true
     this.donateSprite.interactive = true
+    this.volumeSprite.buttonMode = true
+    this.volumeSprite.interactive = true
 
     this.readrSprite.addListener('pointerdown', () => {
       clickUrl('readr')
     })
     this.donateSprite.addListener('pointerdown', () => {
       clickUrl('donate')
+    })
+    this.volumeSprite.addListener('pointerdown', () => {
+      if (sound.volumeAll == 1) {
+        sound.volumeAll = 0
+        this.volumeSprite.alpha = 0.6
+      } else if (sound.volumeAll === 0) {
+        sound.volumeAll = 1
+        this.volumeSprite.alpha = 1
+      }
     })
   }
 
@@ -54,9 +82,12 @@ export class Header {
     this.readrSprite.interactive = false
     this.donateSprite.buttonMode = false
     this.donateSprite.interactive = false
+    this.volumeSprite.buttonMode = false
+    this.volumeSprite.interactive = false
 
     this.readrSprite.removeAllListeners()
     this.donateSprite.removeAllListeners()
+    this.volumeSprite.removeAllListeners()
   }
 
   destoryHeader() {
