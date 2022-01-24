@@ -251,8 +251,12 @@ export class RunScene extends Scene {
         this.gameLevel1()
         break
 
-      default:
       case 2:
+        this.gameLevel2_0()
+        break
+
+      case 3:
+        this.gameLevel--
         this.gameLevel2_0()
         break
     }
@@ -661,6 +665,7 @@ export class RunScene extends Scene {
   _resumeAllGameActivity() {
     // super.createKeyboardListener()
     this.player.jumpTicker.start()
+    this.player.changePlayerTexture('running')
     this.sceneTicker.start()
     this.cityBackgroundLayer.children.forEach((background) => {
       background.optimizeTicker?.start()

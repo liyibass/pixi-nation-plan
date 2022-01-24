@@ -202,7 +202,9 @@ export class BalanceScene extends Scene {
         this.gameLevel2()
         break
 
-      default:
+      case 3:
+        this.gameLevel--
+        this.gameLevel2()
         break
     }
   }

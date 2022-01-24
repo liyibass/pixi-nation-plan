@@ -520,11 +520,11 @@ export class SnakeScene {
         break
 
       case 2:
-        this.createFoodScore('all')
-        this.gameLevel2()
-        break
-
-      default:
+        // this.createFoodScore('all')
+        // this.gameLevel2()
+        this.gameLevel--
+        this.createFoodScore('incinerator')
+        this.gameLevel1()
         break
     }
   }
