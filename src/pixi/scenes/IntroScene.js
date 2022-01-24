@@ -163,7 +163,9 @@ export class IntroScene {
   }
 
   playMusic() {
-    sound.play('intro')
+    sound.play('intro', {
+      loop: true,
+    })
   }
 
   stopMusic() {

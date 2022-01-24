@@ -6,6 +6,7 @@ import { Globals } from '../script/Globals'
 import { Status } from '../script/Status'
 import { unlockCandy } from '../script/Utils'
 import { Scene } from './Scene'
+import { sound } from '@pixi/sound'
 
 const gameStageDimention = Globals.getCandyGameStageDimention()
 // const CANDY_WIDTH = gameStageDimention
@@ -15,6 +16,7 @@ export class CandyScene extends Scene {
     super(...args)
     this.gameLevel = Status.candy.gameLevel
     this.container.name = 'CandyScene'
+    this.initMusic()
 
     this.grid = []
     // unlockCandy()
@@ -29,6 +31,20 @@ export class CandyScene extends Scene {
 
     this.createScene()
     this.startGameFlow()
+  }
+
+  initMusic() {
+    sound.add('candy', Globals.resources['music_candy'])
+  }
+
+  playMusic() {
+    sound.play('candy', {
+      loop: true,
+    })
+  }
+
+  stopMusic() {
+    sound.stop('candy')
   }
   // ===== init system =====
   createScene() {
@@ -687,6 +703,7 @@ export class CandyScene extends Scene {
   // ===== game flow =====
   async startGameFlow() {
     console.log('startGameFlow')
+    this.playMusic()
 
     await this._wait(500)
 
@@ -811,6 +828,7 @@ export class CandyScene extends Scene {
   // ===== game over =====
 
   async failGameHint() {
+    this.playFailMusic()
     super.failGameHint()
 
     // switch (this.gameLevel) {
@@ -829,6 +847,7 @@ export class CandyScene extends Scene {
   }
 
   async failGameChooseHandler(chosen) {
+    this.stopFailMusic()
     switch (chosen) {
       case 'restart':
         this.container.removeChild(this.gameFail.container)
@@ -849,6 +868,8 @@ export class CandyScene extends Scene {
   // ===== game pass =====
 
   async successGameHint() {
+    this.playSuccessMusic()
+
     super.successGameHint()
     this.gameLevel++
     Status.candy.gameLevel++
@@ -867,6 +888,8 @@ export class CandyScene extends Scene {
   }
 
   async successGameChooseHandler(chosen) {
+    this.stopSuccessMusic()
+
     switch (chosen) {
       case 'nextLevel':
         this.container.removeChild(this.gameSuccess.container)

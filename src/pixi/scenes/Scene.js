@@ -12,6 +12,7 @@ import { PauseGame } from '../components/PauseGame'
 import { GameFail } from '../components/GameFail'
 import { GameSuccess } from '../components/GameSuccess'
 import { Header } from '../components/Header'
+import { sound } from '@pixi/sound'
 
 const BLOCK_WIDTH = 16
 
@@ -21,6 +22,20 @@ export class Scene {
     this.gameLevel = 0
     this.selectStage = selectStage
   }
+
+  playSuccessMusic() {
+    sound.play('success')
+  }
+  stopSuccessMusic() {
+    sound.stop('success')
+  }
+  playFailMusic() {
+    sound.play('fail')
+  }
+  stopFailMusic() {
+    sound.stop('fail')
+  }
+
   // ===== init system =====
   createScene() {
     this._createBackground(0xaaaaaa)
@@ -179,6 +194,8 @@ export class Scene {
 
   // ===== game over =====
   async gameOver() {
+    this.stopMusic()
+
     this.sceneTicker.stop()
     if (this.menuButtons?.container) {
       this.container.removeChild(this.menuButtons.container)
@@ -234,6 +251,8 @@ export class Scene {
 
   // ===== game pass =====
   async gamePassed() {
+    this.stopMusic()
+
     this.sceneTicker.stop()
     if (this.menuButtons?.container) {
       this.container.removeChild(this.menuButtons.container)
@@ -323,6 +342,7 @@ export class Scene {
 
     if (this.gameLevel === 3) {
       this.selectStage('menu', this)
+      this.stopMusic()
       return
     }
 
@@ -345,6 +365,7 @@ export class Scene {
     switch (chosen) {
       case 'return':
         this.selectStage('menu', this)
+        this.stopMusic()
         break
 
       default:

@@ -9,6 +9,7 @@ import { SeesawGroup } from '../components/SeesawGroup'
 import { Timer } from '../components/Timer'
 import { WeightCard } from '../components/WeightCard'
 import { unlockBalance } from '../script/Utils'
+import { sound } from '@pixi/sound'
 
 const BLOCK_WIDTH = 16
 
@@ -16,9 +17,24 @@ export class BalanceScene extends Scene {
   constructor(...args) {
     super(...args)
     this.gameLevel = Status.balance.gameLevel
+    this.initMusic()
 
     this.createScene()
     this.startGameFlow()
+  }
+
+  initMusic() {
+    sound.add('balance', Globals.resources['music_balance'])
+  }
+
+  playMusic() {
+    sound.play('balance', {
+      loop: true,
+    })
+  }
+
+  stopMusic() {
+    sound.stop('balance')
   }
   // ===== init system =====
   createScene() {
@@ -169,6 +185,7 @@ export class BalanceScene extends Scene {
   // ===== game flow =====
   async startGameFlow() {
     console.log('startGameFlow')
+    this.playMusic()
 
     await this._wait(500)
 
@@ -304,6 +321,8 @@ export class BalanceScene extends Scene {
 
   // ===== game over =====
   async failGameHint() {
+    this.playFailMusic()
+
     super.failGameHint()
 
     // switch (this.gameLevel) {
@@ -322,6 +341,8 @@ export class BalanceScene extends Scene {
   }
 
   async failGameChooseHandler(chosen) {
+    this.stopFailMusic()
+
     switch (chosen) {
       case 'restart':
         this.container.removeChild(this.gameFail.container)
@@ -341,6 +362,8 @@ export class BalanceScene extends Scene {
 
   // ===== game pass =====
   async successGameHint() {
+    this.playSuccessMusic()
+
     super.successGameHint()
     this.gameLevel++
     Status.balance.gameLevel++
@@ -358,6 +381,8 @@ export class BalanceScene extends Scene {
   }
 
   async successGameChooseHandler(chosen) {
+    this.stopSuccessMusic()
+
     console.log('successGameChooseHandler in Balance')
     switch (chosen) {
       case 'nextLevel':

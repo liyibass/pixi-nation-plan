@@ -8,6 +8,7 @@ import { Taiwan } from '../components/Taiwan'
 import { Scene } from './Scene'
 import { Status } from '../script/Status'
 import { Tip } from '../components/Tip'
+import { sound } from '@pixi/sound'
 
 import {
   unlockCandy,
@@ -30,11 +31,28 @@ export class MenuScene extends Scene {
     this.container.name = 'MenuScene'
 
     this.isNeedTutorial = Status.isNeedTutorial
+    this.initMusic()
 
     this.createScene()
     // this.doctorSay.say('啊')
     this.startGameFlow()
     // this.createTestButton()
+  }
+
+  initMusic() {
+    sound.add('menu', Globals.resources['music_menu'])
+    sound.add('success', Globals.resources['fx_success'])
+    sound.add('fail', Globals.resources['fx_fail'])
+  }
+
+  playMusic() {
+    sound.play('menu', {
+      loop: true,
+    })
+  }
+
+  stopMusic() {
+    sound.stop('menu')
   }
 
   createTestButton() {
@@ -118,6 +136,8 @@ export class MenuScene extends Scene {
   }
 
   async startGameFlow() {
+    this.playMusic()
+
     if (Status.enteredGame) {
       // still in game, and back to menu
       this.openAllListener()
@@ -403,6 +423,8 @@ export class MenuScene extends Scene {
     }
 
     this.taiwan.destroyTaiwan()
+
+    this.stopMusic()
     this.selectStage(choosedGame.gameName || choosedGame, this)
   }
 

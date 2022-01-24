@@ -16,6 +16,7 @@ import { FoodScore } from '../components/FoodScore'
 import { Status } from '../script/Status'
 import { unlockWater, unlockGarbage } from '../script/Utils'
 import { Header } from '../components/Header'
+import { sound } from '@pixi/sound'
 
 // import { SnakeBody } from '../components/SnakeBody'
 
@@ -31,6 +32,7 @@ export class SnakeScene {
   constructor(selectStage = () => {}) {
     this.container = new PIXI.Container()
     this.selectStage = selectStage
+    this.initMusic()
 
     // snake property
     this.snakeArray = []
@@ -60,6 +62,33 @@ export class SnakeScene {
 
     this.startGameFlow()
     // this.startGameTest()
+  }
+
+  initMusic() {
+    sound.add('snake', Globals.resources['music_snake'])
+  }
+
+  playMusic() {
+    sound.play('snake', {
+      loop: true,
+    })
+  }
+
+  stopMusic() {
+    sound.stop('snake')
+  }
+
+  playSuccessMusic() {
+    sound.play('success')
+  }
+  stopSuccessMusic() {
+    sound.stop('success')
+  }
+  playFailMusic() {
+    sound.play('fail')
+  }
+  stopFailMusic() {
+    sound.stop('fail')
   }
   // ===== init game =====
   createSnakeScene() {
@@ -474,6 +503,8 @@ export class SnakeScene {
   async startGameFlow() {
     console.log('startGameFlow')
     this.createSnake()
+
+    this.playMusic()
 
     await wait(500)
 
@@ -1014,6 +1045,8 @@ export class SnakeScene {
   }
 
   async gamePassed() {
+    this.playMusic()
+
     this.snakeMoveTicker.stop()
     this.controller.deactiveListener()
     this.container.removeChild(this.menuButtons.container)
@@ -1025,6 +1058,8 @@ export class SnakeScene {
   }
 
   async gameOver() {
+    this.stopMusic()
+
     this.doctorSay.hint('啊')
     this.snakeMoveTicker.stop()
     this.controller.deactiveListener()
@@ -1041,6 +1076,8 @@ export class SnakeScene {
   }
 
   async failGameHint() {
+    this.playFailMusic()
+
     this.container.removeChild(this.menuButtons.container)
     const gameFail = new GameFail(
       failGameChooseHandler.bind(this),
@@ -1078,6 +1115,7 @@ export class SnakeScene {
     }
 
     async function failGameChooseHandler(chosen) {
+      this.stopFailMusic()
       switch (chosen) {
         case 'restart':
           this.container.removeChild(gameFail.container)
@@ -1094,6 +1132,8 @@ export class SnakeScene {
   }
 
   async successGameHint() {
+    this.playSuccessMusic()
+
     this.gameLevel++
     Status.snake.gameLevel++
 
@@ -1160,6 +1200,8 @@ export class SnakeScene {
     }
 
     async function successGameChooseHandler(chosen) {
+      this.stopSuccessMusic()
+
       switch (chosen) {
         case 'nextLevel':
           this.container.removeChild(gameSuccess.container)
@@ -1379,6 +1421,8 @@ export class SnakeScene {
 
     if (this.gameLevel === 2) {
       this.selectStage('menu', this)
+
+      this.stopMusic()
       return
     }
 
@@ -1401,6 +1445,8 @@ export class SnakeScene {
     switch (chosen) {
       case 'return':
         this.selectStage('menu', this)
+
+        this.stopMusic()
         break
 
       default:

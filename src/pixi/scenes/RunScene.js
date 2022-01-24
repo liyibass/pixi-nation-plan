@@ -8,6 +8,7 @@ import { Status } from '../script/Status'
 import { Scene } from './Scene'
 import { Tiger } from '../components/Tiger'
 import { unlockRun } from '../script/Utils'
+import { sound } from '@pixi/sound'
 
 const BLOCK_WIDTH = 16
 
@@ -24,6 +25,7 @@ export class RunScene extends Scene {
     this.inWindowObstacles = []
     this.container.name = 'RunScene'
     this.gameLevel = Status.run.gameLevel
+    this.initMusic()
 
     this.bottomLayer = new PIXI.Container()
     this.cityBackgroundLayer = new PIXI.Container()
@@ -32,6 +34,20 @@ export class RunScene extends Scene {
 
     this.createScene()
     this.startGameFlow()
+  }
+
+  initMusic() {
+    sound.add('run', Globals.resources['music_run'])
+  }
+
+  playMusic() {
+    sound.play('run', {
+      loop: true,
+    })
+  }
+
+  stopMusic() {
+    sound.stop('run')
   }
   // ===== init system =====
   createScene() {
@@ -222,6 +238,7 @@ export class RunScene extends Scene {
   // ===== game flow =====
   async startGameFlow() {
     console.log('startGameFlow')
+    this.playMusic()
 
     await this._wait(500)
 
@@ -626,7 +643,7 @@ export class RunScene extends Scene {
     // if (this.player.jumpTicker?.started) {
     //   this.player.jumpTicker.stop()
     // }
-    this.sceneTicker.stop()
+    this.sceneTicker?.stop?.()
 
     this.cityBackgroundLayer.children.forEach((background) => {
       background.optimizeTicker?.stop()
@@ -658,6 +675,7 @@ export class RunScene extends Scene {
 
   // ===== game over =====
   async gameOver(obstacle) {
+    this.stopMusic()
     this.sceneTicker.stop()
 
     if (this.menuButtons?.container) {
@@ -709,6 +727,7 @@ export class RunScene extends Scene {
   }
 
   async failGameHint() {
+    this.playFailMusic()
     super.failGameHint()
 
     // switch (this.gameLevel) {
@@ -727,6 +746,7 @@ export class RunScene extends Scene {
   }
 
   async failGameChooseHandler(chosen) {
+    this.stopFailMusic()
     switch (chosen) {
       case 'restart':
         this.container.removeChild(this.gameFail.container)
@@ -764,6 +784,8 @@ export class RunScene extends Scene {
   }
 
   async successGameHint() {
+    this.playSuccessMusic()
+
     super.successGameHint()
     this.gameLevel++
     Status.run.gameLevel++
@@ -778,6 +800,8 @@ export class RunScene extends Scene {
   }
 
   async successGameChooseHandler(chosen) {
+    this.stopSuccessMusic()
+
     switch (chosen) {
       case 'nextLevel':
         this.container.removeChild(this.gameSuccess.container)
