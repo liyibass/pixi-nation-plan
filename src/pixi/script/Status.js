@@ -139,6 +139,11 @@ export const CityStatusArray = storedStatus?.CityStatusArray || [
         // unlockGame: 'candy',
         tabTag: '區位問題',
       },
+      {
+        isLocked: true,
+        // unlockGame: 'run',
+        tabTag: '個別問題',
+      },
     ],
   },
 

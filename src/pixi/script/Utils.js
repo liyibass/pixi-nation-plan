@@ -162,6 +162,15 @@ export const deserializeGameStatus = () => {
 }
 
 export const clickUrl = (urlName) => {
+  let winRef
+  let targetUrl
+
+  // 延迟1000ms
+  setTimeout(() => {
+    winRef = window.open(targetUrl, '_blank')
+    winRef.document.title = 'xxx'
+  }, 1000)
+
   let url
 
   switch (urlName) {
@@ -182,11 +191,11 @@ export const clickUrl = (urlName) => {
       break
   }
 
-  openUrl(url)
-}
-
-function openUrl(url) {
-  window.open(url, '_blank').focus()
+  if (winRef) {
+    winRef.location.href = url
+  } else {
+    targetUrl = url
+  }
 }
 
 export const updateMod = (modName) => {
