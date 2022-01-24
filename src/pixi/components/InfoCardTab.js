@@ -9,10 +9,10 @@ import MultiStyleText from 'pixi-multistyle-text'
 
 const cardDimention = Globals.getCardDimention()
 const TAB_HEIGHT = cardDimention.contentFontSize * 3
-const TAB_WIDTH = cardDimention.contentFontSize * 5
+
 const CONTENT_PADDING = cardDimention.contentFontSize
 
-export class CardTab {
+export class InfoCardTab {
   constructor(
     tabIndex,
     tabData,
@@ -62,15 +62,26 @@ export class CardTab {
     this.page.name = 'page'
 
     this.page.beginFill(getTabColor.bind(this)(this.tabIndex))
-    this.page.drawRoundedRect(0, 0, cardDimention.width, this.contentHeight, 10)
+    this.page.drawRoundedRect(
+      0,
+      0,
+      cardDimention.width,
+      this.contentHeight - TAB_HEIGHT,
+      10
+    )
     this.page.endFill()
-    this.page.y = TAB_HEIGHT
+    this.page.y = TAB_HEIGHT + TAB_HEIGHT
 
     const color = new PIXI.Graphics()
     color.beginFill(getTabColor.bind(this)(this.tabIndex))
-    color.drawRect(0, 0, cardDimention.width, this.contentHeight - 15)
+    color.drawRect(
+      0,
+      0,
+      cardDimention.width,
+      this.contentHeight - TAB_HEIGHT - 15
+    )
     color.endFill()
-    color.y = TAB_HEIGHT
+    color.y = TAB_HEIGHT + TAB_HEIGHT
 
     // page shadow
     const shadow = new PIXI.Graphics()
@@ -79,12 +90,12 @@ export class CardTab {
       0,
       0,
       cardDimention.width + 10,
-      this.contentHeight + 2,
+      this.contentHeight - TAB_HEIGHT + 2,
       20
     )
     shadow.endFill()
     shadow.filters = [new PIXI.filters.BlurFilter(7)]
-    shadow.y = TAB_HEIGHT - 6
+    shadow.y = TAB_HEIGHT + TAB_HEIGHT - 6
 
     this.container.addChild(shadow, color, this.page)
 
@@ -96,7 +107,8 @@ export class CardTab {
     this.scrollPart.x = CONTENT_PADDING
     this.scrollPart.y = CONTENT_PADDING
     this.scrollPartWidth = cardDimention.width - CONTENT_PADDING * 2
-    this.scrollPartHeight = this.contentHeight - CONTENT_PADDING * 2
+    this.scrollPartHeight =
+      this.contentHeight - TAB_HEIGHT - CONTENT_PADDING * 2
 
     // mask for scroll function
     const mask = new PIXI.Graphics()
@@ -117,62 +129,35 @@ export class CardTab {
     this.tabContainer = new PIXI.Container()
     this.tabContainer.name = 'tabContainer'
 
-    const sideShadow = new PIXI.Graphics()
-    sideShadow.beginFill(0x000000, 0.2)
-    // +10 is for hiding bottom rounded rect curve
-    sideShadow.drawRoundedRect(0, 0, TAB_WIDTH + 12, TAB_HEIGHT + 0, 10)
-    sideShadow.endFill()
-    sideShadow.filters = [new PIXI.filters.BlurFilter(5)]
-
-    const tabShadow = new PIXI.Graphics()
-    tabShadow.beginFill(this.isInfoCard ? 0x999999 : 0xa75d31)
-    // +10 is for hiding bottom rounded rect curve
-    tabShadow.drawRoundedRect(0, 0, TAB_WIDTH + 2, TAB_HEIGHT + 0, 10)
-    tabShadow.endFill()
-
-    this.tab = new PIXI.Graphics()
-    this.tab.beginFill(getTabColor.bind(this)(this.tabIndex))
-    this.tab.drawRoundedRect(0, 0, TAB_WIDTH, TAB_HEIGHT + 10, 10)
-    this.tab.endFill()
-
-    const poundSign = new PIXI.Text(`#`, {
-      fill: ['0xffffff'],
-      fontSize: cardDimention.contentFontSize,
-    })
     this.tabWording = new PIXI.Text(`${this.tabData.tabTag}`, {
-      fill: ['0xffffff'],
+      fill: [this.tabIndex === 0 ? '0xFF8B29' : '0x92B79C'],
       fontSize: cardDimention.contentFontSize,
-      wordWrap: true,
-      breakWords: true,
-      wordWrapWidth: 28,
     })
-    poundSign.x = 15
-    poundSign.y = (TAB_HEIGHT - poundSign.height) / 2
-    this.tabWording.x = 32
+
+    const tabPadding = cardDimention.contentFontSize / 4
+    const tabWidth = this.tabWording.width + 2 * tabPadding
+    this.tabWording.x = (tabWidth - this.tabWording.width) / 2
     this.tabWording.y = (TAB_HEIGHT - this.tabWording.height) / 2
 
-    this.tab.addChild(poundSign, this.tabWording)
+    this.tab = new PIXI.Graphics()
+    this.tab.beginFill(0x000000, 1)
+    // this.tab.beginFill(getTabColor.bind(this)(this.tabIndex))
+    this.tab.drawRoundedRect(0, 0, tabWidth, TAB_HEIGHT, 10)
+    this.tab.endFill()
+    this.tab.addChild(this.tabWording)
 
-    // mask
-    const mask = new PIXI.Graphics()
-    mask.beginFill(0x000000, 0.1)
-    // +10 is for hiding bottom rounded rect curve
-    mask.drawRect(0, 0, cardDimention.width, TAB_HEIGHT)
-    mask.endFill()
-    this.tabContainer.mask = mask
-    mask.x = -5
+    // this.tab.addChild(this.tabWording)
 
     // put all component together
-    this.tabContainer.addChild(mask, sideShadow, tabShadow, this.tab)
+    this.tabContainer.addChild(this.tab)
     this.container.addChild(this.tabContainer)
 
     // tab position
     this.tab.y = 1
-    sideShadow.y = 1
-    // sideShadow.x = -6
-    sideShadow.x = this.tabIndex * (TAB_WIDTH - 30) - 6
-    this.tab.x = this.tabIndex * (TAB_WIDTH - 30)
-    tabShadow.x = this.tabIndex * (TAB_WIDTH - 30)
+
+    // TODO
+    this.tab.y = Math.floor(this.tabIndex / 4) * TAB_HEIGHT
+    this.tab.x = (this.tabIndex % 4) * tabWidth
   }
 
   insertTabData() {
@@ -212,6 +197,11 @@ export class CardTab {
           fontSize: cardDimention.contentFontSize,
           fontWeight: 900,
         },
+        center: {
+          fill: ['0xffffff'],
+          fontSize: cardDimention.contentFontSize,
+          align: 'center',
+        },
       })
       paragraphText.y = contentHeight
       contentHeight += paragraphText.height + CONTENT_PADDING
@@ -242,7 +232,15 @@ export class CardTab {
           contentHeight += CONTENT_PADDING
         }
 
+        if (paragraph.type === 'center') {
+          line.alpha = 0
+        }
+
         contentHeight += line.height + CONTENT_PADDING
+      }
+
+      if (paragraph.type === 'center') {
+        paragraphText.x = (this.content.width - paragraphText.width) / 2
       }
     }
 
@@ -367,6 +365,8 @@ export class CardTab {
   }
 
   updateTabOrder(callback) {
+    console.log('updateTabOrder')
+    console.log(this.tabWording)
     // set rest tabs in order
     const exclusiveTabs = []
     this.cardFolder.tabArray.forEach((cardTab) => {
@@ -378,6 +378,7 @@ export class CardTab {
     exclusiveTabs.forEach((cardTab, index) => {
       this.cardFolder.container.setChildIndex(cardTab.container, index)
       cardTab.stopScrollTicker()
+      cardTab.tabWording.style.fill = ['0x92B79C']
     })
 
     // set selected cardTab to top
@@ -385,6 +386,8 @@ export class CardTab {
       this.container,
       this.cardFolder.tabArray.length - 1
     )
+
+    this.tabWording.style.fill = ['0xFF8B29']
 
     this.activateScrollTicker()
     this.content.y = 0

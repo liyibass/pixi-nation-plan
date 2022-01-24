@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { CardTab } from './CardTab'
+import { InfoCardTab } from './InfoCardTab'
 import { Globals } from '../script/Globals'
 import { Status } from '../script/Status'
 
@@ -24,12 +25,39 @@ export class CardFolder {
 
     this.tabArray = []
 
-    this.createCardTabs()
+    if (this.isInfoCard) {
+      this.createInfoCardTabs()
+    } else {
+      this.createCardTabs()
+    }
   }
 
   createCardTabs() {
     for (let i = this.cityData.tabs.length - 1; i >= 0; i--) {
       const tab = new CardTab(
+        i,
+        this.cityData.tabs[i],
+        this.folderHeight,
+        this,
+        this.isInfoCard,
+        this.chooseGameHandler,
+        this.cityIndex
+      )
+      this.tabArray.push(tab)
+      this.container.addChild(tab.container)
+
+      if (i === 0) {
+        tab.scrollTicker?.start?.()
+      }
+    }
+
+    if (!this.isInfoCard && Status.isNeedTutorial === false) {
+      this.activeListener()
+    }
+  }
+  createInfoCardTabs() {
+    for (let i = this.cityData.tabs.length - 1; i >= 0; i--) {
+      const tab = new InfoCardTab(
         i,
         this.cityData.tabs[i],
         this.folderHeight,

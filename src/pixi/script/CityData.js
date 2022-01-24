@@ -1592,7 +1592,7 @@ export const infoCard = {
     {
       // isLocked: false,
       unlockGame: 'snake',
-      tabTag: '目的',
+      tabTag: '計畫目的',
       tabTitle: '目的是什麼？',
       tabContent: [
         {
@@ -1690,6 +1690,38 @@ export const infoCard = {
           type: 'paragraph',
           content:
             '不過從功能分區的定義來看，住在都市的人應不至於感受到太大的變化，原本的都市計畫區原則上全部劃入城鄉發展地區第一類，一樣以都市計畫法管理。至於住在非都市地區的人，可能會因住家被劃設到不同的地區而受到影響。',
+        },
+      ],
+    },
+    {
+      // isLocked: false,
+      unlockGame: 'snake',
+      tabTag: '製作名單',
+      tabTitle: '製作名單',
+      tabContent: [
+        {
+          type: 'center',
+          content: '監製：簡信昌',
+        },
+        {
+          type: 'center',
+          content: '製作人：李又如、陳玟諺',
+        },
+        {
+          type: 'center',
+          content: '記者：陳珮瑜',
+        },
+        {
+          type: 'center',
+          content: ' 設計：曾立宇',
+        },
+        {
+          type: 'center',
+          content: '工程：呂理詣',
+        },
+        {
+          type: 'center',
+          content: '社群：徐湘芸',
         },
       ],
     },
