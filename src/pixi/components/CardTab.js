@@ -3,6 +3,7 @@ import { Globals } from '../script/Globals'
 import { CityStatusArray } from '../script/Status'
 import { Tip } from './Tip'
 import { UnlockButton } from './UnlockButton'
+import { sound } from '@pixi/sound'
 
 import MultiStyleText from 'pixi-multistyle-text'
 
@@ -40,6 +41,10 @@ export class CardTab {
     this.createCardTab()
     this.startScrollTicker()
     // this.activeListener()
+  }
+
+  playClickMusic() {
+    sound.play('click')
   }
 
   createCardTab() {
@@ -404,6 +409,8 @@ export class CardTab {
     this.tab.interactive = true
 
     this.tab.addListener('pointerdown', () => {
+      this.playClickMusic()
+
       this.updateTabOrder()
       this.unlockButton?.activeListener?.()
     })
@@ -415,6 +422,8 @@ export class CardTab {
     this.tab.interactive = true
 
     this.tab.addListener('pointerdown', () => {
+      this.playClickMusic()
+
       this.updateTabOrder()
       // this.unlockButton.activeListener()
     })

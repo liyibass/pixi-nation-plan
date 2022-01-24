@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-
+import { sound } from '@pixi/sound'
 import { Globals } from '../script/Globals'
 const introSlideshowDimention = Globals.getIntroSlideshowDimention()
 
@@ -15,6 +15,10 @@ export class IntroSlideshow {
 
     this.currentFrame = 0
     this.createIntroSlideshow()
+  }
+
+  playClickMusic() {
+    sound.play('click')
   }
 
   async createIntroSlideshow() {
@@ -170,17 +174,18 @@ export class IntroSlideshow {
 
     this.prevArrow.container.addListener('pointerdown', () => {
       if (this.isFadeIn || this.currentFrame === 0) return
-
+      this.playClickMusic()
       this.currentFrame--
       this.updateSlideshow()
     })
     this.nextArrow.container.addListener('pointerdown', () => {
       if (this.isFadeIn || this.currentFrame === 6) return
-
+      this.playClickMusic()
       this.currentFrame++
       this.updateSlideshow()
     })
     this.skipButton.addListener('pointerdown', () => {
+      this.playClickMusic()
       this.exitSlideshow()
     })
   }

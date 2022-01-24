@@ -4,6 +4,7 @@ import { TaiwanCity } from './TaiwanCity'
 import { Globals } from '../script/Globals'
 import { TaiwanGameIcon } from './TaiwanGameIcon'
 import { Card } from './Card'
+import { sound } from '@pixi/sound'
 const taiwanDimention = Globals.getTaiwanDimention()
 
 export class Taiwan {
@@ -21,6 +22,10 @@ export class Taiwan {
     this.createTaiwan()
     this.createCard()
     this.container.interactiveChildren = false
+  }
+
+  playClickMusic() {
+    sound.play('click')
   }
 
   createTaiwan() {
@@ -55,7 +60,10 @@ export class Taiwan {
   }
 
   _chooseCityHandler(selectedCity) {
+    this.playClickMusic()
     this.card.showCityInfo(selectedCity)
+    // this.cardFolder.activeListener()
+    this.card.cardFolder.activeListener()
   }
 
   createGameIcon() {

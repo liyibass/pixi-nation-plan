@@ -7,15 +7,22 @@ import { DoctorShareBoxGroup } from './DoctorShareBoxGroup'
 import { DoctorModBoxGroup } from './DoctorModBoxGroup'
 import { SpeakDialog } from './SpeakDialog'
 import { clickUrl, updateMod } from '../script/Utils'
+import { sound } from '@pixi/sound'
 
 export class DoctorSay {
   constructor() {
     this.container = new PIXI.Container()
     this.container.name = 'doctorSay'
+    // this.initMusic()
     this.init()
 
     this.doctorDimention = Globals.getDoctorDimention()
   }
+
+  playClickMusic() {
+    sound.play('click')
+  }
+
   init() {
     this.container.interactive = true
     this.container.buttonMode = true
@@ -47,6 +54,7 @@ export class DoctorSay {
     console.log('chooseSay')
     return new Promise((resolve) => {
       const chosenHandler = (chosen) => {
+        this.playClickMusic()
         this.container.removeChildren()
         this.container.removeAllListeners()
         resolve(chosen)
@@ -70,6 +78,7 @@ export class DoctorSay {
     return new Promise((resolve) => {
       const shareHandler = async (chosen) => {
         console.log(chosen)
+        this.playClickMusic()
 
         if (chosen === 'cancel') {
           this.container.removeChildren()
@@ -98,6 +107,7 @@ export class DoctorSay {
   mod(text, isClickable = true) {
     return new Promise((resolve) => {
       const modHandler = (chosen) => {
+        this.playClickMusic()
         this.container.removeChildren()
         this.container.removeAllListeners()
 
@@ -160,6 +170,7 @@ export class DoctorSay {
 
     return new Promise((resolve) => {
       this.container.addListener('pointerdown', () => {
+        this.playClickMusic()
         this.container.removeChild(speakDialog.container)
         this.container.removeAllListeners()
         speakDialog.destorySpeakDialog?.()

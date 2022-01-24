@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
+import { sound } from '@pixi/sound'
 
 const cardDimention = Globals.getCardDimention()
 
@@ -21,6 +22,10 @@ export class CardHeader {
     this.landCityIcon = new PIXI.Container()
 
     this.createHeader()
+  }
+
+  playClickMusic() {
+    sound.play('click')
   }
 
   createHeader() {
@@ -187,9 +192,11 @@ export class CardHeader {
     this.arrow2.container.buttonMode = true
     this.arrow2.container.interactive = true
     this.arrow1.container.addListener('pointerdown', () => {
+      this.playClickMusic()
       this.changeCityHandler('prev')
     })
     this.arrow2.container.addListener('pointerdown', () => {
+      this.playClickMusic()
       this.changeCityHandler('next')
     })
   }

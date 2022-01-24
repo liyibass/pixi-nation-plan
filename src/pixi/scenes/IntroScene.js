@@ -46,6 +46,25 @@ export class IntroScene {
     this.createIntro()
   }
 
+  initMusic() {
+    sound.add('intro', Globals.resources['music_intro'])
+    sound.add('click', Globals.resources['fx_click'])
+  }
+
+  playMusic() {
+    sound.play('intro', {
+      loop: true,
+    })
+  }
+
+  playClickMusic() {
+    sound.play('click')
+  }
+
+  stopMusic() {
+    sound.stop('intro')
+  }
+
   _createBackground() {
     const bg = new PIXI.Graphics()
     bg.beginFill(0x92b79c)
@@ -88,6 +107,8 @@ export class IntroScene {
     this.container.addChild(this.skipButton)
 
     this.skipButton.on('pointerdown', () => {
+      this.playClickMusic()
+
       this.isAnimationSkipped = true
       this.container.removeAllListeners()
       this.container.destroy()
@@ -117,6 +138,7 @@ export class IntroScene {
     // this.createCard()
 
     const startFilmScript = async () => {
+      this.playClickMusic()
       this.playMusic()
 
       if (this.filmScriptStep === 0) {
@@ -156,20 +178,6 @@ export class IntroScene {
       this.slideshow = new IntroSlideshow(resolve)
       this.container.addChild(this.slideshow.container)
     })
-  }
-
-  initMusic() {
-    sound.add('intro', Globals.resources['music_intro'])
-  }
-
-  playMusic() {
-    sound.play('intro', {
-      loop: true,
-    })
-  }
-
-  stopMusic() {
-    sound.stop('intro')
   }
 
   async startStory() {

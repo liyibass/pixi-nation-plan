@@ -3,6 +3,7 @@ import { CardFolder } from './CardFolder'
 import { CardHeader } from './CardHeader'
 import { Globals } from '../script/Globals'
 import { cityDataArray } from '../script/CityData'
+import { sound } from '@pixi/sound'
 
 const cardDimention = Globals.getCardDimention()
 
@@ -25,6 +26,10 @@ export class Card {
 
     this.container.visible = false
     this.createCard()
+  }
+
+  playClickMusic() {
+    sound.play('click')
   }
 
   createCard() {
@@ -206,6 +211,7 @@ export class Card {
     this.exitButtonSprite.buttonMode = true
     this.exitButtonSprite.interactive = true
     this.exitButtonSprite.addListener('pointerdown', () => {
+      this.playClickMusic()
       // this.stopAllProcess()
       this.hideCardInfo()
       // this.container.parent.removeChild(this.container)

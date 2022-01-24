@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
 import { Status, CityStatusArray } from '../script/Status'
 import { InfoCard } from './InfoCard'
+import { sound } from '@pixi/sound'
 
 // const groundDimention = Globals.getGroundDimention()
 const fontRatio = window.innerHeight / 812
@@ -18,6 +19,9 @@ export class GroundGroupIcon {
     this.createGroundGroupIcon()
     this.createText()
     this.startAnimationTicker()
+  }
+  playClickMusic() {
+    sound.play('click')
   }
 
   createGroundGroupIcon() {
@@ -80,6 +84,7 @@ export class GroundGroupIcon {
     this.container.buttonMode = true
 
     this.container.addListener('pointerdown', () => {
+      this.playClickMusic()
       const infoCard = new InfoCard(exitCallback)
       const topParent = this.container.parent.parent.parent
 
