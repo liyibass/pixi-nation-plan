@@ -129,7 +129,7 @@ export class BalanceScene extends Scene {
       // const createList = [0, 1, 0, 1, 4, 5, 2, 3, 2]
       const leftList = [0, 1, 0, 1]
       const rightList = [4, 5, 2, 3, 2]
-      leftList.forEach((id) => {
+      rightList.forEach((id) => {
         const { name, weight, load } = this.getRandomWeight(id)
         const weightCard = new WeightCard(
           weight,
@@ -140,7 +140,7 @@ export class BalanceScene extends Scene {
 
         this.seesawGroup.addNewWeightCardToBoard(weightCard, 'left')
       })
-      rightList.forEach((id) => {
+      leftList.forEach((id) => {
         const { name, weight, load } = this.getRandomWeight(id)
         const weightCard = new WeightCard(
           weight,
@@ -149,13 +149,24 @@ export class BalanceScene extends Scene {
           this.seesawGroup.getChoosedWeightCard.bind(this.seesawGroup)
         )
 
-        this.seesawGroup.addNewWeightCardToBoard(weightCard, 'right')
+        this.seesawGroup.addNewWeightCardToBoard(weightCard, 'left')
       })
 
       // this.seesawGroup.rotateBoard(true)
     } else if (this.gameLevel === 2) {
       const leftList = [0, 1, 0, 1, 0, 1, 7]
       const rightList = [2, 3, 2, 3, 2, 4, 5, 4, 5, 4]
+      rightList.forEach((id) => {
+        const { name, weight, load } = this.getRandomWeight(id)
+        const weightCard = new WeightCard(
+          weight,
+          name,
+          load,
+          this.seesawGroup.getChoosedWeightCard.bind(this.seesawGroup)
+        )
+
+        this.seesawGroup.addNewWeightCardToBoard(weightCard, 'left')
+      })
 
       leftList.forEach((id) => {
         const { name, weight, load } = this.getRandomWeight(id)
@@ -167,17 +178,6 @@ export class BalanceScene extends Scene {
         )
 
         this.seesawGroup.addNewWeightCardToBoard(weightCard, 'left')
-      })
-      rightList.forEach((id) => {
-        const { name, weight, load } = this.getRandomWeight(id)
-        const weightCard = new WeightCard(
-          weight,
-          name,
-          load,
-          this.seesawGroup.getChoosedWeightCard.bind(this.seesawGroup)
-        )
-
-        this.seesawGroup.addNewWeightCardToBoard(weightCard, 'right')
       })
     }
   }

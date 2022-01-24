@@ -114,7 +114,7 @@ export class GameTitle {
     await this.showTitle()
     await this.showRestTitle()
     await this.showReadr()
-    await this._wait(3000)
+    await this._wait(1000)
     await this.goToDark()
     await this._wait(1000)
   }
@@ -143,7 +143,7 @@ export class GameTitle {
     return new Promise((resolve) => {
       this.titleTicker.add(() => {
         if (this.title0Sprite.y < this.title0InitY) {
-          this.title0Sprite.y += 2
+          this.title0Sprite.y += 3
           this.title0Sprite.alpha += 0.01
         } else {
           this.title0Sprite.y = this.title0InitY
@@ -151,7 +151,7 @@ export class GameTitle {
         }
 
         if (this.title1Sprite.y > this.title1InitY) {
-          this.title1Sprite.y -= 2
+          this.title1Sprite.y -= 3
           this.title1Sprite.alpha += 0.01
         } else {
           this.titleTicker.stop()

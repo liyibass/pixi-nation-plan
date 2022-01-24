@@ -430,6 +430,32 @@ export const cityDataArray = [
           },
           {
             type: 'title',
+            content: '5 年內有具體規劃的開發計畫，從 5 項暴增到 13 項？',
+          },
+          {
+            type: 'paragraph',
+            content:
+              '縣府在國土計畫專案小組討論階段提出 5 項 5 年內有具體發展的規劃，到了內政部大會審議時，再新增 8 項，民間團體質疑規劃過程太草率。',
+          },
+          {
+            type: 'paragraph',
+            content:
+              '<bold>審查委員：</bold>撤回苗栗公館鄉佛壽普陀山大圓覺禪寺一案，取消銅鑼光電案，最後共通過 11 案。',
+          },
+        ],
+      },
+      {
+        // isLocked: true,
+        unlockGame: 'run',
+        tabTag: '個別問題',
+        tabContent: [
+          {
+            type: 'hint',
+            content:
+              '每個縣市會依照各自的需求，把土地劃設成不同的區域，包括農業區、工業區、住宅區、商業區、鄉村區、國土保育區等。各區的面積分配與位置對於住在上面的人至關重要，以下是國土計畫審查時在苗栗縣討論到的區位問題：',
+          },
+          {
+            type: 'title',
             content: '石虎棲地強碰光電場區？',
           },
           {
