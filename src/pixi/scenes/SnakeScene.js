@@ -1229,6 +1229,7 @@ export class SnakeScene {
   }
 
   restartGame() {
+    this.playMusic()
     this.snakeGroup.destroy()
     this.initGame()
     this.startGame()

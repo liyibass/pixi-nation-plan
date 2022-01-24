@@ -67,11 +67,11 @@ export class Header {
       clickUrl('donate')
     })
     this.volumeSprite.addListener('pointerdown', () => {
-      if (sound.volumeAll == 1) {
+      if (sound.volumeAll == 0.7) {
         sound.volumeAll = 0
         this.volumeSprite.alpha = 0.6
       } else if (sound.volumeAll === 0) {
-        sound.volumeAll = 1
+        sound.volumeAll = 0.7
         this.volumeSprite.alpha = 1
       }
     })
