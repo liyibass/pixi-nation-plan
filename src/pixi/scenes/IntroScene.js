@@ -158,15 +158,15 @@ export class IntroScene {
       }
     }
     // start film script
-    console.log(startFilmScript)
-    this.startButton.on('pointerdown', () => {
-      // sound.add('menu', Globals.resources['music_menu'])
-      // console.log(sound)
-      // sound.play('menu')
+    // console.log(startFilmScript)
+    // this.startButton.on('pointerdown', () => {
+    //   // sound.add('menu', Globals.resources['music_menu'])
+    //   // console.log(sound)
+    //   // sound.play('menu')
 
-      this.selectStage('menu')
-    })
-    // this.startButton.on('pointerdown', startFilmScript)
+    //   // this.selectStage('balance')
+    // })
+    this.startButton.on('pointerdown', startFilmScript)
   }
 
   _createHeader() {

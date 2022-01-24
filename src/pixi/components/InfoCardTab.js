@@ -365,8 +365,6 @@ export class InfoCardTab {
   }
 
   updateTabOrder(callback) {
-    console.log('updateTabOrder')
-    console.log(this.tabWording)
     // set rest tabs in order
     const exclusiveTabs = []
     this.cardFolder.tabArray.forEach((cardTab) => {
@@ -399,7 +397,7 @@ export class InfoCardTab {
 
   stopAllProcess() {
     // if (this.isInfoCard) return
-    // console.log('tab stopAllProcess')
+
     this.tab.buttonMode = false
     this.tab.interactive = false
     this.tab.removeAllListeners()
