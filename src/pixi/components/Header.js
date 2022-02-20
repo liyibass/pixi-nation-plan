@@ -46,8 +46,8 @@ export class Header {
     this.volumeSprite.y = PADDING
 
     this.container.addChild(
-      this.readrSprite,
-      this.donateSprite,
+      // this.readrSprite,
+      // this.donateSprite,
       this.volumeSprite
     )
   }

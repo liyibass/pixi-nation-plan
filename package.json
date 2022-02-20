@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
@@ -11,8 +11,10 @@
     "@pixi/sound": "^4.2.0",
     "core-js": "^3.6.5",
     "lodash": "^4.17.21",
+    "node-sass": "^7.0.1",
     "pixi-multistyle-text": "^0.10.0",
     "pixi.js": "^6.2.0",
+    "sass-loader": "^12.6.0",
     "vue": "^3.0.0"
   },
   "devDependencies": {

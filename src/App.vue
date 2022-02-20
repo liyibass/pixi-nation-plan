@@ -1,14 +1,19 @@
 <template>
+<div class="app">
+<navbar/>
   <Pixi />
+</div>
 </template>
 
 <script>
+import Navbar from './components/Navbar.vue'
 import Pixi from './components/Pixi.vue'
 
 export default {
   name: 'App',
   components: {
     Pixi,
+    Navbar,
   },
 }
 </script>
