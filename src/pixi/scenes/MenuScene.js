@@ -17,6 +17,7 @@ import {
   unlockWater,
   unlockGarbage,
   clearUnlockCardCityArray,
+  saveGameStatus,
 } from '../script/Utils'
 import { GameTitle } from '../components/GameTitle'
 
@@ -137,6 +138,7 @@ export class MenuScene extends Scene {
 
   async startGameFlow() {
     this.playMusic()
+    console.log(Status)
 
     if (Status.enteredGame) {
       // still in game, and back to menu
@@ -175,6 +177,7 @@ export class MenuScene extends Scene {
     }
 
     Status.enteredGame = true
+    saveGameStatus()
 
     await this.checkCityAnimation()
     // check if there's unlocked city
@@ -190,6 +193,9 @@ export class MenuScene extends Scene {
   async checkCityAnimation() {}
 
   async startTutorial() {
+    Status.isNeedTutorial = false
+    saveGameStatus()
+
     this.groundGroup?.deactiveListener?.()
     this.tip = new Tip()
 
@@ -391,7 +397,6 @@ export class MenuScene extends Scene {
               }
 
               console.log('set to false')
-              Status.isNeedTutorial = false
             })
           }
 

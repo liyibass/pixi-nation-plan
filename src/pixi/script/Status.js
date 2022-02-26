@@ -26,6 +26,8 @@ export const Status = storedStatus?.Status || {
   },
 }
 
+Status.enteredGame = false
+
 export const CityStatusArray = storedStatus?.CityStatusArray || [
   {
     cityIndex: 0,

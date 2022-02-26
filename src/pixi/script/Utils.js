@@ -201,3 +201,8 @@ export const clickUrl = (urlName) => {
 export const updateMod = (modName) => {
   console.log(modName)
 }
+
+export const saveGameStatus = () => {
+  // console.log(Status)
+  storeStatusIntoStorage()
+}
