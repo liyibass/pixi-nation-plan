@@ -160,7 +160,7 @@ export class Card {
       case 5:
         return '台中市'
       case 6:
-        return '彰化市'
+        return '彰化縣'
       case 7:
         return '雲林縣'
       case 8:

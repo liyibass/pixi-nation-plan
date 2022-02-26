@@ -7,6 +7,7 @@ const MIN_SPRITE_WIDTH = 30
 
 const TIMER_WIDTH = 69
 const TOP_PADDING = 31
+const SPEED = 3
 
 const { width: GAMESTAGE_WIDTH, height: GAMESTAGE_HEIGHT } =
   Globals.getSeesawGameStageDimention()
@@ -94,7 +95,7 @@ export class WeightCard {
 
     this.positionTicker.add(() => {
       if (this.x > this.targetX) {
-        this.x -= 2
+        this.x -= SPEED
 
         if (!this.isDragging) {
           this.container.x = this.x

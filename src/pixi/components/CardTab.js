@@ -144,7 +144,7 @@ export class CardTab {
       fontSize: cardDimention.contentFontSize,
       wordWrap: true,
       breakWords: true,
-      wordWrapWidth: 28,
+      wordWrapWidth: cardDimention.contentFontSize * 2,
     })
     poundSign.x = 15
     poundSign.y = (TAB_HEIGHT - poundSign.height) / 2
