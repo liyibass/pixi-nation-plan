@@ -231,13 +231,13 @@ export class BalanceScene extends Scene {
         value: 'menu',
       }
     )
-
+    console.log(chosen)
     if (chosen === 'play') {
       // this.createPoisonInterval('fauset')
       this.gameLevel0_1()
     } else {
       await this.shareGame()
-      this.backToMenu()
+      this.backToMenuFromBegining()
     }
   }
 

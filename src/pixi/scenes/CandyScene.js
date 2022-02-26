@@ -759,7 +759,7 @@ export class CandyScene extends Scene {
       this.gameLevel0_1()
     } else {
       await this.shareGame()
-      this.backToMenu(true)
+      this.backToMenuFromBegining()
     }
   }
 

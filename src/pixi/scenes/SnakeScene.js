@@ -126,10 +126,10 @@ export class SnakeScene {
     this.groundGroup.container.y = groundGroupDimention.y
 
     this.container.addChild(this.groundGroup.container)
-    this.groundGroup.activeListener(
-      this.infoCardEnterCallback.bind(this),
-      this.infoCardLeaveCallback.bind(this)
-    )
+    // this.groundGroup.activeListener(
+    //   this.infoCardEnterCallback.bind(this),
+    //   this.infoCardLeaveCallback.bind(this)
+    // )
   }
 
   infoCardEnterCallback() {
@@ -555,7 +555,7 @@ export class SnakeScene {
       this.gameLevel0_1()
     } else {
       await this.shareGame()
-      this.backToMenu()
+      this.backToMenuFromBegining()
     }
   }
 
@@ -1462,6 +1462,12 @@ export class SnakeScene {
         }
         break
     }
+  }
+
+  async backToMenuFromBegining() {
+    console.log('go to menu')
+    this.selectStage('menu', this)
+    this.stopMusic()
   }
 
   async shareGame() {

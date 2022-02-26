@@ -70,10 +70,10 @@ export class Scene {
     this.groundGroup.container.x = groundGroupDimention.x
     this.groundGroup.container.y = groundGroupDimention.y
     this.container.addChild(this.groundGroup.container)
-    this.groundGroup.activeListener(
-      this.infoCardEnterCallback.bind(this),
-      this.infoCardLeaveCallback.bind(this)
-    )
+    // this.groundGroup.activeListener(
+    //   this.infoCardEnterCallback.bind(this),
+    //   this.infoCardLeaveCallback.bind(this)
+    // )
   }
 
   infoCardEnterCallback() {
@@ -366,6 +366,7 @@ export class Scene {
     switch (chosen) {
       case 'return':
         this.selectStage('menu', this)
+        console.log(this)
         this.stopMusic()
         break
 
@@ -378,6 +379,12 @@ export class Scene {
         }
         break
     }
+  }
+
+  async backToMenuFromBegining() {
+    console.log('go to menu')
+    this.selectStage('menu', this)
+    this.stopMusic()
   }
 
   restartGame() {

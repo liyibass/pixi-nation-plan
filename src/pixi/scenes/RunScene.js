@@ -298,7 +298,7 @@ export class RunScene extends Scene {
       this.gameLevel2_1()
     } else {
       await this.shareGame()
-      this.backToMenu()
+      this.backToMenuFromBegining()
     }
   }
   async gameLevel2_1() {
