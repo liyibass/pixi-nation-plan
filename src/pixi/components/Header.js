@@ -45,6 +45,12 @@ export class Header {
     this.donateSprite.y = PADDING
     this.volumeSprite.y = PADDING
 
+    if (sound.volumeAll == 0) {
+      this.volumeSprite.alpha = 0.6
+    } else {
+      this.volumeSprite.alpha = 1
+    }
+
     this.container.addChild(
       // this.readrSprite,
       // this.donateSprite,

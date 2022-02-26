@@ -12,7 +12,8 @@ import { GroundGroup } from '../components/GroundGroup'
 import { IntroSlideshow } from '../components/IntroSlideshow'
 import { Header } from '../components/Header'
 import { sound } from '@pixi/sound'
-sound.volumeAll = 0.7
+import { Status } from '../script/Status'
+sound.volumeAll = Status.initVolune
 
 const skipButtonDimention = Globals.getSkipButtonDimention()
 const groundGroupDimention = Globals.getGroundDimention()

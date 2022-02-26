@@ -4,8 +4,10 @@ const storedStatus = deserializeGameStatus()
 
 export const Status = storedStatus?.Status || {
   isNeedTutorial: true,
-
+  enteredGame: false,
   isShared: false,
+  initVolune: 0, // 0 or 0.7
+
   snake: {
     gameLevel: 0,
     isCleared: false,
@@ -23,9 +25,6 @@ export const Status = storedStatus?.Status || {
     isCleared: false,
   },
 }
-
-Status.enteredGame = false
-Status.isShared = false
 
 export const CityStatusArray = storedStatus?.CityStatusArray || [
   {
