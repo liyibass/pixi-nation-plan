@@ -26,6 +26,7 @@ export class Stop {
     mask.endFill()
     mask.alpha = alpha
     this.container.addChild(mask)
+    mask.interactive = true
   }
 
   createTwoButtons() {
