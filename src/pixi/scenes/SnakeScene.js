@@ -22,7 +22,7 @@ import { sound } from '@pixi/sound'
 
 const BLOCK_WIDTH = 16
 const INIT_SNAKE_LENGTH = 7
-const INIT_FOOD_COUNT = 4
+const INIT_FOOD_COUNT = 1
 const INIT_POISON_COUNT = 3
 const POISON_SPAWN_BOUNDARY = 4
 const POISON_RESPAWN_INTERVAL = 10000
@@ -215,7 +215,6 @@ export class SnakeScene {
       // }
 
       const key = event.key
-
       switch (key) {
         case 'ArrowDown':
           if (
@@ -341,7 +340,9 @@ export class SnakeScene {
 
   createFood(id, foodType) {
     const { i, j } = getRandomFoodPosition.bind(this)()
+    console.log('--' + i + ',' + j)
     const snakeFood = new SnakeFood(id, i, j, foodType)
+    // const snakeFood = new SnakeFood(id, 3, 3, foodType)
 
     this.snakeFoodArray.push(snakeFood)
     this.snakeFoodGroup.addChild(snakeFood.container)
@@ -423,11 +424,13 @@ export class SnakeScene {
 
   async eatingFoodHandler() {
     const { i: headI, j: headJ } = this.snakeArray[0].getPosition()
-
+    // console.log('==========================')
+    // console.log(headI + ',' + headJ)
     // find out whether a food is been eaten
     let eatenFoodIndex = -1
     for (let x = 0; x < this.snakeFoodArray.length; x++) {
       const { i: foodI, j: foodJ } = this.snakeFoodArray[x]
+      // console.log(foodI + ',' + foodJ)
 
       if (foodI === headI && foodJ === headJ) {
         eatenFoodIndex = x
@@ -736,17 +739,22 @@ export class SnakeScene {
         const frontSnakePart = this.snakeArray[i - 1]
         await snakePart.move()
 
+        const positionX = Math.round(snakePart.container.x * 10) / 10
+        const positionY = Math.round(snakePart.container.y * 10) / 10
+
+        if (i === 0) {
+          console.log(positionX % BLOCK_WIDTH)
+        }
+
         // only when snake is moved to grid could change direction
-        if (
-          snakePart.container.x % BLOCK_WIDTH !== 0 ||
-          snakePart.container.y % BLOCK_WIDTH !== 0
-        ) {
+        if (positionX % BLOCK_WIDTH !== 0 || positionY % BLOCK_WIDTH !== 0) {
           continue
         } else {
           // head
           if (i === 0) {
             // remove invalid move direction
             const nextHeadDirection = this.moveDirection[0]
+
             if (
               snakePart.direction === getOppositeDirection(nextHeadDirection)
             ) {
@@ -768,6 +776,10 @@ export class SnakeScene {
             snakePart.prevDirection = snakePart.direction
             snakePart.direction = frontSnakePart.prevDirection
           }
+        }
+
+        if (i === 0) {
+          console.log(snakePart.i + ',' + snakePart.j)
         }
       }
 
@@ -1601,3 +1613,10 @@ function getRandomFoodPosition(isPoison) {
     return Math.floor(Math.random() * (total - 1))
   }
 }
+
+// function roundDecimal(val, precision) {
+//   return (
+//     Math.round(Math.round(val * Math.pow(10, (precision || 0) + 1)) / 10) /
+//     Math.pow(10, precision || 0)
+//   )
+// }

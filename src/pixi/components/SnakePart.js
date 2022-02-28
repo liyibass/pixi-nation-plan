@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 // import { Globals } from '../script/Globals'
-const MOVE_SPEED = 1
+const MOVE_SPEED = 1.6
 const BLOCK_WIDTH = 16
 
 export class SnakePart {
@@ -90,7 +90,9 @@ export class SnakePart {
   }
 
   move() {
-    const { x, y } = this.container
+    const { x: originX, y: originY } = this.container
+    const x = Math.round(originX)
+    const y = Math.round(originY)
     const { i, j } = this
 
     switch (this.direction) {
