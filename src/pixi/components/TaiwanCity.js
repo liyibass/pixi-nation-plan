@@ -386,6 +386,7 @@ export class TaiwanCity {
 
   deactiveListener() {
     this.container.removeAllListeners()
+
     this.textArea.alpha = 0
   }
 

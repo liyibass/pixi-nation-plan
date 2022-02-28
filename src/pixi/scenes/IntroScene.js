@@ -159,10 +159,10 @@ export class IntroScene {
       }
     }
     // start film script
-    // console.log(startFilmScript)
+    // // console.log(startFilmScript)
     // this.startButton.on('pointerdown', () => {
     //   this.selectStage('snake')
-    //   console.log(startFilmScript)
+    //   // console.log(startFilmScript)
     // })
     this.startButton.on('pointerdown', startFilmScript)
   }
@@ -180,7 +180,7 @@ export class IntroScene {
   }
 
   async startStory() {
-    console.log('startStory')
+    // console.log('startStory')
 
     this.ground = new Ground({
       x: Globals.outerWidth / 2,
@@ -231,7 +231,7 @@ export class IntroScene {
       const initShowUpTicker = new PIXI.Ticker()
 
       initShowUpTicker.add(async () => {
-        console.log('initShowUpTicker')
+        // // console.log('initShowUpTicker')
         if (this.player.container.alpha <= 0.5) {
           this.player.container.alpha += 0.01
           this.ground.sprite.alpha += 0.01
@@ -259,7 +259,7 @@ export class IntroScene {
   }
 
   async lookAround() {
-    console.log('lookAround')
+    // // console.log('lookAround')
     await this.player.lookAround()
     await this.playerSay({
       text: '這不是模擬城市的入口嗎？',
@@ -270,7 +270,7 @@ export class IntroScene {
 
   async movePlayerToGround() {
     // this.container.addChild(ground.sprite)
-    console.log('movePlayerToGround')
+    // // console.log('movePlayerToGround')
 
     return new Promise((resolve) => {
       const movePlayerToGroundTicker = new PIXI.Ticker()
@@ -322,7 +322,7 @@ export class IntroScene {
     this.spotlight.sprite.alpha = 0
     await wait(400)
 
-    console.log('spotlightOn')
+    // console.log('spotlightOn')
     this.spotlight.sprite.alpha = 0.8
 
     await this.playerSay({
@@ -334,7 +334,7 @@ export class IntroScene {
   }
 
   async doctorDrop() {
-    console.log('doctorDrop')
+    // console.log('doctorDrop')
 
     return new Promise((resolve) => {
       const doctorDropTicker = new PIXI.Ticker()
@@ -343,7 +343,7 @@ export class IntroScene {
         if (this.doctor.sprite.alpha < 1) {
           this.doctor.sprite.alpha += 0.1
         }
-        // console.log(this.ground.sprite.y)
+        // // console.log(this.ground.sprite.y)
         if (this.doctor.sprite.y <= groundGroupDimention.y - 55) {
           moveDown(this.doctor.sprite)
           this.doctor.sprite.angle += 4
@@ -396,7 +396,7 @@ export class IntroScene {
       const positionCharactersTicker = new PIXI.Ticker()
 
       positionCharactersTicker.add(async () => {
-        console.log('positionCharactersTicker')
+        // console.log('positionCharactersTicker')
 
         if (this.player.container.x <= playerX) {
           this.player.container.x -= 0.8
@@ -453,7 +453,7 @@ export class IntroScene {
   }
 
   async doctorExplain() {
-    console.log('doctorExplain')
+    // console.log('doctorExplain')
     await this.lightUpBackground()
     await this.doctorSay.newSay('新的挑戰者出現啦！')
     this.updateGroundGroup()
@@ -508,7 +508,7 @@ export class IntroScene {
   }
 
   async chosenHandler(chosen) {
-    console.log('choosed ' + chosen)
+    // console.log('choosed ' + chosen)
 
     const lightUpBackgroundTicker = new PIXI.Ticker()
     lightUpBackgroundTicker.add(() => {
@@ -521,7 +521,7 @@ export class IntroScene {
     lightUpBackgroundTicker.start()
 
     if (chosen === 'play') {
-      console.log('play game')
+      // console.log('play game')
       this.container.removeAllListeners()
     } else {
       this.skipCount++

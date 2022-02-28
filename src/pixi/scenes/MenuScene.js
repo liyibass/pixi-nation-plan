@@ -294,14 +294,17 @@ export class MenuScene extends Scene {
         ]
 
       // hint second card tab
+      this.taiwan.card.cardFolder.deactiveListener()
+
       this.tip.createPointerTip(demoTab.tabWording)
       this.container.addChild(this.tip.pointerTipContainer)
-      console.log(demoTab)
+      // console.log(demoTab)
       demoTab.tab.buttonMode = true
       demoTab.tab.interactive = true
       demoTab.tab.addListener('pointerdown', async () => {
         demoTab.updateTabOrder()
         this.removePointerHint()
+        demoTab.deactiveListener()
 
         await this._wait(1000)
         await this.doctorSay.newSay(
@@ -327,13 +330,13 @@ export class MenuScene extends Scene {
         this.container.addChild(this.tip.pointerTipContainer)
 
         const infoCardEnderCallback = async () => {
-          if (!Status.isNeedTutorial) return
+          // if (!Status.isNeedTutorial) return
           console.log('enter infoCard')
           this.removePointerHint()
         }
         const infoCardExitCallback = async () => {
-          console.log(Status.isNeedTutorial)
-          if (!Status.isNeedTutorial) return
+          // console.log(Status.isNeedTutorial)
+          // if (!Status.isNeedTutorial) return
           console.log('eixt infoCard')
 
           await this.doctorSay.newSay(

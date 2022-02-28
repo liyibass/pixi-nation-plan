@@ -94,6 +94,7 @@ export class Taiwan {
   }
 
   activeCityListener() {
+    console.log('activeCityListener')
     this.container.interactiveChildren = true
 
     this.taiwanCityArray.forEach((city) => {

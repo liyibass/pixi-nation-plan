@@ -294,7 +294,7 @@ export class SnakeScene {
   }
 
   createSnake() {
-    console.log('createSnake')
+    // console.log('createSnake')
     this.snakeGroup = new PIXI.Container()
 
     // create snake head
@@ -340,7 +340,7 @@ export class SnakeScene {
 
   createFood(id, foodType) {
     const { i, j } = getRandomFoodPosition.bind(this)()
-    console.log('--' + i + ',' + j)
+    // console.log('--' + i + ',' + j)
     const snakeFood = new SnakeFood(id, i, j, foodType)
     // const snakeFood = new SnakeFood(id, 3, 3, foodType)
 
@@ -722,7 +722,7 @@ export class SnakeScene {
   }
 
   async startGame() {
-    console.log('game started')
+    // console.log('game started')
     await this._countDown(3)
 
     this.createKeyboardListener()
@@ -742,9 +742,9 @@ export class SnakeScene {
         const positionX = Math.round(snakePart.container.x * 10) / 10
         const positionY = Math.round(snakePart.container.y * 10) / 10
 
-        if (i === 0) {
-          console.log(positionX % BLOCK_WIDTH)
-        }
+        // if (i === 0) {
+        //   console.log(positionX % BLOCK_WIDTH)
+        // }
 
         // only when snake is moved to grid could change direction
         if (positionX % BLOCK_WIDTH !== 0 || positionY % BLOCK_WIDTH !== 0) {
@@ -778,9 +778,9 @@ export class SnakeScene {
           }
         }
 
-        if (i === 0) {
-          console.log(snakePart.i + ',' + snakePart.j)
-        }
+        // if (i === 0) {
+        //   console.log(snakePart.i + ',' + snakePart.j)
+        // }
       }
 
       // handle eating food

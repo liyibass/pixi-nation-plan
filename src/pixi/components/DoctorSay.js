@@ -51,7 +51,7 @@ export class DoctorSay {
   }
 
   chooseSay(text, button1, button2) {
-    console.log('chooseSay')
+    // console.log('chooseSay')
     return new Promise((resolve) => {
       const chosenHandler = (chosen) => {
         this.playClickMusic()
@@ -77,7 +77,7 @@ export class DoctorSay {
   share(text) {
     return new Promise((resolve) => {
       const shareHandler = async (chosen) => {
-        console.log(chosen)
+        // console.log(chosen)
         this.playClickMusic()
 
         if (chosen === 'cancel') {

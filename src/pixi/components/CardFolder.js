@@ -121,7 +121,7 @@ export class CardFolder {
   }
 
   activeListener() {
-    // console.log('activeListener')
+    // console.log('active CardFolder Listener')
     this.tabArray.forEach((tab) => {
       tab.activeListener()
     })
@@ -129,6 +129,13 @@ export class CardFolder {
   deactiveListener() {
     this.tabArray.forEach((tab) => {
       tab.deactiveListener()
+    })
+  }
+
+  activeTabListenOnly() {
+    console.log('activeTabListenOnly')
+    this.tabArray.forEach((tab) => {
+      tab.activeTabListener()
     })
   }
 }

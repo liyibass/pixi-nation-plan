@@ -219,8 +219,9 @@ export class Card {
   }
 
   activeListener() {
+    console.log('active Card Listener')
     this.activeCardExitButton()
     this.header.activeListener()
-    this.cardFolder.activeListener()
+    this.cardFolder.activeTabListenOnly()
   }
 }
