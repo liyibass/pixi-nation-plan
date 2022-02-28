@@ -339,7 +339,7 @@ export class SnakeScene {
   }
 
   createFood(id, foodType) {
-    const { i, j } = getRandomFoodPosition.bind(this)()
+    const { i, j } = getRandomFoodPosition.bind(this)(this.totalI, this.totalJ)
     // console.log('--' + i + ',' + j)
     const snakeFood = new SnakeFood(id, i, j, foodType)
     // const snakeFood = new SnakeFood(id, 3, 3, foodType)
@@ -414,7 +414,7 @@ export class SnakeScene {
   }
 
   createPoison(id, poisonType) {
-    const { i, j } = getRandomFoodPosition.bind(this)(true)
+    const { i, j } = getRandomFoodPosition.bind(this)(this.totalI, this.totalJ)
     const snakePoison = new SnakePoison(id, i, j, poisonType)
     this.snakePoisionArray.push(snakePoison)
     this.snakePoisonGroup.addChild(snakePoison.container)
@@ -1570,47 +1570,104 @@ function wait(delayTime) {
   })
 }
 
-function getRandomFoodPosition(isPoison) {
-  let randomI = generateRandom(this.totalI)
-  let randomJ = generateRandom(this.totalJ)
+function getRandomFoodPosition(totalI, totalJ) {
+  const blackListArray = []
 
-  if (isPoison) {
-    // try not too close to head
-    const { i: headI, j: headJ } = this.snakeArray[0]
+  this.snakeArray.forEach((snake) => {
+    blackListArray.push({ i: snake.i, j: snake.j })
+  })
+  this.snakeFoodArray.forEach((food) => {
+    blackListArray.push({ i: food.i, j: food.j })
+  })
+  this.snakePoisionArray.forEach((poison) => {
+    blackListArray.push({ i: poison.i, j: poison.j })
+  })
 
-    if (
-      headI + POISON_SPAWN_BOUNDARY > randomI &&
-      headI - POISON_SPAWN_BOUNDARY < randomI &&
-      headJ + POISON_SPAWN_BOUNDARY > randomJ &&
-      headJ - POISON_SPAWN_BOUNDARY < randomJ
-    ) {
-      // regenerate random position
-      const newPosition = getRandomFoodPosition.bind(this)(isPoison)
-      randomI = newPosition.i
-      randomJ = newPosition.j
-    }
+  // let randomI = generateRandom(this.totalI)
+  // let randomJ = generateRandom(this.totalJ)
 
-    // try not too close to boundray
-    if (randomI < POISON_SPAWN_BOUNDARY) {
-      randomI = POISON_SPAWN_BOUNDARY
-    } else if (randomI > this.totalI - POISON_SPAWN_BOUNDARY) {
-      randomI = this.totalI - POISON_SPAWN_BOUNDARY
-    }
-
-    if (randomJ < POISON_SPAWN_BOUNDARY) {
-      randomJ = POISON_SPAWN_BOUNDARY
-    } else if (randomJ > this.totalJ - POISON_SPAWN_BOUNDARY) {
-      randomJ = this.totalJ - POISON_SPAWN_BOUNDARY
-    }
-  }
-
+  const { randomI, randomJ } = generateRandom(blackListArray)
   return {
     i: randomI,
     j: randomJ,
   }
 
-  function generateRandom(total) {
-    return Math.floor(Math.random() * (total - 1))
+  // if (isPoison) {
+  //   // try not too close to head
+  //   const { i: headI, j: headJ } = this.snakeArray[0]
+
+  //   if (
+  //     headI + POISON_SPAWN_BOUNDARY > randomI &&
+  //     headI - POISON_SPAWN_BOUNDARY < randomI &&
+  //     headJ + POISON_SPAWN_BOUNDARY > randomJ &&
+  //     headJ - POISON_SPAWN_BOUNDARY < randomJ
+  //   ) {
+  //     // regenerate random position
+  //     const newPosition = getRandomFoodPosition.bind(this)(isPoison)
+  //     randomI = newPosition.i
+  //     randomJ = newPosition.j
+  //   }
+
+  //   // try not too close to boundray
+  //   if (randomI < POISON_SPAWN_BOUNDARY) {
+  //     randomI = POISON_SPAWN_BOUNDARY
+  //   } else if (randomI > this.totalI - POISON_SPAWN_BOUNDARY) {
+  //     randomI = this.totalI - POISON_SPAWN_BOUNDARY
+  //   }
+
+  //   if (randomJ < POISON_SPAWN_BOUNDARY) {
+  //     randomJ = POISON_SPAWN_BOUNDARY
+  //   } else if (randomJ > this.totalJ - POISON_SPAWN_BOUNDARY) {
+  //     randomJ = this.totalJ - POISON_SPAWN_BOUNDARY
+  //   }
+  // }
+
+  // return {
+  //   i: randomI,
+  //   j: randomJ,
+  // }
+
+  function generateRandom(blackListArray) {
+    // return Math.floor(Math.random() * (total - 5)) + 2
+    console.log(POISON_SPAWN_BOUNDARY)
+    console.log(blackListArray)
+
+    let { randomI, randomJ } = randomPosition()
+
+    let isTooClose = true
+    let retryCount = 0
+
+    while (isTooClose && retryCount < 5) {
+      for (let i = 0; i < blackListArray.length; i++) {
+        const blackList = blackListArray[i]
+        if (
+          randomI + POISON_SPAWN_BOUNDARY > blackList.i &&
+          randomI - POISON_SPAWN_BOUNDARY < blackList.i &&
+          randomJ + POISON_SPAWN_BOUNDARY > blackList.j &&
+          randomJ - POISON_SPAWN_BOUNDARY < blackList.j
+        ) {
+          isTooClose = false
+        } else {
+          retryCount++
+        }
+      }
+    }
+
+    return {
+      randomI,
+      randomJ,
+    }
+  }
+
+  function randomPosition() {
+    return {
+      randomI:
+        Math.floor(Math.random() * (totalI - 1 - POISON_SPAWN_BOUNDARY)) +
+        Math.floor(POISON_SPAWN_BOUNDARY / 2),
+      randomJ:
+        Math.floor(Math.random() * (totalJ - 1 - POISON_SPAWN_BOUNDARY)) +
+        Math.floor(POISON_SPAWN_BOUNDARY / 2),
+    }
   }
 }
 
