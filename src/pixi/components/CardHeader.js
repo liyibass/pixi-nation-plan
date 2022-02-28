@@ -51,7 +51,12 @@ export class CardHeader {
       Globals.resources[`land_${this.cityIndex}_1`]?.texture
     )
     const landCitySprite = new PIXI.Sprite(landCityTexture)
-    const heightRatio = CARD_HEADER_LAND_CITY_HEIGHT / landCitySprite.height
+    let smaller = 1
+    if (this.cityIndex === 3 || this.cityIndex === 15) {
+      smaller = 0.5
+    }
+    const heightRatio =
+      (CARD_HEADER_LAND_CITY_HEIGHT / landCitySprite.height) * smaller
 
     landCitySprite.width *= heightRatio
     landCitySprite.height *= heightRatio
@@ -63,6 +68,8 @@ export class CardHeader {
     this.landCityIconContainer.x =
       (CARD_CONTENT_WIDTH - this.landCityIconContainer.width) / 2
     // this.landCityIconContainer.y = 20
+    this.landCityIconContainer.y =
+      (CARD_HEADER_LAND_CITY_HEIGHT - this.landCityIconContainer.height) / 2
   }
 
   createTitleSection() {
