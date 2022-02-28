@@ -167,6 +167,7 @@ export class WeightCard {
   }
 
   onTouchStart() {
+    // console.log('OnTouchStart')
     // set the dragging state for this sprite
     this.isDragging = true
 
@@ -202,6 +203,7 @@ export class WeightCard {
   }
 
   onTouchMove(event) {
+    // console.log('onTouchMove')
     if (!this.isDragging) return
 
     if (this.isOnConveyor) {
@@ -211,12 +213,12 @@ export class WeightCard {
         this.container.x = 0 - TIMER_WIDTH + this.container.width / 2
       } else if (x + this.container.width / 2 > GAMESTAGE_WIDTH) {
         this.container.x =
-          GAMESTAGE_HEIGHT - TIMER_WIDTH - this.container.width / 2
+          GAMESTAGE_WIDTH - TIMER_WIDTH - this.container.width / 2
       } else if (y - this.container.height / 2 < 0) {
         this.container.y = 0 - TOP_PADDING + this.container.height / 2
       } else if (y + this.container.height / 2 > GAMESTAGE_HEIGHT) {
         this.container.y =
-          GAMESTAGE_WIDTH - TOP_PADDING - this.container.width / 2
+          GAMESTAGE_HEIGHT - TOP_PADDING - this.container.width / 2
       } else {
         // 3. apply the rusulting offset
         this.container.x = x - TIMER_WIDTH
@@ -231,7 +233,8 @@ export class WeightCard {
   }
 
   onTouchLeave() {
-    console.log('pointer up')
+    // console.log('===onTouchLeave')
+
     this.isDragging = false
 
     if (this.isOnConveyor) {

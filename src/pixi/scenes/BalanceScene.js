@@ -206,6 +206,10 @@ export class BalanceScene extends Scene {
         this.gameLevel--
         this.gameLevel2()
         break
+
+      default:
+        this.gameLevel = 2
+        this.gameLevel2()
     }
   }
 
@@ -279,6 +283,18 @@ export class BalanceScene extends Scene {
     this.conveyor.startConveyor(this.gameLevel)
     this.timer.startTimer()
     this._startsceneTicker()
+
+    this.container.interactive = true
+
+    this.container.on('pointerdown', () => {
+      console.log('onTouchStart')
+    })
+    this.container.on('pointermove', () => {
+      console.log('onTouchMove')
+    })
+    this.container.on('pointerup', () => {
+      console.log('onTouchLeave')
+    })
   }
 
   _startsceneTicker() {
@@ -357,6 +373,7 @@ export class BalanceScene extends Scene {
         this.playMusic()
         this.resetGameSetting()
         this.initGame()
+        this.createInitLoad()
         this.startGame()
         break
 
