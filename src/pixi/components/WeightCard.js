@@ -9,8 +9,12 @@ const TIMER_WIDTH = 69
 const TOP_PADDING = 31
 const SPEED = 3
 
-const { width: GAMESTAGE_WIDTH, height: GAMESTAGE_HEIGHT } =
-  Globals.getSeesawGameStageDimention()
+const {
+  width: GAMESTAGE_WIDTH,
+  height: GAMESTAGE_HEIGHT,
+  x: GAMESTAGE_X,
+  y: GAMESTAGE_Y,
+} = Globals.getSeesawGameStageDimention()
 
 export class WeightCard {
   constructor(weight = 100, name = 'weightAdult', load = 1, weightCardHandler) {
@@ -208,21 +212,46 @@ export class WeightCard {
 
     if (this.isOnConveyor) {
       const { x, y } = this._getPositionRelativeToGameStage(event)
+      const leftBoundary = 0 - TIMER_WIDTH + this.container.width / 2
+      const rightBoundary =
+        GAMESTAGE_WIDTH - TIMER_WIDTH - this.container.width / 2
+      const topBoundary = 0 - TOP_PADDING + this.container.height / 2
+      const bottomBoundary =
+        GAMESTAGE_HEIGHT - TOP_PADDING - this.container.width / 2
 
       if (x - this.container.width / 2 < 0) {
-        this.container.x = 0 - TIMER_WIDTH + this.container.width / 2
+        this.container.x = leftBoundary
       } else if (x + this.container.width / 2 > GAMESTAGE_WIDTH) {
-        this.container.x =
-          GAMESTAGE_WIDTH - TIMER_WIDTH - this.container.width / 2
+        this.container.x = rightBoundary
       } else if (y - this.container.height / 2 < 0) {
-        this.container.y = 0 - TOP_PADDING + this.container.height / 2
+        this.container.y = topBoundary
       } else if (y + this.container.height / 2 > GAMESTAGE_HEIGHT) {
-        this.container.y =
-          GAMESTAGE_HEIGHT - TOP_PADDING - this.container.width / 2
+        this.container.y = bottomBoundary
       } else {
         // 3. apply the rusulting offset
         this.container.x = x - TIMER_WIDTH
         this.container.y = y - TOP_PADDING
+      }
+
+      this.container.x = x - TIMER_WIDTH
+      this.container.y = y - TOP_PADDING
+
+      // check if out of boundary
+      const { x: pointerX, y: pointerY } = event.data.global
+
+      if (
+        pointerX < 0 ||
+        pointerX > window.innerWidth ||
+        pointerY < 0 ||
+        pointerY > window.innerHeight ||
+        pointerX < GAMESTAGE_X ||
+        pointerX > GAMESTAGE_X + GAMESTAGE_WIDTH ||
+        pointerY < GAMESTAGE_Y + TOP_PADDING ||
+        pointerY > GAMESTAGE_Y + TOP_PADDING + GAMESTAGE_HEIGHT
+      ) {
+        console.log('YOYO')
+        this.isDragging = false
+        this.onTouchLeave()
       }
     } else {
       const { x, y } = this._getPositionRelativeToSeesawGroup(event)
@@ -233,7 +262,7 @@ export class WeightCard {
   }
 
   onTouchLeave() {
-    // console.log('===onTouchLeave')
+    console.log('===onTouchLeave')
 
     this.isDragging = false
 
@@ -242,6 +271,10 @@ export class WeightCard {
       this.container.parent.setChildIndex(this.container, 0)
 
       const { x, y } = this.container
+
+      if (!this.originalPosition) {
+        console.log(this)
+      }
       const { x: originalX, y: originalY } = this.originalPosition
 
       if (x !== originalX && y !== originalY && y > originalY + 60) {

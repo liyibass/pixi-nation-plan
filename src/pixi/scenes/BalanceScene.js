@@ -286,15 +286,15 @@ export class BalanceScene extends Scene {
 
     this.container.interactive = true
 
-    this.container.on('pointerdown', () => {
-      console.log('onTouchStart')
-    })
-    this.container.on('pointermove', () => {
-      console.log('onTouchMove')
-    })
-    this.container.on('pointerup', () => {
-      console.log('onTouchLeave')
-    })
+    // this.container.on('pointerdown', () => {
+    //   console.log('onTouchStart')
+    // })
+    // this.container.on('pointermove', () => {
+    //   console.log('onTouchMove')
+    // })
+    // this.container.on('pointerup', () => {
+    //   console.log('onTouchLeave')
+    // })
   }
 
   _startsceneTicker() {
