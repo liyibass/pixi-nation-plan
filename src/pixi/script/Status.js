@@ -27,6 +27,10 @@ export const Status = storedStatus?.Status || {
 }
 
 Status.enteredGame = false
+// Status.balance = {
+//   gameLevel: 0,
+//   isCleared: false,
+// }
 
 export const CityStatusArray = storedStatus?.CityStatusArray || [
   {

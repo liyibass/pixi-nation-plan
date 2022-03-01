@@ -293,7 +293,8 @@ export class BalanceScene extends Scene {
     //   console.log('onTouchMove')
     // })
     // this.container.on('pointerup', () => {
-    //   console.log('onTouchLeave')
+    //   console.log(this)
+    //   this.gameLevel = 0
     // })
   }
 
@@ -309,6 +310,7 @@ export class BalanceScene extends Scene {
   _gameStateMonitor() {
     if (this.timer.time <= 0) {
       this.gameOver()
+      return
     }
 
     if (
