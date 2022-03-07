@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
+import { CandyScore } from './CandyScore'
 
 const gameStageDimention = Globals.getCandyGameStageDimention()
 
@@ -10,13 +11,12 @@ const BAR_HEIGHT = 15
 
 const ICON_WIDTH = 34
 const STEP_WIDTH = 30
-const RESET_WIDTH = 28
+const RESET_WIDTH = Globals.CANDY_SCORE_HEIGHT
 const PADDING_WIDTH = 5
 const STEP_X = ICON_WIDTH + PADDING_WIDTH
 const BAR_X = STEP_X + STEP_WIDTH + PADDING_WIDTH
-const BAR_WIDTH =
-  gameStageDimention.width - BAR_X - PADDING_WIDTH * 2 - RESET_WIDTH
-const RESET_X = BAR_X + BAR_WIDTH + PADDING_WIDTH
+const BAR_WIDTH = gameStageDimention.width - BAR_X - PADDING_WIDTH
+// const RESET_X = BAR_X + BAR_WIDTH + PADDING_WIDTH
 
 export class CandyHeader {
   constructor(
@@ -36,6 +36,14 @@ export class CandyHeader {
     this.remainStepCount = getRemainStepCount(this.gameLevel)
     this.maxPoint = getMaxPoint(this.gameLevel)
 
+    this.pointArray = [
+      { typeIndex: 0, count: 0, point: 100 },
+      { typeIndex: 1, count: 0, point: 75 },
+      { typeIndex: 2, count: 0, point: 50 },
+      { typeIndex: 3, count: 0, point: 200 },
+      { typeIndex: 4, count: 0, point: 200 },
+    ]
+
     this.createCandyHeader()
   }
 
@@ -45,6 +53,7 @@ export class CandyHeader {
     this._createRemainStepCount()
     this._createScoreBar()
     this._createResetButton()
+    this._createCandyScore()
   }
 
   createBackground() {
@@ -147,11 +156,21 @@ export class CandyHeader {
   _createResetButton() {
     const resetTexture = new PIXI.Texture(Globals.resources[`reset`]?.texture)
     this.resetSprite = new PIXI.Sprite(resetTexture)
+    this.resetSprite.width = RESET_WIDTH
+    this.resetSprite.height = RESET_WIDTH
 
     this.container.addChild(this.resetSprite)
 
-    this.resetSprite.y = (HEADER_HEIGHT - this.resetSprite.height) / 2
-    this.resetSprite.x = RESET_X
+    this.resetSprite.y = Globals.CANDY_HEADER_HEIGHT + Globals.gameStagePadding
+    this.resetSprite.x = gameStageDimention.width - this.resetSprite.width
+  }
+
+  _createCandyScore() {
+    this.candyScore = new CandyScore(this.pointArray)
+
+    this.container.addChild(this.candyScore.container)
+    this.candyScore.container.y =
+      Globals.CANDY_HEADER_HEIGHT + Globals.gameStagePadding
   }
 
   decreaseStepCount() {
@@ -169,21 +188,14 @@ export class CandyHeader {
 
     console.log(isFirstTimeLineCheck)
 
-    const pointArray = [
-      { count: 0, point: 100 },
-      { count: 0, point: 75 },
-      { count: 0, point: 50 },
-      { count: 0, point: 200 },
-      { count: 0, point: 200 },
-    ]
     needToDeleteArray.forEach((candy) => {
       // console.log(candy)
-      pointArray[candy.typeIndex].count++
+      this.pointArray[candy.typeIndex].count++
       // pointNew += Math.floor(candy.candyPoint / 3)
     })
     let point = this.currentPoint
 
-    pointArray.forEach((candyType) => {
+    this.pointArray.forEach((candyType) => {
       const lineCount = Math.floor(candyType.count / 3)
       const bonusCount = candyType.count % 3
 
@@ -196,6 +208,9 @@ export class CandyHeader {
     this.currentPoint = point <= this.maxPoint ? point : this.maxPoint
     this.currentPointText.text = this.currentPoint
     this._setWhiteBarWidth()
+
+    // udpate score
+    this.candyScore.updateScore()
 
     if (this.currentPoint >= this.maxPoint) {
       this.gamePassed()

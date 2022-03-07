@@ -117,7 +117,7 @@ export class CandyScene extends Scene {
     this.container.addChild(this.candyHeader.container)
 
     this.candyHeader.container.x = gameStageDimention.x
-    this.candyHeader.container.y = 16
+    this.candyHeader.container.y = Globals.gameStagePadding
   }
 
   async createCandys() {
