@@ -800,6 +800,14 @@ export class CandyScene extends Scene {
   // ===== start game =====
   async startGame() {
     await super.startGame()
+
+    const groundGroupTopY =
+      this.groundGroup.container.y - this.groundGroup.container.height / 2
+    const gameStageBottomY = gameStageDimention.y + gameStageDimention.height
+
+    this.menuButtons.container.y =
+      groundGroupTopY + (gameStageBottomY - groundGroupTopY) / 2
+
     this.isGameStop = false
 
     this.candyHeader.activeCandyHeader()

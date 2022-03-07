@@ -162,34 +162,11 @@ export const Globals = {
   CANDY_SCORE_HEIGHT: 40,
   CANDY_POINT_0: 100,
   getCandyGameStageDimention: function () {
-    // const windowWidth =
-    //   this.outerWidth - 2 * this.gameStagePadding < Math.floor((this.outerHeight * 5) / 8)
-    //     ? this.outerWidth - 2 * this.gameStagePadding
-    //     : Math.floor((this.outerHeight * 5) / 8)
-
-    // const candyWidth = Math.floor((windowWidth - 2 * this.gameStagePadding) / 8)
-
-    // const colCount = 8
-    // const rowCount = Math.floor((this.outerHeight * 5) / 8 / candyWidth)
-    // const width = candyWidth * colCount
-    // const height = candyWidth * rowCount
-
-    // return {
-    //   x: (this.outerWidth - width) / 2,
-    //   y: 0 + this.gameStagePadding * 2 + 28,
-    //   // y: this.outerHeight / 5,
-    //   width,
-    //   height,
-    //   colCount,
-    //   rowCount,
-    //   candyWidth,
-    // }
-
     const windowWidth =
       this.outerWidth - 2 * this.gameStagePadding <
       Math.floor((this.outerHeight * 5) / 8)
         ? this.outerWidth - 2 * this.gameStagePadding
-        : Math.floor((this.outerHeight * 5) / 8)
+        : Math.floor((this.outerHeight * 5) / 9)
 
     const candyWidth = Math.floor((windowWidth - 2 * this.gameStagePadding) / 8)
 

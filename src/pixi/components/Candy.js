@@ -47,7 +47,9 @@ export class Candy {
     candySprite.width = CANDY_WIDTH
     candySprite.height = CANDY_WIDTH
 
-    this.container.addChild(candySprite)
+    this.candyIconContainer = new PIXI.Container()
+    this.candyIconContainer.addChild(candySprite)
+    this.container.addChild(this.candyIconContainer)
   }
 
   candyInitPosition() {
@@ -335,19 +337,31 @@ export class Candy {
   }
 
   vanish() {
+    const pointText = new PIXI.Text(this.candyPoint, {
+      fontSize: CANDY_WIDTH / 4,
+      fill: 0xffffff,
+      fontWeight: 'bold',
+    })
+    pointText.alpha = 0
+    pointText.x = (CANDY_WIDTH - pointText.width) / 2
+    pointText.y = (CANDY_WIDTH - pointText.height) / 2
+    this.container.addChild(pointText)
+
     this.vanishTicker = new PIXI.Ticker()
     let scale = 1
 
     return new Promise((resolve) => {
       this.vanishTicker.add(() => {
-        if (this.container.alpha > 0) {
-          this.container.alpha -= 0.08
+        if (this.candyIconContainer.alpha > 0) {
+          this.candyIconContainer.alpha -= 0.08
+          pointText.alpha += 0.06
           scale += 0.02
-          this.container.scale.set(scale)
+          this.candyIconContainer.scale.set(scale)
+          pointText.scale.set(scale)
+        } else if (pointText.alpha > 0) {
+          pointText.alpha -= 0.1
         } else {
           this.vanishTicker.stop()
-          this.container.alpha = 0
-
           resolve()
         }
       })
