@@ -4,6 +4,9 @@ import { Globals } from '../script/Globals'
 const gameStageDimention = Globals.getCandyGameStageDimention()
 const CANDY_WIDTH = gameStageDimention.candyWidth
 const SWAP_SPEED = 4
+
+const INVALID_FACTORY_CANDY_INDEX = 4
+
 export class Candy {
   constructor(typeIndex = 0, i = 0, j = 0, swapHandler = () => {}) {
     this.typeIndex = typeIndex
@@ -29,6 +32,11 @@ export class Candy {
     // this.leftCandy = null
     // this.rightCandy = null
     // this.isDelete = false
+
+    if (this.typeIndex === INVALID_FACTORY_CANDY_INDEX) {
+      console.log('YOYO')
+      this.blinkInvalidFactoryCandy()
+    }
   }
 
   createCandy() {
@@ -362,12 +370,38 @@ export class Candy {
           pointText.alpha -= 0.1
         } else {
           this.vanishTicker.stop()
+          this.blinkTicker?.stop?.()
           resolve()
         }
       })
 
       this.vanishTicker.start()
     })
+  }
+
+  blinkInvalidFactoryCandy() {
+    if (this.typeIndex !== INVALID_FACTORY_CANDY_INDEX) return
+
+    this.blinkTicker = new PIXI.Ticker()
+
+    let status = 'dark'
+    this.blinkTicker.add(() => {
+      if (status === 'dark') {
+        this.candyIconContainer.alpha -= 0.02
+
+        if (this.candyIconContainer.alpha < 0.5) {
+          status = 'light'
+        }
+      } else {
+        this.candyIconContainer.alpha += 0.02
+
+        if (this.candyIconContainer.alpha > 1) {
+          status = 'dark'
+        }
+      }
+    })
+
+    this.blinkTicker.start()
   }
 }
 

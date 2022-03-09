@@ -12,6 +12,8 @@ const gameStageDimention = Globals.getCandyGameStageDimention()
 // const CANDY_WIDTH = gameStageDimention
 const MAX_TYPE_COUNT = 4
 const MAX_INVALID_FACTORY_COUNT = 2
+const INVALID_FACTORY_CANDY_INDEX = 4
+
 export class CandyScene extends Scene {
   constructor(...args) {
     super(...args)
@@ -29,7 +31,7 @@ export class CandyScene extends Scene {
       { typeIndex: 1, count: 0, point: 75 },
       { typeIndex: 2, count: 0, point: 50 },
       { typeIndex: 3, count: 0, point: 200 },
-      { typeIndex: 4, count: 0, point: 200 },
+      { typeIndex: INVALID_FACTORY_CANDY_INDEX, count: 0, point: 200 },
     ]
     this.isSwaping = false
     this.isHandlingLine = false
@@ -151,7 +153,7 @@ export class CandyScene extends Scene {
           (i === randomNumber1 && j === randomNumber2) ||
           (i === randomNumber2 && j === randomNumber1)
         ) {
-          typeIndex = 4
+          typeIndex = INVALID_FACTORY_CANDY_INDEX
           this.invalidFactoryCount++
         } else {
           typeIndex = generateTypeIndex.bind(this)(i, j, rowArray)
@@ -581,7 +583,7 @@ export class CandyScene extends Scene {
           i === randomNumber1 &&
           j === randomNumber2
         ) {
-          typeIndex = 4
+          typeIndex = INVALID_FACTORY_CANDY_INDEX
         } else {
           typeIndex = Math.floor(Math.random() * MAX_TYPE_COUNT)
         }
