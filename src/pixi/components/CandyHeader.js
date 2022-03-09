@@ -23,7 +23,8 @@ export class CandyHeader {
     reCreateCandys = () => {},
     gameFail = () => {},
     gamePassed = () => {},
-    gameLevel = 0
+    gameLevel = 0,
+    pointArray
   ) {
     this.container = new PIXI.Container()
     this.container.name = 'candyHeader'
@@ -36,13 +37,7 @@ export class CandyHeader {
     this.remainStepCount = getRemainStepCount(this.gameLevel)
     this.maxPoint = getMaxPoint(this.gameLevel)
 
-    this.pointArray = [
-      { typeIndex: 0, count: 0, point: 100 },
-      { typeIndex: 1, count: 0, point: 75 },
-      { typeIndex: 2, count: 0, point: 50 },
-      { typeIndex: 3, count: 0, point: 200 },
-      { typeIndex: 4, count: 0, point: 200 },
-    ]
+    this.pointArray = pointArray
 
     this.createCandyHeader()
   }

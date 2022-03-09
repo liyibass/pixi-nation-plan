@@ -10,17 +10,27 @@ import { sound } from '@pixi/sound'
 
 const gameStageDimention = Globals.getCandyGameStageDimention()
 // const CANDY_WIDTH = gameStageDimention
-
+const MAX_TYPE_COUNT = 4
+const MAX_INVALID_FACTORY_COUNT = 2
 export class CandyScene extends Scene {
   constructor(...args) {
     super(...args)
     this.gameLevel = Status.candy.gameLevel
+
     this.container.name = 'CandyScene'
     this.initMusic()
 
+    this.invalidFactoryCount = 0
+
     this.grid = []
     // unlockCandy()
-
+    this.pointArray = [
+      { typeIndex: 0, count: 0, point: 100 },
+      { typeIndex: 1, count: 0, point: 75 },
+      { typeIndex: 2, count: 0, point: 50 },
+      { typeIndex: 3, count: 0, point: 200 },
+      { typeIndex: 4, count: 0, point: 200 },
+    ]
     this.isSwaping = false
     this.isHandlingLine = false
     this.isVanishing = false
@@ -112,7 +122,8 @@ export class CandyScene extends Scene {
       this.reCreateCandys.bind(this),
       this.gameOver.bind(this),
       this.gamePassed.bind(this),
-      this.gameLevel
+      this.gameLevel,
+      this.pointArray
     )
     this.container.addChild(this.candyHeader.container)
 
@@ -124,13 +135,27 @@ export class CandyScene extends Scene {
     this.isFalling = true
     this.grid = [[], [], [], [], [], [], [], []]
     const fallingCandysPromise = []
+
+    const { randomNumber1, randomNumber2 } = generateTwoRandomNumber(
+      this.rowCount
+    )
+
     for (let j = this.rowCount - 1; j >= 0; j--) {
       const rowArray = []
       // this.grid.unshift(rowArray)
       this.grid[j] = rowArray
 
       for (let i = 0; i < this.colCount; i++) {
-        const typeIndex = generateTypeIndex.bind(this)(i, j, rowArray)
+        let typeIndex
+        if (
+          (i === randomNumber1 && j === randomNumber2) ||
+          (i === randomNumber2 && j === randomNumber1)
+        ) {
+          typeIndex = 4
+          this.invalidFactoryCount++
+        } else {
+          typeIndex = generateTypeIndex.bind(this)(i, j, rowArray)
+        }
 
         const candy = this.createCandy(typeIndex, i, j)
         rowArray.push(candy)
@@ -183,7 +208,7 @@ export class CandyScene extends Scene {
 
       let genCount = 0
       while (excludeTypeIndex.length < 10) {
-        const index = Math.floor(Math.random() * 4)
+        const index = Math.floor(Math.random() * MAX_TYPE_COUNT)
 
         if (excludeTypeIndex.indexOf(index) === -1 || genCount > 20) {
           excludeTypeIndex.push(index)
@@ -540,12 +565,27 @@ export class CandyScene extends Scene {
 
     const addedCandyArray = []
 
+    // const { randomNumber1, randomNumber2 } = generateTwoRandomNumber()
+
     for (let i = 0; i < this.colCount; i++) {
       for (let j = this.rowCount - 1; j >= 0; j--) {
         const element = this.grid[j][i]
         if (element !== null) continue
 
-        const typeIndex = Math.floor(Math.random() * 4)
+        const { randomNumber1, randomNumber2 } = generateTwoRandomNumber(
+          this.rowCount
+        )
+        let typeIndex
+        if (
+          this.invalidFactoryCount < MAX_INVALID_FACTORY_COUNT &&
+          i === randomNumber1 &&
+          j === randomNumber2
+        ) {
+          typeIndex = 4
+        } else {
+          typeIndex = Math.floor(Math.random() * MAX_TYPE_COUNT)
+        }
+
         const candy = this.createCandy(typeIndex, i, j)
 
         this.candyBox.addChild(candy.container)
@@ -961,5 +1001,19 @@ export class CandyScene extends Scene {
 
   destroyScene() {
     this.candyHeader.destoryCandyHeader()
+  }
+}
+
+function generateTwoRandomNumber(maxNumber) {
+  let randomNumber1 = Math.floor(Math.random() * maxNumber)
+  let randomNumber2
+
+  do {
+    randomNumber2 = Math.floor(Math.random() * maxNumber)
+  } while (randomNumber1 === randomNumber2)
+
+  return {
+    randomNumber1,
+    randomNumber2,
   }
 }
