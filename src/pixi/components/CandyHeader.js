@@ -177,16 +177,15 @@ export class CandyHeader {
     }
   }
 
-  increaseScore(needToDeleteArray, isFirstTimeLineCheck) {
+  increaseScore(needToDeleteArray) {
     // const lineCount = Math.floor(needToDeleteArray.length / 3)
     // const bonusCount = needToDeleteArray.length % 3
 
-    console.log(isFirstTimeLineCheck)
+    // console.log(isFirstTimeLineCheck)
 
     needToDeleteArray.forEach((candy) => {
       // console.log(candy)
       this.pointArray[candy.typeIndex].count++
-      // pointNew += Math.floor(candy.candyPoint / 3)
     })
     let point = this.currentPoint
 
@@ -209,6 +208,8 @@ export class CandyHeader {
 
     if (this.currentPoint >= this.maxPoint) {
       this.gamePassed()
+
+      console.log(this.pointArray)
     }
   }
 
@@ -262,6 +263,8 @@ export class CandyHeader {
 
     this.maxPoint = getMaxPoint(this.gameLevel)
     this.maxPointText.text = this.maxPoint
+
+    // restore candy record
     console.log(this)
   }
 
@@ -301,12 +304,14 @@ function getMaxPoint(gameLevel) {
   switch (gameLevel) {
     default:
     case 0:
-      return 800
+      return 2000
+    // return 80000
 
     case 1:
-      return 1200
+      return 4000
 
     case 2:
-      return 1500
+    case 3:
+      return 6000
   }
 }

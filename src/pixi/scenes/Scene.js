@@ -24,16 +24,16 @@ export class Scene {
   }
 
   playSuccessMusic() {
-    sound.play('success')
+    sound?.play?.('success')
   }
   stopSuccessMusic() {
-    sound.stop('success')
+    sound?.stop?.('success')
   }
   playFailMusic() {
-    sound.play('fail')
+    sound?.play?.('fail')
   }
   stopFailMusic() {
-    sound.stop('fail')
+    sound?.stop?.('fail')
   }
 
   // ===== init system =====
@@ -366,7 +366,7 @@ export class Scene {
     switch (chosen) {
       case 'return':
         this.selectStage('menu', this)
-        console.log(this)
+
         this.stopMusic()
         break
 

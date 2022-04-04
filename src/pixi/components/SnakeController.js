@@ -82,6 +82,14 @@ export class SnakeController {
     }
   }
 
+  // createNewController() {
+  //   const arrowUpTexture = new PIXI.Sprite(Globals.resources['arrowUp'].texture)
+  //   const arrowDownTexture = new PIXI.Sprite(Globals.resources['arrowDown'].texture)
+  //   const arrowLeftTexture = new PIXI.Sprite(Globals.resources['arrowLeft'].texture)
+  //   const arrowRightTexture = new PIXI.Sprite(Globals.resources['arrowRight'].texture)
+
+  // }
+
   activeListener() {
     console.log('activeController')
 

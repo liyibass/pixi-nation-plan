@@ -200,6 +200,11 @@ import music_menu from '../assets/audios/music_menu.mp3'
 import music_run from '../assets/audios/music_run.mp3'
 import music_snake from '../assets/audios/music_snake.mp3'
 import volume from '../assets/images/volume.png'
+import smoke from '../assets/images/smoke.png'
+import arrowUp from '../assets/images/arrowUp.png'
+import arrowDown from '../assets/images/arrowDown.png'
+import arrowLeft from '../assets/images/arrowLeft.png'
+import arrowRight from '../assets/images/arrowRight.png'
 
 export const LoaderConfig = {
   player,
@@ -405,4 +410,9 @@ export const LoaderConfig = {
   music_run,
   music_snake,
   volume,
+  smoke,
+  arrowUp,
+  arrowDown,
+  arrowLeft,
+  arrowRight,
 }

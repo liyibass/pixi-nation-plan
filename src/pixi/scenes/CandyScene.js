@@ -13,6 +13,7 @@ const gameStageDimention = Globals.getCandyGameStageDimention()
 const MAX_TYPE_COUNT = 4
 const MAX_INVALID_FACTORY_COUNT = 2
 const INVALID_FACTORY_CANDY_INDEX = 4
+const DEAD_CANDY_INDEX = 5
 
 export class CandyScene extends Scene {
   constructor(...args) {
@@ -25,6 +26,7 @@ export class CandyScene extends Scene {
     this.invalidFactoryCount = 0
 
     this.grid = []
+
     // unlockCandy()
     this.pointArray = [
       { typeIndex: 0, count: 0, point: 100 },
@@ -33,6 +35,17 @@ export class CandyScene extends Scene {
       { typeIndex: 3, count: 0, point: 200 },
       { typeIndex: INVALID_FACTORY_CANDY_INDEX, count: 0, point: 200 },
     ]
+
+    this.pointArrayRecord = Status?.candy?.pointArray?.length
+      ? Status.candy.pointArray
+      : [
+          { typeIndex: 0, count: 0, point: 100 },
+          { typeIndex: 1, count: 0, point: 75 },
+          { typeIndex: 2, count: 0, point: 50 },
+          { typeIndex: 3, count: 0, point: 200 },
+          { typeIndex: INVALID_FACTORY_CANDY_INDEX, count: 0, point: 200 },
+        ]
+
     this.isSwaping = false
     this.isHandlingLine = false
     this.isVanishing = false
@@ -301,7 +314,10 @@ export class CandyScene extends Scene {
     // check if this swap move has line
     // if so, complete swaping
     // if not, then redo swaping
-    this.needToDeleteArray = this.examineIfHasLine()
+
+    const { needToDelete, needToTurnVanish } = this.examineIfHasLine()
+    this.needToDeleteArray = needToDelete
+    this.needToTurnVanish = needToTurnVanish
 
     if (this.needToDeleteArray.length) {
       // trigger their swap animation
@@ -427,7 +443,12 @@ export class CandyScene extends Scene {
   async checkLineLoop() {
     if (this.isGameStop) return
     // =====================CHECK LINE LOOP======================
-    this.needToDeleteArray = this.examineIfHasLine()
+
+    const { needToDelete, needToTurnVanish } = this.examineIfHasLine()
+    this.needToDeleteArray = needToDelete
+    this.needToTurnVanish = needToTurnVanish
+
+    this.vanishHandler()
 
     let isFirstTimeLineCheck = true
     while (this.needToDeleteArray.length > 0) {
@@ -435,10 +456,10 @@ export class CandyScene extends Scene {
 
       this.isHandlingLine = true
       await this.lineHandler()
-      await this.candyHeader.increaseScore(
-        this.needToDeleteArray,
-        isFirstTimeLineCheck
-      )
+
+      const scoredCandys = this.needToDeleteArray.concat(this.needToTurnVanish)
+      console.log(scoredCandys)
+      await this.candyHeader.increaseScore(scoredCandys, isFirstTimeLineCheck)
 
       if (isFirstTimeLineCheck) {
         // this is for point counting
@@ -449,7 +470,9 @@ export class CandyScene extends Scene {
       this.needToDeleteArray = []
       this.needToFallingQueue = []
 
-      this.needToDeleteArray = this.examineIfHasLine()
+      const { needToDelete, needToTurnVanish } = this.examineIfHasLine()
+      this.needToDeleteArray = needToDelete
+      this.needToTurnVanish = needToTurnVanish
       // await this._wait(1000)
       this.isHandlingLine = false
     }
@@ -519,6 +542,14 @@ export class CandyScene extends Scene {
         J--
       }
       return aboveCandyArray
+    }
+  }
+
+  async vanishHandler() {
+    for (let index = 0; index < this.needToTurnVanish.length; index++) {
+      const candy = this.needToTurnVanish[index]
+      candy.typeIndex = DEAD_CANDY_INDEX
+      await candy.dead()
     }
   }
 
@@ -610,6 +641,7 @@ export class CandyScene extends Scene {
 
   examineIfHasLine() {
     const needToDelete = []
+    const needToTurnVanish = []
     // this._logGrid()
 
     for (let j = 0; j < this.rowCount; j++) {
@@ -617,70 +649,140 @@ export class CandyScene extends Scene {
       for (let i = 0; i < this.colCount; i++) {
         const candy = this.grid[j][i]
         if (candy === null) continue
-        // if (candy.isDelete) continue
+        if (candy.typeIndex === DEAD_CANDY_INDEX) continue
 
         // check right
-        const rightLineLength = rightLineCheck.bind(this)(candy)
-        const bottomLineLength = bottomLineCheck.bind(this)(candy)
+        const { rightLineLength, hasInvalidFactoryX } =
+          rightLineCheck.bind(this)(candy)
+        const { bottomLineLength, hasInvalidFactoryY } =
+          bottomLineCheck.bind(this)(candy)
 
         if (rightLineLength >= 3) {
           // console.log(candy)
           for (let k = 0; k < rightLineLength; k++) {
-            // this.grid[j][i + k].isDelete = true
-            if (needToDelete.indexOf(this.grid[j][i + k]) === -1) {
-              needToDelete.push(this.grid[j][i + k])
+            if (hasInvalidFactoryX || hasInvalidFactoryY) {
+              if (needToTurnVanish.indexOf(this.grid[j][i + k]) === -1) {
+                needToTurnVanish.push(this.grid[j][i + k])
+              }
+            } else {
+              if (needToDelete.indexOf(this.grid[j][i + k]) === -1) {
+                needToDelete.push(this.grid[j][i + k])
+              }
             }
           }
         }
         if (bottomLineLength >= 3) {
-          // console.log(candy)
           for (let k = 0; k < bottomLineLength; k++) {
-            // this.grid[j][i + k].isDelete = true
-            if (needToDelete.indexOf(this.grid[j + k][i]) === -1) {
-              needToDelete.push(this.grid[j + k][i])
+            if (hasInvalidFactoryX || hasInvalidFactoryY) {
+              if (needToTurnVanish.indexOf(this.grid[j + k][i]) === -1) {
+                needToTurnVanish.push(this.grid[j + k][i])
+              }
+            } else {
+              if (needToDelete.indexOf(this.grid[j + k][i]) === -1) {
+                needToDelete.push(this.grid[j + k][i])
+              }
             }
           }
         }
       }
     }
 
+    return { needToDelete, needToTurnVanish }
+
     function rightLineCheck(candy) {
-      if (!candy) return 1
+      if (!candy || typeof candy?.typeIndex !== 'number') return 1
 
       const { i, j } = candy
       let rightLineLength = 1
       let rightIndexOffset = 1
+      let loopCount = 0
+      let hasInvalidFactory = false
+      const lineArray = []
 
       while (
-        typeof candy?.typeIndex === 'number' &&
-        this.grid[j]?.[i + rightIndexOffset]?.typeIndex === candy.typeIndex
+        // normal condition
+        // O O
+        candy.typeIndex === this.grid[j]?.[i + rightIndexOffset]?.typeIndex
+        // O X (O)
+        // || this.grid[j]?.[i + rightIndexOffset]?.typeIndex === INVALID_FACTORY_CANDY_INDEX
+        // X O
+
+        // X X
+
+        // // O X O
+        // (this.grid[j]?.[i + rightIndexOffset]?.typeIndex ===
+        //   INVALID_FACTORY_CANDY_INDEX &&
+        //   candy.typeIndex ===
+        //     this.grid[j]?.[i + rightIndexOffset + 1]?.typeIndex) ||
+        // // X O O
+        // (candy.typeIndex === INVALID_FACTORY_CANDY_INDEX &&
+        //   this.grid[j]?.[i + rightIndexOffset]?.typeIndex &&
+        //   this.grid[j]?.[i + rightIndexOffset]?.typeIndex ===
+        //     this.grid[j]?.[i + rightIndexOffset + 1]?.typeIndex))
       ) {
         rightLineLength++
         rightIndexOffset++
+        loopCount++
+        lineArray.push(candy)
+
+        if (loopCount > 10) {
+          console.log('infinite loop happended')
+          break
+        }
       }
 
-      return rightLineLength
+      lineArray.forEach((candy) => {
+        if (candy.typeIndex === INVALID_FACTORY_CANDY_INDEX) {
+          hasInvalidFactory = true
+        }
+      })
+      // console.log(lineArray)
+
+      return { rightLineLength, hasInvalidFactoryX: hasInvalidFactory }
     }
 
     function bottomLineCheck(candy) {
-      if (!candy) return 1
+      if (!candy || typeof candy?.typeIndex !== 'number') return 1
       const { i, j } = candy
 
       let bottomLineLength = 1
       let bottomIndexOffset = 1
+      let loopCount = 0
+      let hasInvalidFactory = false
+      const lineArray = []
 
       while (
-        typeof candy?.typeIndex === 'number' &&
-        this.grid[j + bottomIndexOffset]?.[i]?.typeIndex === candy.typeIndex
+        // normal condition
+        // O O
+        candy.typeIndex === this.grid[j + bottomIndexOffset]?.[i]?.typeIndex
+        // this.grid[j + bottomIndexOffset]?.[i]?.typeIndex ===
+        //   INVALID_FACTORY_CANDY_INDEX ||
+        // (candy.typeIndex === INVALID_FACTORY_CANDY_INDEX &&
+        //   this.grid[j + bottomIndexOffset]?.[i]?.typeIndex &&
+        //   this.grid[j + bottomIndexOffset]?.[i]?.typeIndex ===
+        //     this.grid[j + bottomIndexOffset + 1]?.[i]?.typeIndex))
       ) {
         bottomLineLength++
         bottomIndexOffset++
+
+        loopCount++
+        lineArray.push(candy)
+
+        if (loopCount > 10) {
+          console.log('infinite loop happended')
+          break
+        }
       }
+      // console.log(lineArray)
 
-      return bottomLineLength
+      lineArray.forEach((candy) => {
+        if (candy.typeIndex === INVALID_FACTORY_CANDY_INDEX) {
+          hasInvalidFactory = true
+        }
+      })
+
+      return { bottomLineLength, hasInvalidFactoryY: hasInvalidFactory }
     }
-
-    return needToDelete
   }
 
   _getOpponentCandy(candy, direction) {
@@ -777,7 +879,10 @@ export class CandyScene extends Scene {
       '綠色方塊代表農業區，紅色方塊代表工業區，白色方塊代表住商區，黃色方塊代表鄉村區，藍色方塊代表國土保育區。每一個資源都有不同的分數。'
     )
     await this.doctorSay.newSay(
-      '遊戲方式很簡單，只要讓3個以上相同的方塊連在一起，就可以獲得這個素材了！'
+      '遊戲方式很簡單，只要讓 3 個以上相同的方塊連在一起，就可以獲得這個素材了！'
+    )
+    await this.doctorSay.newSay(
+      '為了蓋出理想的村莊，你還可以善用「重新整理」鍵，搜集自己最喜歡的方塊類型，建設理想中的田園城市，或是工業大城！'
     )
 
     const chosen = await this.doctorSay.chooseSay(
@@ -924,16 +1029,74 @@ export class CandyScene extends Scene {
 
     super.successGameHint()
     this.gameLevel++
+
+    // save
     Status.candy.gameLevel++
+    if (this.gameLevel !== 3) {
+      this.pointArray.forEach((candyType, index) => {
+        this.pointArrayRecord[index].count += candyType.count
+      })
+
+      Status.candy.pointArray = this.pointArrayRecord
+    }
+    console.log(Status.candy.pointArray)
 
     if (this.gameLevel === 3) {
-      await this.doctorSay.newSay('哇，你真的很有當村長的天份！')
-      await this.doctorSay.newSay(
-        '一個村莊必須要有農地、工業區、商業區和住宅區等等的分區規劃，村民才能住得開心舒適，'
-      )
-      await this.doctorSay.newSay(
-        '想要治理好一個村莊是不是很不容易呢？別擔心，你已經做得很好了！'
-      )
+      // get the largest
+      let largest = this.pointArray[0]
+      this.pointArray.forEach((candyType) => {
+        if (candyType.count > largest) {
+          largest = candyType
+        }
+      })
+      console.log(largest)
+
+      switch (largest.typeIndex) {
+        case 0:
+          await this.doctorSay.newSay(
+            '從你的選擇看來，你認為一個村莊最重要的資源就是農地了，'
+          )
+          await this.doctorSay.newSay(
+            '和宜蘭縣、雲林縣一樣，把農業視為是重點發展方向，或是在境內規劃了很多宜維護農地。田園城市是你的夢想！'
+          )
+
+          break
+
+        case 1:
+          await this.doctorSay.newSay(
+            '從你的選擇看來，你認為一個村莊最重要的資源就是住商中心了，'
+          )
+          await this.doctorSay.newSay(
+            '和新竹縣、彰化縣一樣，目標是讓更多人搬進來，活絡當地的商業發展。'
+          )
+          break
+
+        case 2:
+          await this.doctorSay.newSay(
+            '從你的選擇看來，你認為一個村莊最重要的資產就是自然資源了，'
+          )
+          await this.doctorSay.newSay(
+            '和南投縣、臺東縣一樣，劃設出許多的國土保育地區，保護自然資源。兼顧發展與保育是你的夢想！'
+          )
+          break
+
+        case 3:
+          await this.doctorSay.newSay(
+            '從你的選擇看來，你認為一個村莊最重要的資源就是工業區了，'
+          )
+          await this.doctorSay.newSay(
+            '和桃園市、高雄市一樣，把二級產業視為是重點發展方向，或是在境內規劃了很多產業園區。製造業中心是你的夢想！'
+          )
+
+          break
+        case 4:
+          await this.doctorSay.newSay('哎呀！你好像蠻喜歡蓋違章工廠，')
+          await this.doctorSay.newSay(
+            '雖然可以賺比較多的分數，但代價就是周遭的土地可能不能再使用哦！像是彰化縣就曾經有大量農地受到重金屬污染無法再耕作，三思而後行啊！'
+          )
+
+          break
+      }
 
       unlockCandy()
     }
@@ -984,21 +1147,6 @@ export class CandyScene extends Scene {
       // console.log(this.grid[j])
       console.log(row)
     }
-
-    // function getColor(typeIndex) {
-    //   switch (typeIndex) {
-    //     case 0:
-    //       return '黃'
-    //     case 1:
-    //       return '綠'
-    //     case 2:
-    //       return '藍'
-    //     case 3:
-    //       return '紅'
-    //     default:
-    //       return null
-    //   }
-    // }
   }
 
   destroyScene() {

@@ -102,7 +102,11 @@ export class BalanceScene extends Scene {
     this.conveyor = new Conveyor(
       this.seesawGroup.getChoosedWeightCard.bind(this.seesawGroup)
     )
+
     this.gameStage.addChild(this.conveyor.container)
+
+    // let seesawGroup can ovserve conveyor status
+    this.seesawGroup.conveyor = this.conveyor
   }
 
   createTimer() {
@@ -279,7 +283,7 @@ export class BalanceScene extends Scene {
   // ===== start game =====
   async startGame() {
     await super.startGame()
-
+    this.conveyor.cardCount = 0
     this.conveyor.startConveyor(this.gameLevel)
     this.timer.startTimer()
     this._startsceneTicker()

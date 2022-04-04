@@ -44,7 +44,7 @@ export class IntroScene {
       this.doctorExplain.bind(this),
     ]
     this.filmScriptStep = 0
-
+    this.initMusic()
     this.createIntro()
   }
 
@@ -134,7 +134,6 @@ export class IntroScene {
     this._createBackground()
     this.createStartButton()
     this._createHeader()
-    this.initMusic()
 
     // this.createTaiwan()
     // this.createCard()
@@ -160,11 +159,13 @@ export class IntroScene {
     }
     // start film script
     // // console.log(startFilmScript)
-    this.startButton.on('pointerdown', () => {
-      this.selectStage('candy')
-      console.log(startFilmScript)
-    })
-    // this.startButton.on('pointerdown', startFilmScript)
+    // this.startButton.on('pointerdown', () => {
+    //   this.playClickMusic()
+    //   this.playMusic()
+    //   this.selectStage('candy')
+    //   console.log(startFilmScript)
+    // })
+    this.startButton.on('pointerdown', startFilmScript)
   }
 
   _createHeader() {

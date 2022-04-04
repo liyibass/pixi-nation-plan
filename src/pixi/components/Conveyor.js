@@ -12,6 +12,7 @@ export class Conveyor {
     this.container = new PIXI.Container()
     this.container.name = 'conveyor'
     this.getChoosedWeightCard = getChoosedWeightCard
+    this.cardCount = 0
 
     this.width = Globals.getSeesawGameStageDimention().width
     this.container.x = TIMER_WIDTH
@@ -135,9 +136,13 @@ export class Conveyor {
           this.showedCardCount < TOTAL_CARD_COUNT
         ) {
           this.addNewWeightCard()
+          this.cardCount++
         }
 
-        createNewWeightCardTimeout()
+        // level 0 only has 9 card total
+        if (!(gameLevel === 0 && this.cardCount === 9)) {
+          createNewWeightCardTimeout()
+        }
       }, 2000)
     }
 

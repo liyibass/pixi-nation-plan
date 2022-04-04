@@ -23,6 +23,13 @@ export const Status = storedStatus?.Status || {
   candy: {
     gameLevel: 0,
     isCleared: false,
+    pointArray: [
+      { typeIndex: 0, count: 0, point: 100 },
+      { typeIndex: 1, count: 0, point: 75 },
+      { typeIndex: 2, count: 0, point: 50 },
+      { typeIndex: 3, count: 0, point: 200 },
+      { typeIndex: 4, count: 0, point: 200 },
+    ],
   },
 }
 

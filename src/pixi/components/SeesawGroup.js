@@ -14,6 +14,8 @@ export class SeesawGroup {
     this.container = new PIXI.Container()
     this.container.name = 'seesawGroup'
     this.gameLevel = gameLevel
+    this.conveyor
+
     this.createSeesaw()
     this.createSeesawButton()
     this.setPosition()
@@ -264,6 +266,11 @@ export class SeesawGroup {
         difference === 0 &&
         Math.abs(this.board.container.angle) <= 2
       ) {
+        if (this.gameLevel === 0 && this.conveyor?.cardCount < 9) {
+          console.log("it's now game level 0")
+          console.log(this.conveyor?.cardCount)
+        }
+
         this.board.container.angle = 0
         this.seesawRotateTicker.stop()
         this.setClearCountDown()

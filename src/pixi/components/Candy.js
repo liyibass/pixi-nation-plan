@@ -6,7 +6,7 @@ const CANDY_WIDTH = gameStageDimention.candyWidth
 const SWAP_SPEED = 4
 
 const INVALID_FACTORY_CANDY_INDEX = 4
-
+const DEAD_CANDY_INDEX = 5
 export class Candy {
   constructor(typeIndex = 0, i = 0, j = 0, swapHandler = () => {}) {
     this.typeIndex = typeIndex
@@ -58,6 +58,31 @@ export class Candy {
     this.candyIconContainer = new PIXI.Container()
     this.candyIconContainer.addChild(candySprite)
     this.container.addChild(this.candyIconContainer)
+  }
+
+  dead() {
+    if (this.typeIndex !== DEAD_CANDY_INDEX) return
+    this.updateCandyTexture(DEAD_CANDY_INDEX - 1)
+    this.candyPoint = getCandyPoint(this.typeIndex)
+    this.blinkTicker?.stop?.()
+    this.stopDragMonitor()
+
+    this.vanish()
+  }
+
+  updateCandyTexture(index) {
+    this.candyIconContainer.removeChildren()
+
+    const candyTexture = new PIXI.Texture(
+      Globals.resources[`b${index}`]?.texture
+    )
+    const candySprite = new PIXI.Sprite(candyTexture)
+
+    candySprite.width = CANDY_WIDTH
+    candySprite.height = CANDY_WIDTH
+    candySprite.alpha = 0.5
+
+    this.candyIconContainer.addChild(candySprite)
   }
 
   candyInitPosition() {
@@ -131,6 +156,12 @@ export class Candy {
       // events for drag move
       .on('mousemove', this.onDragMove.bind(this))
       .on('touchmove', this.onDragMove.bind(this))
+  }
+
+  stopDragMonitor() {
+    this.container.interactive = false
+    this.container.buttonMode = false
+    this.container.removeAllListeners()
   }
 
   onDragStart(event) {
@@ -355,12 +386,14 @@ export class Candy {
     pointText.y = (CANDY_WIDTH - pointText.height) / 2
     this.container.addChild(pointText)
 
+    const opacityValue = this.typeIndex === DEAD_CANDY_INDEX ? 0.4 : 0
+
     this.vanishTicker = new PIXI.Ticker()
     let scale = 1
 
     return new Promise((resolve) => {
       this.vanishTicker.add(() => {
-        if (this.candyIconContainer.alpha > 0) {
+        if (this.candyIconContainer.alpha > opacityValue) {
           this.candyIconContainer.alpha -= 0.08
           pointText.alpha += 0.06
           scale += 0.02
@@ -416,6 +449,7 @@ function getCandyPoint(candyIndex) {
     case 3:
       return 200
     case 4:
+    case 5:
       return 200
   }
 }
