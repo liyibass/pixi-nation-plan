@@ -804,109 +804,20 @@ export class CandyScene extends Scene {
         const candy = this.grid[j][i]
         if (candy === null) continue
 
-        // right validation
-        const rightSecondCandy = this.grid[j][i + 1]
-        const rightThirdCandy = this.grid[j][i + 2]
-        if (!rightSecondCandy || !rightThirdCandy) continue
+        const {
+          processedCandys: rightLineArray,
+          hasInvalidFactory: xHasInvalidFactory,
+        } = xAxisLineChecker.bind(this)(candy)
 
-        // validate line
-        let processedCandys = [candy, rightSecondCandy, rightThirdCandy]
-        let rightCount = 0
-        let hasInvalidFactory = false
-        // let currentTypeIndex
-        // O O O
-        if (
-          candy.typeIndex === rightSecondCandy?.typeIndex &&
-          candy.typeIndex === rightThirdCandy?.typeIndex
-        ) {
-          console.log('has normal line')
-          rightCount = 3
-          // currentTypeIndex = candy.typeIndex
+        if (rightLineArray.length < 3) continue
+        console.log(rightLineArray)
+        console.log(xHasInvalidFactory)
 
-          // check if has another matched candy
-          let isWhileLoopOn = true
-          while (isWhileLoopOn) {
-            const nextCandy = this.grid[j][i + rightCount]
-
-            // OOOO
-            if (candy.typeIndex === nextCandy?.typeIndex) {
-              processedCandys.push(nextCandy)
-              rightCount++
-            } else if (nextCandy?.typeIndex === INVALID_FACTORY_CANDY_INDEX) {
-              // OOOF
-              processedCandys.push(nextCandy)
-              rightCount++
-              hasInvalidFactory = true
-            }
-            // OOOX
-            else {
-              isWhileLoopOn = false
-            }
-          }
-
-          i += rightCount - 1
-        } else if (
-          candy.typeIndex === INVALID_FACTORY_CANDY_INDEX &&
-          rightSecondCandy?.typeIndex === rightThirdCandy?.typeIndex
-        ) {
-          console.log('F O O')
-          rightCount = 3
-          hasInvalidFactory = true
-
-          const { typeIndex } = rightThirdCandy
-          const more = getMoreLineCountFromRightEdge.bind(this)(
-            typeIndex,
-            rightThirdCandy
-          )
-
-          if (more.length > 0) {
-            processedCandys.push(...more)
-            rightCount += more.length
-          }
-        } else if (
-          rightSecondCandy?.typeIndex === INVALID_FACTORY_CANDY_INDEX &&
-          candy.typeIndex === rightThirdCandy?.typeIndex
-        ) {
-          console.log('O F O')
-          rightCount = 3
-          hasInvalidFactory = true
-          const { typeIndex } = rightThirdCandy
-          const more = getMoreLineCountFromRightEdge.bind(this)(
-            typeIndex,
-            rightThirdCandy
-          )
-
-          if (more.length > 0) {
-            processedCandys.push(...more)
-            rightCount += more.length
-          }
-        } else if (
-          rightThirdCandy?.typeIndex === INVALID_FACTORY_CANDY_INDEX &&
-          candy.typeIndex === rightSecondCandy?.typeIndex
-        ) {
-          console.log('O O F')
-          rightCount = 3
-          hasInvalidFactory = true
-
-          const typeIndex = candy.typeIndex
-          const more = getMoreLineCountFromRightEdge.bind(this)(
-            typeIndex,
-            rightThirdCandy
-          )
-
-          if (more.length > 0) {
-            processedCandys.push(...more)
-            rightCount += more.length
-          }
-        }
-
-        if (rightCount < 3) continue
-
-        if (hasInvalidFactory) {
-          needToTurnVanishArray.push(...processedCandys)
-        } else {
-          needToDeleteArray.push(...processedCandys)
-        }
+        // if (xHasInvalidFactory) {
+        //   needToTurnVanishArray.push(...rightLineArray)
+        // } else {
+        //   needToDeleteArray.push(...rightLineArray)
+        // }
       }
     }
     console.log(needToDeleteArray)
@@ -937,6 +848,112 @@ export class CandyScene extends Scene {
       }
 
       return lineArray
+    }
+
+    function xAxisLineChecker(candy) {
+      const { i, j } = candy
+      // right validation
+      const rightSecondCandy = this.grid[j][i + 1]
+      const rightThirdCandy = this.grid[j][i + 2]
+      if (!rightSecondCandy || !rightThirdCandy)
+        return { processedCandys: [], hasInvalidFactory: false }
+
+      // validate line
+      let processedCandys = [candy, rightSecondCandy, rightThirdCandy]
+      let rightCount = 0
+      let hasInvalidFactory = false
+      // let currentTypeIndex
+      // O O O
+      if (
+        candy.typeIndex === rightSecondCandy?.typeIndex &&
+        candy.typeIndex === rightThirdCandy?.typeIndex
+      ) {
+        console.log('has normal line')
+        rightCount = 3
+        // currentTypeIndex = candy.typeIndex
+
+        // check if has another matched candy
+        let isWhileLoopOn = true
+        while (isWhileLoopOn) {
+          const nextCandy = this.grid[j][i + rightCount]
+
+          // OOOO
+          if (candy.typeIndex === nextCandy?.typeIndex) {
+            processedCandys.push(nextCandy)
+            rightCount++
+          } else if (nextCandy?.typeIndex === INVALID_FACTORY_CANDY_INDEX) {
+            // OOOF
+            processedCandys.push(nextCandy)
+            rightCount++
+            hasInvalidFactory = true
+          }
+          // OOOX
+          else {
+            isWhileLoopOn = false
+          }
+        }
+
+        //  i += rightCount - 1
+      } else if (
+        candy.typeIndex === INVALID_FACTORY_CANDY_INDEX &&
+        rightSecondCandy?.typeIndex === rightThirdCandy?.typeIndex
+      ) {
+        console.log('F O O')
+        rightCount = 3
+        hasInvalidFactory = true
+
+        const { typeIndex } = rightThirdCandy
+        const more = getMoreLineCountFromRightEdge.bind(this)(
+          typeIndex,
+          rightThirdCandy
+        )
+
+        if (more.length > 0) {
+          processedCandys.push(...more)
+          rightCount += more.length
+        }
+      } else if (
+        rightSecondCandy?.typeIndex === INVALID_FACTORY_CANDY_INDEX &&
+        candy.typeIndex === rightThirdCandy?.typeIndex
+      ) {
+        console.log('O F O')
+        rightCount = 3
+        hasInvalidFactory = true
+        const { typeIndex } = rightThirdCandy
+        const more = getMoreLineCountFromRightEdge.bind(this)(
+          typeIndex,
+          rightThirdCandy
+        )
+
+        if (more.length > 0) {
+          processedCandys.push(...more)
+          rightCount += more.length
+        }
+      } else if (
+        rightThirdCandy?.typeIndex === INVALID_FACTORY_CANDY_INDEX &&
+        candy.typeIndex === rightSecondCandy?.typeIndex
+      ) {
+        console.log('O O F')
+        rightCount = 3
+        hasInvalidFactory = true
+
+        const typeIndex = candy.typeIndex
+        const more = getMoreLineCountFromRightEdge.bind(this)(
+          typeIndex,
+          rightThirdCandy
+        )
+
+        if (more.length > 0) {
+          processedCandys.push(...more)
+          rightCount += more.length
+        }
+      }
+
+      if (rightCount < 3) {
+        return { processedCandys: [], hasInvalidFactory: false }
+      } else {
+        return { processedCandys, hasInvalidFactory }
+      }
     }
   }
 
