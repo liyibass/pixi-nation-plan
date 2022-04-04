@@ -458,7 +458,7 @@ export class CandyScene extends Scene {
       await this.lineHandler()
 
       const scoredCandys = this.needToDeleteArray.concat(this.needToTurnVanish)
-      console.log(scoredCandys)
+
       await this.candyHeader.increaseScore(scoredCandys, isFirstTimeLineCheck)
 
       if (isFirstTimeLineCheck) {
@@ -546,11 +546,12 @@ export class CandyScene extends Scene {
   }
 
   async vanishHandler() {
-    for (let index = 0; index < this.needToTurnVanish.length; index++) {
-      const candy = this.needToTurnVanish[index]
-      candy.typeIndex = DEAD_CANDY_INDEX
-      await candy.dead()
-    }
+    // console.log(this.needToTurnVanish)
+    // for (let index = 0; index < this.needToTurnVanish.length; index++) {
+    //   const candy = this.needToTurnVanish[index]
+    //   candy.typeIndex = DEAD_CANDY_INDEX
+    //   await candy.dead()
+    // }
   }
 
   async fallingCandy(needToFallingQueue) {
@@ -639,7 +640,7 @@ export class CandyScene extends Scene {
     return nullCount
   }
 
-  examineIfHasLine() {
+  examineIfHasLine2() {
     const needToDelete = []
     const needToTurnVanish = []
     // this._logGrid()
@@ -691,6 +692,7 @@ export class CandyScene extends Scene {
 
     function rightLineCheck(candy) {
       if (!candy || typeof candy?.typeIndex !== 'number') return 1
+      if (candy.i > this.colCount - 2) return 1
 
       const { i, j } = candy
       let rightLineLength = 1
@@ -699,27 +701,60 @@ export class CandyScene extends Scene {
       let hasInvalidFactory = false
       const lineArray = []
 
-      while (
-        candy.typeIndex === this.grid[j]?.[i + rightIndexOffset]?.typeIndex
-      ) {
-        rightLineLength++
-        rightIndexOffset++
-        loopCount++
-        lineArray.push(candy)
+      // let currentTypeIndex = candy.typeIndex
+      let isWhileLoopOn = true
+
+      while (isWhileLoopOn) {
+        const rightCandy = this.grid[j]?.[i + rightIndexOffset]
+        if (!rightCandy) break
+
+        // (O) O
+        if (candy.typeIndex === rightCandy?.typeIndex) {
+          checkedAndContinuefindNext()
+        } else if (rightCandy?.typeIndex === INVALID_FACTORY_CANDY_INDEX) {
+          // (O) F
+          // (O) O F
+          checkedAndContinuefindNext()
+        } else if (candy.typeIndex === INVALID_FACTORY_CANDY_INDEX) {
+          // (F) O
+          // (F) O O
+          const thirdCandy = this.grid[j]?.[i + rightIndexOffset + 1]
+          if (thirdCandy && thirdCandy?.typeIndex === rightCandy?.typeIndex) {
+            checkedAndContinuefindNext()
+          } else {
+            isWhileLoopOn = false
+          }
+        } else {
+          isWhileLoopOn = false
+        }
 
         if (loopCount > 10) {
           console.log('infinite loop happended')
           break
         }
       }
+      function checkedAndContinuefindNext() {
+        rightLineLength++
+        rightIndexOffset++
+        loopCount++
+        lineArray.push(candy)
+      }
 
-      lineArray.forEach((candy) => {
-        if (candy.typeIndex === INVALID_FACTORY_CANDY_INDEX) {
-          hasInvalidFactory = true
-        }
-      })
+      // while (
+      //   candy.typeIndex === this.grid[j]?.[i + rightIndexOffset]?.typeIndex
+      // ) {
+      //   rightLineLength++
+      //   rightIndexOffset++
+      //   loopCount++
+      //   lineArray.push(candy)
 
-      // console.log(lineArray)
+      //   if (loopCount > 10) {
+      //     console.log('infinite loop happended')
+      //     break
+      //   }
+      // }
+
+      console.log(lineArray)
 
       return { rightLineLength, hasInvalidFactoryX: hasInvalidFactory }
     }
@@ -760,48 +795,47 @@ export class CandyScene extends Scene {
     }
   }
 
-  examineIfHasLine1() {
+  examineIfHasLine() {
     const needToDeleteArray = []
     const needToTurnVanishArray = []
-    // let hasInvalidFactory = false
 
     for (let j = 0; j < this.rowCount; j++) {
-      // for (let j = 0; j < 3; j++) {
       for (let i = 0; i < this.colCount; i++) {
         const candy = this.grid[j][i]
         if (candy === null) continue
 
-        // left validation
-        const rightFirstCandy = this.grid[j][i + 1]
-        const rightSecondCandy = this.grid[j][i + 2]
-        if (!rightFirstCandy || !rightSecondCandy) continue
+        // right validation
+        const rightSecondCandy = this.grid[j][i + 1]
+        const rightThirdCandy = this.grid[j][i + 2]
+        if (!rightSecondCandy || !rightThirdCandy) continue
 
         // validate line
-        let processedCandys = [candy, rightFirstCandy, rightSecondCandy]
-        let leftLineCount = 0
+        let processedCandys = [candy, rightSecondCandy, rightThirdCandy]
+        let rightCount = 0
         let hasInvalidFactory = false
         // let currentTypeIndex
-        // OOO
+        // O O O
         if (
-          candy.typeIndex === rightFirstCandy?.typeIndex &&
-          candy.typeIndex === rightSecondCandy?.typeIndex
+          candy.typeIndex === rightSecondCandy?.typeIndex &&
+          candy.typeIndex === rightThirdCandy?.typeIndex
         ) {
           console.log('has normal line')
-          leftLineCount = 3
+          rightCount = 3
           // currentTypeIndex = candy.typeIndex
 
           // check if has another matched candy
           let isWhileLoopOn = true
           while (isWhileLoopOn) {
-            const nextCandy = this.grid[j][i + leftLineCount]
+            const nextCandy = this.grid[j][i + rightCount]
 
             // OOOO
             if (candy.typeIndex === nextCandy?.typeIndex) {
               processedCandys.push(nextCandy)
-              leftLineCount++
+              rightCount++
             } else if (nextCandy?.typeIndex === INVALID_FACTORY_CANDY_INDEX) {
+              // OOOF
               processedCandys.push(nextCandy)
-              leftLineCount++
+              rightCount++
               hasInvalidFactory = true
             }
             // OOOX
@@ -810,39 +844,68 @@ export class CandyScene extends Scene {
             }
           }
 
-          if (hasInvalidFactory) {
-            needToTurnVanishArray.push(...processedCandys)
-          } else {
-            needToDeleteArray.push(...processedCandys)
-          }
-          i += leftLineCount - 1
+          i += rightCount - 1
+        } else if (
+          candy.typeIndex === INVALID_FACTORY_CANDY_INDEX &&
+          rightSecondCandy?.typeIndex === rightThirdCandy?.typeIndex
+        ) {
+          console.log('F O O')
+          rightCount = 3
+          hasInvalidFactory = true
 
-          // let turnOnWhileLoop = true
-          // let rightMoreCandy = this.grid[j][i + leftLineCount]
-          // if (!rightMoreCandy) turnOnWhileLoop = false
-          // while (turnOnWhileLoop) {
-          //   if (
-          //     candy.typeIndex === rightMoreCandy?.typeIndex ||
-          //     rightFirstCandy.typeIndex === rightMoreCandy?.typeIndex ||
-          //     rightMoreCandy?.typeIndex === INVALID_FACTORY_CANDY_INDEX
-          //   ) {
-          //     leftLineCount++
-          //     rightMoreCandy = this.grid[j][i + leftLineCount]
-          //   } else {
-          //     turnOnWhileLoop = false
-          //   }
-          // }
+          const { typeIndex } = rightThirdCandy
+          const more = getMoreLineCountFromRightEdge.bind(this)(
+            typeIndex,
+            rightThirdCandy
+          )
+
+          if (more.length > 0) {
+            processedCandys.push(...more)
+            rightCount += more.length
+          }
+        } else if (
+          rightSecondCandy?.typeIndex === INVALID_FACTORY_CANDY_INDEX &&
+          candy.typeIndex === rightThirdCandy?.typeIndex
+        ) {
+          console.log('O F O')
+          rightCount = 3
+          hasInvalidFactory = true
+          const { typeIndex } = rightThirdCandy
+          const more = getMoreLineCountFromRightEdge.bind(this)(
+            typeIndex,
+            rightThirdCandy
+          )
+
+          if (more.length > 0) {
+            processedCandys.push(...more)
+            rightCount += more.length
+          }
+        } else if (
+          rightThirdCandy?.typeIndex === INVALID_FACTORY_CANDY_INDEX &&
+          candy.typeIndex === rightSecondCandy?.typeIndex
+        ) {
+          console.log('O O F')
+          rightCount = 3
+          hasInvalidFactory = true
+
+          const typeIndex = candy.typeIndex
+          const more = getMoreLineCountFromRightEdge.bind(this)(
+            typeIndex,
+            rightThirdCandy
+          )
+
+          if (more.length > 0) {
+            processedCandys.push(...more)
+            rightCount += more.length
+          }
         }
 
-        if (
-          (candy.typeIndex === INVALID_FACTORY_CANDY_INDEX &&
-            rightFirstCandy?.typeIndex === rightSecondCandy?.typeIndex) ||
-          (rightFirstCandy?.typeIndex === INVALID_FACTORY_CANDY_INDEX &&
-            candy.typeIndex === rightSecondCandy?.typeIndex) ||
-          (rightSecondCandy?.typeIndex === INVALID_FACTORY_CANDY_INDEX &&
-            candy.typeIndex === rightFirstCandy?.typeIndex)
-        ) {
-          console.log('has line with invalid factory')
+        if (rightCount < 3) continue
+
+        if (hasInvalidFactory) {
+          needToTurnVanishArray.push(...processedCandys)
+        } else {
+          needToDeleteArray.push(...processedCandys)
         }
       }
     }
@@ -852,6 +915,28 @@ export class CandyScene extends Scene {
     return {
       needToDelete: needToDeleteArray,
       needToTurnVanish: needToTurnVanishArray,
+    }
+
+    function getMoreLineCountFromRightEdge(wantedTypeIndex, rightEdgeCandy) {
+      const { i, j } = rightEdgeCandy
+      if (i > this.colCount - 1 || j > this.rowCount - 1) return []
+      console.log(rightEdgeCandy)
+      let isWhileLoopOn = true
+      let count = 0
+      const lineArray = []
+
+      while (isWhileLoopOn) {
+        const rightCandy = this.grid[j][i + count + 1]
+
+        if (rightCandy?.typeIndex === wantedTypeIndex) {
+          count++
+          lineArray.push(rightCandy)
+        } else {
+          isWhileLoopOn = false
+        }
+      }
+
+      return lineArray
     }
   }
 
