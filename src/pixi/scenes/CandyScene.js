@@ -323,7 +323,14 @@ export class CandyScene extends Scene {
     this.needToDeleteArray = needToDelete
     this.needToTurnVanish = needToTurnVanish
 
-    if (this.needToDeleteArray.length || this.needToTurnVanish.length) {
+    const interactiveWithDeadCandy =
+      candy.typeIndex === DEAD_CANDY_INDEX ||
+      opponentCandy.typeIndex === DEAD_CANDY_INDEX
+
+    if (
+      !interactiveWithDeadCandy &&
+      (this.needToDeleteArray.length || this.needToTurnVanish.length)
+    ) {
       // trigger their swap animation
       switch (direction) {
         case 'right':
