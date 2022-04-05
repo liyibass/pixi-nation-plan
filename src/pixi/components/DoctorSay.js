@@ -6,7 +6,7 @@ import { DoctorDialogBoxNew } from './DoctorDialogBoxNew'
 import { DoctorShareBoxGroup } from './DoctorShareBoxGroup'
 import { DoctorModBoxGroup } from './DoctorModBoxGroup'
 import { SpeakDialog } from './SpeakDialog'
-import { clickUrl, updateMod } from '../script/Utils'
+import { shareUtil, updateMod } from '../script/Utils'
 import { sound } from '@pixi/sound'
 
 export class DoctorSay {
@@ -75,23 +75,32 @@ export class DoctorSay {
   }
 
   share(text) {
-    return new Promise((resolve) => {
-      const shareHandler = async (chosen) => {
-        // console.log(chosen)
-        this.playClickMusic()
+    shareUtil.shareHandler(true)
 
-        if (chosen === 'cancel') {
-          this.container.removeChildren()
-          this.container.removeAllListeners()
-          resolve(false)
-        } else {
-          clickUrl(chosen)
-          await this._wait(2000)
-          this.container.removeChildren()
-          this.container.removeAllListeners()
-          resolve(true)
-        }
+    return new Promise((resolve) => {
+      const shareHandler = async () => {
+        // console.log(chosen)
+        // this.playClickMusic()
+        // if (chosen === 'cancel') {
+        //   this.container.removeChildren()
+        //   this.container.removeAllListeners()
+        //   resolve(false)
+        // } else {
+        //   // clickUrl(chosen)
+        //   await this._wait(2000)
+        //   this.container.removeChildren()
+        //   this.container.removeAllListeners()
+        //   resolve(true)
+        // }
       }
+
+      const doneShare = () => {
+        this.container.removeChildren()
+        this.container.removeAllListeners()
+        resolve(true)
+      }
+
+      shareUtil.doneShare = doneShare
 
       const dialogBox = new DoctorShareBoxGroup({
         text,

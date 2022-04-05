@@ -4,6 +4,14 @@
   </transition>
 
   <div class="pixi" ref="pixi" />
+  <div class="shareDialog" v-if="isHandlingShare">
+    <a :href="fbUrl" target="_blank" @click="shareClickHandler"
+      ><img :src="require('../assets/images/facebook.png')" alt=""
+    /></a>
+    <a :href="lineUrl" target="_blank" @click="shareClickHandler"
+      ><img :src="require('../assets/images/line.png')" alt=""
+    /></a>
+  </div>
 </template>
 
 <script>
@@ -12,6 +20,7 @@ import Loading from '../components/Loading.vue'
 // import loadingPage from '../pixi/stages/loadingPage'
 
 import { App } from '../pixi/script/App'
+import { shareUtil } from '../pixi/script/Utils'
 
 // const WIDTH = 375
 // const HEIGHT = 812
@@ -23,16 +32,36 @@ export default {
     return {
       progress: 0,
       loaded: false,
+      isHandlingShare: false,
+      projectUrl: 'https://www.readr.tw/project/3/nation-plan',
     }
+  },
+  computed: {
+    fbUrl() {
+      return `https://www.facebook.com/sharer/sharer.php?u=${this.projectUrl}`
+    },
+    lineUrl() {
+      return `http://line.naver.jp/R/msg/text/?nation-plan%0D%0A${this.projectUrl}`
+    },
   },
   methods: {
     startHandler() {
       this.loaded = true
     },
+    handlingShareToggle(boolean) {
+      this.isHandlingShare = boolean || true
+      console.log(boolean)
+    },
+    shareClickHandler() {
+      this.isHandlingShare = false
+      shareUtil.doneShare()
+    },
   },
   async mounted() {
     const app = new App(this)
     app.run()
+
+    shareUtil.shareHandler = this.handlingShareToggle.bind(this)
   },
 }
 </script>
@@ -40,5 +69,22 @@ export default {
 <style>
 .pixi {
   height: 100vh;
+}
+
+.shareDialog {
+  position: fixed;
+
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.shareDialog > a {
+  flex: 1;
+  opacity: 0;
 }
 </style>

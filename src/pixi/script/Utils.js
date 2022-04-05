@@ -127,6 +127,28 @@ export const unlockRun = () => {
   storeStatusIntoStorage()
 }
 
+export const unlockAll = () => {
+  console.log('unlockAll')
+  unlockCardCityArray = []
+
+  CityStatusArray.forEach((cityData) => {
+    let hasUnlock = false
+    cityData.tabs.forEach((tab) => {
+      tab.isLocked = false
+      hasUnlock = true
+    })
+
+    if (
+      hasUnlock &&
+      !unlockCardCityArray.find((city) => city.cityIndex === cityData.cityIndex)
+    ) {
+      unlockCardCityArray.push(cityData)
+    }
+  })
+
+  storeStatusIntoStorage()
+}
+
 export const storeStatusIntoStorage = () => {
   window.localStorage.setItem('gameStatus', serializeGameStatus())
 }
@@ -205,4 +227,9 @@ export const updateMod = (modName) => {
 export const saveGameStatus = () => {
   // console.log(Status)
   storeStatusIntoStorage()
+}
+
+export const shareUtil = {
+  shareHandler: () => {},
+  doneShare: () => {},
 }

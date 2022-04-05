@@ -20,6 +20,7 @@ import {
   saveGameStatus,
 } from '../script/Utils'
 import { GameTitle } from '../components/GameTitle'
+import { unlockAll } from '../script/Utils'
 
 export class MenuScene extends Scene {
   constructor(selectStage = () => {}) {
@@ -104,6 +105,16 @@ export class MenuScene extends Scene {
       this.taiwan.activeGameListener()
       this.taiwan.card.activeListener()
     })
+  }
+
+  unlockHandler(unlockFunction) {
+    unlockFunction()
+    this.taiwan.destroyTaiwan()
+    this.taiwan.container.destroy()
+    this.createTaiwan()
+    this.taiwan.activeCityListener()
+    this.taiwan.activeGameListener()
+    this.taiwan.card.activeListener()
   }
 
   // ===== init system =====
@@ -251,7 +262,8 @@ export class MenuScene extends Scene {
         console.log(isShared)
         if (isShared) {
           Status.isShared = true
-          await this.doctorSay.mod('恭喜你解鎖了新人物！', false)
+          // await this.doctorSay.mod('恭喜你解鎖了新人物！', false)
+          this.unlockHandler(unlockAll)
         }
         this.openAllListener()
       }
