@@ -47,8 +47,9 @@ export class Water extends Obstacle {
   startObstacleTicker() {
     this.defaultX = this.container.x
     this.defaultY = this.container.y
-    this.ObstacleOperateTicker = new PIXI.Ticker()
-    this.ObstacleOperateTicker.add(() => {
+    // this.ObstacleOperateTicker = new PIXI.Ticker()
+
+    const tickerCallback = () => {
       this._checkIfObstacleIsInWindow()
       if (this.isInWindow) {
         // get water and player's global position
@@ -69,7 +70,10 @@ export class Water extends Obstacle {
         }
         // this.isAddedToProcesser = true
       }
-    })
+    }
+    this.ObstacleOperateTicker.add(tickerCallback)
     this.ObstacleOperateTicker.start()
+
+    // return tickerCallback
   }
 }

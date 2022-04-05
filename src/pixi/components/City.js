@@ -11,7 +11,8 @@ export class City {
     collisionMonitor,
     player,
     currentCityNameMonitor,
-    middleCallback
+    middleCallback,
+    exitCallback
   ) {
     this.cityIndex = currentCityIndex
     this.cityName = this._getCityName(currentCityIndex)
@@ -19,6 +20,7 @@ export class City {
     this.player = player
     this.currentCityNameMonitor = currentCityNameMonitor
     this.middleCallback = middleCallback
+    this.exitCallback = exitCallback
 
     this.cityBackground = this.createCityBackground()
     this.cityBoard = this.createBoard()
@@ -44,7 +46,8 @@ export class City {
     const background = new CityBackground(
       this.cityName,
       this.cityIndex,
-      this.middleCallback
+      this.middleCallback,
+      this.exitCallback
     )
 
     return background

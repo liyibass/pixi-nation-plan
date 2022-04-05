@@ -21,7 +21,7 @@ const gameStageDimention = Globals.getRunGameStageDimention()
 export class RunScene extends Scene {
   constructor(...args) {
     super(...args)
-    this.currentCityIndex = 2
+    this.currentCityIndex = 0
     this.inWindowObstacles = []
     this.container.name = 'RunScene'
     this.gameLevel = Status.run.gameLevel
@@ -31,7 +31,6 @@ export class RunScene extends Scene {
     this.cityBackgroundLayer = new PIXI.Container()
     this.boardLayer = new PIXI.Container()
     this.obstacleLayer = new PIXI.Container()
-    this.cityConveyor = []
 
     this.createScene()
     this.startGameFlow()
@@ -139,7 +138,7 @@ export class RunScene extends Scene {
   async initGame() {
     console.log('initGame')
 
-    this._createCity()
+    this._createCity(this.currentCityIndex)
     this.gameStage.setChildIndex(
       this.player.container,
       this.gameStage.children.length - 1
@@ -167,13 +166,9 @@ export class RunScene extends Scene {
   }
 
   _createCity() {
-    const city = this.getNewCity(this.currentCityIndex)
-
-    this.cityBackgroundLayer.addChild(city.cityBackground.container)
-    this.boardLayer.addChild(city.cityBoard.container)
-    this.obstacleLayer.addChild(city.cityObstacle.container)
-
-    this.cityConveyor.push(city)
+    for (let i = 0; i < 7; i++) {
+      this._createNewCity(i)
+    }
 
     this.gameStage.addChild(
       this.cityBackgroundLayer,
@@ -185,36 +180,16 @@ export class RunScene extends Scene {
   middleCallback(lastCityIndex) {
     // console.log('YOYO')
     console.log(lastCityIndex)
-
-    this.currentCityIndex++
-
-    const newCity = this.getNewCity(this.currentCityIndex)
-
-    this.cityBackgroundLayer.addChild(newCity.cityBackground.container)
-    this.boardLayer.addChild(newCity.cityBoard.container)
-    this.obstacleLayer.addChild(newCity.cityObstacle.container)
-
-    this.cityConveyor.push(newCity)
+    // this.currentCityIndex++
   }
 
-  exitCallback(lastCityIndex) {
-    console.log(`${lastCityIndex} leaved`)
-
-    const passedCity = this.cityConveyor.shift()
-
-    this.cityBackgroundLayer.removeChild(passedCity.cityBackground.container)
-    this.boardLayer.removeChild(passedCity.cityBoard.container)
-    this.obstacleLayer.removeChild(passedCity.cityObstacle.container)
-  }
-
-  getNewCity(cityIndex) {
+  _createNewCity(cityIndex) {
     const city = new City(
       cityIndex,
       this.collisionMonitor.bind(this),
       this.player,
       this.currentCityNameMonitor.bind(this),
-      this.middleCallback.bind(this),
-      this.exitCallback.bind(this)
+      this.middleCallback.bind(this)
     )
 
     let interval = (cityIndex === 0 ? 0 : 1 * (this.gameStageWidth * 2)) / 3
@@ -223,21 +198,26 @@ export class RunScene extends Scene {
     }
     const offset = this.gameStageWidth / 4
 
-    city.cityBackground.container.x = 100 + this.gameStageWidth + interval
+    city.cityBackground.container.x =
+      this.cityBackgroundLayer.width + this.gameStageWidth + interval
 
     city.cityBoard.container.x =
-      ((100 + this.gameStageWidth + interval) * BOARD_SPEED) /
+      ((this.cityBackgroundLayer.width + this.gameStageWidth + interval) *
+        BOARD_SPEED) /
         BACKGROUND_SPEED -
       offset
 
     city.cityObstacle.container.x =
-      ((100 + this.gameStageWidth + interval) * OBSTACLE_SPEED) /
+      ((this.cityBackgroundLayer.width + this.gameStageWidth + interval) *
+        OBSTACLE_SPEED) /
         BACKGROUND_SPEED -
       offset
 
     // city.cityObstacle.container.y = 200
 
-    return city
+    this.cityBackgroundLayer.addChild(city.cityBackground.container)
+    this.boardLayer.addChild(city.cityBoard.container)
+    this.obstacleLayer.addChild(city.cityObstacle.container)
   }
 
   currentCityNameMonitor(cityName) {
@@ -355,6 +335,54 @@ export class RunScene extends Scene {
     this.boardLayer.vx = 0
     this.obstacleLayer.vx = 0
 
+    this.right.press = () => {
+      if (!this.sceneTicker?.started) {
+        return
+      }
+      this.player.container.scale.x = 1
+      this.player.container.vx = PLAYER_SPEED
+      this.player.container.vy = 0
+      this.player.changePlayerTexture('running')
+
+      this.cityBackgroundLayer.vx = -BACKGROUND_SPEED
+      this.boardLayer.vx = -BOARD_SPEED
+      this.obstacleLayer.vx = -PLAYER_SPEED
+    }
+    this.right.release = () => {
+      if (!this.left.isDown && this.player.container.vy === 0) {
+        this.player.container.vx = 0
+        this.player.changePlayerTexture('stand')
+
+        this.cityBackgroundLayer.vx = 0
+        this.boardLayer.vx = 0
+        this.obstacleLayer.vx = 0
+      }
+    }
+
+    this.left.press = () => {
+      if (!this.sceneTicker?.started) {
+        return
+      }
+      this.player.container.scale.x = -1
+      this.player.container.vx = -PLAYER_SPEED
+      this.player.container.vy = 0
+      this.player.changePlayerTexture('running')
+
+      // this.cityBackgroundLayer.vx = BACKGROUND_SPEED
+      // this.boardLayer.vx = BOARD_SPEED
+      // this.obstacleLayer.vx = PLAYER_SPEED
+    }
+    this.left.release = () => {
+      if (!this.right.isDown && this.player.container.vy === 0) {
+        this.player.container.vx = 0
+        this.player.changePlayerTexture('stand')
+
+        this.cityBackgroundLayer.vx = 0
+        this.boardLayer.vx = 0
+        this.obstacleLayer.vx = 0
+      }
+    }
+
     //Up
     this.up.press = () => {
       if (!this.sceneTicker?.started) {
@@ -456,7 +484,7 @@ export class RunScene extends Scene {
 
   _startSceneTicker() {
     this.sceneTicker = new PIXI.Ticker()
-    let debounceCount = 0
+
     const tickerCallback = () => {
       // console.log(time)
       if (
@@ -479,24 +507,13 @@ export class RunScene extends Scene {
       this.player.container.x += this.player.container.vx
 
       // background move depends on their velocity value
-      this.cityBackgroundLayer.children.forEach((bg) => {
-        bg.x += this.cityBackgroundLayer.vx
-      })
-      this.boardLayer.children.forEach((board) => {
-        board.x += this.boardLayer.vx
-      })
-      this.obstacleLayer.children.forEach((obstacle) => {
-        obstacle.x += this.obstacleLayer.vx
-      })
-      // console.log(this.cityBackgroundLayer.children)
+      this.cityBackgroundLayer.x += this.cityBackgroundLayer.vx
+      this.boardLayer.x += this.boardLayer.vx
+      this.obstacleLayer.x += this.obstacleLayer.vx
 
       // observe obstacle
-      debounceCount++
 
-      if (debounceCount > 5) {
-        debounceCount = 0
-        this._obstacleProcesser()
-      }
+      this._obstacleProcesser()
 
       // this.cityBackgroundLayer.children.forEach((cityBackground) => {
       //   const needToDeleteOldCity =
@@ -638,7 +655,6 @@ export class RunScene extends Scene {
     this.inWindowObstacles.forEach((obstacle) => {
       obstacle.ObstacleOperateTicker.stop()
     })
-    this.ci
 
     this.player.changePlayerTexture('stand')
     this.player.jumpTicker.stop()

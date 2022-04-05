@@ -24,7 +24,8 @@ export class Obstacle {
     this.ObstacleOperateTicker = new PIXI.Ticker()
 
     let debounce = 0
-    this.ObstacleOperateTicker.add(() => {
+
+    const tickerCallback = () => {
       if (debounce < 30) {
         debounce++
         return
@@ -48,8 +49,11 @@ export class Obstacle {
           this.destoryObstacle()
         }
       }
-    })
+    }
+    this.ObstacleOperateTicker.add(tickerCallback)
     this.ObstacleOperateTicker.start()
+
+    // return tickerCallback
   }
 
   destoryObstacle() {

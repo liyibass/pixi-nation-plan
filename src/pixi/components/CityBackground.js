@@ -6,10 +6,11 @@ const gameStageDimention = Globals.getRunGameStageDimention()
 const proximateCityWidth = gameStageDimention.width * 2
 
 export class CityBackground {
-  constructor(cityName, cityIndex, middleCallback) {
+  constructor(cityName, cityIndex, middleCallback, exitCallback) {
     this.cityName = cityName
     this.cityIndex = cityIndex
     this.middleCallback = middleCallback
+    this.exitCallback = exitCallback
     this.container = new PIXI.Container()
     this.container.name = `cityBackground-${this.cityName}`
 
@@ -339,7 +340,8 @@ export class CityBackground {
         if (isBehindWindow) {
           this.container.renderable = false
           this.optimizeTicker.stop()
-          console.log('end')
+
+          this.exitCallback(this.cityIndex)
         }
       } else {
         this.container.renderable = false

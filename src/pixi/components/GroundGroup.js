@@ -62,7 +62,7 @@ export class GroundGroup {
 
   createIcons() {
     const iconsContainer = new PIXI.Container()
-    const interval = 60
+    const interval = (groundGroupDimention.groundWidth * 0.6) / 3
     this.iconArray = []
     for (let i = 0; i < 3; i++) {
       const icon = new GroundGroupIcon(i)
