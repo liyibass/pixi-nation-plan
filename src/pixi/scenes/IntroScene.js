@@ -159,13 +159,13 @@ export class IntroScene {
     }
     // start film script
     // // console.log(startFilmScript)
-    this.startButton.on('pointerdown', () => {
-      this.playClickMusic()
-      this.playMusic()
-      this.selectStage('run')
-      console.log(startFilmScript)
-    })
-    // this.startButton.on('pointerdown', startFilmScript)
+    // this.startButton.on('pointerdown', () => {
+    //   this.playClickMusic()
+    //   this.playMusic()
+    //   this.selectStage('run')
+    //   console.log(startFilmScript)
+    // })
+    this.startButton.on('pointerdown', startFilmScript)
   }
 
   _createHeader() {

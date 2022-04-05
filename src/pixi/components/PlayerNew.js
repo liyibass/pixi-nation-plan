@@ -168,7 +168,8 @@ export class Player {
 
         this.standHeight = this.initStandHeight
         this.container.y = this.standHeight
-        this.runningPlayerSprite.start()
+        console.log(this.runningPlayerSprite)
+        this.runningPlayerSprite?.start?.()
         return
       }
 

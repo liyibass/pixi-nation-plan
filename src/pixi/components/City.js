@@ -12,7 +12,8 @@ export class City {
     player,
     currentCityNameMonitor,
     middleCallback,
-    exitCallback
+    exitCallback,
+    obstacleCallbackArray
   ) {
     this.cityIndex = currentCityIndex
     this.cityName = this._getCityName(currentCityIndex)
@@ -21,6 +22,7 @@ export class City {
     this.currentCityNameMonitor = currentCityNameMonitor
     this.middleCallback = middleCallback
     this.exitCallback = exitCallback
+    this.obstacleCallbackArray = obstacleCallbackArray
 
     this.cityBackground = this.createCityBackground()
     this.cityBoard = this.createBoard()
@@ -58,7 +60,8 @@ export class City {
       this.cityName,
       this.cityBackground.container.width * 2,
       this.collisionMonitor,
-      this.player
+      this.player,
+      this.obstacleCallbackArray
     )
     return obstacle
   }

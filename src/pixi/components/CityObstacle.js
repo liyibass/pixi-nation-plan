@@ -11,11 +11,18 @@ import { FinishLine } from './FinishLine'
 const gameStageDimention = Globals.getRunGameStageDimention()
 
 export class CityObstacle {
-  constructor(cityName, obstacleWidth, collisionMonitor, player) {
+  constructor(
+    cityName,
+    obstacleWidth,
+    collisionMonitor,
+    player,
+    obstacleCallbackArray
+  ) {
     this.cityName = cityName
     this.obstacleWidth = obstacleWidth
     this.collisionMonitor = collisionMonitor
-    this.player = player
+    ;(this.player = player),
+      (this.obstacleCallbackArray = obstacleCallbackArray)
 
     this.container = new PIXI.Container()
     this.container.name = `cityObstacle-${this.cityName}`
@@ -83,7 +90,7 @@ export class CityObstacle {
 
       this.container.addChild(chimney.container)
 
-      chimney.startObstacleTicker()
+      chimney.getObstacleTickerCallback(this.obstacleCallbackArray)
     }
   }
 
@@ -111,7 +118,8 @@ export class CityObstacle {
         interval === 0
           ? car.container.width * 2
           : car.container.width + interval
-      car.startObstacleTicker()
+
+      car.getObstacleTickerCallback(this.obstacleCallbackArray)
     }
   }
 
@@ -139,7 +147,7 @@ export class CityObstacle {
           ? solarBoard.container.width * 2
           : solarBoard.container.width + interval
 
-      solarBoard.startObstacleTicker()
+      solarBoard.getObstacleTickerCallback(this.obstacleCallbackArray)
     }
   }
 
@@ -166,7 +174,8 @@ export class CityObstacle {
 
       this.obstacleArray.push(water)
       this.container.addChild(water.container)
-      water.startObstacleTicker()
+
+      water.getObstacleTickerCallback(this.obstacleCallbackArray)
 
       // add obstacle floating on the water
 
@@ -188,7 +197,8 @@ export class CityObstacle {
 
         this.obstacleArray.push(floatingObstacle)
         this.container.addChild(floatingObstacle.container)
-        floatingObstacle.startObstacleTicker()
+
+        floatingObstacle.getObstacleTickerCallback(this.obstacleCallbackArray)
       }
 
       this.container.setChildIndex(
@@ -213,7 +223,8 @@ export class CityObstacle {
       this.obstacleArray.push(rock)
 
       this.container.addChild(rock.container)
-      rock.startObstacleTicker()
+
+      rock.getObstacleTickerCallback(this.obstacleCallbackArray)
     }
   }
 
@@ -235,6 +246,7 @@ export class CityObstacle {
 
     this.container.addChild(finishLine.container)
     this.obstacleArray.push(finishLine)
-    finishLine.startObstacleTicker()
+
+    finishLine.getObstacleTickerCallback(this.obstacleCallbackArray)
   }
 }

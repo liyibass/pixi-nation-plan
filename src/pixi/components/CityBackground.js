@@ -17,6 +17,9 @@ export class CityBackground {
     this.bottomLayerContainer = new PIXI.Container()
     this.isInMiddle = false
 
+    // this.container.width = 1000
+    this.container.alpha = 0
+
     this.createCityBackground()
 
     this.optimize()

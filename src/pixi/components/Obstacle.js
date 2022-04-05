@@ -18,22 +18,14 @@ export class Obstacle {
     this.obstacleHeight = 0
   }
 
-  startObstacleTicker() {
+  getObstacleTickerCallback(obstacleCallbackArray) {
     this.defaultX = this.container.x
     this.defaultY = this.container.y
-    this.ObstacleOperateTicker = new PIXI.Ticker()
-
-    let debounce = 0
+    // this.ObstacleOperateTicker = new PIXI.Ticker()
 
     const tickerCallback = () => {
-      if (debounce < 30) {
-        debounce++
-        return
-      } else {
-        debounce = 0
-      }
+      this.isInWindow = this._checkIfObstacleIsInWindow.bind(this)()
 
-      this._checkIfObstacleIsInWindow()
       if (this.isInWindow) {
         this._turnOnObstacle()
         if (!this.isAddedToProcesser) {
@@ -50,17 +42,18 @@ export class Obstacle {
         }
       }
     }
-    this.ObstacleOperateTicker.add(tickerCallback)
-    this.ObstacleOperateTicker.start()
 
-    // return tickerCallback
+    // this.ObstacleOperateTicker.add(tickerCallback)
+    // this.ObstacleOperateTicker.start()
+
+    obstacleCallbackArray.push(tickerCallback.bind(this))
   }
 
   destoryObstacle() {
     this.container.visible = false
     this.isAddedToProcesser = false
-    this.ObstacleOperateTicker.stop()
-    this.ObstacleOperateTicker.destroy()
+    // this.ObstacleOperateTicker.stop()
+    // this.ObstacleOperateTicker.destroy()
     this.container.destroy()
     console.log('destroyed')
 
@@ -68,11 +61,16 @@ export class Obstacle {
   }
 
   _checkIfObstacleIsInWindow() {
-    const { tx } = this.container.worldTransform
+    try {
+      const tx = this?.container?.worldTransform?.tx + this?.container?.width
 
-    this.isInWindow =
-      tx >= gameStageDimention.x &&
-      tx <= gameStageDimention.x + gameStageDimention.width
+      return (
+        tx >= gameStageDimention.x &&
+        tx <= gameStageDimention.x + gameStageDimention.width
+      )
+    } catch (error) {
+      return false
+    }
   }
 
   _turnOnObstacle() {

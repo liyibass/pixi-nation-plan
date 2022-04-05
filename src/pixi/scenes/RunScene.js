@@ -21,7 +21,7 @@ const gameStageDimention = Globals.getRunGameStageDimention()
 export class RunScene extends Scene {
   constructor(...args) {
     super(...args)
-    this.currentCityIndex = 2
+    this.currentCityIndex = 0
     this.inWindowObstacles = []
     this.container.name = 'RunScene'
     this.gameLevel = Status.run.gameLevel
@@ -32,6 +32,7 @@ export class RunScene extends Scene {
     this.boardLayer = new PIXI.Container()
     this.obstacleLayer = new PIXI.Container()
     this.cityConveyor = []
+    this.obstacleCallbackArray = []
 
     this.createScene()
     this.startGameFlow()
@@ -214,7 +215,8 @@ export class RunScene extends Scene {
       this.player,
       this.currentCityNameMonitor.bind(this),
       this.middleCallback.bind(this),
-      this.exitCallback.bind(this)
+      this.exitCallback.bind(this),
+      this.obstacleCallbackArray
     )
 
     let interval = (cityIndex === 0 ? 0 : 1 * (this.gameStageWidth * 2)) / 3
@@ -338,6 +340,7 @@ export class RunScene extends Scene {
     // this.moveHandler()
 
     this._startSceneTicker()
+    this._startObstacleTicker()
     this.newMoveHandler()
   }
 
@@ -456,7 +459,7 @@ export class RunScene extends Scene {
 
   _startSceneTicker() {
     this.sceneTicker = new PIXI.Ticker()
-    let debounceCount = 0
+
     const tickerCallback = () => {
       // console.log(time)
       if (
@@ -491,24 +494,7 @@ export class RunScene extends Scene {
       // console.log(this.cityBackgroundLayer.children)
 
       // observe obstacle
-      debounceCount++
-
-      if (debounceCount > 5) {
-        debounceCount = 0
-        this._obstacleProcesser()
-      }
-
-      // this.cityBackgroundLayer.children.forEach((cityBackground) => {
-      //   const needToDeleteOldCity =
-      //     cityBackground.worldTransform.tx + cityBackground.width < 0
-
-      //   if (needToDeleteOldCity) {
-      //     cityBackground.visible = false
-      //     // cityBackground.destroy()
-
-      //     // this.boardLayer.children[index]?.destroy()
-      //   }
-      // })
+      this._obstacleProcesser()
 
       // tiger handler
       if (
@@ -529,6 +515,24 @@ export class RunScene extends Scene {
     this.sceneTicker.add(tickerCallback)
 
     this.sceneTicker.start()
+  }
+
+  _startObstacleTicker() {
+    this.obstacleTicker = new PIXI.Ticker()
+
+    let debounceCount
+    const tickerCallback = () => {
+      debounceCount++
+      if (debounceCount < 10) return
+
+      this.obstacleCallbackArray.forEach((callback) => {
+        callback()
+      })
+    }
+
+    this.obstacleTicker.add(tickerCallback)
+
+    this.obstacleTicker.start()
   }
 
   _obstacleProcesser() {
@@ -631,14 +635,14 @@ export class RunScene extends Scene {
     //   this.player.jumpTicker.stop()
     // }
     this.sceneTicker?.stop?.()
+    this.obstacleTicker?.stop?.()
 
     this.cityBackgroundLayer.children.forEach((background) => {
       background.optimizeTicker?.stop()
     })
-    this.inWindowObstacles.forEach((obstacle) => {
-      obstacle.ObstacleOperateTicker.stop()
-    })
-    this.ci
+    // this.inWindowObstacles.forEach((obstacle) => {
+    //   obstacle.ObstacleOperateTicker.stop()
+    // })
 
     this.player.changePlayerTexture('stand')
     this.player.jumpTicker.stop()
@@ -651,12 +655,13 @@ export class RunScene extends Scene {
     this.player.jumpTicker.start()
     this.player.changePlayerTexture('running')
     this.sceneTicker.start()
+    this.obstacleTicker.start()
     this.cityBackgroundLayer.children.forEach((background) => {
       background.optimizeTicker?.start()
     })
-    this.inWindowObstacles.forEach((obstacle) => {
-      obstacle.ObstacleOperateTicker.start()
-    })
+    // this.inWindowObstacles.forEach((obstacle) => {
+    //   obstacle.ObstacleOperateTicker.start()
+    // })
 
     this.player.runningPlayerSprite.play()
     this.activateClickToJump()
@@ -666,6 +671,7 @@ export class RunScene extends Scene {
   async gameOver(obstacle) {
     this.stopMusic()
     this.sceneTicker.stop()
+    this.obstacleTicker.stop()
 
     if (this.menuButtons?.container) {
       this.container.removeChild(this.menuButtons.container)
@@ -761,6 +767,7 @@ export class RunScene extends Scene {
   // ===== game pass =====
   async gamePassed() {
     this.sceneTicker.stop()
+    this.obstacleTicker.stop()
     if (this.menuButtons?.container) {
       this.container.removeChild(this.menuButtons.container)
     }
