@@ -60,14 +60,14 @@ export class Candy {
     this.container.addChild(this.candyIconContainer)
   }
 
-  dead() {
+  async dead() {
     if (this.typeIndex !== DEAD_CANDY_INDEX) return
     this.updateCandyTexture(DEAD_CANDY_INDEX - 1)
     this.candyPoint = getCandyPoint(this.typeIndex)
     this.blinkTicker?.stop?.()
     this.stopDragMonitor()
 
-    this.vanish()
+    await this.vanish()
   }
 
   updateCandyTexture(index) {
@@ -386,21 +386,40 @@ export class Candy {
     pointText.y = (CANDY_WIDTH - pointText.height) / 2
     this.container.addChild(pointText)
 
-    const opacityValue = this.typeIndex === DEAD_CANDY_INDEX ? 0.4 : 0
+    const opacityValue = this.typeIndex === DEAD_CANDY_INDEX ? 0.5 : 0
 
     this.vanishTicker = new PIXI.Ticker()
     let scale = 1
 
+    const smokeTexture = new PIXI.Texture(Globals.resources['smoke'].texture)
+    const smokeSprite = new PIXI.Sprite(smokeTexture)
+    smokeSprite.width = this.candyIconContainer.width * 0.8
+    smokeSprite.height = this.candyIconContainer.height * 0.8
+    smokeSprite.anchor.set(0.5, 0.5)
+    smokeSprite.x = this.candyIconContainer.width / 2
+    smokeSprite.y = this.candyIconContainer.height / 2
+    smokeSprite.alpha = 0
+    this.candyIconContainer.addChild(smokeSprite)
+
     return new Promise((resolve) => {
       this.vanishTicker.add(() => {
         if (this.candyIconContainer.alpha > opacityValue) {
-          this.candyIconContainer.alpha -= 0.08
+          if (smokeSprite.alpha < 1) {
+            smokeSprite.alpha += 0.1
+            smokeSprite.width += 1
+            smokeSprite.height += 1
+            smokeSprite.angle += 4
+          }
+          this.candyIconContainer.alpha -= 0.04
           pointText.alpha += 0.06
           scale += 0.02
-          this.candyIconContainer.scale.set(scale)
+          // this.candyIconContainer.scale.set(scale)
           pointText.scale.set(scale)
         } else if (pointText.alpha > 0) {
           pointText.alpha -= 0.1
+          smokeSprite.alpha -= 0.1
+        } else if (smokeSprite.alpha > 0) {
+          smokeSprite.alpha -= 0.1
         } else {
           this.vanishTicker.stop()
           this.blinkTicker?.stop?.()

@@ -138,7 +138,8 @@ export class CandyScene extends Scene {
       this.gameOver.bind(this),
       this.gamePassed.bind(this),
       this.gameLevel,
-      this.pointArray
+      this.pointArray,
+      this.pointArrayRecord
     )
     this.container.addChild(this.candyHeader.container)
 
@@ -154,6 +155,8 @@ export class CandyScene extends Scene {
     const { randomNumber1, randomNumber2 } = generateTwoRandomNumber(
       this.rowCount
     )
+    const { randomNumber1: randomNumber3, randomNumber2: randomNumber4 } =
+      generateTwoRandomNumber(this.rowCount)
 
     for (let j = this.rowCount - 1; j >= 0; j--) {
       const rowArray = []
@@ -163,8 +166,9 @@ export class CandyScene extends Scene {
       for (let i = 0; i < this.colCount; i++) {
         let typeIndex
         if (
-          (i === randomNumber1 && j === randomNumber2) ||
-          (i === randomNumber2 && j === randomNumber1)
+          this.gameLevel === 2 &&
+          ((i === randomNumber1 && j === randomNumber2) ||
+            (i === randomNumber3 && j === randomNumber4))
         ) {
           typeIndex = INVALID_FACTORY_CANDY_INDEX
           this.invalidFactoryCount++
@@ -554,7 +558,7 @@ export class CandyScene extends Scene {
     for (let index = 0; index < this.needToTurnVanish.length; index++) {
       const candy = this.needToTurnVanish[index]
       candy.typeIndex = DEAD_CANDY_INDEX
-      await candy.dead()
+      candy.dead()
     }
   }
 
@@ -1172,6 +1176,13 @@ export class CandyScene extends Scene {
     this.playMusic()
 
     await this._wait(500)
+    this.pointArray = [
+      { typeIndex: 0, count: 0, point: 100 },
+      { typeIndex: 1, count: 0, point: 75 },
+      { typeIndex: 2, count: 0, point: 50 },
+      { typeIndex: 3, count: 0, point: 200 },
+      { typeIndex: INVALID_FACTORY_CANDY_INDEX, count: 0, point: 200 },
+    ]
 
     switch (this.gameLevel) {
       case 0:
@@ -1454,6 +1465,7 @@ export class CandyScene extends Scene {
     // super.removeKeyboardListener()
     super.resetGameSetting()
     this.removeAllCandys()
+    this.candyHeader.pointArray = this.pointArray
     this.candyHeader.resetCandyHeader(this.gameLevel)
     this.grid = []
   }

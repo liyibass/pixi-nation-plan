@@ -24,7 +24,8 @@ export class CandyHeader {
     gameFail = () => {},
     gamePassed = () => {},
     gameLevel = 0,
-    pointArray
+    pointArray,
+    pointArrayRecord
   ) {
     this.container = new PIXI.Container()
     this.container.name = 'candyHeader'
@@ -38,6 +39,7 @@ export class CandyHeader {
     this.maxPoint = getMaxPoint(this.gameLevel)
 
     this.pointArray = pointArray
+    this.pointArrayRecord = pointArrayRecord
 
     this.createCandyHeader()
   }
@@ -177,13 +179,16 @@ export class CandyHeader {
     }
   }
 
-  increaseScore(needToDeleteArray) {
-    // const lineCount = Math.floor(needToDeleteArray.length / 3)
-    // const bonusCount = needToDeleteArray.length % 3
+  increaseScore(scoredCandys) {
+    console.log(scoredCandys)
+    // increase point
+    let point = this.currentPoint
+    scoredCandys.forEach((candy) => {
+      point += candy.candyPoint
+    })
 
-    // console.log(isFirstTimeLineCheck)
-    console.log(needToDeleteArray)
-    needToDeleteArray.forEach((candy) => {
+    // increate corresponding candy count for candyScore
+    scoredCandys.forEach((candy) => {
       // console.log(candy)
       if (candy.typeIndex === 5) {
         this.pointArray[4].count++
@@ -191,29 +196,28 @@ export class CandyHeader {
         this.pointArray[candy.typeIndex].count++
       }
     })
-    let point = this.currentPoint
 
-    this.pointArray.forEach((candyType) => {
-      const lineCount = Math.floor(candyType.count / 3)
-      const bonusCount = candyType.count % 3
+    // this.pointArray.forEach((candyType) => {
+    //   const lineCount = Math.floor(candyType.count / 3)
+    //   const bonusCount = candyType.count % 3
 
-      point += lineCount * candyType.point + bonusCount * 5
-    })
+    //   point += lineCount * candyType.point + bonusCount * 5
+    // })
 
-    // pointNew += Math.floor(candy.candyPoint / 3)
-    // TODO : update score method
+    // // pointNew += Math.floor(candy.candyPoint / 3)
+    // // TODO : update score method
 
     this.currentPoint = point <= this.maxPoint ? point : this.maxPoint
     this.currentPointText.text = this.currentPoint
     this._setWhiteBarWidth()
 
-    // udpate score
+    // // udpate score
     this.candyScore.updateScore()
 
     if (this.currentPoint >= this.maxPoint) {
       this.gamePassed()
 
-      console.log(this.pointArray)
+      //   console.log(this.pointArray)
     }
   }
 
@@ -267,9 +271,13 @@ export class CandyHeader {
 
     this.maxPoint = getMaxPoint(this.gameLevel)
     this.maxPointText.text = this.maxPoint
-
+    this.resetCandyScore()
     // restore candy record
-    console.log(this)
+  }
+
+  resetCandyScore() {
+    this.candyScore.pointArray = this.pointArray
+    this.candyScore.updateScore()
   }
 
   activeCandyHeader() {
