@@ -319,7 +319,7 @@ export class CandyScene extends Scene {
     this.needToDeleteArray = needToDelete
     this.needToTurnVanish = needToTurnVanish
 
-    if (this.needToDeleteArray.length) {
+    if (this.needToDeleteArray.length || this.needToTurnVanish.length) {
       // trigger their swap animation
       switch (direction) {
         case 'right':
@@ -451,7 +451,10 @@ export class CandyScene extends Scene {
     this.vanishHandler()
 
     let isFirstTimeLineCheck = true
-    while (this.needToDeleteArray.length > 0) {
+    while (
+      this.needToDeleteArray.length > 0 ||
+      this.needToTurnVanish.length > 0
+    ) {
       if (this.isGameStop) return
 
       this.isHandlingLine = true
@@ -468,6 +471,7 @@ export class CandyScene extends Scene {
 
       // clear
       this.needToDeleteArray = []
+      this.needToTurnVanish = []
       this.needToFallingQueue = []
 
       const { needToDelete, needToTurnVanish } = this.examineIfHasLine()
@@ -546,12 +550,12 @@ export class CandyScene extends Scene {
   }
 
   async vanishHandler() {
-    // console.log(this.needToTurnVanish)
-    // for (let index = 0; index < this.needToTurnVanish.length; index++) {
-    //   const candy = this.needToTurnVanish[index]
-    //   candy.typeIndex = DEAD_CANDY_INDEX
-    //   await candy.dead()
-    // }
+    console.log(this.needToTurnVanish)
+    for (let index = 0; index < this.needToTurnVanish.length; index++) {
+      const candy = this.needToTurnVanish[index]
+      candy.typeIndex = DEAD_CANDY_INDEX
+      await candy.dead()
+    }
   }
 
   async fallingCandy(needToFallingQueue) {
@@ -803,6 +807,7 @@ export class CandyScene extends Scene {
       for (let i = 0; i < this.colCount; i++) {
         const candy = this.grid[j][i]
         if (candy === null) continue
+        if (candy.typeIndex === DEAD_CANDY_INDEX) continue
 
         const {
           processedCandys: rightLineArray,
@@ -915,7 +920,7 @@ export class CandyScene extends Scene {
         // check if has another matched candy
         let isWhileLoopOn = true
         while (isWhileLoopOn) {
-          const nextCandy = this.grid[j][i + rightCount]
+          const nextCandy = this.grid[j]?.[i + rightCount]
 
           // OOOO
           if (candy.typeIndex === nextCandy?.typeIndex) {
@@ -1020,7 +1025,7 @@ export class CandyScene extends Scene {
         // check if has another matched candy
         let isWhileLoopOn = true
         while (isWhileLoopOn) {
-          const nextCandy = this.grid[j + downCount][i]
+          const nextCandy = this.grid[j + downCount]?.[i]
 
           // OOOO
           if (candy.typeIndex === nextCandy?.typeIndex) {

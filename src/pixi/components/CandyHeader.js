@@ -182,10 +182,14 @@ export class CandyHeader {
     // const bonusCount = needToDeleteArray.length % 3
 
     // console.log(isFirstTimeLineCheck)
-
+    console.log(needToDeleteArray)
     needToDeleteArray.forEach((candy) => {
       // console.log(candy)
-      this.pointArray[candy.typeIndex].count++
+      if (candy.typeIndex === 5) {
+        this.pointArray[4].count++
+      } else {
+        this.pointArray[candy.typeIndex].count++
+      }
     })
     let point = this.currentPoint
 
