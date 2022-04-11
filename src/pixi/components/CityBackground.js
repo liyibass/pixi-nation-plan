@@ -18,7 +18,7 @@ export class CityBackground {
     this.isInMiddle = false
 
     // this.container.width = 1000
-    this.container.alpha = 0
+    this.container.alpha = 0.7
 
     this.createCityBackground()
 
@@ -123,17 +123,18 @@ export class CityBackground {
       )
       const bushSprite = new PIXI.Sprite(bushTexture)
       bushSprite.pivot.y = bushSprite.height
+      // bushSprite.alpha = 0.4
 
       bushSprite.x =
         (this.container.width / (TOTAL_BUSH - 1)) * j +
         (Math.random() * 70 - 35)
 
-      const bushYOffset = Math.floor(Math.random() * 30)
-      bushSprite.y = gameStageDimention.height + bushYOffset
+      // const bushYOffset = Math.floor(Math.random() * 30)
+      bushSprite.y = gameStageDimention.height
 
       this.container.addChild(bushSprite)
 
-      this._addMaskToObstacle(bushSprite, bushYOffset)
+      // this._addMaskToObstacle(bushSprite, bushYOffset)
     }
   }
 
@@ -142,7 +143,7 @@ export class CityBackground {
       Globals.resources[`building`].texture
     )
     const TOTAL_BUILDING = Math.floor(
-      proximateCityWidth / (buildingTexture.width + 50)
+      proximateCityWidth / (buildingTexture.width + 100)
     )
 
     for (let j = 0; j < TOTAL_BUILDING; j++) {
@@ -151,12 +152,16 @@ export class CityBackground {
 
       buildingSprite.x =
         (proximateCityWidth / TOTAL_BUILDING) * j + (Math.random() * 100 - 50)
-      const buildingYOffset = Math.floor(Math.random() * 40) + 10
-      buildingSprite.y = gameStageDimention.height + buildingYOffset
+
+      buildingSprite.y = gameStageDimention.height
 
       this.container.addChild(buildingSprite)
 
-      this._addMaskToObstacle(buildingSprite, buildingYOffset)
+      if (j % 4 === 0) {
+        const buildingYOffset = Math.floor(Math.random() * 40) + 10
+        buildingSprite.y = gameStageDimention.height + buildingYOffset
+        this._addMaskToObstacle(buildingSprite, buildingYOffset)
+      }
     }
   }
 
@@ -323,20 +328,30 @@ export class CityBackground {
       // console.log(`optimize : ${this.cityName}`)
 
       const showUp = this.container.worldTransform.tx - window.innerWidth < 0
-      const isInMiddle =
-        this.container.worldTransform.tx < 0 &&
-        this.container.worldTransform.tx + this.container.width / 2 < 0
+      // const isInMiddle =
+      //   this.container.worldTransform.tx < 0 &&
+      //   this.container.worldTransform.tx + this.container.width / 2 < 0
 
       const isBehindWindow =
         this.container.worldTransform.tx + this.container.width < 0 &&
         this.container.worldTransform.tx < 0
 
+      const isShowedAll =
+        this.container.worldTransform.tx + this.container.width <
+        window.innerWidth
+
       if (showUp) {
         this.container.renderable = true
 
-        if (isInMiddle && !this.isInMiddle) {
-          this.isInMiddle = true
+        // if (isInMiddle && !this.isInMiddle) {
+        //   this.isInMiddle = true
 
+        //   this.middleCallback(this.cityIndex)
+        // }
+
+        if (isShowedAll && !this.isShowedAll) {
+          this.isShowedAll = true
+          console.log('isShowedAll')
           this.middleCallback(this.cityIndex)
         }
 

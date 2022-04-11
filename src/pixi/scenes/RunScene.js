@@ -200,7 +200,6 @@ export class RunScene extends Scene {
 
   exitCallback(lastCityIndex) {
     console.log(`${lastCityIndex} leaved`)
-
     const passedCity = this.cityConveyor.shift()
 
     this.cityBackgroundLayer.removeChild(passedCity.cityBackground.container)
@@ -342,6 +341,8 @@ export class RunScene extends Scene {
     this._startSceneTicker()
     this._startObstacleTicker()
     this.newMoveHandler()
+
+    this.player.jump()
   }
 
   moveHandler() {

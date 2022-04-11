@@ -61,12 +61,26 @@ export class Obstacle {
   }
 
   _checkIfObstacleIsInWindow() {
+    // try {
+    //   const tx = this?.container?.worldTransform?.tx + this?.container?.width
+
+    //   return (
+    //     tx >= gameStageDimention.x &&
+    //     tx <= gameStageDimention.x + gameStageDimention.width
+    //   )
+    // } catch (error) {
+    //   return false
+    // }
+
     try {
       const tx = this?.container?.worldTransform?.tx + this?.container?.width
 
       return (
         tx >= gameStageDimention.x &&
-        tx <= gameStageDimention.x + gameStageDimention.width
+        tx <=
+          gameStageDimention.x +
+            gameStageDimention.width +
+            window.innerWidth / 3
       )
     } catch (error) {
       return false
