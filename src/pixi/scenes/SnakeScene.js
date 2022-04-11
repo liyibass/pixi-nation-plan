@@ -1489,7 +1489,8 @@ export class SnakeScene {
     )
 
     const isShared = await this.doctorSay.share(
-      '好吧…那只好請你幫我分享，讓我找下一個小幫手～別擔心，我也會送一些小禮物，讓你不會空手而歸，先別急著關掉視窗！'
+      '好吧…那只好請你幫我分享，讓我找下一個小幫手～別擔心，我也會送一些小禮物，讓你不會空手而歸，先別急著關掉視窗！',
+      this.gameName
     )
 
     if (isShared) {

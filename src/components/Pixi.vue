@@ -5,10 +5,10 @@
 
   <div class="pixi" ref="pixi" />
   <div class="shareDialog" v-if="isHandlingShare">
-    <a :href="fbUrl" target="_blank" @click="shareClickHandler"
+    <a :href="fbUrl" target="_blank" @click="shareClickHandler('fb')"
       ><img :src="require('../assets/images/facebook.png')" alt=""
     /></a>
-    <a :href="lineUrl" target="_blank" @click="shareClickHandler"
+    <a :href="lineUrl" target="_blank" @click="shareClickHandler('line')"
       ><img :src="require('../assets/images/line.png')" alt=""
     /></a>
   </div>
@@ -21,6 +21,7 @@ import Loading from '../components/Loading.vue'
 
 import { App } from '../pixi/script/App'
 import { shareUtil } from '../pixi/script/Utils'
+import ga from '../gaHandler'
 
 // const WIDTH = 375
 // const HEIGHT = 812
@@ -48,13 +49,28 @@ export default {
     startHandler() {
       this.loaded = true
     },
-    handlingShareToggle(boolean) {
+    handlingShareToggle(boolean, gameName) {
       this.isHandlingShare = boolean || true
-      console.log(boolean)
+      this.gameName = gameName
     },
-    shareClickHandler() {
+    shareClickHandler(shareSite) {
+      this.gaClickHandler(`${this.gameName}/share/${shareSite}`)
       this.isHandlingShare = false
       shareUtil.doneShare()
+    },
+    gaClickHandler(event_label) {
+      // console.log(eventLabel)
+      this.$gtag.event('click', {
+        event_category: 'projects',
+        event_label,
+      })
+    },
+    gaScrollHandler(event_label) {
+      // console.log(eventLabel)
+      this.$gtag.event('scroll', {
+        event_category: 'projects',
+        event_label,
+      })
     },
   },
   async mounted() {
@@ -62,6 +78,8 @@ export default {
     app.run()
 
     shareUtil.shareHandler = this.handlingShareToggle.bind(this)
+    ga.gaClickHandler = this.gaClickHandler.bind(this)
+    ga.gaScrollHandler = this.gaScrollHandler.bind(this)
   },
 }
 </script>

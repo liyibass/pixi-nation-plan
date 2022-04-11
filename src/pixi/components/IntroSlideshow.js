@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { sound } from '@pixi/sound'
 import { Globals } from '../script/Globals'
+import gaHandler from '../../gaHandler'
 const introSlideshowDimention = Globals.getIntroSlideshowDimention()
 
 const PADDING = 47
@@ -185,6 +186,7 @@ export class IntroSlideshow {
       this.updateSlideshow()
     })
     this.skipButton.addListener('pointerdown', () => {
+      gaHandler.gaClickHandler('skip-1st-anime')
       this.playClickMusic()
       this.exitSlideshow()
     })

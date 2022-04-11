@@ -3,6 +3,7 @@ import { Globals } from '../script/Globals'
 import { Status, CityStatusArray } from '../script/Status'
 import { InfoCard } from './InfoCard'
 import { sound } from '@pixi/sound'
+import gaHandler from '../../gaHandler'
 
 // const groundDimention = Globals.getGroundDimention()
 const fontRatio = window.innerHeight / 812
@@ -84,6 +85,7 @@ export class GroundGroupIcon {
     this.container.buttonMode = true
 
     this.container.addListener('pointerdown', () => {
+      gaHandler.gaClickHandler('nation-plan-for-dummies')
       this.playClickMusic()
       const infoCard = new InfoCard(exitCallback)
       const topParent = this.container.parent.parent.parent

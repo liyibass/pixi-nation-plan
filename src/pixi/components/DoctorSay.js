@@ -74,25 +74,11 @@ export class DoctorSay {
     })
   }
 
-  share(text) {
-    shareUtil.shareHandler(true)
+  share(text, gameName) {
+    shareUtil.shareHandler(true, gameName)
 
     return new Promise((resolve) => {
-      const shareHandler = async () => {
-        // console.log(chosen)
-        // this.playClickMusic()
-        // if (chosen === 'cancel') {
-        //   this.container.removeChildren()
-        //   this.container.removeAllListeners()
-        //   resolve(false)
-        // } else {
-        //   // clickUrl(chosen)
-        //   await this._wait(2000)
-        //   this.container.removeChildren()
-        //   this.container.removeAllListeners()
-        //   resolve(true)
-        // }
-      }
+      const shareHandler = async () => {}
 
       const doneShare = () => {
         this.container.removeChildren()

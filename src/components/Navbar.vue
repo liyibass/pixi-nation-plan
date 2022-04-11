@@ -1,6 +1,11 @@
 <template>
   <div class="navbar">
-    <a class="navbar__home" href="https://www.readr.tw/" target="_blank">
+    <a
+      class="navbar__home"
+      href="https://www.readr.tw/"
+      target="_blank"
+      @click="logoHandler"
+    >
       <img :src="require('@/assets/images/readr.png')" />
     </a>
 
@@ -15,7 +20,15 @@
 </template>
 
 <script>
-export default {}
+import gaHandler from '../gaHandler'
+
+export default {
+  methods: {
+    logoHandler() {
+      gaHandler.gaClickHandler('back to home')
+    },
+  },
+}
 </script>
 <style>
 .navbar {

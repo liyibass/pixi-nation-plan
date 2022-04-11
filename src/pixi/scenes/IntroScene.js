@@ -13,6 +13,7 @@ import { IntroSlideshow } from '../components/IntroSlideshow'
 import { Header } from '../components/Header'
 import { sound } from '@pixi/sound'
 import { Status } from '../script/Status'
+import gaHandler from '../../gaHandler'
 sound.volumeAll = Status.initVolune
 
 const skipButtonDimention = Globals.getSkipButtonDimention()
@@ -109,6 +110,7 @@ export class IntroScene {
     this.container.addChild(this.skipButton)
 
     this.skipButton.on('pointerdown', () => {
+      gaHandler.gaClickHandler('skip-2nd-anime')
       this.playClickMusic()
 
       this.isAnimationSkipped = true
