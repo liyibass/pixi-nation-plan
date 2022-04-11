@@ -121,9 +121,8 @@ export class CardFolder {
   }
 
   activeListener() {
-    // console.log('active CardFolder Listener')
     this.tabArray.forEach((tab) => {
-      tab.activeListener()
+      tab.activeListener(this.cityData)
     })
   }
   deactiveListener() {

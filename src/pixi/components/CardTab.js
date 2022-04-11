@@ -6,6 +6,7 @@ import { UnlockButton } from './UnlockButton'
 import { sound } from '@pixi/sound'
 
 import MultiStyleText from 'pixi-multistyle-text'
+import gaHandler from '../../gaHandler'
 
 const cardDimention = Globals.getCardDimention()
 const TAB_HEIGHT = cardDimention.contentFontSize * 3
@@ -339,7 +340,12 @@ export class CardTab {
   }
 
   createUnlockButton() {
-    this.unlockButton = new UnlockButton(this.unlockGame.bind(this))
+    console.log('createUnlockButton in cardTab')
+
+    this.unlockButton = new UnlockButton(
+      this.unlockGame.bind(this),
+      this.cityIndex
+    )
 
     this.unlockButton.container.x =
       (this.page.width - this.unlockButton.container.width) / 2
@@ -409,10 +415,13 @@ export class CardTab {
     this.tab.interactive = true
 
     this.tab.addListener('pointerdown', () => {
+      gaHandler.gaClickHandler(
+        `${this.tabData.cityName}/${this.tabData.tabTagEng}/tag`
+      )
       this.playClickMusic()
 
       this.updateTabOrder()
-      this.unlockButton?.activeListener?.()
+      this.unlockButton?.activeListener?.(this.tabData.cityName)
     })
   }
 

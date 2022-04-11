@@ -63,7 +63,7 @@ export class Taiwan {
     this.playClickMusic()
     this.card.showCityInfo(selectedCity)
     // this.cardFolder.activeListener()
-    this.card.cardFolder.activeListener()
+    // this.card.cardFolder.activeListener()
   }
 
   createGameIcon() {

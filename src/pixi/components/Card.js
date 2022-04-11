@@ -124,7 +124,7 @@ export class Card {
       cityDataArray.find((cityData) => cityData.cityIndex === this.cityIndex) ||
         cityDataArray[0]
     )
-    this.cardFolder.activeListener()
+    // this.cardFolder.activeListener()
   }
 
   createTab() {

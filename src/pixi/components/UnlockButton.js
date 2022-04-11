@@ -1,9 +1,11 @@
 import * as PIXI from 'pixi.js'
 import { Globals } from '../script/Globals'
+import gaHandler from '../../gaHandler'
 
 export class UnlockButton {
-  constructor(callback = () => {}) {
+  constructor(callback = () => {}, cityIndex) {
     this.callback = callback
+    this.cityIndex = cityIndex
     this.container = new PIXI.Container()
     this.createButton()
     this.createLockIcon()
@@ -49,8 +51,9 @@ export class UnlockButton {
     this.container.addChild(lockSprite)
   }
 
-  activeListener() {
+  activeListener(cityName) {
     this.container.addListener('pointerdown', () => {
+      gaHandler.gaClickHandler(`${cityName}/area/game`)
       this.container.removeAllListeners()
       this.callback()
     })

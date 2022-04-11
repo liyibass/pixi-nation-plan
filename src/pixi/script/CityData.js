@@ -7,6 +7,7 @@ export const cityDataArray = [
       {
         // isLocked: false,
         unlockGame: 'snake',
+        cityName: 'newtaipei',
         tabTag: '基本資料',
         tabContent: [
           {
@@ -40,6 +41,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'snake',
         tabTag: '區位問題',
+        tabTagEng: 'area',
+        cityName: 'newtaipei',
         //tabTitle:'？',
         tabContent: [
           {
@@ -89,6 +92,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
+        cityName: 'taoyuan',
         tabContent: [
           {
             type: 'paragraph',
@@ -116,6 +120,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
+        tabTagEng: 'area',
+        cityName: 'taoyuan',
         tabContent: [
           {
             type: 'hint',
@@ -147,6 +153,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
+        tabTagEng: 'indi',
+        cityName: 'taoyuan',
         tabContent: [
           {
             type: 'hint',
@@ -185,6 +193,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
+        cityName: 'hsinchu',
         tabContent: [
           {
             type: 'paragraph',
@@ -207,6 +216,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'snake',
         tabTag: '垃圾問題',
+        tabTagEng: 'trash',
+        cityName: 'hsinchu',
         tabContent: [
           {
             type: 'hint',
@@ -233,6 +244,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
+        tabTagEng: 'area',
+        cityName: 'hsinchu',
         tabContent: [
           {
             type: 'hint',
@@ -260,6 +273,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'snake',
         tabTag: '缺水問題',
+        tabTagEng: 'water',
+        cityName: 'hsinchu',
         tabContent: [
           {
             type: 'hint',
@@ -295,6 +310,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
+        cityName: 'hsinchu-city',
         tabContent: [
           {
             type: 'paragraph',
@@ -317,6 +333,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
+        tabTagEng: 'area',
+        cityName: 'hsinchu-city',
         tabContent: [
           {
             type: 'hint',
@@ -343,6 +361,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'snake',
         tabTag: '缺水問題',
+        tabTagEng: 'water',
+        cityName: 'hsinchu-city',
         tabContent: [
           {
             type: 'hint',
@@ -370,6 +390,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
+        tabTagEng: 'indi',
+        cityName: 'hsinchu-city',
         tabContent: [
           {
             type: 'hint',
@@ -405,6 +427,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
+        cityName: 'miaoli',
         tabContent: [
           {
             type: 'paragraph',
@@ -422,6 +445,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
+        tabTagEng: 'area',
+        cityName: 'miaoli',
         tabContent: [
           {
             type: 'hint',
@@ -448,6 +473,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
+        tabTagEng: 'indi',
+        cityName: 'miaoli',
         tabContent: [
           {
             type: 'hint',
@@ -482,6 +509,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
+        cityName: 'taichung',
         tabContent: [
           {
             type: 'paragraph',
@@ -509,6 +537,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
+        tabTagEng: 'area',
+        cityName: 'taichung',
         tabContent: [
           {
             type: 'hint',
@@ -557,6 +587,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
+        cityName: 'chunghua',
         tabContent: [
           {
             type: 'paragraph',
@@ -584,6 +615,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'balance',
         tabTag: '人口問題',
+        tabTagEng: 'population',
+        cityName: 'chunghua',
         tabContent: [
           {
             type: 'hint',
@@ -610,6 +643,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
+        tabTagEng: 'area',
+        cityName: 'chunghua',
         tabContent: [
           {
             type: 'hint',
@@ -662,6 +697,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
+        cityName: 'yunlin',
         tabContent: [
           {
             type: 'paragraph',
@@ -689,6 +725,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
+        tabTagEng: 'area',
+        cityName: 'yunlin',
         tabContent: [
           {
             type: 'hint',
@@ -715,6 +753,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
+        tabTagEng: 'indi',
+        cityName: 'yunlin',
         tabContent: [
           {
             type: 'hint',
@@ -751,6 +791,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'snake',
         tabTag: '垃圾問題',
+        tabTagEng: 'trash',
+        cityName: 'yunlin',
         tabContent: [
           {
             type: 'hint',
@@ -785,6 +827,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
+        cityName: 'chiayi',
         tabContent: [
           {
             type: 'paragraph',
@@ -807,6 +850,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'balance',
         tabTag: '人口問題',
+        tabTagEng: 'population',
+        cityName: 'chiayi',
         tabContent: [
           {
             type: 'hint',
@@ -833,6 +878,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
+        tabTagEng: 'indi',
+        cityName: 'chiayi',
         tabContent: [
           {
             type: 'hint',
@@ -877,6 +924,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
+        cityName: 'tainan',
         tabContent: [
           {
             type: 'paragraph',
@@ -894,6 +942,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'balance',
         tabTag: '人口問題',
+        tabTagEng: 'population',
+        cityName: 'tainan',
         tabContent: [
           {
             type: 'hint',
@@ -925,6 +975,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
+        tabTagEng: 'indi',
+        cityName: 'tainan',
         tabContent: [
           {
             type: 'hint',
@@ -960,6 +1012,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
+        cityName: 'kao',
         tabContent: [
           {
             type: 'paragraph',
@@ -987,6 +1040,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'snake',
         tabTag: '缺水問題',
+        tabTagEng: 'water',
+        cityName: 'kao',
         tabContent: [
           {
             type: 'hint',
@@ -1014,6 +1069,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'balance',
         tabTag: '人口問題',
+        tabTagEng: 'population',
+        cityName: 'kao',
         tabContent: [
           {
             type: 'hint',
@@ -1040,6 +1097,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
+        tabTagEng: 'area',
+        cityName: 'kao',
         tabContent: [
           {
             type: 'hint',
@@ -1068,6 +1127,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
+        tabTagEng: 'indi',
+        cityName: 'kao',
         tabContent: [
           {
             type: 'hint',
@@ -1102,6 +1163,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
+        cityName: 'pintung',
         tabContent: [
           {
             type: 'paragraph',
@@ -1124,6 +1186,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
+        tabTagEng: 'area',
+        cityName: 'pintung',
         tabContent: [
           {
             type: 'hint',
@@ -1163,6 +1227,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
+        cityName: 'taitung',
         tabContent: [
           {
             type: 'paragraph',
@@ -1185,6 +1250,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'snake',
         tabTag: '垃圾問題',
+        tabTagEng: 'trash',
+        cityName: 'taitung',
         tabContent: [
           {
             type: 'hint',
@@ -1219,6 +1286,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
+        cityName: 'hualian',
         tabContent: [
           {
             type: 'paragraph',
@@ -1241,6 +1309,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'balance',
         tabTag: '人口問題',
+        tabTagEng: 'population',
+        cityName: 'hualian',
         tabContent: [
           {
             type: 'hint',
@@ -1267,6 +1337,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
+        tabTagEng: 'area',
+        cityName: 'hualian',
         tabContent: [
           {
             type: 'hint',
@@ -1301,6 +1373,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
+        cityName: 'yilan',
         tabContent: [
           {
             type: 'paragraph',
@@ -1323,6 +1396,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
+        tabTagEng: 'indi',
+        cityName: 'yilan',
         tabContent: [
           {
             type: 'hint',
@@ -1376,6 +1451,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: 'snake',
         tabTag: '基本資料',
+        cityName: 'keelung',
         tabContent: [
           {
             type: 'paragraph',
@@ -1393,6 +1469,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'run',
         tabTag: '個別問題',
+        tabTagEng: 'indi',
+        cityName: 'keelung',
         tabContent: [
           {
             type: 'hint',
@@ -1427,6 +1505,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
+        cityName: 'nantou',
         tabContent: [
           {
             type: 'paragraph',
@@ -1444,6 +1523,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'snake',
         tabTag: '垃圾問題',
+        tabTagEng: 'trash',
+        cityName: 'nantou',
         tabContent: [
           {
             type: 'hint',
@@ -1470,6 +1551,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
+        tabTagEng: 'area',
+        cityName: 'nantou',
         tabContent: [
           {
             type: 'hint',
@@ -1514,6 +1597,7 @@ export const cityDataArray = [
         // isLocked: false,
         unlockGame: '',
         tabTag: '基本資料',
+        cityName: 'penghu',
         tabContent: [
           {
             type: 'paragraph',
@@ -1536,6 +1620,8 @@ export const cityDataArray = [
         // isLocked: true,
         unlockGame: 'candy',
         tabTag: '區位問題',
+        tabTagEng: 'area',
+        cityName: 'penghu',
         tabContent: [
           {
             type: 'hint',
