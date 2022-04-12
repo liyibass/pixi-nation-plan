@@ -674,6 +674,13 @@ export class RunScene extends Scene {
     this.sceneTicker.stop()
     this.obstacleTicker.stop()
 
+    console.log(this.currentCityIndex)
+    console.log(this.cityBackgroundLayer.children)
+
+    if (this.cityBackgroundLayer.children.length > 1) {
+      this.currentCityIndex--
+    }
+
     if (this.menuButtons?.container) {
       this.container.removeChild(this.menuButtons.container)
     }

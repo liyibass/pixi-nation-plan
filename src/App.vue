@@ -1,8 +1,8 @@
 <template>
-<div class="app">
-<navbar/>
-  <Pixi />
-</div>
+  <div class="app">
+    <navbar />
+    <Pixi />
+  </div>
 </template>
 
 <script>
@@ -25,6 +25,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  height: 100%;
+
   /* margin-top: 60px; */
 }
 

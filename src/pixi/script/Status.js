@@ -6,7 +6,6 @@ export const Status = storedStatus?.Status || {
   isNeedTutorial: true,
   enteredGame: false,
   isShared: false,
-  initVolune: 0, // 0 or 0.7
 
   snake: {
     gameLevel: 0,
@@ -34,6 +33,7 @@ export const Status = storedStatus?.Status || {
 }
 
 Status.enteredGame = false
+Status.initVolune = 0.7 // 0 or 0.7 = false
 // Status.balance = {
 //   gameLevel: 0,
 //   isCleared: false,
