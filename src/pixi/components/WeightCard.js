@@ -262,7 +262,7 @@ export class WeightCard {
   }
 
   onTouchLeave() {
-    console.log('===onTouchLeave')
+    // console.log('===onTouchLeave')
 
     this.isDragging = false
 
@@ -272,7 +272,7 @@ export class WeightCard {
 
       const { x, y } = this.container
 
-      console.log(this.originalPosition)
+      // console.log(this.originalPosition)
       if (!this.originalPosition) {
         return
       }

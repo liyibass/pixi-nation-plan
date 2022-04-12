@@ -626,6 +626,7 @@ export class CandyScene extends Scene {
         )
         let typeIndex
         if (
+          this.gameLevel === 2 &&
           this.invalidFactoryCount < MAX_INVALID_FACTORY_COUNT &&
           i === randomNumber1 &&
           j === randomNumber2

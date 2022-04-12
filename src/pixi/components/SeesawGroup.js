@@ -36,6 +36,8 @@ export class SeesawGroup {
 
     this.isDead = false
     this.isClear = false
+
+    this.cardCountOnBoard = 0
   }
 
   createSeesaw() {
@@ -69,6 +71,7 @@ export class SeesawGroup {
   }
 
   addNewWeightCardToBoard(weightCard, side = 'left') {
+    console.log('addNewWeightCardToBoard')
     // add seesaw ref into card
     weightCard.seesawGroupRef = this
     weightCard.seesawBoardRef = this.board
@@ -131,6 +134,8 @@ export class SeesawGroup {
     if (weightCard.isOnConveyor) {
       // card is from conveyor to seesaw
       weightCard.isOnConveyor = false
+      console.log('getChoosedWeightCard')
+      this.cardCountOnBoard++
 
       // display card
       this.board.container.addChild(weightCard.container)

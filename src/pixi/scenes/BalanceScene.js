@@ -114,7 +114,7 @@ export class BalanceScene extends Scene {
 
     switch (this.gameLevel) {
       case 0:
-        time = 300
+        time = 30
         break
       case 1:
         time = 90
@@ -327,7 +327,11 @@ export class BalanceScene extends Scene {
       this.gameOver()
     }
 
+    // checkpoint
     if (this.seesawGroup.isClear) {
+      console.log(this.seesawGroup.cardCountOnBoard)
+      if (this.gameLevel === 0 && this.seesawGroup.cardCountOnBoard < 9) return
+
       this.gamePassed()
     }
   }

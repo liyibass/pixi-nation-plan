@@ -22,7 +22,7 @@ import { sound } from '@pixi/sound'
 
 const BLOCK_WIDTH = 16
 const INIT_SNAKE_LENGTH = 7
-const INIT_FOOD_COUNT = 1
+const INIT_FOOD_COUNT = 3
 const INIT_POISON_COUNT = 3
 const POISON_SPAWN_BOUNDARY = 4
 const POISON_RESPAWN_INTERVAL = 10000
@@ -1057,7 +1057,7 @@ export class SnakeScene {
   }
 
   async gamePassed() {
-    this.playMusic()
+    this.stopMusic()
 
     this.snakeMoveTicker.stop()
     this.controller.deactiveListener()
@@ -1242,7 +1242,7 @@ export class SnakeScene {
   }
 
   restartGame() {
-    this.playMusic()
+    // this.playMusic()
     this.snakeGroup.destroy()
     this.initGame()
     this.startGame()
