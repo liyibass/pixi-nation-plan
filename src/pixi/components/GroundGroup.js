@@ -96,7 +96,7 @@ export class GroundGroup {
       if (!Status.isShared) return
       this.doctorSay = new DoctorSay()
       this.menuSceneContainer.addChild(this.doctorSay.container)
-      this.doctorSay.mod('已解鎖獨家角色(功能尚未開發)')
+      // this.doctorSay.mod('已解鎖獨家角色(功能尚未開發)')
     })
   }
 
