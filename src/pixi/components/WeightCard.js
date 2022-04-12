@@ -272,8 +272,9 @@ export class WeightCard {
 
       const { x, y } = this.container
 
+      console.log(this.originalPosition)
       if (!this.originalPosition) {
-        console.log(this)
+        return
       }
       const { x: originalX, y: originalY } = this.originalPosition
 
@@ -294,15 +295,18 @@ export class WeightCard {
       seesawGroup.removeChild(this.container)
       seesawBoard.addChild(this.container)
 
-      const { x, y } = this.container
-      const { x: originalX, y: originalY } = this.originalPosition
+      // const { x, y } = this.container
+      // console.log(this.originalPosition)
+      // const { x: originalX, y: originalY } = this.originalPosition
 
-      if (x !== originalX && y !== originalY) {
-        console.log('drop card in seesaw')
-        this._dropWeightCardToSeesaw(this)
-      } else {
-        this._resetToOriginalPosition()
-      }
+      this._dropWeightCardToSeesaw(this)
+      // if (x !== originalX || y !== originalY) {
+      //   console.log('drop card in seesaw')
+      //   this._dropWeightCardToSeesaw(this)
+      // } else {
+      //   console.log('_resetToOriginalPosition')
+      //   this._resetToOriginalPosition()
+      // }
     }
   }
 

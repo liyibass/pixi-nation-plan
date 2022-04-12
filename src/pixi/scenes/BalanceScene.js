@@ -114,7 +114,7 @@ export class BalanceScene extends Scene {
 
     switch (this.gameLevel) {
       case 0:
-        time = 30
+        time = 300
         break
       case 1:
         time = 90
