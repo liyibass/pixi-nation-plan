@@ -50,7 +50,7 @@ export class SnakeScene {
 
     // food property
     this.snakeFoodArray = []
-    this.snakePoisionArray = []
+    this.snakePoisonArray = []
     this.createFoodQuery = []
     this.createPoisonQuery = []
     this.snakePoisonGroup = new PIXI.Container()
@@ -382,10 +382,13 @@ export class SnakeScene {
 
   createPoisonInterval(poisonType) {
     this.createPoisonQuery.push(1)
+    const poisonTimestamp = this.timestamp
 
     const createPoisonTimeout = () => {
       setTimeout(() => {
         console.log('createPoisonTimeout start')
+        console.log(this.timestamp)
+        console.log(poisonTimestamp)
 
         if (!this.snakeMoveTicker) {
           return
@@ -396,9 +399,13 @@ export class SnakeScene {
           return
         }
 
+        if (poisonTimestamp !== this.timestamp) {
+          return
+        }
+
         if (
           this.createPoisonQuery.length > 0 &&
-          this.snakePoisionArray.length < INIT_POISON_COUNT
+          this.snakePoisonArray.length < INIT_POISON_COUNT
         ) {
           const poisonId = this.createPoisonQuery.shift()
           this.createPoison(poisonId, poisonType)
@@ -416,7 +423,7 @@ export class SnakeScene {
   createPoison(id, poisonType) {
     const { i, j } = getRandomFoodPosition.bind(this)(this.totalI, this.totalJ)
     const snakePoison = new SnakePoison(id, i, j, poisonType)
-    this.snakePoisionArray.push(snakePoison)
+    this.snakePoisonArray.push(snakePoison)
     this.snakePoisonGroup.addChild(snakePoison.container)
 
     return snakePoison
@@ -574,6 +581,7 @@ export class SnakeScene {
     await this.doctorSay.newSay(
       '水滴會隨機出現，你可不要漏掉囉。也要小心不要撞到牆，可能會沒命的！'
     )
+
     this.startGame()
     await wait(3000)
     // doctorSay.hint('加油！', 3000)
@@ -637,6 +645,8 @@ export class SnakeScene {
     await this._countDown(3)
     this.snakeMoveTicker.start()
 
+    this.timestamp = Date.now()
+    console.log('reset timestamp  ' + this.timestamp)
     this.createPoisonInterval('incinerator')
   }
 
@@ -680,6 +690,8 @@ export class SnakeScene {
 
   initGame() {
     this.createSnake()
+    this.timestamp = Date.now()
+    console.log('reset timestamp  ' + this.timestamp)
 
     switch (this.gameLevel) {
       case 0:
@@ -702,10 +714,6 @@ export class SnakeScene {
         this.createFoodScore('all')
         break
     }
-  }
-
-  async startGameTest() {
-    this.startGame()
   }
 
   // ===== start game =====
@@ -733,6 +741,7 @@ export class SnakeScene {
 
   startSnakeMoveTicker() {
     this.snakeMoveTicker = new PIXI.Ticker()
+    let debounce = 0
     this.snakeMoveTicker.add(async () => {
       for (let i = 0; i < this.snakeArray.length; i++) {
         const snakePart = this.snakeArray[i]
@@ -790,13 +799,31 @@ export class SnakeScene {
 
       // handle if dead
       this.deadMonitor()
+
+      if (debounce > 30) {
+        debounce = 0
+        this.errorRenderingPoisonHander()
+      }
+      debounce++
     })
 
     this.snakeMoveTicker.start()
   }
 
+  errorRenderingPoisonHander() {
+    this.snakePoisonGroup.children.forEach((renderedPoison) => {
+      const valid = this.snakePoisonArray.find(
+        (validPoison) => renderedPoison === validPoison.container
+      )
+      if (!valid) {
+        console.log('has invalid poison')
+        this.snakePoisonGroup.removeChild(renderedPoison)
+      }
+    })
+  }
+
   async circleMonitor() {
-    if (!this.snakePoisionArray?.length) {
+    if (!this.snakePoisonArray?.length) {
       // no poison on the stage,
       // remove snakePoisonGroup just in case
 
@@ -843,8 +870,8 @@ export class SnakeScene {
       }
 
       // check if the poison's position is within circle boundary
-      for (let inext = 0; inext < this.snakePoisionArray.length; inext++) {
-        const targetPoison = this.snakePoisionArray[inext]
+      for (let inext = 0; inext < this.snakePoisonArray.length; inext++) {
+        const targetPoison = this.snakePoisonArray[inext]
         const { i, j, width, height, type } = targetPoison
 
         let isWithinBoundary = false
@@ -890,12 +917,17 @@ export class SnakeScene {
   }
 
   async eatPoison(poison) {
+    console.log(poison)
+
     this.snakePoisonGroup.removeChild(poison.container)
-    this.snakePoisionArray.forEach((poison, x, arr) => {
+    this.snakePoisonArray.forEach((poison, x, arr) => {
       if (poison.id === poison.id) {
         arr.splice(x, 1)
       }
     })
+
+    console.log(this.snakePoisonGroup)
+    console.log(this.snakePoisonArray)
 
     if (this.isEatFirstPoison && this.gameLevel === 0) {
       this.isEatFirstPoison = false
@@ -911,6 +943,9 @@ export class SnakeScene {
 
       await this._countDown(3)
       this.snakeMoveTicker.start()
+
+      this.timestamp = Date.now()
+      console.log('reset timestamp  ' + this.timestamp)
 
       if (this.gameLevel === 0) {
         this.createPoisonInterval('fauset')
@@ -936,9 +971,9 @@ export class SnakeScene {
 
     const { i, j } = position
 
-    if (this.snakePoisionArray.length) {
-      for (let index = 0; index < this.snakePoisionArray.length; index++) {
-        const poison = this.snakePoisionArray[index]
+    if (this.snakePoisonArray.length) {
+      for (let index = 0; index < this.snakePoisonArray.length; index++) {
+        const poison = this.snakePoisonArray[index]
         const { i: I, j: J, width, height, type } = poison
 
         let leftBoundray
@@ -966,6 +1001,7 @@ export class SnakeScene {
           j <= bottomBoundary
         ) {
           this.gameOver()
+
           break
         }
       }
@@ -1260,7 +1296,7 @@ export class SnakeScene {
 
     // clear food and poison
     this.snakeFoodArray = []
-    this.snakePoisionArray = []
+    this.snakePoisonArray = []
     this.createFoodQuery = []
     this.createPoisonQuery = []
     this.score = {
@@ -1580,7 +1616,7 @@ function getRandomFoodPosition(totalI, totalJ) {
   this.snakeFoodArray.forEach((food) => {
     blackListArray.push({ i: food.i, j: food.j })
   })
-  this.snakePoisionArray.forEach((poison) => {
+  this.snakePoisonArray.forEach((poison) => {
     blackListArray.push({ i: poison.i, j: poison.j })
   })
 
@@ -1630,8 +1666,6 @@ function getRandomFoodPosition(totalI, totalJ) {
 
   function generateRandom(blackListArray) {
     // return Math.floor(Math.random() * (total - 5)) + 2
-    console.log(POISON_SPAWN_BOUNDARY)
-    console.log(blackListArray)
 
     let { randomI, randomJ } = randomPosition()
 
