@@ -35,7 +35,7 @@ export class Obstacle {
           this.isAddedToProcesser = true
         }
       } else {
-        if (this.isAddedToProcesser) {
+        if (this.isAddedToProcesser && this.container.x < 0) {
           // console.log('out of window')
           this.collisionMonitor(this)
           this.destoryObstacle()

@@ -71,7 +71,7 @@ export class CityObstacle {
 
   _createTaoyuan() {
     const CHIMNEY_WIDTH = 30
-    const CHIMNEY_DISTANCE = 700
+    const CHIMNEY_DISTANCE = window.innerWidth > 500 ? 700 : 500
     const CHIMNEY_UNIT = CHIMNEY_DISTANCE + CHIMNEY_WIDTH
     const CHIMNEY_COUNT = Math.floor(this.obstacleWidth / CHIMNEY_UNIT)
 
