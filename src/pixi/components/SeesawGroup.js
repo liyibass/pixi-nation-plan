@@ -335,8 +335,12 @@ export class SeesawGroup {
         this.leftTotalWeight > 0 &&
         this.leftTotalWeight === this.rightTotalWeight
       ) {
-        this.isClear = true
-        console.log('CLEAR')
+        if (this.gameLevel === 0 && this.cardCountOnBoard < 9) {
+          clearInterval(this.clearCountDown)
+        } else {
+          this.isClear = true
+          console.log('CLEAR')
+        }
       } else {
         clearInterval(this.clearCountDown)
       }

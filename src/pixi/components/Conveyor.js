@@ -8,11 +8,12 @@ const TOTAL_CARD_COUNT = 32
 
 // const TOP_PADDING = 0
 export class Conveyor {
-  constructor(getChoosedWeightCard) {
+  constructor(getChoosedWeightCard, gameLevel) {
     this.container = new PIXI.Container()
     this.container.name = 'conveyor'
     this.getChoosedWeightCard = getChoosedWeightCard
     this.cardCount = 0
+    this.gameLevel = gameLevel
 
     this.width = Globals.getSeesawGameStageDimention().width
     this.container.x = TIMER_WIDTH
@@ -27,7 +28,9 @@ export class Conveyor {
 
     this.stop = false
 
+    this.conveyorOrderArray = []
     this.createConveyor()
+    this.handleConveyorOrderArray()
   }
 
   createConveyor() {
@@ -47,9 +50,15 @@ export class Conveyor {
     this.container.mask = mask
   }
 
+  handleConveyorOrderArray() {
+    if (this.gameLevel === 0) {
+      this.conveyorOrderArray = [0, 1, 0, 2, 3, 2, 4, 5, 4]
+    }
+  }
+
   // TODO:
   addNewWeightCard(cardType) {
-    const { name, weight, load } = this.getRandomWeight(cardType)
+    const { name, weight, load } = this.getCertainOrRandomWeightCard(cardType)
     const weightCard = new WeightCard(
       weight,
       name,
@@ -135,8 +144,17 @@ export class Conveyor {
           this.conveyorCardCount < 7 &&
           this.showedCardCount < TOTAL_CARD_COUNT
         ) {
-          this.addNewWeightCard()
-          this.cardCount++
+          if (this.gameLevel === 0) {
+            const nextCardType = this.conveyorOrderArray.shift()
+
+            if (typeof nextCardType !== 'number' && !nextCardType) return
+
+            this.addNewWeightCard()
+            this.cardCount++
+          } else {
+            this.addNewWeightCard()
+            this.cardCount++
+          }
         }
 
         // level 0 only has 9 card total
@@ -149,7 +167,7 @@ export class Conveyor {
     createNewWeightCardTimeout()
   }
 
-  getRandomWeight(cardType) {
+  getCertainOrRandomWeightCard(cardType) {
     const randomId = cardType || Math.floor(Math.random() * 5)
 
     switch (randomId) {
