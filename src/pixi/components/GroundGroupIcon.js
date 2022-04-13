@@ -38,8 +38,9 @@ export class GroundGroupIcon {
   }
 
   createText() {
+    console.log('createText')
     // text
-    const textContainer = new PIXI.Container()
+    this.textContainer = new PIXI.Container()
 
     if (this.iconIndex !== 2) {
       this.currentCountText = new PIXI.Text(`${this.currentCount}`, {
@@ -54,21 +55,31 @@ export class GroundGroupIcon {
       this.totalCountText.alpha = 0.5
       this.totalCountText.x = this.currentCountText.width
 
-      textContainer.addChild(this.currentCountText, this.totalCountText)
+      this.textContainer.addChild(this.currentCountText, this.totalCountText)
     } else {
       const title = new PIXI.Text(`國土計畫`, {
         fill: ['0xffffff'],
         fontSize,
       })
 
-      textContainer.addChild(title)
+      this.textContainer.addChild(title)
     }
 
-    textContainer.x = -textContainer.width / 2
-    textContainer.y = 5
-    this.container.addChild(textContainer)
+    this.textContainer.x = -this.textContainer.width / 2
+    this.textContainer.y = 5
+    this.container.addChild(this.textContainer)
 
     // position
+  }
+
+  updateText() {
+    this.currentCount = getCount(this.iconIndex)
+    this.totalCount = getTotalCount(this.iconIndex)
+
+    this.currentCountText.text = `${this.currentCount}`
+    this.totalCountText.text = `/${this.totalCount}`
+    this.totalCountText.x = this.currentCountText.width
+    this.textContainer.x = -this.textContainer.width / 2
   }
 
   startAnimationTicker() {

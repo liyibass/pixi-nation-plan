@@ -118,8 +118,8 @@ export class GroundGroup {
 
   updateStageStatus() {
     for (let i = 0; i < 2; i++) {
-      const icon = this.iconArray[2]
-      console.log(icon)
+      const icon = this.iconArray[i]
+      icon.updateText()
     }
   }
 }

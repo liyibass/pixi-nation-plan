@@ -37,6 +37,7 @@ export class MenuScene extends Scene {
 
     this.createScene()
     // this.doctorSay.say('啊')
+    this.groundGroup.updateStageStatus()
     this.startGameFlow()
     // this.createTestButton()
   }
@@ -263,6 +264,7 @@ export class MenuScene extends Scene {
           Status.isShared = true
           // await this.doctorSay.mod('恭喜你解鎖了新人物！', false)
           this.unlockHandler(unlockAll)
+          this.groundGroup.updateStageStatus()
         }
         this.openAllListener()
       }
