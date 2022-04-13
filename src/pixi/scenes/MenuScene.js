@@ -308,6 +308,7 @@ export class MenuScene extends Scene {
 
       // hint second card tab
       this.taiwan.card.cardFolder.deactiveListener()
+      this.taiwan.card.backgroundLayer.removeAllListeners()
 
       this.tip.createPointerTip(demoTab.tabWording)
       this.container.addChild(this.tip.pointerTipContainer)
@@ -364,6 +365,7 @@ export class MenuScene extends Scene {
           const kaoshiungCallback = async () => {
             this.removePointerHint()
             this.taiwan.kaoshiung.stopHintCity()
+            this.taiwan.card.backgroundLayer.removeAllListeners()
 
             await this.doctorSay.newSay('接下來點選旁邊被封印的卡片區')
 
