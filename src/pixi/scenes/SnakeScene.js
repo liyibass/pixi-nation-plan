@@ -29,7 +29,7 @@ const POISON_RESPAWN_INTERVAL = 10000
 let easterEggString = ''
 
 export class SnakeScene {
-  constructor(selectStage = () => {}) {
+  constructor(selectStage = () => { }) {
     this.container = new PIXI.Container()
     this.selectStage = selectStage
     this.initMusic()
@@ -926,8 +926,7 @@ export class SnakeScene {
       }
     })
 
-    console.log(this.snakePoisonGroup)
-    console.log(this.snakePoisonArray)
+
 
     if (this.isEatFirstPoison && this.gameLevel === 0) {
       this.isEatFirstPoison = false
@@ -1027,7 +1026,7 @@ export class SnakeScene {
     this.container.addChild(this.menuButtons.container)
 
     this.menuButtons.container.x = menuPosition.x
-    this.menuButtons.container.y = menuPosition.y
+    this.menuButtons.container.y = menuPosition.y + this.menuButtons.container.height * 0.8
 
     function menuChosenHandler(chosen) {
       switch (chosen) {

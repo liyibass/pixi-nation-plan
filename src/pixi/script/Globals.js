@@ -10,7 +10,7 @@ const dialogWidth = window.innerWidth
 const dialogHeight = Math.floor(window.innerHeight * dialogRatio)
 const dialogFontSize = Math.floor(window.innerHeight * dialogFontRatio)
 
-const snakeButtonRatio = 130 / 812
+const snakeButtonRatio = 170 / 812
 
 export const Globals = {
   gameStagePadding: 10,
@@ -30,8 +30,8 @@ export const Globals = {
     window.innerHeight / 2 < 450
       ? window.innerHeight / 2 - 30
       : window.innerHeight / 2 < 500
-      ? window.innerHeight / 2 - 100
-      : 500,
+        ? window.innerHeight / 2 - 100
+        : 500,
   isSmallScreen: function () {
     return !!this.outerWidth < 1280
   },
@@ -106,7 +106,7 @@ export const Globals = {
         this.outerHeight / 2 +
         this.gameStagePadding +
         this.contentHeight / 6 -
-        this.CONTROLLER_WIDTH / 2,
+        this.CONTROLLER_WIDTH / 4,
     }
   },
 
@@ -148,8 +148,8 @@ export const Globals = {
       this.outerWidth - 2 * this.gameStagePadding < 600
         ? this.outerWidth - 2 * this.gameStagePadding
         : this.outerWidth - 2 * this.gameStagePadding < 1280
-        ? 700
-        : 900
+          ? 700
+          : 900
 
     return {
       x: (this.outerWidth - width) / 2,
@@ -164,7 +164,7 @@ export const Globals = {
   getCandyGameStageDimention: function () {
     const windowWidth =
       this.outerWidth - 2 * this.gameStagePadding <
-      Math.floor((this.outerHeight * 5) / 8)
+        Math.floor((this.outerHeight * 5) / 8)
         ? this.outerWidth - 2 * this.gameStagePadding
         : Math.floor((this.outerHeight * 5) / 9)
 

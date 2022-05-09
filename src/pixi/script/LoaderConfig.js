@@ -411,8 +411,8 @@ export const LoaderConfig = {
   music_snake,
   volume,
   smoke,
-  arrowUp,
-  arrowDown,
-  arrowLeft,
-  arrowRight,
+  arrow0: arrowUp,
+  arrow1: arrowRight,
+  arrow2: arrowDown,
+  arrow3: arrowLeft,
 }
